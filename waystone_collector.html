@@ -1563,10 +1563,13 @@ function showScreen(id){
 // EXPLORE
 // ════════════════════════════════════════
 function startExplore(){
-  buildRun();
-  buildProgress();
-  showScreen('s-explore');
-  renderEncounter();
+  // Debug - show explore screen immediately with test content
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-explore').classList.add('active');
+
+  try { buildRun(); } catch(e){ document.getElementById('enc-text').innerHTML='<b style="color:red">buildRun error: '+e.message+'</b>'; return; }
+  try { buildProgress(); } catch(e){ document.getElementById('enc-text').innerHTML='<b style="color:red">buildProgress error: '+e.message+'</b>'; return; }
+  try { renderEncounter(); } catch(e){ document.getElementById('enc-text').innerHTML='<b style="color:red">renderEncounter error: '+e.message+'</b>'; return; }
 }
 
 function buildProgress(){
