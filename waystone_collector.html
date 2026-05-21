@@ -24,11 +24,11 @@
   --r: 20px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;position:relative;}
 
 /* ── STARS ── */
 body::before{
-  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background-image:
     radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,.7) 0%,transparent 100%),
     radial-gradient(1.5px 1.5px at 22% 5%,rgba(255,255,255,.5) 0%,transparent 100%),
@@ -44,8 +44,13 @@ body::before{
     radial-gradient(1px 1px at 95% 58%,rgba(255,255,255,.4) 0%,transparent 100%);
 }
 
-.screen{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;
-  opacity:0;pointer-events:none;transition:opacity .4s ease;}
+.screen{
+  position:absolute; top:0; left:0; right:0; bottom:0;
+  z-index:1; display:flex; flex-direction:column;
+  opacity:0; pointer-events:none;
+  transition:opacity .4s ease;
+  overflow:hidden;
+}
 .screen.active{opacity:1;pointer-events:all;}
 
 /* ════════════════════════════════════════
@@ -77,22 +82,65 @@ body::before{
 /* ════════════════════════════════════════
    EXPLORE SCREEN
 ════════════════════════════════════════ */
-#s-explore{flex-direction:row;}
+/* ── EXPLORE LAYOUT ── */
+/* Landscape: side by side */
+#s-explore{ flex-direction:row; overflow:hidden; }
 
 .explore-left{
-  width:42%;height:100%;position:relative;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
-  padding-bottom:20px;overflow:hidden;
+  position:relative;
+  width:42%; 
+  flex:0 0 42%;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-end;
+  padding-bottom:20px;
+  overflow:hidden;
 }
-.explore-bg{position:absolute;inset:0;z-index:0;}
-.location-art{position:relative;z-index:1;width:240px;height:240px;}
-.location-label{position:relative;z-index:1;
-  font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(255,255,255,.4);margin-bottom:8px;}
-
+.explore-bg{
+  position:absolute; top:0; left:0; right:0; bottom:0;
+  z-index:0;
+}
+.location-art{
+  position:relative; z-index:1;
+  width:240px; height:240px; flex-shrink:0;
+}
+.location-label{
+  position:relative; z-index:1;
+  font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(255,255,255,.4); margin-bottom:8px;
+}
 .explore-right{
-  width:58%;height:100%;display:flex;flex-direction:column;
-  padding:24px 28px 24px 16px;gap:14px;overflow-y:auto;
+  flex:1 1 0;
+  min-width:0; min-height:0;
+  display:flex; flex-direction:column;
+  padding:52px 24px 24px 16px; gap:12px;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
+
+/* Portrait override */
+@media (orientation:portrait) {
+  #s-explore{ flex-direction:column; }
+  .explore-left{
+    width:100%; height:220px; flex-shrink:0;
+    justify-content:center; align-items:center;
+    flex-direction:row; padding-bottom:0;
+  }
+  .location-art{ width:180px; height:180px; }
+  .explore-right{
+    flex:1; width:100%; height:auto;
+    padding:12px 16px 24px; overflow-y:auto;
+  }
+  .explore-nav{ top:8px; right:10px; }
+  .nav-btn{ font-size:11px; padding:5px 10px; }
+  .disc-wrap{ flex-direction:column; gap:20px; align-items:center; text-align:center; padding:24px 20px; }
+  .disc-art{ width:160px; height:160px; }
+  .disc-name{ font-size:36px; }
+  #s-detail{ flex-direction:column; align-items:center; gap:20px; padding:20px; overflow-y:auto; justify-content:flex-start; }
+  .detail-art{ width:180px; height:180px; }
+  .detail-info{ max-width:100%; }
+  .comp-grid{ grid-template-columns:repeat(3,1fr); padding:12px; }
+  .title-island{ width:240px; height:120px; }
+  .title-logo{ font-size:40px; }
+  .title-btns{ flex-direction:column; align-items:center; }
 }
 
 /* Axes */
@@ -1549,19 +1597,34 @@ function updateAxes(){
 const LOC_KEYS=Object.keys(LOCATIONS);
 function renderEncounter(){
   const enc=runEncounters[runIdx];
-  // Location
+  if(!enc){ console.error('No encounter at index',runIdx); return; }
+
+  // Location art - injected first, separately
   const locKey=enc.loc||LOC_KEYS[runIdx%LOC_KEYS.length];
   const loc=LOCATIONS[locKey]||LOCATIONS.beach;
-  document.getElementById('location-label').textContent=loc.label;
-  document.getElementById('explore-bg').style.background=loc.bg;
-  document.getElementById('location-art').innerHTML=loc.art;
 
-  document.getElementById('enc-text').innerHTML=enc.text;
-  document.getElementById('enc-q').textContent=enc.q;
+  try {
+    document.getElementById('location-label').textContent=loc.label||'The Island';
+    document.getElementById('explore-bg').style.background=loc.bg||'#0a1a30';
+    document.getElementById('location-art').innerHTML=loc.art||'';
+  } catch(e){ console.log('Location art error:',e); }
 
+  // Text content - use textContent for safety where possible, innerHTML only for rich text
+  try {
+    const encTextEl = document.getElementById('enc-text');
+    const encQEl = document.getElementById('enc-q');
+    if(encTextEl) encTextEl.innerHTML = enc.text || '';
+    if(encQEl) encQEl.textContent = enc.q || 'What do you do?';
+  } catch(e){
+    console.log('Enc text error:',e);
+    document.getElementById('enc-text').textContent = enc.text.replace(/<[^>]*>/g,'') || '';
+  }
+
+  // Choices
   const cc=document.getElementById('choices');
+  if(!cc) return;
   cc.innerHTML='';
-  enc.choices.forEach((c,i)=>{
+  (enc.choices||[]).forEach((c,i)=>{
     const btn=document.createElement('button');
     btn.className='choice-btn';
     btn.textContent=c.t;
@@ -1571,6 +1634,13 @@ function renderEncounter(){
 
   document.getElementById('feedback').classList.remove('show');
   document.getElementById('choices').style.opacity='1';
+  document.getElementById('choices').style.pointerEvents='all';
+  updateProgress();
+  updateAxes();
+  // Scroll right panel to top
+  const rp = document.querySelector('.explore-right');
+  if(rp) rp.scrollTop=0;
+}
   document.getElementById('choices').style.pointerEvents='all';
   updateProgress();
   updateAxes();
