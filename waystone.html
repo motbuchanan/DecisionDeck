@@ -1440,21 +1440,53 @@ function startGame() {
   renderScenario();
 }
 
-function buildPlaythrough() {
-  // Guaranteed one mirror; 5 others, one from each non-mirror cat
-  const cats = ['freeze','flip','storm','tangle','wait','stranger'];
-  const mirrors = SCENARIOS.filter(s=>s.cat==='mirror');
-  const mirrorPick = mirrors[Math.floor(Math.random()*mirrors.length)];
+// Tracks which scenario IDs have been seen this session — avoids repeats until pool exhausted
+let seenScenarios = new Set();
 
-  const others = [];
+function fisherYates(arr) {
+  const a = [...arr];
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickUnseen(pool) {
+  // Prefer unseen scenarios; if all seen, reset the seen set for this category
+  const unseen = pool.filter(s => !seenScenarios.has(s.id));
+  const source = unseen.length > 0 ? unseen : pool;
+  return source[Math.floor(Math.random() * source.length)];
+}
+
+function buildPlaythrough() {
+  // ALL 7 categories — mirror guaranteed, 5 others drawn from remaining 6
+  const cats = ['freeze','flip','storm','tangle','wait','stranger'];
+
+  // Pick mirror
+  const mirrors = SCENARIOS.filter(s => s.cat === 'mirror');
+  const mirrorPick = pickUnseen(mirrors);
+
+  // Pick one from each of the 6 non-mirror cats
+  const othersPool = [];
   for(const cat of cats){
-    const pool = SCENARIOS.filter(s=>s.cat===cat);
-    others.push(pool[Math.floor(Math.random()*pool.length)]);
+    const pool = SCENARIOS.filter(s => s.cat === cat);
+    othersPool.push(pickUnseen(pool));
   }
 
-  // Shuffle the 6 (mirror + 5 others, one cat removed randomly to keep at 6 total)
-  const combined = [mirrorPick, ...others.slice(0,5)];
-  playthroughScenarios = combined.sort(()=>Math.random()-0.5);
+  // Shuffle the 6 other picks and take 5 (randomly dropping one category each play)
+  const shuffledOthers = fisherYates(othersPool);
+  const chosen5 = shuffledOthers.slice(0, 5);
+
+  // Combine mirror + 5 others and shuffle the full 6
+  const combined = fisherYates([mirrorPick, ...chosen5]);
+  playthroughScenarios = combined;
+
+  // Mark all as seen
+  combined.forEach(s => seenScenarios.add(s.id));
+
+  // If all 35 have been seen, reset so they cycle again fresh
+  if(seenScenarios.size >= SCENARIOS.length) seenScenarios.clear();
 }
 
 function buildProgressDots() {
@@ -1547,82 +1579,82 @@ function makeChoice(idx) {
   // Per-choice sensory note (if provided), otherwise draw from pool
   const axNotePools = {
     flame: [
-      "The Flame burns a little brighter.",
-      "The Flame steadies — not blazing, but sure.",
-      "The Flame flickers, then holds.",
-      "You feel the Flame warm in your chest.",
-      "The Flame doesn't go out. It never did.",
-      "Something in the Flame settles.",
-      "The Flame pulses once — quiet and certain.",
-      "The Flame grows taller for a moment.",
-      "You carry the Flame and it carries you back.",
-      "The Flame is still there. Always still there.",
-      "Something brave just happened. The Flame noticed.",
-      "The Flame breathes in. Holds. Breathes out.",
-      "It was hard. The Flame burned anyway.",
-      "The Flame doesn't need to be loud to be real.",
-      "You didn't have to do that. You did it anyway. The Flame knows.",
-      "The Flame warms the cold edges.",
-      "Small flame. Real flame. Yours.",
-      "The Flame remembered something just now.",
-      "That took courage. The Flame felt it.",
-      "The Flame bends in the wind but does not go out.",
-      "You walked toward the hard thing. The Flame came with you.",
-      "The Flame hums — low and steady.",
-      "Something in your chest lit up just now.",
-      "The Flame is patient. So are you.",
+      "Because you went toward the hard thing, the Flame burns a little brighter.",
+      "That choice took courage. The Flame steadies — not blazing, but sure.",
+      "You didn't have to do that. You did it anyway. The Flame flickers, then holds.",
+      "Because you acted when it was easier not to, the Flame warms in your chest.",
+      "That was the brave choice. The Flame doesn't go out. It never did.",
+      "Something in you decided to try. The Flame felt that decision.",
+      "Courage just happened — quiet and real. The Flame pulses once in recognition.",
+      "You chose the harder path. The Flame grows taller for a moment.",
+      "Because you stayed when it was hard, you carry the Flame and it carries you back.",
+      "That choice was yours and it was brave. The Flame is still there. Always still there.",
+      "You went somewhere uncomfortable. That's what courage is. The Flame noticed.",
+      "Because you kept going, the Flame breathes in, holds, breathes out.",
+      "It was hard. You did it anyway. The Flame burned for exactly that reason.",
+      "That wasn't the easy choice. The Flame doesn't need it to be loud to be real.",
+      "You acted. That's why the Flame knows.",
+      "Your choice lit something. The Flame warms the cold edges.",
+      "Small act. Real act. Brave act. The Flame is yours.",
+      "You went first when you didn't have to. The Flame remembered that.",
+      "Because you chose courage, the Flame brightens.",
+      "You bent in the wind and didn't go out. Neither did the Flame.",
+      "You walked toward the hard thing. The Flame came with you because of that.",
+      "Because you were honest when it was easier not to be, the Flame hums low and steady.",
+      "Something in your chest lit up just now. Your choice did that.",
+      "You were patient and brave at the same time. The Flame is patient too.",
     ],
     thread: [
-      "The Thread glows between you and the world.",
-      "The Thread tightens — a good kind of tight.",
-      "The Thread hums quietly, like it's satisfied.",
-      "You feel the Thread warm at your wrist.",
-      "The Thread reaches a little further.",
-      "Something in the Thread knits itself together.",
-      "The Thread holds. It always holds when you let it.",
-      "The Thread catches something that might have been lost.",
-      "You thought about someone else just now. The Thread felt that.",
-      "The Thread weaves one more strand in.",
-      "Kindness is invisible until it isn't. The Thread just became visible.",
-      "The Thread runs between you and everyone you've ever been kind to.",
-      "You gave something. The Thread grew.",
-      "The Thread doesn't break. It bends, but it doesn't break.",
-      "You noticed what someone else was feeling. That's the Thread, working.",
-      "The Thread pulls gently — connecting, not trapping.",
-      "Something softened just now. The Thread was there.",
-      "The Thread shines brightest when you're not looking at it.",
-      "You made space for someone. The Thread expanded.",
-      "Small kindness. Big Thread.",
-      "The Thread remembered every other time you showed up.",
-      "A stitch just closed somewhere. You made that happen.",
-      "The Thread is patient — it waited for you to be ready.",
-      "Connection happened. The Thread knows.",
+      "Because you thought about someone else, the Thread glows between you and the world.",
+      "You listened before you acted. That's why the Thread tightens — a good kind of tight.",
+      "That kindness was real. The Thread hums quietly, like it's satisfied.",
+      "You reached toward someone. The Thread warms at your wrist because of that.",
+      "Your choice connected you to something bigger. The Thread reaches a little further.",
+      "You chose repair. The Thread knits itself together where you chose it.",
+      "Because you showed up, the Thread holds. It always holds when you let it.",
+      "That choice caught something that might have been lost. The Thread felt it.",
+      "You thought about someone else just now. That's exactly what the Thread is made of.",
+      "Your kindness just wove one more strand in.",
+      "That was invisible kindness — the best kind. The Thread just became visible.",
+      "Every kind thing runs through the Thread. Your choice just ran through it.",
+      "You gave something. That's why the Thread grew.",
+      "You chose the generous thing when you didn't have to. The Thread holds because of choices like that.",
+      "You noticed what someone else was feeling. The Thread glows for exactly that reason.",
+      "Because you stayed connected instead of pulling away, the Thread pulls gently.",
+      "Your choice softened something. The Thread was there for it.",
+      "You didn't take the easy exit. The Thread shines brightest because of that.",
+      "You made space. The Thread expanded where you made it.",
+      "Small choice, big kindness. That's why the Thread grows.",
+      "Because you chose to come back, the Thread remembered every other time you did.",
+      "You chose repair over pride. A stitch just closed because of that.",
+      "You were patient with someone. The Thread was patient waiting for that choice.",
+      "Connection happened because you made it happen. The Thread knows.",
     ],
     stone: [
-      "The Stone feels warmer in your pocket.",
-      "The Stone grows heavier in a good way.",
-      "The Stone settles — solid, quiet, yours.",
-      "You feel the Stone steady in your hand.",
-      "The Stone doesn't shake. Neither do you.",
-      "Something in the Stone clicks into place.",
-      "The Stone has been here before. It knows how to hold.",
-      "Still here. Still steady. The Stone and you both.",
-      "The storm passed. The Stone noticed.",
-      "You held your ground. The Stone held with you.",
-      "The Stone is smooth from how many times you've held it.",
-      "Steady doesn't mean easy. The Stone knows that.",
-      "The Stone settles deeper in your pocket.",
-      "Something that was shaking stopped shaking.",
-      "The Stone was tested. It did not crack.",
-      "You stayed. The Stone stayed. That's everything.",
-      "The Stone is older than the storm. It will outlast this one too.",
-      "Solid. Quiet. Warm. The Stone, and you.",
-      "The Stone absorbs the shake so you don't have to.",
-      "That was harder than it looked. The Stone felt the whole thing.",
-      "You found your footing. The Stone helped.",
-      "The Stone keeps no score. It just holds.",
-      "Still. After everything — still.",
-      "The Stone is your anchor. Today it earned it.",
+      "Because you held on when things got big, the Stone feels warmer in your pocket.",
+      "You found your footing. That's why the Stone grows heavier — in the good way.",
+      "You didn't rush. You didn't run. The Stone settles because of that.",
+      "You stayed steady. The Stone steadies with you.",
+      "The wave came and you held your ground. The Stone doesn't shake. Neither did you.",
+      "That choice was grounded. The Stone clicks into place because you chose it.",
+      "You've been here before and you held. The Stone has been here too. It knows how.",
+      "You're still here. Still steady. The Stone noticed because you chose to stay.",
+      "The storm passed because you let it. The Stone noticed you let it.",
+      "Your feet found the ground. The Stone helped because you let it.",
+      "Steady doesn't mean easy. You knew that. The Stone knows it too.",
+      "You stayed in it instead of running. The Stone settles deeper for that reason.",
+      "Something that was shaking stopped shaking. Your choice did that.",
+      "You were tested. The Stone was tested. Neither cracked because you chose to hold.",
+      "You stayed when leaving was an option. The Stone stayed with you.",
+      "The Stone is older than the hard feeling. Your choice reminded you both.",
+      "Solid. Quiet. Warm. The Stone, because you were solid too.",
+      "The Stone absorbs the shake so you don't have to. Your choice let it.",
+      "That was harder than it looked. Your steadiness made it look easier than it was.",
+      "You found your footing in the hard moment. The Stone helped because you reached for it.",
+      "You chose to stay grounded. The Stone keeps no score — it just holds what you give it.",
+      "Still. After everything — still. Because you chose still.",
+      "You held the feeling instead of acting on it. The Stone settles for exactly that reason.",
+      "Your anchor held today. It held because you chose to let it.",
     ]
   };
 
