@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>The Deck of Paths</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0b07;
+    --parchment: #1a1408;
+    --parchment-light: #241c0f;
+    --border: #4a3a1e;
+    --border-light: #6b5430;
+    --accent: #c9922a;
+    --accent-dim: #7a5518;
+    --gold: #e8c96a;
+    --gold-dim: #a88930;
+    --text: #e8dcc8;
+    --text-dim: #9a8a6a;
+    --rune: #d4a853;
+    --positive: #7ab87a;
+    --negative: #c47a5a;
+    --neutral: #c9922a;
+    --radius: 4px;
+    --glow: rgba(201, 146, 42, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Crimson Text', serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(100, 60, 10, 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(80, 40, 8, 0.12) 0%, transparent 60%);
+    color: var(--text);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  .app {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  .header { text-align: center; padding: 16px 0 8px; }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(232, 201, 106, 0.3);
+  }
+  .header .subtitle {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+    font-style: italic;
+    letter-spacing: 1px;
+  }
+  .header .divider {
+    margin: 8px auto 0;
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  /* ── CANDLE PROGRESS ── */
+  .progress-wrap { margin: 14px 0; display: flex; align-items: center; gap: 10px; }
+  .candle-track {
+    flex: 1; height: 3px;
+    background: linear-gradient(90deg, var(--border), var(--border-light));
+    border-radius: 2px; overflow: hidden;
+    position: relative;
+  }
+  .candle-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    transition: width 0.6s ease;
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba(232, 201, 106, 0.4);
+  }
+  .candle-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    min-width: 45px;
+    text-align: right;
+    letter-spacing: 1px;
+  }
+
+  /* ── RUNE SCORES ── */
+  .rune-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; padding: 10px 16px;
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    position: relative;
+  }
+  .rune-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(201, 146, 42, 0.04) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .rune-item { text-align: center; }
+  .rune-item .rune-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+  }
+  .rune-item .rune-val {
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  .rune-item .rune-val.renown { color: var(--accent); text-shadow: 0 0 8px rgba(201, 146, 42, 0.3); }
+  .rune-item .rune-val.resolve { color: var(--gold); text-shadow: 0 0 8px rgba(232, 201, 106, 0.2); }
+  .rune-item .rune-val.calling { color: #b8a0e8; text-shadow: 0 0 8px rgba(184, 160, 232, 0.2); }
+
+  /* ── CARD ── */
+  .card-container { flex: 1; display: flex; flex-direction: column; }
+
+  .card {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    flex: 1; display: flex; flex-direction: column;
+    animation: cardIn 0.5s ease;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--gold), var(--accent), transparent);
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at top left, rgba(201, 146, 42, 0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(100, 60, 10, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .card.mirror::before { background: linear-gradient(90deg, transparent, #8b70c8, #b8a0e8, #8b70c8, transparent); }
+  .card.offpath::before { background: linear-gradient(90deg, transparent, var(--gold-dim), var(--gold), var(--gold-dim), transparent); }
+
+  /* Corner ornaments */
+  .card-corner {
+    position: absolute;
+    width: 18px; height: 18px;
+    opacity: 0.4;
+  }
+  .card-corner.tl { top: 6px; left: 6px; border-top: 1px solid var(--gold-dim); border-left: 1px solid var(--gold-dim); }
+  .card-corner.tr { top: 6px; right: 6px; border-top: 1px solid var(--gold-dim); border-right: 1px solid var(--gold-dim); }
+  .card-corner.bl { bottom: 6px; left: 6px; border-bottom: 1px solid var(--gold-dim); border-left: 1px solid var(--gold-dim); }
+  .card-corner.br { bottom: 6px; right: 6px; border-bottom: 1px solid var(--gold-dim); border-right: 1px solid var(--gold-dim); }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .card-arcana {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 6px;
+    position: relative; z-index: 1;
+  }
+  .card.mirror .card-arcana { color: #b8a0e8; }
+  .card.offpath .card-arcana { color: var(--gold); }
+
+  .card-vision {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    line-height: 1.5;
+    font-style: italic;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+
+  .card-question {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    font-weight: 600;
+    margin-bottom: 22px;
+    flex: 1;
+    color: var(--text);
+    position: relative; z-index: 1;
+  }
+
+  .card-omen {
+    font-size: 0.75rem;
+    color: var(--gold);
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: rgba(232, 201, 106, 0.06);
+    border-radius: var(--radius);
+    border-left: 2px solid var(--gold-dim);
+    font-style: italic;
+    position: relative; z-index: 1;
+  }
+  .omen-tag {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-bottom: 6px;
+    background: rgba(184, 160, 232, 0.15);
+    color: #b8a0e8;
+  }
+
+  /* ── PATHS (CHOICES) ── */
+  .paths { display: flex; flex-direction: column; gap: 8px; margin-top: auto; position: relative; z-index: 1; }
+
+  .path-btn {
+    background: rgba(26, 20, 8, 0.6);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 13px 15px;
+    color: var(--text);
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+  }
+  .path-btn::before {
+    content: '◈ ';
+    color: var(--border-light);
+    transition: color 0.25s ease;
+    font-size: 0.7rem;
+  }
+  .path-btn:hover {
+    border-color: var(--accent);
+    background: rgba(201, 146, 42, 0.07);
+    color: var(--gold);
+  }
+  .path-btn:hover::before { color: var(--accent); }
+  .path-btn:active { transform: scale(0.99); }
+  .path-btn.chosen {
+    border-color: var(--accent);
+    background: rgba(201, 146, 42, 0.1);
+    color: var(--gold);
+  }
+  .path-btn.chosen::before { color: var(--accent); }
+  .path-btn:disabled { cursor: default; opacity: 0.45; }
+
+  /* ── READING (RESULT) ── */
+  .reading { animation: resultIn 0.4s ease; padding-top: 14px; position: relative; z-index: 1; }
+  @keyframes resultIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reading-rune {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .reading-rune .delta {
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .reading-rune .delta.pos { color: var(--positive); text-shadow: 0 0 10px rgba(122, 184, 122, 0.3); }
+  .reading-rune .delta.neg { color: var(--negative); text-shadow: 0 0 10px rgba(196, 122, 90, 0.3); }
+  .reading-rune .delta.zero { color: var(--neutral); }
+  .reading-rune .axis-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .reading-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .next-btn {
+    width: 100%; padding: 13px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .next-btn:hover { background: rgba(201, 146, 42, 0.1); }
+  .next-btn:active { transform: scale(0.98); }
+
+  /* ── START SCREEN ── */
+  .start-screen {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; gap: 18px;
+    animation: cardIn 0.6s ease;
+  }
+
+  .start-sigil {
+    font-size: 2.8rem;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 0 12px rgba(201, 146, 42, 0.4));
+  }
+
+  .start-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+  }
+
+  .start-screen p {
+    font-size: 1rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 320px;
+    font-style: italic;
+  }
+
+  .start-rule {
+    width: 200px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  .begin-btn {
+    margin-top: 8px;
+    padding: 13px 40px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .begin-btn:hover { background: rgba(201, 146, 42, 0.1); box-shadow: 0 0 20px rgba(201, 146, 42, 0.1); }
+
+  /* ── FATE SCREEN ── */
+  .fate-screen {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; gap: 14px;
+    animation: cardIn 0.6s ease;
+    padding: 10px 0;
+  }
+
+  .fate-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+  }
+
+  .fate-runes {
+    display: flex; gap: 24px; margin: 6px 0;
+  }
+  .fate-rune { text-align: center; }
+  .fate-rune .f-val {
+    font-family: 'Cinzel', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .fate-rune .f-lbl {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .fate-rule {
+    width: 160px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+
+  .fate-reading {
+    font-size: 0.97rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 340px;
+    font-style: italic;
+    text-align: left;
+  }
+
+  .cast-again {
+    margin-top: 8px;
+    padding: 12px 36px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .cast-again:hover { background: rgba(201, 146, 42, 0.1); }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+
+const VISIONS = [
+
+  // ===== THE PATH OF WORKS =====
+  {
+    id: "pw-1", arcana: "The Path of Works", type: "work",
+    vision: "A task presents itself — one beyond the edges of what was asked of you. The skill is yours. The asking was not.",
+    question: "Is stepping forward without being summoned how you choose to move through the world?",
+    choices: [
+      { text: "I step forward — the task needs doing and I am able", scores: { renown: 5, resolve: 3, calling: 4 }, reading: "There is a certain kind of person who moves toward need rather than waiting for permission. Whether others name it or not, such movement shapes a reputation — not in a single act, but across a hundred of them. The question worth carrying: does the world you're building see what you give, or only what you were told to give?" },
+      { text: "I wait to see if it will be asked of me — then decide", scores: { renown: 1, resolve: 2, calling: 2 }, reading: "Patience has its wisdom. But there is a difference between patience and hesitation wearing patience's robes. The seat you seek is given to those who are already acting like they belong in it — not those who wait to be invited. Watch which one this was." },
+      { text: "I hold my ground — what is not asked for and not paid for is not mine to carry", scores: { renown: -2, resolve: 4, calling: 1 }, reading: "A boundary held is not always a door closed. Sometimes knowing what you will and will not carry is the beginning of real agency — not the end of it. The question is whether this is a value you hold with intention, or a shield you raise when the weight feels like it belongs to someone else's kingdom." }
+    ],
+    tags: ["work", "identity", "renown"]
+  },
+  {
+    id: "pw-2", arcana: "The Path of Works", type: "work",
+    vision: "A decision is being made that affects your ground. You were not consulted. You hold knowledge the decision-makers do not.",
+    question: "The door was not opened for you. Do you knock?",
+    choices: [
+      { text: "I make my voice known — to stay silent when I see clearly would be a different kind of failure", scores: { renown: 5, resolve: 3, calling: 5 }, reading: "To speak when not called upon is a risk — and sometimes it is the most important thing a person can do. The difference between the advisor who is sought and the one who is not often comes down to this: did they speak when it mattered, before they were given leave to speak? How you carry that voice will determine whether it becomes a door." },
+      { text: "I find a trusted ear and pass the knowledge through them", scores: { renown: 2, resolve: 2, calling: 3 }, reading: "The hidden path has its uses. But consider: every time you route your wisdom through another's mouth, you build their authority and defer your own. It may serve the outcome today. It will not build the table you seek to sit at." },
+      { text: "I hold the knowledge and watch — if the decision fails, the lesson will be heard more clearly", scores: { renown: -3, resolve: 3, calling: -1 }, reading: "There is a coldness to letting things break so that you may be proven right. Even if the lesson lands — it lands on others who were not consulted either. The seat at the table is rarely given to the one who watched and waited for failure. It is given to the one who tried to prevent it." }
+    ],
+    tags: ["work", "voice", "calling"]
+  },
+  {
+    id: "pw-3", arcana: "The Path of Works", type: "work",
+    vision: "You are asked to pass your knowledge to someone newer. Days of your time. No additional coin. No ceremony.",
+    question: "What does your answer to this ask say about where you are going?",
+    choices: [
+      { text: "I give it freely — teaching is how knowledge becomes legacy", scores: { renown: 6, resolve: 4, calling: 5 }, reading: "The ones who hoard their craft tend to become its ceiling. The ones who teach it tend to become its foundation — and foundations are what towers are built upon. Every person who walks away knowing more because of you is a small stone in the wall of the reputation you are trying to build." },
+      { text: "I give it — but I note the cost, and I carry some resentment with me", scores: { renown: 1, resolve: -1, calling: 1 }, reading: "The task done with resentment is still done. But resentment has a way of making itself known — in tone, in availability, in the corners people feel but cannot name. If the giving costs you something real, that is worth examining. Is it the teaching that costs you, or the silence of those who should be naming what you give?" },
+      { text: "I give what I am formally obligated to give and no more", scores: { renown: -2, resolve: 3, calling: -2 }, reading: "A defensible choice. And one that will be remembered — not as cruelty, but as a signal about what you are willing to invest in. The people who see the future in you are watching for exactly this kind of moment. That does not mean you owe everything. It means the path you want requires a different kind of arithmetic." }
+    ],
+    tags: ["work", "renown", "resolve"]
+  },
+  {
+    id: "pw-4", arcana: "The Path of Works", type: "work",
+    vision: "A stretch of days where the work holds no fire. You come. You perform. You leave. The routine is a river with no current.",
+    question: "What does the flatness tell you — and will you listen?",
+    choices: [
+      { text: "It tells me something is missing — I sit with that rather than push through it", scores: { renown: 2, resolve: 2, calling: 6 }, reading: "The willingness to listen to the silence between the tasks is uncommon. Most take the flatness as weather and wait for it to pass. You are treating it as a message. That is wiser — provided you let the message reach all the way to a question: missing from what? Missing from whom?" },
+      { text: "It tells me that not every chapter holds fire — I keep moving", scores: { renown: 2, resolve: 5, calling: 1 }, reading: "Endurance is a real virtue. The question is whether this endurance is carrying you toward something, or carrying you through more of the same. There is a difference between moving through a difficult passage and walking in circles. Does the road ahead look different from the road behind?" },
+      { text: "It tells me this place may not be where my fire lives — but I am not yet ready to name that", scores: { renown: 1, resolve: 2, calling: 4 }, reading: "Not yet ready to name it is an honest place to stand. The naming has its own gravity — once you say a thing plainly, it begins to move. When you are ready, the naming will not be a crisis. It will be an answer you already carried." }
+    ],
+    tags: ["work", "calling", "identity"]
+  },
+
+  // ===== WHERE THE HOURS ARE SPENT =====
+  {
+    id: "wh-1", arcana: "Where the Hours Are Spent", type: "work",
+    vision: "A gap in the day. No task is pressing. Your hand moves toward your pocket before the thought is fully formed.",
+    question: "What does the reaching tell you?",
+    choices: [
+      { text: "That I seek diversion — and I am honest about that small surrender", scores: { renown: -1, resolve: 1, calling: -1 }, reading: "Honesty about the small surrenders is rarer than it sounds. Most name them something else. What you do with the honesty is the question — does it change the next reaching, or merely describe this one?" },
+      { text: "That I am not given enough here to keep my whole self occupied", scores: { renown: 1, resolve: 2, calling: 3 }, reading: "There is something important beneath this answer. A person running at full engagement rarely reaches for distraction — the reaching is often a symptom of a mismatch between capacity and demand. If your gifts outpace what is asked of you, the answer is not patience. It is seeking a larger vessel." },
+      { text: "That I have a habit I have not yet chosen to examine", scores: { renown: 2, resolve: 3, calling: 2 }, reading: "Habits are the choices we stopped making consciously. The ones who build the reputations they want are rarely the ones who have no habits — they are the ones who examine them. You have identified one. What you do from here is the actual choice." }
+    ],
+    tags: ["self-awareness", "renown", "resolve"]
+  },
+  {
+    id: "wh-2", arcana: "Where the Hours Are Spent", type: "work",
+    vision: "The sun has moved. The work accomplished does not account for the hours given.",
+    question: "Is this the place where your best hours are meant to go?",
+    choices: [
+      { text: "Not entirely — and I know it, which is why I am here", scores: { renown: 2, resolve: 3, calling: 5 }, reading: "The knowing is the beginning of the choosing. You are in a place that does not yet ask for your full measure — that is a fact, not a failure. What you do with that knowledge determines whether this is a waystation or a destination. Those who seek the council do not arrive there by accident." },
+      { text: "For now it is — I am building toward something and this funds the building", scores: { renown: 3, resolve: 5, calling: 3 }, reading: "This is an honest and practical answer. The house. The plan. The larger life. The work is the resource for the dream, not the dream itself. Hold that clearly. The danger is not the using of the work — it is the forgetting that the work is not the destination." },
+      { text: "I have not yet asked myself that fully", scores: { renown: 1, resolve: 1, calling: 3 }, reading: "The question has a weight to it that takes time to carry properly. You are beginning to feel that weight. That is not behind — that is exactly on time for where you seem to be." }
+    ],
+    tags: ["calling", "identity", "direction"]
+  },
+
+  // ===== THE ASKING FOR MORE =====
+  {
+    id: "am-1", arcana: "The Asking for More", type: "work",
+    vision: "A thing is asked of you that sits outside your chartered territory. You are able. You are uncertain whether you are willing.",
+    question: "What lives beneath the uncertainty?",
+    choices: [
+      { text: "A question of worth — whether the asking matches the giving", scores: { renown: 3, resolve: 4, calling: 2 }, reading: "To know your worth and to hold it is not smallness — it is clarity. The danger is in turning every ask into a ledger. Some investments do not pay immediately. Some doors look like debts until you realize they were passages. Examine which kind this is before you decide." },
+      { text: "A deeper want — I wish to be asked differently, with recognition of what the asking costs", scores: { renown: 4, resolve: 2, calling: 5 }, reading: "This is the truest answer you could give. It is not the task that resists — it is the invisible treatment of your contribution as expected, rather than offered. That distinction matters enormously. Name it to yourself, and when the time is right, name it plainly to the people whose opinion of you matters for the path you are walking." },
+      { text: "Not much — I will decide when I see the full picture", scores: { renown: 2, resolve: 3, calling: 2 }, reading: "Reserving judgment until more is known is wisdom when there is more to learn. Be careful that it does not become a way of avoiding the choice that is already in front of you. The full picture rarely arrives. At some point the path requires a step without the map being complete." }
+    ],
+    tags: ["work", "renown", "identity"]
+  },
+  {
+    id: "am-2", arcana: "The Asking for More", type: "work",
+    vision: "You have spoken words that some have heard as: I am only here for the coin. Those words came from a true feeling. The hearing was also true.",
+    question: "How do you reckon with the distance between what you meant and what was received?",
+    choices: [
+      { text: "The hearing was a misreading — my commitment runs deeper than a few unguarded words", scores: { renown: -2, resolve: 3, calling: 1 }, reading: "Perhaps. But reputations are not built on what we mean — they are built on what is consistently observed. If those who hold your fate heard something you did not intend, the only remedy is a long and visible correction. Words do not undo words. Actions over time are the only counterweight." },
+      { text: "I chose those words and I own the choosing — but they were a moment, not a creed", scores: { renown: 3, resolve: 4, calling: 3 }, reading: "Owning the words without being defined by them is the mature path. A moment does not make a character — but a pattern does. The question is whether this was a single stone or part of a wall that others can see more clearly than you can. Be honest about that." },
+      { text: "The words were true in the moment — and I am still figuring out how much of me they represent", scores: { renown: 2, resolve: 3, calling: 4 }, reading: "This is the most honest answer, and also the most important one to carry forward. If you are still figuring out how much you mean it — that uncertainty is itself a direction. The path you have described wanting requires a different answer to this question. The figuring out is not a delay. It is the work." }
+    ],
+    tags: ["renown", "identity", "calling"]
+  },
+  {
+    id: "am-3", arcana: "The Asking for More", type: "work",
+    vision: "The seat at the council — to speak when decisions are made, to be heard when the ground level is affected. You have named this wanting clearly.",
+    question: "What are you doing today that earns a seat at that table?",
+    choices: [
+      { text: "I work well and trust that good work finds its audience in time", scores: { renown: 1, resolve: 5, calling: 1 }, reading: "Good work is necessary. It is not sufficient. The seat at the council is not given to those who wait for their work to be discovered — it is given to those who are already behaving as though they belong in the room. Work without visibility is a foundation with no tower built upon it." },
+      { text: "I am making myself known — finding the right moments to speak and be seen", scores: { renown: 6, resolve: 3, calling: 6 }, reading: "This is the path. Not loudly, not constantly — but with intention. The council fills itself with people it already knows. The one who stands apart waiting to be noticed will stand apart indefinitely. The one who makes themselves known in the right rooms, on the right questions, with the right tone — that person becomes someone the council thinks of when the seat opens." },
+      { text: "Honestly — not enough yet. I know what I want but my feet have not yet followed my wanting", scores: { renown: 3, resolve: 1, calling: 4 }, reading: "The knowing is not nothing. But it is incomplete. The wanting and the doing must eventually meet, and every day they do not, the distance between the two becomes a little more familiar — which is the real danger. Not failure. Comfort. Pick one thing. One conversation. One move. That is all the path requires next." }
+    ],
+    tags: ["renown", "calling", "trajectory"]
+  },
+
+  // ===== THE LONG ROAD =====
+  {
+    id: "lr-1", arcana: "The Long Road", type: "work",
+    vision: "You are building something with your companion that has no guaranteed horizon — a house, a plan, a life large enough for more than the two of you.",
+    question: "What keeps you moving on the days when the destination is not visible?",
+    choices: [
+      { text: "The knowing of why — the reason we chose this path is bigger than the days between", scores: { renown: 3, resolve: 5, calling: 6 }, reading: "Those who build things that last are rarely sustained by the nearness of the ending — they are sustained by the depth of the beginning. If the why is real and clear and shared between you and your companion, it will outlast every obstacle the road puts in your way. Tend that why as you would tend a fire in a cold place." },
+      { text: "The seeing of small progress — each stone laid is its own kind of arrival", scores: { renown: 3, resolve: 4, calling: 4 }, reading: "This is a practical and honest wisdom. The long road is made of short steps, and the ones who finish it are usually those who learned to find the completion in the stepping as much as in the arriving. Hold that skill. There will be stretches where the destination goes fully invisible. The steps will carry you through them." },
+      { text: "Some days nothing keeps me — and I have learned to let those days be what they are", scores: { renown: 2, resolve: 3, calling: 3 }, reading: "The acceptance of the dark days without being defined by them is its own kind of strength. Not every day of the long road is a day of conviction. The ones who arrive are not the ones who felt it every day — they are the ones who kept walking on the days they did not. You seem to know the difference." }
+    ],
+    tags: ["calling", "resolve", "long-road"]
+  },
+  {
+    id: "lr-2", arcana: "The Long Road", type: "offpath",
+    vision: "You and your companion live in borrowed space, between the home you left and the one you are seeking. The walls are not yours. The time is not certain.",
+    question: "What does this season of in-between ask of you?",
+    choices: [
+      { text: "Patience — this is a passage, not a dwelling, and I try to hold it that way", scores: { renown: 2, resolve: 5, calling: 3 }, reading: "The passage becomes a dwelling when we stop moving toward the door. You seem to know the difference. Hold that — and hold it with your companion too, who may be measuring the passage by a different clock than yours." },
+      { text: "Gratitude — there is a gift in the borrowed space that I do not always remember to receive", scores: { renown: 3, resolve: 3, calling: 2 }, reading: "The ones who gave you this shelter chose to. That choice carries weight that gets lighter if you stop lifting it. Gratitude tends to change the texture of even the most difficult in-between — not by denying the difficulty, but by placing it inside something larger." },
+      { text: "Vision — I need to keep the destination visible so the passage does not feel like settling", scores: { renown: 3, resolve: 4, calling: 6 }, reading: "The vision is the compass. Without it, the in-between becomes the condition rather than the crossing. Keep it alive and specific — not as an escape from where you are, but as a true picture of where you are going. The more concrete the vision, the more useful it becomes when the road is uncertain." }
+    ],
+    tags: ["calling", "resolve", "long-road"]
+  },
+  {
+    id: "lr-3", arcana: "The Long Road", type: "offpath",
+    vision: "There are children who need a hearth. You and your companion are building one large enough to offer that. It is not a small thing to choose.",
+    question: "What is the truest reason you walk toward this?",
+    choices: [
+      { text: "Because there is a need and we are able — and that has always been enough reason for us", scores: { renown: 4, resolve: 4, calling: 5 }, reading: "The alignment between ability and willingness is rarer than it sounds. Many are able and do not choose. Many are willing and are not able. You are describing both — and pointing them together in the same direction. That is a kind of clarity about who you are that most people never achieve." },
+      { text: "Because the life we are building should hold more than the two of us — that is what we mean by home", scores: { renown: 3, resolve: 5, calling: 6 }, reading: "A home built to hold more than its builders — that is a generous and deliberate architecture. The fact that you and your companion share this as the shape of the life you want means you are not just making a decision. You are constructing an identity together. That holds through the hardest crossings." },
+      { text: "I am still learning how to put the reason into words — I only know it is true", scores: { renown: 3, resolve: 3, calling: 3 }, reading: "Some truths live in the body before they arrive in language. You do not need the words to make the choice real — but finding them, even in private, tends to make you a more durable carrier of the thing. When the road gets hard, the words are what you reach for." }
+    ],
+    tags: ["calling", "identity", "long-road"]
+  },
+
+  // ===== WHEN NO ONE BEARS WITNESS =====
+  {
+    id: "wn-1", arcana: "When No One Bears Witness", type: "work",
+    vision: "The task before you — no eye watches. No recognition awaits. You could do less and no accounting would come.",
+    question: "Who are you when the witness is only yourself?",
+    choices: [
+      { text: "The same as when I am watched — that consistency is the thing I am most certain of", scores: { renown: 6, resolve: 5, calling: 4 }, reading: "This is among the most important things a person can know about themselves. The reputations that last are not built in the visible moments — they are built in the unseen ones that eventually accumulate into something others recognize without being able to name. You are describing a kind of integrity that does not need an audience." },
+      { text: "Honest — some days I give the full measure, some days I give what the moment requires", scores: { renown: 2, resolve: 3, calling: 2 }, reading: "Variable standards are human. The question is whether you are satisfied with that variability, or whether you are describing a gap between who you are and who you intend to be. The gap is only a problem if it is unnamed." },
+      { text: "Less steady than I would like — the unwitnessed hours show me what I am still working on", scores: { renown: 3, resolve: 4, calling: 3 }, reading: "The ones who improve are usually those who can be honest about the unwitnessed hours. Self-knowledge without self-deception is the foundation of actual change. The gap you are naming is not a verdict — it is a starting point." }
+    ],
+    tags: ["identity", "renown", "resolve"]
+  },
+  {
+    id: "wn-2", arcana: "When No One Bears Witness", type: "work",
+    vision: "You aided someone — time spent, knowledge given, no record kept. The gratitude was brief. The moment passed.",
+    question: "What does it mean to you, now that it is past?",
+    choices: [
+      { text: "It is complete — the giving was its own reward and I feel no lack in it", scores: { renown: 5, resolve: 5, calling: 4 }, reading: "This is a rare and valuable thing to know about yourself. The people who build something lasting are often those for whom the giving is not contingent on the receiving. Not because they have no needs, but because their needs are met in the quality of the act itself. Guard that quality." },
+      { text: "A small part of me would have welcomed being seen — that is honest and I hold it without shame", scores: { renown: 4, resolve: 4, calling: 3 }, reading: "Wanting to be seen for what you give is not weakness. It is human. The distinction is between letting that want drive the giving — or letting it simply observe it. You seem to be doing the second, which keeps the generosity intact." },
+      { text: "I carry some weight about how much I give that is never counted", scores: { renown: 2, resolve: 2, calling: 3 }, reading: "That weight deserves an honest look. It is telling you something — either that you give more than is sustainable, or that you are in an environment that has not learned to see what you offer. Both are real possibilities. The answer determines whether the work is to change yourself or to change your field." }
+    ],
+    tags: ["identity", "renown", "resolve"]
+  },
+
+  // ===== THE SEAT AT THE COUNCIL =====
+  {
+    id: "sc-1", arcana: "The Seat at the Council", type: "work",
+    vision: "You want a voice when the decisions that shape your ground are being made. You want to be present before the stone is set, not after.",
+    question: "What kind of person is given that voice — and are you becoming them?",
+    choices: [
+      { text: "Someone trusted — and I am building that trust, though slowly", scores: { renown: 4, resolve: 4, calling: 4 }, reading: "Trust is the only currency that buys the seat. It is accumulated in small visible acts across a long time. Every time you do what you said you would do, speak plainly when the room is comfortable with silence, and hold the line even when holding it costs you — you are adding to the account. Slowly is still the right direction." },
+      { text: "Someone the council already sees as valuable — and I am working to make sure they see me that way", scores: { renown: 6, resolve: 3, calling: 5 }, reading: "Visibility in the right rooms is not vanity — it is strategy. The seat does not go to the most capable person in the building. It goes to the most capable person the decision-makers know and believe in. Both conditions are required. You seem to understand that." },
+      { text: "Someone who has earned it by the weight of what they carry — I am not there yet, and I know it", scores: { renown: 3, resolve: 5, calling: 4 }, reading: "Knowing you are not there yet is more useful than believing you already are. The path to the seat is not a leap — it is a sequence of smaller moves, each of which makes the next one possible. Where you are now is not where you will be. The path is what matters more than the position." }
+    ],
+    tags: ["renown", "calling", "trajectory"]
+  },
+  {
+    id: "sc-2", arcana: "The Seat at the Council", type: "work",
+    vision: "A chance appears to take on more responsibility. More authority. More visibility. The cost is also more. You were not expecting it today.",
+    question: "What is the honest feeling beneath the surface of your answer?",
+    choices: [
+      { text: "Ready — this is the direction I have been building toward and I receive it", scores: { renown: 5, resolve: 5, calling: 6 }, reading: "The readiness that comes from genuine preparation is different from bravado. If you feel it fully — in the body, not just in the mind — that is a signal worth trusting. The ones who succeed in these moments are rarely the ones who convinced themselves they were ready. They are the ones who were." },
+      { text: "Excited and afraid in equal measure — which has always meant I should say yes", scores: { renown: 5, resolve: 4, calling: 5 }, reading: "Both at once. That combination is one of the most reliable readings of rightness. Pure excitement without fear is underestimation. Fear without excitement is misalignment. Both together means the thing is real and the stakes are real. Walk toward it." },
+      { text: "Uncertain — I want it but I want to be sure I want it for the right reasons", scores: { renown: 3, resolve: 3, calling: 4 }, reading: "Examining the reasons is wisdom — as long as it does not become a way of circling the decision rather than making it. The right reasons are rarely pure. Most moves forward are made of equal parts calling and ambition and fear and desire. If the largest part is genuine, that is sufficient." }
+    ],
+    tags: ["renown", "calling", "trajectory"]
+  },
+
+  // ===== THE MIRROR SPEAKS =====
+  {
+    id: "ms-1", arcana: "The Mirror Speaks", type: "mirror",
+    vision: "The deck holds no vision for you now. It holds a question.",
+    question: "You say you want the seat at the council — the voice in the room before decisions are made. When you imagine having it, what are you actually imagining?",
+    choices: [
+      { text: "Speaking — having my ground-level knowledge heard before it is too late to change course", scores: { renown: 3, resolve: 2, calling: 4 }, reading: "This is a purpose worth building toward. The knowledge of the ground is the most valuable thing the council rarely has — and the ones who carry it up to the table perform a service the whole operation depends upon. Hold that clarity. It will sustain you through the long building." },
+      { text: "Being seen as someone who matters to how this place works", scores: { renown: 4, resolve: 1, calling: 3 }, reading: "There is nothing small about wanting to matter. The desire to be counted as essential is part of what drives people to do more than is asked of them. Just know that the seat is given for the contribution, not the wanting to be seen. Align your work with the contribution. The being seen follows from that." },
+      { text: "Both — and I am not ashamed of the second as much as I used to be", scores: { renown: 3, resolve: 3, calling: 4 }, reading: "Wanting to contribute and wanting to be recognized for it are not in conflict — they are two honest parts of the same ambition. The shame around the second usually fades as people get clearer about their worth. That clarity seems to be arriving for you." }
+    ],
+    tags: ["identity", "calling", "trajectory"]
+  },
+  {
+    id: "ms-2", arcana: "The Mirror Speaks", type: "mirror",
+    vision: "No vision. Only this.",
+    question: "Five years forward. The house is found. The family you are building is underway. The work has moved. What does a good version of that life look like — specifically?",
+    choices: [
+      { text: "I can see it clearly — I have walked through it in my mind more than once", scores: { renown: 3, resolve: 4, calling: 5 }, reading: "The ones who arrive at the lives they imagined are rarely those who had the most talent or the most luck. They are usually the ones who could see the destination clearly enough to make small decisions in its direction. You have that picture. Let it guide the small choices — they are the ones that actually build the path." },
+      { text: "The family and house are clear — the work part is still forming", scores: { renown: 2, resolve: 3, calling: 3 }, reading: "The asymmetry tells you something true: you know what you value most. The work clarity will come as you move toward it. For now, let the clearer picture pull the less clear one in its direction. People who know what they are building a life for tend to find the work that fits it." },
+      { text: "I have not drawn the picture in full yet — I hold the pieces but have not assembled them", scores: { renown: 2, resolve: 2, calling: 2 }, reading: "The assembling is worth doing — not to plan every step, but to understand the shape of the life you are building. Spend an hour with your companion drawing the picture together. Not the obstacles. Not the plan. Just the picture of a good day, five years from now. What the morning looks like. What the evening holds. The rest follows from there." }
+    ],
+    tags: ["calling", "identity", "long-road"]
+  },
+  {
+    id: "ms-3", arcana: "The Mirror Speaks", type: "mirror",
+    vision: "No vision. Only the question you may have been avoiding.",
+    question: "What is the thing you already know but have not yet done anything about?",
+    choices: [
+      { text: "A move at work I have been deferring — a conversation or an action I keep circling", scores: { renown: 3, resolve: 1, calling: 4 }, reading: "Name it. Right now, in the private room of your own thinking. Not the whole arc — just the next step. The first move is almost always smaller than the whole weight of having not made it. The deferring costs more than the doing." },
+      { text: "Something about how I am showing up for the people who matter most to me", scores: { renown: 2, resolve: 2, calling: 3 }, reading: "This kind of knowing — about yourself in relation to those you love — is the most important and the most postponed. It does not require a grand gesture. It usually requires one honest conversation, or one different choice tomorrow. The knowing you already carry is the beginning. Act from it." },
+      { text: "I will need more time with this question before I can answer it truly", scores: { renown: 1, resolve: 2, calling: 2 }, reading: "Leave it open. Do not chase it down or resolve it tonight. The thing you already know is patient — it has been waiting and it will wait a little longer. It will surface when you stop trying to surface it. Pay attention when it does." }
+    ],
+    tags: ["self-awareness", "identity", "calling"]
+  },
+  {
+    id: "ms-4", arcana: "The Mirror Speaks", type: "mirror",
+    vision: "No vision. Just you, and the question the deck has been carrying since the first card was drawn.",
+    question: "Are you the person your path requires you to be — or are you still becoming them?",
+    choices: [
+      { text: "Still becoming — and I am at peace with that", scores: { renown: 3, resolve: 4, calling: 4 }, reading: "The peace is the important part. There is a version of 'still becoming' that is comfortable avoidance — and a version that is honest forward motion. The peace that comes from the second is earned. The peace that comes from the first is borrowed. Which kind feels true to you?" },
+      { text: "Both — I am the person in some rooms and still becoming them in others", scores: { renown: 4, resolve: 4, calling: 4 }, reading: "That is probably the most accurate answer available to any person of real ambition. Fully arrived people tend to stop moving. The ones who carry the right tension — already enough and not yet finished — tend to be the ones who build things that outlast the building of them." },
+      { text: "I am not yet sure what that person fully looks like — the path is still revealing itself", scores: { renown: 2, resolve: 3, calling: 3 }, reading: "The path reveals the person more than any preparation does. You may not see the full shape of who you are becoming until you have walked further. That is not a delay — it is the nature of the kind of becoming you seem to be inside of. Stay on the road. Look back occasionally. The shape will become clearer." }
+    ],
+    tags: ["identity", "calling", "trajectory"]
+  }
+
+];
+
+// ========== ENGINE ==========
+class DeckOfPaths {
+  constructor() {
+    this.state = 'start';
+    this.scores = { renown: 50, resolve: 50, calling: 50 };
+    this.round = 0;
+    this.totalRounds = 14;
+    this.history = [];
+    this.currentVision = null;
+    this.selectedPath = null;
+    this.usedIds = new Set();
+    this.drawn = [];
+    this.render();
+  }
+
+  buildDeck() {
+    let pool = VISIONS.filter(v => !this.usedIds.has(v.id));
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    const selected = [];
+    const arcanaCount = {};
+    const typeCount = { work: 0, offpath: 0, mirror: 0 };
+
+    const guarantees = [
+      pool.find(v => v.type === 'mirror'),
+      pool.find(v => v.type === 'mirror' && !selected.includes(v)),
+      pool.find(v => v.type === 'offpath'),
+      pool.find(v => v.arcana === 'The Seat at the Council'),
+      pool.find(v => v.arcana === 'The Long Road'),
+    ].filter(Boolean);
+
+    for (const v of guarantees) {
+      if (!selected.includes(v)) {
+        selected.push(v);
+        arcanaCount[v.arcana] = (arcanaCount[v.arcana] || 0) + 1;
+        typeCount[v.type] = (typeCount[v.type] || 0) + 1;
+      }
+    }
+    for (const v of pool) {
+      if (selected.length >= this.totalRounds) break;
+      if (selected.includes(v)) continue;
+      const ac = arcanaCount[v.arcana] || 0;
+      if (ac >= 2) continue;
+      if (v.type === 'mirror' && typeCount.mirror >= 3) continue;
+      if (v.type === 'offpath' && typeCount.offpath >= 3) continue;
+      selected.push(v);
+      arcanaCount[v.arcana] = ac + 1;
+      typeCount[v.type] = (typeCount[v.type] || 0) + 1;
+    }
+    for (const v of pool) {
+      if (selected.length >= this.totalRounds) break;
+      if (!selected.includes(v)) selected.push(v);
+    }
+    for (let i = selected.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [selected[i], selected[j]] = [selected[j], selected[i]];
+    }
+    if (selected[0] && selected[0].type === 'mirror') {
+      const swap = selected.findIndex((v, i) => i > 2 && v.type === 'work');
+      if (swap > 0) [selected[0], selected[swap]] = [selected[swap], selected[0]];
+    }
+    this.drawn = selected;
+  }
+
+  findOmen(history) {
+    if (history.length < 3) return null;
+    const current = this.currentVision;
+    if (!current) return null;
+    const overlap = history.filter(h => {
+      const past = VISIONS.find(v => v.id === h.id);
+      if (!past) return false;
+      return past.tags.some(t => current.tags.includes(t));
+    });
+    if (overlap.length > 0) {
+      const ref = overlap[overlap.length - 1];
+      const past = VISIONS.find(v => v.id === ref.id);
+      return { text: `In an earlier vision of ${past.arcana}, you chose: "${ref.pathText}" — let that echo as you read this one.` };
+    }
+    return null;
+  }
+
+  applyVariance(scores) {
+    const m = { ...scores };
+    const roll = Math.random();
+    const keys = Object.keys(m);
+    if (roll < 0.15 && m.renown > 3) {
+      m.renown = Math.round(m.renown * 0.35);
+    } else if (roll < 0.28 && m.renown < -2) {
+      m.resolve = Math.abs(m.resolve) + 2;
+    } else if (roll < 0.40) {
+      const pick = keys[Math.floor(Math.random() * keys.length)];
+      if (Math.abs(m[pick]) > 2) m[pick] = -Math.round(m[pick] * 0.4);
+    } else if (roll < 0.48) {
+      const pick = keys[Math.floor(Math.random() * keys.length)];
+      m[pick] += (Math.random() > 0.5 ? 3 : -3);
+    }
+    return m;
+  }
+
+  nextRound() {
+    if (this.round >= this.totalRounds) { this.state = 'fate'; this.render(); return; }
+    this.currentVision = this.drawn[this.round];
+    this.usedIds.add(this.currentVision.id);
+    this.selectedPath = null;
+    this.state = 'play';
+    this.render();
+  }
+
+  choosePath(index) {
+    if (this.selectedPath !== null) return;
+    this.selectedPath = index;
+    const path = this.currentVision.choices[index];
+    const mod = this.applyVariance(path.scores);
+    this.scores.renown = Math.max(0, Math.min(100, this.scores.renown + mod.renown));
+    this.scores.resolve = Math.max(0, Math.min(100, this.scores.resolve + mod.resolve));
+    this.scores.calling = Math.max(0, Math.min(100, this.scores.calling + mod.calling));
+    this.history.push({ id: this.currentVision.id, pathIndex: index, pathText: path.text, scores: mod });
+    this.round++;
+    this.render();
+  }
+
+  getFateReading() {
+    const sorted = [
+      { name: 'renown', val: this.scores.renown },
+      { name: 'resolve', val: this.scores.resolve },
+      { name: 'calling', val: this.scores.calling }
+    ].sort((a, b) => b.val - a.val);
+    const high = sorted[0].name;
+    const low = sorted[2].name;
+
+    const readings = {
+      renown: {
+        high: "Your renown grows in the telling of your deeds before you have spoken a word of them. The choices across these visions point to a person who understands that reputation is built in the unseen hours and confirmed in the visible ones. What is said of you in rooms you have not entered is already beginning to serve you. Tend it with the same care you have shown in these pages.",
+        low: "The renown you seek has not yet found the path between your worth and the world's knowing of it. This is not a judgment — it is a distance. Distances close with intention. The visions suggest you may need to become more deliberate about being seen in the places that matter, not because you lack substance, but because substance alone does not open doors."
+      },
+      resolve: {
+        high: "The visions show a depth of commitment that does not depend on perfect conditions. You are building something across multiple fronts — the house, the plan, the life, the work — and doing it without the certainty that any one of them will arrive on schedule. That kind of resolve is what separates those who finish the road from those who reach its first difficulty and wait for the difficulty to resolve itself.",
+        low: "The resolve in these visions ran unevenly. That is not a condemnation — it is a pattern worth examining. There are places where you are withholding the full measure of yourself, and the withholding has reasons. Some of those reasons are sound. Some are protective instincts that have become habits. The visions suggest the work of becoming who your path requires is still more ahead of you than behind."
+      },
+      calling: {
+        high: "The thread of calling runs clearly through your visions. You know where you are going, even when the specific steps are obscured. That directional clarity is one of the most valuable things a person can carry — it shapes small decisions without effort and keeps you oriented when the road becomes difficult to read. The seat you seek is not as far as it may appear from where you stand today.",
+        low: "The calling is present — you would not be walking this path if it were not — but the visions suggest it is still somewhat muffled, competing with other voices for your attention. This is the work of the in-between: not forcing the clarity, but removing the things that obscure it. The path and the person are still in the process of finding each other. That finding is closer than it feels."
+      }
+    };
+
+    const mirrorHistory = this.history.filter(h => {
+      const v = VISIONS.find(vi => vi.id === h.id);
+      return v && v.type === 'mirror';
+    });
+    let epilogue = '';
+    if (mirrorHistory.length >= 2) {
+      const honest = mirrorHistory.filter(h => {
+        const v = VISIONS.find(vi => vi.id === h.id);
+        const path = v.choices[h.pathIndex];
+        return path.scores.calling >= 3;
+      }).length;
+      if (honest >= 2) {
+        epilogue = "\n\nThe Mirror did not flinch from you, and you did not flinch from the Mirror. That is a rarer thing than most of these visions encounter. Carry what you found here. Play again when the road looks different and see what has changed.";
+      } else {
+        epilogue = "\n\nThe Mirror held up its glass and you held up yours. The picture will sharpen with time. Cast the deck again when the seasons turn — what felt uncertain today may feel clear then.";
+      }
+    }
+
+    return `${readings[high].high}\n\n${readings[low].low}${epilogue}`;
+  }
+
+  start() {
+    this.scores = { renown: 50, resolve: 50, calling: 50 };
+    this.round = 0; this.history = []; this.selectedPath = null;
+    this.buildDeck(); this.nextRound();
+  }
+
+  getCardClass() {
+    if (!this.currentVision) return '';
+    if (this.currentVision.type === 'mirror') return 'mirror';
+    if (this.currentVision.type === 'offpath') return 'offpath';
+    return '';
+  }
+
+  render() {
+    const app = document.getElementById('app');
+
+    if (this.state === 'start') {
+      app.innerHTML = `
+        <div class="header">
+          <h1>The Deck of Paths</h1>
+          <div class="subtitle">A scrying of the road ahead</div>
+          <div class="divider"></div>
+        </div>
+        <div class="start-screen">
+          <div class="start-sigil">⧖</div>
+          <div class="start-title">Cast the Cards — Read the Path</div>
+          <div class="start-rule"></div>
+          <p>Fourteen visions will be drawn. Each presents a crossroads. Choose your path — not the path that seems correct, but the one that is true.<br><br>Three aspects shall be read: <strong style="color:var(--accent)">Renown</strong>, <strong style="color:var(--gold)">Resolve</strong>, and <strong style="color:#b8a0e8">Calling</strong>.<br><br>The cards do not always reward what seems wise. This is by design. The road is uncertain. So is the reading.<br><br>Some visions concern the work. Some concern the road beyond it. All concern the one who walks.<br><br>At the last card, a fate shall be read.</p>
+          <div class="start-rule"></div>
+          <button class="begin-btn" onclick="deck.start()">Draw the First Card</button>
+        </div>`;
+      return;
+    }
+
+    if (this.state === 'fate') {
+      const reading = this.getFateReading();
+      const paras = reading.split('\n\n');
+      app.innerHTML = `
+        <div class="header">
+          <h1>The Deck of Paths</h1>
+          <div class="subtitle">The Fate Reading</div>
+          <div class="divider"></div>
+        </div>
+        <div class="fate-screen">
+          <div class="fate-title">The Cards Have Spoken</div>
+          <div class="fate-runes">
+            <div class="fate-rune"><div class="f-val" style="color:var(--accent)">${this.scores.renown}</div><div class="f-lbl">Renown</div></div>
+            <div class="fate-rune"><div class="f-val" style="color:var(--gold)">${this.scores.resolve}</div><div class="f-lbl">Resolve</div></div>
+            <div class="fate-rune"><div class="f-val" style="color:#b8a0e8">${this.scores.calling}</div><div class="f-lbl">Calling</div></div>
+          </div>
+          <div class="fate-rule"></div>
+          ${paras.map(p => `<p class="fate-reading">${p}</p>`).join('')}
+          <div class="fate-rule"></div>
+          <button class="cast-again" onclick="deck.start()">Cast Again</button>
+        </div>`;
+      return;
+    }
+
+    const v = this.currentVision;
+    const cardClass = this.getCardClass();
+    const omen = this.findOmen(this.history);
+    const selected = this.selectedPath;
+    const path = selected !== null ? v.choices[selected] : null;
+    const modScores = selected !== null ? this.history[this.history.length - 1].scores : null;
+
+    let pathsHTML = '';
+    if (selected === null) {
+      pathsHTML = `<div class="paths">${v.choices.map((c, i) => `<button class="path-btn" onclick="deck.choosePath(${i})">${c.text}</button>`).join('')}</div>`;
+    } else {
+      const dominant = Object.entries(modScores).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
+      const dVal = dominant[1];
+      const dClass = dVal > 0 ? 'pos' : dVal < 0 ? 'neg' : 'zero';
+      const dSign = dVal > 0 ? '+' : '';
+      const axisNames = { renown: 'Renown', resolve: 'Resolve', calling: 'Calling' };
+      pathsHTML = `
+        <div class="paths">${v.choices.map((c, i) => `<button class="path-btn${i === selected ? ' chosen' : ''}" disabled>${c.text}</button>`).join('')}</div>
+        <div class="reading">
+          <div class="reading-rune">
+            <div class="delta ${dClass}">${dSign}${dVal}</div>
+            <div class="axis-name">${axisNames[dominant[0]]}</div>
+          </div>
+          <div class="reading-text">${path.reading}</div>
+          <button class="next-btn" onclick="deck.nextRound()">${this.round >= this.totalRounds ? '✦ Receive the Fate Reading' : '✦ Draw the Next Card'}</button>
+        </div>`;
+    }
+
+    app.innerHTML = `
+      <div class="header"><h1>The Deck of Paths</h1></div>
+      <div class="progress-wrap">
+        <div class="candle-track"><div class="candle-fill" style="width:${(this.round / this.totalRounds) * 100}%"></div></div>
+        <div class="candle-label">${this.round} / ${this.totalRounds}</div>
+      </div>
+      <div class="rune-bar">
+        <div class="rune-item"><div class="rune-label">Renown</div><div class="rune-val renown">${this.scores.renown}</div></div>
+        <div class="rune-item"><div class="rune-label">Resolve</div><div class="rune-val resolve">${this.scores.resolve}</div></div>
+        <div class="rune-item"><div class="rune-label">Calling</div><div class="rune-val calling">${this.scores.calling}</div></div>
+      </div>
+      <div class="card-container">
+        <div class="card ${cardClass}">
+          <div class="card-corner tl"></div>
+          <div class="card-corner tr"></div>
+          <div class="card-corner bl"></div>
+          <div class="card-corner br"></div>
+          <div class="card-arcana">✦ ${v.arcana}</div>
+          <div class="card-vision">${v.vision}</div>
+          ${omen && selected === null ? `<div class="card-omen"><span class="omen-tag">Omen</span><br>${omen.text}</div>` : ''}
+          <div class="card-question">${v.question}</div>
+          ${pathsHTML}
+        </div>
+      </div>`;
+  }
+}
+
+const deck = new DeckOfPaths();
+</script>
+</body>
+</html>
