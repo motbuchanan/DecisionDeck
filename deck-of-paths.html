@@ -693,6 +693,7 @@ class DeckOfPaths {
   constructor() {
     this.state = 'start';
     this.scores = { renown: 50, resolve: 50, calling: 50 };
+    this.usedIds = new Set();
     this.round = 0;
     this.totalRounds = 14;
     this.history = [];
@@ -704,6 +705,7 @@ class DeckOfPaths {
   }
 
   buildDeck() {
+    if (this.usedIds.size >= VISIONS.length) this.usedIds = new Set();
     let pool = VISIONS.filter(v => !this.usedIds.has(v.id));
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -858,6 +860,7 @@ class DeckOfPaths {
 
   start() {
     this.scores = { renown: 50, resolve: 50, calling: 50 };
+    this.usedIds = new Set();
     this.round = 0; this.history = []; this.selectedPath = null;
     this.buildDeck(); this.nextRound();
   }

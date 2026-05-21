@@ -712,6 +712,7 @@ class DecisionDeck {
   constructor() {
     this.state = 'start';
     this.scores = { influence: 50, execution: 50, alignment: 50 };
+    this.usedIds = new Set();
     this.round = 0;
     this.totalRounds = 14;
     this.history = [];
@@ -723,6 +724,7 @@ class DecisionDeck {
   }
 
   buildDeck() {
+    if (this.usedIds.size >= SCENARIOS.length) this.usedIds = new Set();
     let pool = SCENARIOS.filter(s => !this.usedIds.has(s.id));
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -892,6 +894,7 @@ class DecisionDeck {
 
   start() {
     this.scores = { influence: 50, execution: 50, alignment: 50 };
+    this.usedIds = new Set();
     this.round = 0;
     this.history = [];
     this.selectedChoice = null;

@@ -706,6 +706,7 @@ class DecisionDeck {
   constructor() {
     this.state = 'start';
     this.scores = { trust: 50, momentum: 50, clarity: 50 };
+    this.usedIds = new Set();
     this.round = 0;
     this.totalRounds = 14;
     this.history = [];
@@ -717,6 +718,7 @@ class DecisionDeck {
   }
 
   buildDeck() {
+    if (this.usedIds.size >= SCENARIOS.length) this.usedIds = new Set();
     let pool = SCENARIOS.filter(s => !this.usedIds.has(s.id));
     // Shuffle
     for (let i = pool.length - 1; i > 0; i--) {
@@ -901,6 +903,7 @@ class DecisionDeck {
 
   start() {
     this.scores = { trust: 50, momentum: 50, clarity: 50 };
+    this.usedIds = new Set();
     this.round = 0;
     this.history = [];
     this.selectedChoice = null;
