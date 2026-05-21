@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Waystone</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --flame: #ff8c42;
+    --flame-glow: rgba(255,140,66,0.3);
+    --thread: #7ecfc0;
+    --thread-glow: rgba(126,207,192,0.3);
+    --stone: #a0b4c8;
+    --stone-glow: rgba(160,180,200,0.3);
+    --gold: #f0c040;
+    --cream: #f5edd8;
+    --text: #e8e0d0;
+    --text-dim: #8a8880;
+    --lumen: #fffbe8;
+    --border: rgba(255,255,255,0.08);
+    --r: 18px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%; min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* STARS BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 8%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 55% 30%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 72% 12%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 88% 25%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 28% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 82% 65%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 5% 85%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 45%, rgba(255,255,255,0.3) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .screen {
+    position: fixed; inset: 0; z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    overflow-y: auto; overflow-x: hidden;
+    padding: 0 0 40px 0;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  .screen.active { opacity: 1; pointer-events: all; }
+
+  /* ═══════════════════════════════════════
+     TITLE / WELCOME SCREEN
+  ═══════════════════════════════════════ */
+  #screen-title {
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 40%, rgba(126,207,192,0.08) 0%, transparent 70%);
+  }
+
+  .title-inner {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 60px 32px 48px;
+    max-width: 420px; width: 100%;
+    gap: 0;
+  }
+
+  .lighthouse-art {
+    font-size: 64px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 20px rgba(240,192,64,0.5));
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%,100% { filter: drop-shadow(0 0 20px rgba(240,192,64,0.5)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 35px rgba(240,192,64,0.8)); transform: scale(1.05); }
+  }
+
+  .title-name {
+    font-family: 'Lora', serif;
+    font-size: 44px; font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-shadow: 0 0 40px rgba(240,192,64,0.4);
+    margin-bottom: 8px;
+  }
+
+  .title-sub {
+    font-family: 'Lora', serif;
+    font-size: 15px; font-style: italic;
+    color: var(--text-dim);
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+  }
+
+  .title-desc {
+    font-size: 15px; line-height: 1.7;
+    color: rgba(232,224,208,0.75);
+    margin-bottom: 40px;
+    max-width: 320px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), #d4a020);
+    color: #1a1000;
+    border: none; border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px; font-weight: 800;
+    padding: 16px 48px;
+    cursor: pointer;
+    box-shadow: 0 4px 24px rgba(240,192,64,0.35);
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .btn-primary:active { transform: scale(0.96); }
+
+  .axes-preview {
+    display: flex; gap: 20px;
+    margin-bottom: 32px;
+  }
+  .axis-pip {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .axis-pip .icon { font-size: 24px; }
+  .axis-pip.flame { color: var(--flame); }
+  .axis-pip.thread { color: var(--thread); }
+  .axis-pip.stone { color: var(--stone); }
+
+  /* ═══════════════════════════════════════
+     NAME SCREEN
+  ═══════════════════════════════════════ */
+  #screen-name {
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 50%, rgba(255,140,66,0.06) 0%, transparent 70%);
+  }
+
+  .name-inner {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 60px 32px;
+    max-width: 420px; width: 100%;
+    gap: 24px;
+  }
+
+  .lumen-art {
+    font-size: 56px;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 16px rgba(255,251,232,0.6));
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .name-heading {
+    font-family: 'Lora', serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+
+  .name-story {
+    font-size: 15px; line-height: 1.8;
+    color: rgba(232,224,208,0.8);
+    font-family: 'Lora', serif;
+    font-style: italic;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px 24px;
+  }
+
+  .name-input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 2px solid rgba(255,251,232,0.2);
+    border-radius: 50px;
+    color: var(--lumen);
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px; font-weight: 700;
+    padding: 14px 24px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .name-input:focus { border-color: rgba(255,251,232,0.5); }
+  .name-input::placeholder { color: rgba(255,251,232,0.25); }
+
+  .name-skip {
+    font-size: 13px; color: var(--text-dim);
+    background: none; border: none;
+    cursor: pointer; text-decoration: underline;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* ═══════════════════════════════════════
+     GAME SCREEN
+  ═══════════════════════════════════════ */
+  #screen-game {
+    background: radial-gradient(ellipse at 50% 20%, rgba(126,207,192,0.05) 0%, transparent 60%);
+  }
+
+  .game-header {
+    width: 100%; max-width: 480px;
+    padding: 20px 20px 0;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 12px;
+  }
+
+  .progress-row {
+    display: flex; gap: 6px;
+    width: 100%;
+  }
+  .progress-dot {
+    flex: 1; height: 4px; border-radius: 2px;
+    background: rgba(255,255,255,0.1);
+    transition: background 0.4s ease;
+  }
+  .progress-dot.done { background: var(--gold); }
+  .progress-dot.current { background: rgba(240,192,64,0.5); }
+
+  .axes-row {
+    display: flex; gap: 10px;
+    width: 100%;
+  }
+  .axis-bar {
+    flex: 1; background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 10px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+  }
+  .axis-bar-label {
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .axis-bar-icon { font-size: 16px; }
+  .axis-bar-fill-wrap {
+    width: 100%; height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px; overflow: hidden;
+  }
+  .axis-bar-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  }
+  .axis-bar.flame .axis-bar-label { color: var(--flame); }
+  .axis-bar.flame .axis-bar-fill { background: var(--flame); }
+  .axis-bar.thread .axis-bar-label { color: var(--thread); }
+  .axis-bar.thread .axis-bar-fill { background: var(--thread); }
+  .axis-bar.stone .axis-bar-label { color: var(--stone); }
+  .axis-bar.stone .axis-bar-fill { background: var(--stone); }
+
+  .game-card {
+    width: 100%; max-width: 480px;
+    padding: 20px;
+    display: flex; flex-direction: column;
+    gap: 16px;
+  }
+
+  .scenario-location {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-dim);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .location-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--thread);
+  }
+
+  .scenario-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 24px 22px;
+    font-family: 'Lora', serif;
+    font-size: 15.5px;
+    line-height: 1.85;
+    color: var(--text);
+  }
+  .scenario-box em {
+    color: var(--cream);
+    font-style: italic;
+  }
+  .scenario-box .creature-name {
+    color: var(--gold);
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  .scenario-question {
+    font-family: 'Lora', serif;
+    font-size: 16px; font-weight: 600;
+    font-style: italic;
+    color: var(--cream);
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  .choices {
+    display: flex; flex-direction: column;
+    gap: 10px;
+  }
+
+  .choice-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: var(--r);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 14.5px; font-weight: 600;
+    line-height: 1.5;
+    padding: 16px 20px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .choice-btn:active,
+  .choice-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); }
+
+  /* FEEDBACK STATE */
+  .feedback-box {
+    display: none;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 22px 22px;
+    flex-direction: column;
+    gap: 12px;
+    animation: fadeIn 0.4s ease;
+  }
+  .feedback-box.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .feedback-story {
+    font-family: 'Lora', serif;
+    font-size: 15px; line-height: 1.85;
+    color: var(--text);
+  }
+  .feedback-story em { color: var(--cream); font-style: italic; }
+
+  .feedback-lumen {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: rgba(255,251,232,0.05);
+    border-radius: 12px; padding: 14px 16px;
+    border-left: 3px solid rgba(255,251,232,0.3);
+  }
+  .feedback-lumen-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .feedback-lumen-text {
+    font-family: 'Lora', serif;
+    font-size: 14px; font-style: italic;
+    color: var(--lumen); line-height: 1.7;
+  }
+
+  .feedback-axis-note {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 6px 12px;
+    border-radius: 50px;
+    display: inline-flex; align-items: center;
+    gap: 5px; align-self: flex-start;
+  }
+  .axis-note-flame { background: rgba(255,140,66,0.15); color: var(--flame); }
+  .axis-note-thread { background: rgba(126,207,192,0.15); color: var(--thread); }
+  .axis-note-stone { background: rgba(160,180,200,0.15); color: var(--stone); }
+
+  .btn-continue {
+    background: rgba(240,192,64,0.12);
+    border: 1.5px solid rgba(240,192,64,0.3);
+    border-radius: 50px;
+    color: var(--gold);
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 800;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-self: center;
+    margin-top: 4px;
+  }
+  .btn-continue:active { background: rgba(240,192,64,0.2); }
+
+  /* ═══════════════════════════════════════
+     RESULTS SCREEN
+  ═══════════════════════════════════════ */
+  #screen-results {
+    background: radial-gradient(ellipse at 50% 30%, rgba(240,192,64,0.08) 0%, transparent 60%);
+    justify-content: center;
+  }
+
+  .results-inner {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 48px 28px 60px;
+    max-width: 440px; width: 100%;
+    gap: 0;
+  }
+
+  .results-lumen { font-size: 52px; margin-bottom: 16px;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 16px rgba(255,251,232,0.5));
+  }
+
+  .results-heading {
+    font-family: 'Lora', serif;
+    font-size: 28px; font-weight: 700;
+    color: var(--gold); margin-bottom: 8px;
+  }
+
+  .results-sub {
+    font-size: 14px; color: var(--text-dim);
+    margin-bottom: 32px;
+    font-family: 'Lora', serif; font-style: italic;
+  }
+
+  .results-axes {
+    display: flex; flex-direction: column;
+    gap: 14px; width: 100%;
+    margin-bottom: 32px;
+  }
+
+  .results-axis {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 20px;
+    text-align: left;
+    display: flex; align-items: center; gap: 14px;
+  }
+
+  .results-axis-icon { font-size: 26px; flex-shrink: 0; }
+  .results-axis-body { flex: 1; }
+  .results-axis-name {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .results-axis-bar-wrap {
+    width: 100%; height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px; overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .results-axis-bar {
+    height: 100%; border-radius: 3px;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1) 0.3s;
+  }
+  .results-axis-note {
+    font-size: 12.5px; color: rgba(232,224,208,0.7);
+    font-family: 'Lora', serif; font-style: italic;
+    line-height: 1.5;
+  }
+
+  .results-axis.flame .results-axis-name { color: var(--flame); }
+  .results-axis.flame .results-axis-bar { background: var(--flame); }
+  .results-axis.thread .results-axis-name { color: var(--thread); }
+  .results-axis.thread .results-axis-bar { background: var(--thread); }
+  .results-axis.stone .results-axis-name { color: var(--stone); }
+  .results-axis.stone .results-axis-bar { background: var(--stone); }
+
+  .results-lumen-note {
+    background: rgba(255,251,232,0.05);
+    border: 1px solid rgba(255,251,232,0.12);
+    border-radius: var(--r);
+    padding: 22px 24px;
+    font-family: 'Lora', serif;
+    font-size: 15px; line-height: 1.85;
+    color: var(--lumen);
+    font-style: italic;
+    margin-bottom: 32px;
+    text-align: left;
+  }
+
+  .results-btn-row {
+    display: flex; flex-direction: column;
+    gap: 10px; width: 100%;
+  }
+
+  .btn-play-again {
+    background: linear-gradient(135deg, var(--gold), #d4a020);
+    color: #1a1000;
+    border: none; border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 17px; font-weight: 800;
+    padding: 15px 32px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(240,192,64,0.3);
+    transition: all 0.2s;
+  }
+  .btn-play-again:active { transform: scale(0.97); }
+
+  /* TTS button */
+  .tts-btn {
+    position: fixed; bottom: 20px; right: 20px;
+    z-index: 10;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    border-radius: 50%; width: 44px; height: 44px;
+    font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .tts-btn:active { background: rgba(255,255,255,0.15); }
+  .tts-btn.speaking { background: rgba(126,207,192,0.2); border-color: var(--thread); }
+
+</style>
+</head>
+<body>
+
+<!-- TTS BUTTON -->
+<button class="tts-btn" id="tts-btn" title="Read aloud">🔊</button>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 1: TITLE
+══════════════════════════════════════════ -->
+<div class="screen active" id="screen-title">
+  <div class="title-inner">
+    <div class="lighthouse-art">🗼</div>
+    <div class="title-name">WAYSTONE</div>
+    <div class="title-sub">an island of small adventures</div>
+
+    <div class="axes-preview">
+      <div class="axis-pip flame"><div class="icon">🔥</div>THE FLAME</div>
+      <div class="axis-pip thread"><div class="icon">🧵</div>THE THREAD</div>
+      <div class="axis-pip stone"><div class="icon">🪨</div>THE STONE</div>
+    </div>
+
+    <div class="title-desc">
+      A small island appears when a Traveler needs it.<br>
+      The Waystone lighthouse always knows the way.<br>
+      What will you do when things get hard?
+    </div>
+
+    <button class="btn-primary" onclick="goToName()">Begin the Journey</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 2: NAME THE LUMEN
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-name">
+  <div class="name-inner">
+    <div class="lumen-art">✨</div>
+    <div class="name-heading">A small light is following you.</div>
+    <div class="name-story">
+      It appeared the moment you set foot on the island. It doesn't speak yet — it just floats nearby, warm and quiet, like it's been waiting for you.
+      <br><br>
+      It needs a name. Yours to give.
+    </div>
+    <input class="name-input" id="lumen-name-input" type="text" maxlength="20" placeholder="What do you call it?" autocomplete="off" autocorrect="off">
+    <button class="btn-primary" onclick="confirmName()">That's its name</button>
+    <button class="name-skip" onclick="skipName()">I'll call it Luma for now</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 3: GAME
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-game">
+  <div class="game-header">
+    <div class="progress-row" id="progress-row"></div>
+    <div class="axes-row">
+      <div class="axis-bar flame">
+        <div class="axis-bar-label">The Flame</div>
+        <div class="axis-bar-icon">🔥</div>
+        <div class="axis-bar-fill-wrap"><div class="axis-bar-fill" id="flame-fill" style="width:50%"></div></div>
+      </div>
+      <div class="axis-bar thread">
+        <div class="axis-bar-label">The Thread</div>
+        <div class="axis-bar-icon">🧵</div>
+        <div class="axis-bar-fill-wrap"><div class="axis-bar-fill" id="thread-fill" style="width:50%"></div></div>
+      </div>
+      <div class="axis-bar stone">
+        <div class="axis-bar-label">The Stone</div>
+        <div class="axis-bar-icon">🪨</div>
+        <div class="axis-bar-fill-wrap"><div class="axis-bar-fill" id="stone-fill" style="width:50%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-card">
+    <div class="scenario-location" id="scenario-location">
+      <div class="location-dot"></div>
+      <span id="location-text">The Lighthouse</span>
+    </div>
+
+    <div class="scenario-box" id="scenario-text"></div>
+    <div class="scenario-question" id="scenario-question"></div>
+
+    <div class="choices" id="choices-container"></div>
+
+    <div class="feedback-box" id="feedback-box">
+      <div class="feedback-story" id="feedback-story"></div>
+      <div class="feedback-lumen" id="feedback-lumen">
+        <div class="feedback-lumen-icon">✨</div>
+        <div class="feedback-lumen-text" id="feedback-lumen-text"></div>
+      </div>
+      <div id="feedback-axis-note"></div>
+      <button class="btn-continue" id="btn-continue" onclick="nextScenario()">Continue the journey →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 4: RESULTS
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-results">
+  <div class="results-inner">
+    <div class="results-lumen">✨</div>
+    <div class="results-heading">Journey's End</div>
+    <div class="results-sub" id="results-sub">The Waystone is quiet now.</div>
+
+    <div class="results-axes">
+      <div class="results-axis flame">
+        <div class="results-axis-icon">🔥</div>
+        <div class="results-axis-body">
+          <div class="results-axis-name">The Flame — Courage</div>
+          <div class="results-axis-bar-wrap"><div class="results-axis-bar" id="result-flame-bar" style="width:0%"></div></div>
+          <div class="results-axis-note" id="result-flame-note"></div>
+        </div>
+      </div>
+      <div class="results-axis thread">
+        <div class="results-axis-icon">🧵</div>
+        <div class="results-axis-body">
+          <div class="results-axis-name">The Thread — Kindness</div>
+          <div class="results-axis-bar-wrap"><div class="results-axis-bar" id="result-thread-bar" style="width:0%"></div></div>
+          <div class="results-axis-note" id="result-thread-note"></div>
+        </div>
+      </div>
+      <div class="results-axis stone">
+        <div class="results-axis-icon">🪨</div>
+        <div class="results-axis-body">
+          <div class="results-axis-name">The Stone — Steadiness</div>
+          <div class="results-axis-bar-wrap"><div class="results-axis-bar" id="result-stone-bar" style="width:0%"></div></div>
+          <div class="results-axis-note" id="result-stone-note"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-lumen-note" id="results-lumen-note"></div>
+
+    <div class="results-btn-row">
+      <button class="btn-play-again" onclick="playAgain()">Journey Again 🗺️</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let lumenName = 'Luma';
+let axes = { flame: 50, thread: 50, stone: 50 };
+let playthroughScenarios = [];
+let currentIdx = 0;
+let choiceHistory = []; // for callbacks
+let TOTAL = 6;
+
+// ════════════════════════════════════════════
+// SCENARIO POOL
+// cat: freeze|flip|storm|tangle|wait|mirror|stranger
+// Each choice: { text, story, lumen, axis, delta, axisClass }
+// ════════════════════════════════════════════
+const SCENARIOS = [
+
+  // ─── FREEZE (5) ───────────────────────────
+  {
+    id: 'freeze_1', cat: 'freeze',
+    location: "Brin's Workshop",
+    text: `<span class="creature-name">Brin</span> is already there, surrounded by paints and a blank piece of paper. She looks up and her ears flatten shyly.\n\n<em>"I was going to make something,"</em> she says quietly. <em>"But I don't know how to start. My brain knows what it wants but my hand won't move."</em>\n\nShe pushes the paper toward you.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Pick up the brush and make one small mark — just a dot, just to begin.",
+        story: `The dot sits there. It isn't much. But Brin stares at it and something shifts in her face. <em>"Oh,"</em> she says quietly. <em>"That's the nose."</em> Her hand starts moving.`,
+        lumen: `Starting is the hardest part. You started.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+      { text: "Tell Brin to describe what she sees in her head while you draw the first line for her.",
+        story: `Brin closes her eyes and describes a creature with seven legs and a hat made of clouds. You draw a wobbly first line. She laughs — it looks nothing like what she imagined. She picks up her own brush to fix it.`,
+        lumen: `You listened before you acted.`,
+        axis: 'thread', delta: 8, axisClass: 'axis-note-thread' },
+      { text: "Sit next to her and say nothing. Just stay.",
+        story: `You sit. A whole minute passes. Brin fidgets. Then she picks up the brush herself — slowly — and makes a mark so small you almost miss it. She looks at you. <em>"I just needed someone to not leave,"</em> she says.`,
+        lumen: `Sometimes the bravest thing is staying.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'freeze_2', cat: 'freeze',
+    location: "Wellow's Kitchen",
+    text: `<span class="creature-name">Wellow</span> is making bread today. The kitchen smells like warm dough and something sweet. Wellow sets a ball of dough in front of you.\n\n<em>"Your turn to knead,"</em> Wellow says. <em>"Just push and fold. Push and fold."</em>\n\nYou stare at the dough. You know how. You've watched. But now it's in front of you and somehow your hands feel stuck.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Put your hands in. Don't think. Just push.",
+        story: `The dough is warmer than you expected. Your hands figure out what to do before your brain does. Push and fold. Push and fold. After a minute you're not thinking about starting anymore — you're just doing it.`,
+        lumen: `Your hands knew even when your brain wasn't sure.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+      { text: "Ask Wellow to put their hands on top of yours and go first.",
+        story: `Wellow hums and places huge, warm hands over yours. You push together. <em>"There,"</em> Wellow says. <em>"You already know."</em> Then Wellow steps back and you keep going on your own.`,
+        lumen: `Asking for help to get started is not the same as not being able to do it.`,
+        axis: 'flame', delta: 7, axisClass: 'axis-note-flame' },
+      { text: "Tell Wellow your hands feel frozen and you don't know why.",
+        story: `Wellow nods slowly like this is a very normal thing. <em>"The beginning has its own kind of hard,"</em> Wellow says. <em>"It doesn't mean you can't."</em> Then Wellow waits. And waits. And eventually your hands move.`,
+        lumen: `Telling the truth about being stuck is its own kind of courage.`,
+        axis: 'thread', delta: 9, axisClass: 'axis-note-thread' },
+    ]
+  },
+  {
+    id: 'freeze_3', cat: 'freeze',
+    location: "The Music Circle",
+    text: `<span class="creature-name">Coss</span> hands you a drum.\n\n<em>"Just play something,"</em> Coss says, already beating out a rhythm on his own. <em>"Anything. There's no wrong."</em>\n\nYou hold the drum. Everyone is waiting. Coss is waiting. The drum feels very heavy and very loud even before you hit it.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Hit it once. Just once. See what happens.",
+        story: `One beat. It echoes. Coss grins. <em>"There!"</em> he shouts, and plays louder. Something in your chest loosens. You hit it again.`,
+        lumen: `One beat. That's how every song starts.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+      { text: "Tell Coss you need a second.",
+        story: `<em>"Take two,"</em> Coss says, totally unbothered, and keeps playing to fill the silence. You breathe. You find the rhythm with your foot first, tapping along. Then the drum follows.`,
+        lumen: `Knowing what you need and saying it out loud — that takes a kind of courage too.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+      { text: "Set the drum down and just listen for now.",
+        story: `You put the drum down. Coss doesn't stop or say anything — just plays. <span class="creature-name">Pip</span> starts whistling along. After a while the music fills you up enough that your hand reaches for the drum on its own.`,
+        lumen: `Listening until you're ready is not giving up. It's preparing.`,
+        axis: 'thread', delta: 7, axisClass: 'axis-note-thread' },
+    ]
+  },
+  {
+    id: 'freeze_4', cat: 'freeze',
+    location: "The Market Bridge",
+    text: `There's a drawing competition at the market. Anyone can enter — you just put your drawing on the bridge railing and people vote with colored stones.\n\nYou have a drawing. It's a good one. You made it this morning.\n\nBut standing here with all the other drawings already on the railing, your drawing feels too small, too wrong, not good enough to show.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Put it on the railing anyway. Don't look at the other drawings.",
+        story: `You hang it up fast, before you can change your mind. Then you walk away. An hour later you come back to find three colored stones next to your drawing. You don't know who left them.`,
+        lumen: `Showing the thing takes more courage than making it. You showed it.`,
+        axis: 'flame', delta: 10, axisClass: 'axis-note-flame' },
+      { text: "Ask Brin to come stand with you while you hang it.",
+        story: `<span class="creature-name">Brin</span> holds your hand the whole time — not saying anything, just there. You hang the drawing. It looks right on the railing. You never would have known that alone.`,
+        lumen: `Some things are easier with a hand to hold. You knew that about yourself.`,
+        axis: 'thread', delta: 8, axisClass: 'axis-note-thread' },
+      { text: "Keep the drawing in your pocket. Maybe next time.",
+        story: `You keep it. On the way home you look at it again in the better light and notice something: it's actually really good. <em>Next time,</em> you think. And you mean it.`,
+        lumen: `Keeping it today doesn't mean never. Next time is real.`,
+        axis: 'stone', delta: 6, axisClass: 'axis-note-stone' },
+    ]
+  },
+  {
+    id: 'freeze_5', cat: 'freeze',
+    location: "Wellow's Kitchen",
+    text: `<span class="creature-name">Wellow</span> left a note on the counter:\n\n<em>"The rolls need decorating before they go in. You know how. You've done this before. I trust you."</em>\n\nThe rolls are there. The icing is there. But Wellow is gone and it's just you and the silence and all that blank dough waiting.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Start with the easiest one — just one swirl. See how it goes.",
+        story: `One swirl. It comes out a little wobbly. But it's on there. And somehow the second one is easier, and the third easier than that. By the end the whole tray is done and you didn't even notice when it stopped being hard.`,
+        lumen: `The first one is always the hardest. You did the first one.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Put on your favorite imaginary music in your head while you work.",
+        story: `You start humming something. Your hands follow the rhythm. The rolls get faces and spirals and one that looks like it might be a tiny sun. Wellow comes back and goes very quiet, then says: <em>"Oh. You made them yours."</em>`,
+        lumen: `You found a way to make starting feel like playing.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+      { text: "Wait for Wellow to come back and start together.",
+        story: `You wait. You're not sure why. When Wellow returns they don't seem surprised. They pick up the icing bag and say <em>"Together then,"</em> and that's all it takes.`,
+        lumen: `Knowing when you need company is knowing yourself.`,
+        axis: 'thread', delta: 7, axisClass: 'axis-note-thread' },
+    ]
+  },
+
+  // ─── FLIP (5) ─────────────────────────────
+  {
+    id: 'flip_1', cat: 'flip',
+    location: "Behind the Lighthouse",
+    text: `<span class="creature-name">Coss</span> has been talking about the Tide Festival for three days. Drums. Dancing. A hundred creatures making noise at once. He's described every detail including what he'll eat and in what order.\n\nThe morning of the festival, you find Coss behind the lighthouse. Not drumming. Just sitting.\n\n<em>"I don't want to go,"</em> he says. He won't look at you. <em>"I know I said I did. But now it's real and it's too much."</em>`,
+    question: "What do you do?",
+    choices: [
+      { text: `Say "You don't have to explain it."`,
+        story: `Coss is quiet for a long time. Then a breath so big his whole body deflates. <em>"Everyone thinks I'm weird for not wanting to go."</em>\n\n<em>"I don't,"</em> you say.\n\nThe silence after that feels different. Softer.`,
+        lumen: `Being present without fixing is its own kind of courage.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+      { text: `Say "What if we just walk to the edge and look? We don't have to go in."`,
+        story: `You walk to the edge together. You can hear the drums from there. Coss stands very still, listening. After a while he takes one step forward. Then another. He doesn't go all the way in. But he goes further than he thought he would.`,
+        lumen: `One step at a time is still moving.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Suggest making your own festival right here — just the two of you.",
+        story: `Coss looks at you for a long moment. Then he picks up his drum. You find two sticks and bang them on a rock. It sounds terrible. Coss starts laughing. You play your own festival until the real one ends.`,
+        lumen: `You met him where he was. That's what a real friend does.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+    ]
+  },
+  {
+    id: 'flip_2', cat: 'flip',
+    location: "The Beach",
+    text: `You've been looking forward to the night swim for a whole week. You packed your things. You told everyone. You ran all the way to the beach.\n\nAnd now you're standing at the edge of the water and it's darker than you thought and colder than you thought and your feet will not move.\n\nThe water is right there. Your toes are almost in.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Take one step in. Just your feet. See how it feels.",
+        story: `Cold. The water is cold. But your feet know what to do with cold — they feel it and then they adjust. You take another step. Then another. The dark water glitters around your knees and it is nothing like what you feared.`,
+        lumen: `The real thing is almost never exactly what you were afraid of.`,
+        axis: 'flame', delta: 10, axisClass: 'axis-note-flame' },
+      { text: "Sit at the edge and put just your toes in first.",
+        story: `Just toes. Cold. Real. The rest of you watches and waits. After a while your ankles go in too. You didn't plan that — they just did. Your body knew before your brain decided.`,
+        lumen: `Going slowly is not the same as not going.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+      { text: "Tell Pip how you're feeling. Say it out loud.",
+        story: `<em>"I really wanted to and now I really don't and I don't know what that means,"</em> you say.\n\nPip tilts their head. <em>"It means you're brave for coming this far,"</em> Pip says. <em>"And it means the water will still be here tomorrow."</em>`,
+        lumen: `Saying the complicated feeling out loud makes it smaller.`,
+        axis: 'thread', delta: 9, axisClass: 'axis-note-thread' },
+    ]
+  },
+  {
+    id: 'flip_3', cat: 'flip',
+    location: "The Market",
+    text: `A new group of travelers arrived on the island today. You watched them from a distance — they looked fun, the kind of travelers who laugh loudly and share their food.\n\nYou spent all morning deciding to talk to them.\n\nNow they're right there at the market stall. And your feet have turned to rocks and your mouth has forgotten all its words.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Walk up and say one thing. Any one thing. Just one.",
+        story: `<em>"That looks good,"</em> you say, pointing at whatever they're looking at. One of them turns. <em>"Right? We've been here for ten minutes trying to decide."</em>\n\nAnd somehow after that first word, the rest come easier.`,
+        lumen: `The first word is the hardest. You said it.`,
+        axis: 'flame', delta: 10, axisClass: 'axis-note-flame' },
+      { text: "Ask Pip to walk over with you.",
+        story: `<span class="creature-name">Pip</span> immediately starts whistling a little song as you walk over together. One of the travelers looks up and grins. <em>"Is that a Pip? I've always wanted to meet a Pip."</em>\n\nJust like that, the conversation is happening and you're in it.`,
+        lumen: `Asking for company is not weakness. It is how brave things get done.`,
+        axis: 'thread', delta: 8, axisClass: 'axis-note-thread' },
+      { text: "Watch from nearby. Maybe there'll be another chance later.",
+        story: `You watch. They're even funnier up close. Later, near the end of the market day, one of them wanders over to where you're sitting.\n\n<em>"Hey, I kept seeing you — do you know where to find the good honey on this island?"</em>\n\nYou do.`,
+        lumen: `Sometimes the conversation finds you.`,
+        axis: 'stone', delta: 7, axisClass: 'axis-note-stone' },
+    ]
+  },
+  {
+    id: 'flip_4', cat: 'flip',
+    location: "Wellow's Kitchen",
+    text: `You've been dreaming about making the layered honey cake since <span class="creature-name">Wellow</span> showed you the recipe three days ago. Today is the day. The ingredients are out. The kitchen smells ready.\n\nBut the recipe has seven steps and suddenly seven feels like a hundred and the cake feels impossible and you're not sure you should have started at all.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Cover all the steps except Step 1. Only look at one at a time.",
+        story: `Step 1: measure the honey. That's it. Just that. You measure the honey. Then Step 2. The cake never feels like seven steps again — it just keeps being one step at a time until the kitchen smells incredible.`,
+        lumen: `You made it smaller. That's a skill.`,
+        axis: 'stone', delta: 10, axisClass: 'axis-note-stone' },
+      { text: "Ask Wellow to stay in the kitchen while you work, even if they don't help.",
+        story: `Wellow brings their tea and sits in the corner humming. They don't touch anything. But somehow having Wellow there makes the seven steps feel more like yours to do. The cake comes out perfectly.`,
+        lumen: `Knowing you do better with company nearby is knowing yourself well.`,
+        axis: 'thread', delta: 8, axisClass: 'axis-note-thread' },
+      { text: "Start with the part you're most excited about, even if it's not Step 1.",
+        story: `You start with the decoration — swirls of honey on top — even though it's supposed to be last. Wellow appears in the doorway and raises an eyebrow. <em>"Interesting approach,"</em> Wellow says. You finish the rest backward and somehow it works.`,
+        lumen: `There is more than one right order. You found yours.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'flip_5', cat: 'flip',
+    location: "The Forest Path",
+    text: `You planned the whole treasure hunt. You drew the map. You hid the treasure yourself yesterday. You were SO excited.\n\nThis morning you woke up and the excitement is gone. Replaced by something heavy that you can't name. You don't want to do the treasure hunt anymore even though nothing went wrong.\n\n<span class="creature-name">Brin</span> is waiting at the trailhead with her ears up and her tail wagging.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Go anyway. See if the feeling changes once you start.",
+        story: `You go. For the first five minutes you feel nothing. Then you find the first clue and Brin makes a tiny sound of delight and something in your chest cracks open. By the third clue you're running.`,
+        lumen: `Sometimes the feeling catches up after you start. You gave it the chance.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+      { text: "Tell Brin honestly: you feel strange today and you don't know why.",
+        story: `Brin nods slowly. <em>"That happens to me too,"</em> she says. <em>"Sometimes everything feels far away."</em>\n\n<em>"Yeah,"</em> you say. <em>"Exactly that."</em>\n\nYou do the treasure hunt anyway, slowly, and it helps more than you expected.`,
+        lumen: `Naming the feeling — even when you can't explain it — is not nothing.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Ask Brin if you can do something quiet together instead.",
+        story: `<em>"Of course,"</em> <span class="creature-name">Brin</span> says immediately, no questions asked. You sit on a log and draw things you see in the forest. It turns out to be one of the best afternoons you've had on the island.`,
+        lumen: `Knowing what you need and choosing it — that is its own kind of wisdom.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+    ]
+  },
+
+  // ─── STORM (5) ────────────────────────────
+  {
+    id: 'storm_1', cat: 'storm',
+    location: "The Beach",
+    text: `You spent all morning building something. A tower of driftwood and shells and one perfect blue stone from the low tide. It took forever. It was almost done.\n\n<span class="creature-name">Coss</span> ran past chasing a seabird and the whole thing fell.\n\nHe didn't even notice.\n\nYou feel it — starting in your chest, moving up. Hot. Fast. Too big.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Sit down where you are and don't move until the hot feeling gets smaller.",
+        story: `You sit. The feeling pushes against the inside of your chest like it wants out. You let it push. You don't do anything with it yet. After a while — not right away, but after a while — it gets a little smaller.`,
+        lumen: `You held the storm inside long enough for it to pass.`,
+        axis: 'stone', delta: 10, axisClass: 'axis-note-stone' },
+      { text: "Find the Lumen and tell it exactly how angry you are.",
+        story: `The Lumen floats close. You tell it everything — how long you worked, how perfect it almost was, how unfair it is. The Lumen doesn't say anything. Its light pulses slowly, like breathing. You start breathing with it without meaning to.`,
+        lumen: `Saying the thing out loud made it smaller.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+      { text: "Call out to Coss and tell him what happened.",
+        story: `<em>"Coss!"</em> He stops. Turns. Sees your face and then sees the pile of driftwood. His ears go flat.\n\n<em>"Oh no,"</em> he says quietly. <em>"I didn't see it. I'm so sorry."</em>\n\nHe helps you find the blue stone in the rubble. You build something smaller together.`,
+        lumen: `Telling the truth was harder than staying quiet. You did it anyway.`,
+        axis: 'thread', delta: 9, axisClass: 'axis-note-thread' },
+    ]
+  },
+  {
+    id: 'storm_2', cat: 'storm',
+    location: "The Music Circle",
+    text: `You were playing the drum perfectly. Your rhythm was exactly right. You could feel it.\n\nThen <span class="creature-name">Coss</span> changed the song without warning. A completely different beat. Everyone switched except you and now you're the only one playing the wrong thing and the sound is terrible and everyone heard it.\n\nThe embarrassment arrives like a wave.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Stop playing. Take a breath. Find the new rhythm before you start again.",
+        story: `You stop. Coss glances over but doesn't say anything. You listen. You find the beat with your foot first, then your hand, then the drum. When you come back in it's right. Nobody says anything about the gap.`,
+        lumen: `Stopping on purpose takes more courage than pushing through.`,
+        axis: 'stone', delta: 10, axisClass: 'axis-note-stone' },
+      { text: "Keep going even if it sounds wrong until you find your way back.",
+        story: `It takes four more beats of wrong before you lock in. Those four beats feel enormous. But then you're in it and you stay in it and by the end you've forgotten to be embarrassed.`,
+        lumen: `You stayed in it. Sometimes that's the whole job.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+      { text: "Laugh at yourself a little. It was funny too.",
+        story: `You make a face and let out a small laugh. <span class="creature-name">Pip</span> catches it and starts giggling. Coss grins. The tension breaks. Then everyone plays the wrong thing on purpose for one beat — together — just to be even.`,
+        lumen: `Finding the funny in the hard moment is a real skill. Not everyone has it.`,
+        axis: 'thread', delta: 9, axisClass: 'axis-note-thread' },
+    ]
+  },
+  {
+    id: 'storm_3', cat: 'storm',
+    location: "The Market",
+    text: `It was supposed to be your turn to pick the dessert from the market stall.\n\nBut by the time you got there the honey rolls were gone. All of them. Someone else got the last ones and they didn't even save you one.\n\nIt is so unfair. The unfairness fills your whole body.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Walk away from the stall before the feeling comes out.",
+        story: `You walk. Fast. To the edge of the market, past the bridge, almost to the beach. The walking helps. By the time you come back the worst of it has moved through you. The stall has new rolls — different ones — and they turn out to be better.`,
+        lumen: `You knew you needed to move before you could think. You moved.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Tell Wellow what happened and that it feels really unfair.",
+        story: `<em>"It is unfair,"</em> <span class="creature-name">Wellow</span> says simply. Not trying to fix it. Just agreeing.\n\nSomething about being believed makes the feeling shrink. <em>"Come,"</em> Wellow says. <em>"I know where there are better rolls anyway."</em>`,
+        lumen: `Being believed matters. You found someone who believed you.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Say out loud 'that was really unfair' — just to yourself, quietly.",
+        story: `You say it quietly, just to the air. It sounds true. It doesn't fix it. But saying it makes it feel more real and more bearable at the same time. You stand there for a minute and then you go find something else.`,
+        lumen: `Naming a feeling is one of the first steps to not being ruled by it.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'storm_4', cat: 'storm',
+    location: "Brin's Workshop",
+    text: `You were almost finished. The best drawing you've ever made. You were going to show everyone.\n\nThen you made one wrong line. Just one. Right through the middle of the best part.\n\nYou stare at it. The wrong line stares back.\n\nThe urge to crumple the whole thing up is very strong.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Put the drawing face down and walk away for a little while.",
+        story: `You flip it over. You can't look at it yet. You get a snack. You look out the window. When you come back fifteen minutes later you pick it up again. The wrong line is still there. But somehow the rest of the drawing looks better than you remembered.`,
+        lumen: `Distance changes what you see. You gave yourself the distance.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Show Brin and tell her exactly what went wrong.",
+        story: `<span class="creature-name">Brin</span> studies the drawing very seriously. Then she points at the wrong line. <em>"What if it's a crack in the creature's shell? Like it's hatching?"</em>\n\nYou stare. Oh.\n\nOH.`,
+        lumen: `Another pair of eyes can see what you can't. You asked for them.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Make the wrong line part of the drawing on purpose. Turn it into something.",
+        story: `A scar. A river. A stripe on a wing. You choose the wing. It takes ten minutes and a lot of staring. But when you're done the drawing is different than what you planned — and somehow better. More alive.`,
+        lumen: `The mistake became the best part. You made that happen.`,
+        axis: 'flame', delta: 10, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'storm_5', cat: 'storm',
+    location: "The Forest Path",
+    text: `<span class="creature-name">Pip</span> said something without thinking.\n\nNot mean on purpose. You know that. But it landed wrong and it stung and the sting is growing into something bigger.\n\nPip is still talking, not realizing. The words are building up inside you.`,
+    question: "What do you do?",
+    choices: [
+      { text: `Say "Pip, that hurt a little." Just that.`,
+        story: `Pip stops mid-sentence. Those big eyes go wide. <em>"I didn't — I'm sorry. I didn't mean it that way."</em>\n\nYou believe them. The thing that was growing inside you gets smaller immediately.`,
+        lumen: `Saying it quietly and truly — before it becomes something bigger — is one of the hardest things there is.`,
+        axis: 'flame', delta: 10, axisClass: 'axis-note-flame' },
+      { text: "Wait until the feeling peaks and then take three slow breaths.",
+        story: `You breathe. Pip keeps talking. The feeling peaks like a wave and then — you let it pass through. By the time Pip finishes you've decided it wasn't worth the argument. You feel proud of yourself in a quiet way.`,
+        lumen: `Letting a wave pass through is a skill that takes practice. You practiced it.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Change the subject to something completely different.",
+        story: `<em>"Hey, did you see the thing Coss built by the bridge?"</em> you say. Pip blinks. <em>"No — what?"</em>\n\nYou saved both of you from something. You'll bring up the hurt thing later, when it's smaller. Maybe. Or maybe it'll just be gone by then.`,
+        lumen: `Sometimes protecting the moment matters more than being right.`,
+        axis: 'thread', delta: 8, axisClass: 'axis-note-thread' },
+    ]
+  },
+
+  // ─── TANGLE (5) ───────────────────────────
+  {
+    id: 'tangle_1', cat: 'tangle',
+    location: "The Bridge",
+    text: `You said something to <span class="creature-name">Pip</span> that you didn't mean.\n\nYou were frustrated — not at Pip, at something else entirely. But Pip was there and the words came out sharp and wrong and now Pip is sitting on the far side of the bridge not whistling.\n\nPip always whistles. The silence is loud.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Go sit next to Pip without saying anything yet.",
+        story: `You sit. Pip doesn't whistle but doesn't move away either. After a while Pip's tail starts tapping a tiny rhythm. Then one tiny whistle. Just one note. Then another.\n\nThe thread between you begins to mend without any words at all.`,
+        lumen: `You showed up. That was the first part.`,
+        axis: 'thread', delta: 9, axisClass: 'axis-note-thread' },
+      { text: `Say "I said something wrong. I didn't mean it at you."`,
+        story: `Pip looks at you for a long time. <em>"I know,"</em> Pip says finally. <em>"I could tell it wasn't really about me. I just didn't know what to do with it."</em>\n\n<em>"Me either,"</em> you say.\n\nThe thread between you glows.`,
+        lumen: `Telling the truth about what happened is how tangles come undone.`,
+        axis: 'thread', delta: 11, axisClass: 'axis-note-thread' },
+      { text: "Ask Wellow what to do first.",
+        story: `<span class="creature-name">Wellow</span> hums before speaking. <em>"Pip doesn't need the right words,"</em> Wellow says. <em>"Pip needs to know you came back."</em>\n\nYou go back. You don't say anything perfect. But you go back.`,
+        lumen: `Asking for help before you act is wisdom, not weakness.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+    ]
+  },
+  {
+    id: 'tangle_2', cat: 'tangle',
+    location: "The Music Circle",
+    text: `You and <span class="creature-name">Coss</span> wanted the same drum.\n\nThere's only one good one. You both reached for it. It was fine for a minute and then it wasn't and things got loud and some words got said and now Coss is on one side of the circle and you're on the other and the drum is in the middle and nobody is playing.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Suggest taking turns — you go first, then Coss.",
+        story: `<em>"You go first,"</em> you say. Coss blinks like he expected something different. Then he nods. He plays for a while. When he hands it over his ears are back down. You play. The music comes back.`,
+        lumen: `Offering to go second when you wanted to go first — that's generosity. It's also the thread holding.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Pick up a different instrument and start a new rhythm.",
+        story: `You find two sticks. They're not the good drum. But you start playing anyway and the rhythm is good enough that <span class="creature-name">Pip</span> joins in, and then Coss picks up the drum and comes over because the music pulled him in before either of you remembered to stay mad.`,
+        lumen: `Sometimes starting the thing is better than solving the argument.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Tell Coss honestly that you both wanted it and that was hard.",
+        story: `<em>"We both really wanted it,"</em> you say. <em>"That's just hard."</em>\n\nCoss looks at you. <em>"Yeah,"</em> he says. <em>"It is."</em>\n\nSomething about saying the obvious true thing takes the heat out of the room.`,
+        lumen: `Naming what's actually happening often matters more than solving it.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'tangle_3', cat: 'tangle',
+    location: "Wellow's Kitchen",
+    text: `<span class="creature-name">Wellow</span> asked you to stir the pot and you got distracted and it burned a little on the bottom.\n\nWellow noticed. Wellow didn't yell. But you could tell Wellow was disappointed and now there's a heavy feeling in the kitchen that you put there.\n\nWellow is cleaning up without saying anything.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Go over and help clean up without saying anything first.",
+        story: `You pick up a cloth and start wiping without being asked. <span class="creature-name">Wellow</span> glances over. After a minute Wellow makes a small warm sound. <em>"These things happen,"</em> Wellow says. <em>"You know that."</em>`,
+        lumen: `Sometimes an action says what words can't get right.`,
+        axis: 'thread', delta: 9, axisClass: 'axis-note-thread' },
+      { text: `Say "I'm sorry. I got distracted and I should have been more careful."`,
+        story: `Wellow stops. Turns to look at you. <em>"I know,"</em> Wellow says. <em>"And now you know too. That's enough."</em>\n\nThe heavy thing in the kitchen lifts. Almost immediately.`,
+        lumen: `A real apology — no excuses, no 'but' — clears the air. Yours did.`,
+        axis: 'stone', delta: 10, axisClass: 'axis-note-stone' },
+      { text: "Ask Wellow if there's something you can do to fix it.",
+        story: `<em>"Can we start a new pot?"</em> you ask. <em>"I'll stir this one the whole time."</em>\n\nWellow pauses. Then: <em>"Yes. We can do that."</em>\n\nYou stir the whole time. Not once do you look away.`,
+        lumen: `Asking to repair something is braver than hoping no one noticed.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'tangle_4', cat: 'tangle',
+    location: "Brin's Workshop",
+    text: `<span class="creature-name">Brin</span> spent all morning on something and you said, without thinking, that it looked like an accident.\n\nYou didn't mean it cruelly. You were being honest in the blunt way that sometimes comes out wrong. But Brin's ears went flat and she turned away and now she's cleaning her brushes with very careful small strokes.\n\nYou feel terrible.`,
+    question: "What do you do?",
+    choices: [
+      { text: `Say "I said that wrong. I didn't mean it the way it came out."`,
+        story: `Brin's brush pauses. She doesn't turn around yet. But you can see something change in the set of her shoulders.\n\n<em>"Okay,"</em> she says quietly. Then, after a moment: <em>"What did you mean?"</em>\n\nAnd you actually answer her. And the thing you say is much better than what you said before.`,
+        lumen: `Correcting what came out wrong is different from pretending it didn't happen.`,
+        axis: 'thread', delta: 11, axisClass: 'axis-note-thread' },
+      { text: "Ask Brin to show you what she was going for.",
+        story: `<em>"Can you tell me what it was supposed to be?"</em> you ask.\n\nBrin turns slowly. She looks at you for a moment to check if you mean it. Then she explains. You listen. By the end you understand what you missed and you tell her so.`,
+        lumen: `Asking to understand is a way of apologizing without using the word.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+      { text: "Sit quietly nearby and wait to see if Brin wants to talk.",
+        story: `You stay. Brin keeps cleaning her brushes. The silence is uncomfortable but you don't leave. Eventually Brin says: <em>"I know it's not perfect."</em>\n\n<em>"I think it is,"</em> you say. And now you mean it.`,
+        lumen: `Staying when you feel bad — without explaining yourself — is its own kind of sorry.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+    ]
+  },
+  {
+    id: 'tangle_5', cat: 'tangle',
+    location: "The Forest Path",
+    text: `You and <span class="creature-name">Brin</span> were supposed to do the whole forest trail together. But partway through you got excited and ran ahead and when you reached the end you turned around and Brin wasn't there.\n\nYou wait. Eventually Brin appears, walking slowly, ears flat.\n\n<em>"You left me,"</em> Brin says. That's all.`,
+    question: "What do you do?",
+    choices: [
+      { text: `Say "I got excited and forgot to look back. I'm sorry."`,
+        story: `Brin looks at you. A long look. <em>"I know you didn't mean to,"</em> Brin says. <em>"But I was alone for a long time."</em>\n\n<em>"I know,"</em> you say. <em>"I'm going to try to remember."</em>\n\nYou walk back together.`,
+        lumen: `You held the apology and the truth in the same sentence. That's hard to do.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Suggest doing the whole trail again — together, your pace matched to Brin's.",
+        story: `Brin's ears come up a little. <em>"The whole thing again?"</em>\n\n<em>"The whole thing,"</em> you say.\n\nThis time you run ahead twice, catch yourself, slow down, and turn back. Both times. The trail takes twice as long. It's the best walk you've had on the island.`,
+        lumen: `Making it right is sometimes more than just saying sorry.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+      { text: "Ask Brin what it felt like when she was walking alone.",
+        story: `Brin thinks about this. <em>"Small,"</em> she says finally. <em>"I felt small."</em>\n\nYou don't say anything right away. You sit with that word. Then: <em>"I don't want you to feel small. I'll do better."</em>`,
+        lumen: `Asking someone what it felt like — and really listening — is the deepest kind of sorry.`,
+        axis: 'stone', delta: 10, axisClass: 'axis-note-stone' },
+    ]
+  },
+
+  // ─── WAIT (5) ─────────────────────────────
+  {
+    id: 'wait_1', cat: 'wait',
+    location: "Brin's Workshop",
+    text: `You are in the middle of the best drawing you have ever made.\n\nThe creature has seventeen legs and a tail like a ribbon and you just figured out how to do the eyes and it's almost — almost — exactly right.\n\n<span class="creature-name">Wellow</span> appears in the doorway. <em>"It's time,"</em> Wellow says gently. <em>"We talked about this."</em>`,
+    question: "What do you do?",
+    choices: [
+      { text: "Put the brush down and go. You can come back.",
+        story: `You put the brush down. It takes everything. You go.\n\nWhen you come back the drawing is still there, exactly as you left it. The eyes are still waiting for you.`,
+        lumen: `You stopped. The drawing survived. So did you.`,
+        axis: 'stone', delta: 10, axisClass: 'axis-note-stone' },
+      { text: "Ask Wellow for three more minutes — just enough to finish the eyes.",
+        story: `<em>"Three minutes,"</em> <span class="creature-name">Wellow</span> says with a small nod.\n\nYou finish the eyes. They're right. You put the brush down with thirty seconds to spare.`,
+        lumen: `Asking for what you need — clearly, calmly — is its own kind of courage.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+      { text: "Write three words on the corner of the paper so you remember where you were.",
+        story: `You write three tiny words in the corner: <em>ribbon tail — eyes.</em> Then you put the brush down and go.\n\nWhen you return, the words are waiting. You pick up exactly where you left off.`,
+        lumen: `You built a bridge between now and later. That's a real skill.`,
+        axis: 'thread', delta: 8, axisClass: 'axis-note-thread' },
+    ]
+  },
+  {
+    id: 'wait_2', cat: 'wait',
+    location: "The Music Circle",
+    text: `The song isn't finished. You can feel where it's going. You can almost hear the next part that hasn't happened yet.\n\n<span class="creature-name">Pip</span> has already put their instrument down. <em>"We should go,"</em> Pip says. <em>"It's getting late."</em>\n\nThe unfinished song plays on inside your head.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Hum the rest of it quietly as you walk so you don't lose it.",
+        story: `You hum the whole way home. <span class="creature-name">Pip</span> listens without saying anything. At the door you hum it one more time and then it's set — safe, like something you put on a shelf. You'll find it tomorrow.`,
+        lumen: `You found a way to carry it with you without staying.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Ask Pip for five more minutes.",
+        story: `<em>"Five minutes,"</em> <span class="creature-name">Pip</span> says, and sits back down, patient as anything. You play the ending you could hear in your head. It comes out better than you expected. Then you put the instrument down yourself.`,
+        lumen: `Asking for what you need — and then honoring the answer — is how trust is built.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+      { text: "Leave the song unfinished. Trust that you'll remember.",
+        story: `You set it down. You walk away. The unfinished thing sits in you like a held breath.\n\nThe next morning you wake up and the next part of the song is right there, fully formed, like it finished itself overnight. You run to play it.`,
+        lumen: `Some things keep working even when you stop. You trusted that.`,
+        axis: 'thread', delta: 8, axisClass: 'axis-note-thread' },
+    ]
+  },
+  {
+    id: 'wait_3', cat: 'wait',
+    location: "Wellow's Kitchen",
+    text: `The bread needs to rest now. <span class="creature-name">Wellow</span> explained this: the bread has to sit for a whole hour before it can go in. You can't rush it. You can't poke it. You just have to wait.\n\nAn hour is a very long time.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Find something completely different to do for the hour.",
+        story: `You go draw something. You forget about the bread entirely. When the hour ends <span class="creature-name">Wellow</span> calls you back. The bread has puffed up soft and huge. You put it in together. It's the best loaf of the week.`,
+        lumen: `You let the thing that needed time have time. That's patience.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Ask Wellow why the bread needs to rest and really listen to the answer.",
+        story: `Wellow explains about the air and the warmth and the way the dough changes when you leave it alone. You didn't expect to find it interesting. You do.\n\nAn hour later you understand why the bread is better for the waiting.`,
+        lumen: `Curiosity makes waiting easier. You found your curiosity.`,
+        axis: 'thread', delta: 8, axisClass: 'axis-note-thread' },
+      { text: "Sit nearby and watch the bread, seeing if you can notice it changing.",
+        story: `You watch. For a while nothing happens. Then — very slowly — the dough rises. You can see it if you're patient enough. It takes almost the full hour and you see the whole thing.\n\n<span class="creature-name">Wellow</span> comes back. <em>"You watched it the whole time?"</em> Wellow asks.\n\n<em>"Yes,"</em> you say. <em>"I didn't want to miss it."</em>`,
+        lumen: `You turned waiting into watching. That's a different thing entirely.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'wait_4', cat: 'wait',
+    location: "The Market",
+    text: `There's one honey roll left and two of you want it.\n\nYou got here first. It should be yours. But the traveler next to you got here at almost exactly the same moment and they have been staring at it with such longing.\n\nThe market vendor is watching you both.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Let the other traveler have it.",
+        story: `<em>"You take it,"</em> you say. The traveler stares at you. <em>"Are you sure?"</em>\n\n<em>"Yeah."</em>\n\nThey take it. Then, after a moment, they break it in half and hand you the other piece. <em>"Thank you,"</em> they say.`,
+        lumen: `You gave something away and got something back you didn't expect.`,
+        axis: 'thread', delta: 11, axisClass: 'axis-note-thread' },
+      { text: "Suggest flipping a coin or playing rock-paper-sticks to decide.",
+        story: `The traveler laughs, surprised. You play three rounds of rock-paper-sticks. The traveler wins two of three.\n\n<em>"Good game,"</em> you say, and mean it. The traveler buys you a different pastry with the change in their pocket.`,
+        lumen: `Making a fair game out of an unfair moment — that's creative. And kind.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+      { text: "Claim it — you were here first.",
+        story: `You take the roll. It's yours — you were first. You eat it walking away.\n\nIt tastes fine. But you think about the traveler's face the whole time and it sits a little heavy. Next time, you think.`,
+        lumen: `You were right that it was yours. Something still felt off. That feeling is worth noticing.`,
+        axis: 'stone', delta: 5, axisClass: 'axis-note-stone' },
+    ]
+  },
+  {
+    id: 'wait_5', cat: 'wait',
+    location: "The Forest Path",
+    text: `The game was almost over. You were this close to finding the final treasure.\n\nBut you have to stop now. Right now. Someone else needs you and the game has to wait.\n\nYou stand on the path looking at the direction you were going. So close.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Mark the spot somehow so you know exactly where to come back.",
+        story: `You stack three specific stones on top of each other — your marker. You'll know it's yours. Then you go help. When you come back hours later your marker is still there, patient as a promise.`,
+        lumen: `You built a bridge to your future self. That was wise.`,
+        axis: 'stone', delta: 10, axisClass: 'axis-note-stone' },
+      { text: "Go help. The game isn't going anywhere.",
+        story: `You go. You don't look back. Whoever needed you needed you now and the treasure will be there later. When you return the next morning the path is fresh and the treasure might as well have waited just for you.`,
+        lumen: `You chose the person over the prize. The prize was still there after.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Say out loud 'I really don't want to stop' before you go.",
+        story: `You say it to the trees. <em>"I really don't want to stop."</em> Nobody hears it except maybe the Lumen. Then you go.\n\nSaying it helped. The going was easier after.`,
+        lumen: `Naming what you're giving up makes it easier to give it up. You found that out.`,
+        axis: 'flame', delta: 8, axisClass: 'axis-note-flame' },
+    ]
+  },
+
+  // ─── MIRROR (5) ───────────────────────────
+  {
+    id: 'mirror_1', cat: 'mirror',
+    location: "The Beach",
+    text: `The storm came and went and some things were said and now it's quiet again.\n\nYou're sitting on the beach. The Lumen is next to you.\n\n<em>"I always do that,"</em> you say out loud. Not to the Lumen. Just to the air.\n\n<em>"Do what?"</em> the Lumen asks.\n\n<em>"Make it worse. I always make it worse."</em>\n\nThe Lumen is quiet for a moment.\n\n<em>"Always?"</em> it says.`,
+    question: "What do you say?",
+    choices: [
+      { text: `"Most of the time."`,
+        story: `<em>"Most of the time,"</em> the Lumen repeats. <em>"That's different from always."</em>\n\nYou don't say anything. But something shifts — like a door that was stuck has moved one inch.`,
+        lumen: `Most of the time is not the same as always. That matters.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+      { text: `"I don't know. It feels like always."`,
+        story: `<em>"Feelings say always and never,"</em> the Lumen says, <em>"because they're loud. They're not always right about the facts."</em>\n\n<em>"So what do I do with that?"</em>\n\n<em>"Just notice it,"</em> the Lumen says. <em>"That's enough for today."</em>`,
+        lumen: `Saying the honest complicated thing is where it starts.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+      { text: "Say nothing and throw a stone into the water.",
+        story: `The stone makes a clean arc and disappears.\n\nThe Lumen watches.\n\n<em>"You can throw another one,"</em> it says.\n\nYou do. And another. After the fourth one something in your chest gets a little looser.\n\n<em>"Ready to talk?"</em> the Lumen asks.\n\n<em>"Maybe,"</em> you say.`,
+        lumen: `Sometimes the body needs to move before the words can come.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+    ]
+  },
+  {
+    id: 'mirror_2', cat: 'mirror',
+    location: "Wellow's Kitchen",
+    text: `The rolls didn't come out right. Not terrible. Just... not right. And you tried hard. You followed every step.\n\n<span class="creature-name">Wellow</span> tasted one. <em>"These are good,"</em> Wellow said. But you know they're not as good as last time.\n\nYou keep saying it in your head: <em>I can't do anything right.</em>`,
+    question: "What do you do with that thought?",
+    choices: [
+      { text: "Notice it and say back to it: 'That's not actually true.'",
+        story: `You say it quietly. <em>"That's not actually true."</em>\n\nThe thought doesn't disappear. But it gets a little smaller. Like you reminded it that you know better.\n\n<span class="creature-name">Wellow</span> hands you another roll. <em>"Eat one. They're good."</em>`,
+        lumen: `Talking back to the thought — even once, even quietly — is how you start to be in charge of it.`,
+        axis: 'flame', delta: 10, axisClass: 'axis-note-flame' },
+      { text: "Tell Wellow what's going on inside your head.",
+        story: `<em>"I keep thinking I can't do anything right,"</em> you say.\n\n<span class="creature-name">Wellow</span> is quiet for a long moment. Then: <em>"You made bread today. You made it with your hands. That is something right."</em>\n\nIt doesn't fix everything. But it's something to hold.`,
+        lumen: `You told the truth to someone safe. They gave you something true back.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Ask if you can try the recipe again tomorrow.",
+        story: `<em>"Yes,"</em> <span class="creature-name">Wellow</span> says immediately. <em>"Same recipe. And we'll see what's different."</em>\n\nThe thought is still there. But there's something else now too: tomorrow, and another try.`,
+        lumen: `Asking for another chance is the bravest thing.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+    ]
+  },
+  {
+    id: 'mirror_3', cat: 'mirror',
+    location: "Brin's Workshop",
+    text: `<span class="creature-name">Brin</span> is looking at your drawing. Really looking. She's been quiet for a long time.\n\n<em>"This is wonderful,"</em> she says.\n\nSomething in you doesn't know what to do with that. Instead of feeling good, you feel strange. Like the compliment landed in the wrong place.\n\n<em>"It's not that good,"</em> you say.`,
+    question: "What happens next?",
+    choices: [
+      { text: "Let Brin tell you what she sees in it. Actually listen.",
+        story: `<span class="creature-name">Brin</span> points to three specific things. The way the creature's eye catches the light. The texture on the wings. The way the tail curves at the end.\n\nYou look at your drawing like you're seeing it for the first time. Hm.`,
+        lumen: `Sometimes someone else's eyes can give you yours back.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: `Say "Thank you" and see what that feels like.`,
+        story: `<em>"Thank you,"</em> you say. It feels a little wrong in your mouth. But you say it anyway.\n\n<span class="creature-name">Brin</span> smiles like that was the whole thing she was waiting for.\n\nYou look at your drawing again. It's still the same drawing. But somehow it looks a little better.`,
+        lumen: `Letting good things in takes practice. You practiced it.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Ask Brin why she thinks it's wonderful.",
+        story: `<em>"Why do you think it's wonderful?"</em> you ask, genuinely.\n\n<span class="creature-name">Brin</span> looks surprised that you asked. Then she says: <em>"Because it looks like something only you would make."</em>\n\nYou sit with that for a long time.`,
+        lumen: `Asking why makes the good thing real. You made it real.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'mirror_4', cat: 'mirror',
+    location: "The Lighthouse Steps",
+    text: `You are sitting on the lighthouse steps alone. You have been sitting here for a while.\n\nThe Lumen floats down and settles next to you.\n\n<em>"You're quiet today,"</em> the Lumen says.\n\n<em>"I'm always the problem,"</em> you say. <em>"When things go wrong, it's me. Every time."</em>\n\nThe Lumen doesn't argue.`,
+    question: "What do you do next?",
+    choices: [
+      { text: "Ask the Lumen if that's true.",
+        story: `<em>"Is it true?"</em> you ask.\n\nThe Lumen thinks. <em>"You are part of a lot of things — yes,"</em> it says carefully. <em>"But a lot of other things are also part of you. It's not as clean as always or never."</em>\n\nYou don't fully believe it. But you hear it.`,
+        lumen: `Asking the question instead of just believing the thought — that's brave.`,
+        axis: 'flame', delta: 10, axisClass: 'axis-note-flame' },
+      { text: "Say 'I'm tired of being the problem.'",
+        story: `<em>"I'm tired,"</em> you say. <em>"I'm tired of being the problem."</em>\n\nThe Lumen is quiet. Then: <em>"That feeling — being tired of it — that means you want something different. That's a beginning."</em>`,
+        lumen: `Tired of it is different from giving up. Tired of it is the first step toward something new.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Sit with the Lumen and not say anything at all for a while.",
+        story: `You sit. The Lumen sits. The sea moves. The light from the lighthouse sweeps around slowly.\n\nAfter a long while you say: <em>"I don't always know what to do with myself."</em>\n\n<em>"Neither do I,"</em> the Lumen says. <em>"I just stay close anyway."</em>`,
+        lumen: `You stayed with the feeling instead of running from it. That took something.`,
+        axis: 'thread', delta: 9, axisClass: 'axis-note-thread' },
+    ]
+  },
+  {
+    id: 'mirror_5', cat: 'mirror',
+    location: "The Beach",
+    text: `Everything was good today. Really good. You helped <span class="creature-name">Wellow</span>, you made something beautiful with <span class="creature-name">Brin</span>, the music with <span class="creature-name">Coss</span> was perfect.\n\nBut tonight, alone on the beach, you feel sad. And the worst part is you don't know why.\n\n<em>Why am I sad when everything was good?</em> you think. <em>What's wrong with me?</em>`,
+    question: "What do you do with that question?",
+    choices: [
+      { text: "Decide that nothing is wrong with you. Feelings don't need a reason.",
+        story: `You say it quietly: <em>"Nothing is wrong with me."</em>\n\nThe sad feeling doesn't leave. But it stops feeling like evidence of something broken. It's just a feeling, sitting there with you on the beach, with no explanation needed.`,
+        lumen: `Feelings don't always have reasons. That doesn't make them wrong — or you.`,
+        axis: 'stone', delta: 10, axisClass: 'axis-note-stone' },
+      { text: "Tell the Lumen you're sad even though today was good.",
+        story: `<em>"I don't understand it,"</em> you say. <em>"Today was good. And I feel sad."</em>\n\nThe Lumen glows softly. <em>"Both things can be true,"</em> it says. <em>"That happens to people who feel things deeply. It's not a flaw."</em>`,
+        lumen: `Feeling things deeply is not the same as being broken. It is just how you're made.`,
+        axis: 'thread', delta: 11, axisClass: 'axis-note-thread' },
+      { text: "Let yourself be sad for a while without trying to explain it.",
+        story: `You sit with it. The sad feeling. You don't push it away. You don't make it mean something.\n\nAfter a while it changes on its own — not disappears, but changes. Softer. Less heavy.\n\nThe Lumen is still there when you look over.`,
+        lumen: `You let it be. Not everything needs to be understood before it can pass.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+    ]
+  },
+
+  // ─── STRANGER (5) ─────────────────────────
+  {
+    id: 'stranger_1', cat: 'stranger',
+    location: "The Market",
+    text: `There is someone new on the island.\n\nYou've never seen them before. They're sitting at the edge of the market, not buying anything, just watching. They have a small notebook and they're drawing something in it very carefully.\n\nThey glance up and see you looking.\n\nThey don't wave. They don't look away either.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Walk over and look at what they're drawing.",
+        story: `It's a creature with wings made of leaves and eyes like buttons.\n\n<em>"That's incredible,"</em> you say. You mean it.\n\nSomething in their face changes — like they were expecting something different. <em>"It's not done,"</em> they say. But they don't close the notebook.`,
+        lumen: `The truest thing you can say to someone new is something you actually mean.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Find something to do nearby — not talking, just existing close.",
+        story: `You sit down nearby and do your own thing. The stranger keeps drawing. At some point — you're not sure when — you realize the distance between you is smaller than it was.\n\nNeither of you said anything. Something happened anyway.`,
+        lumen: `Presence without pressure is its own kind of welcome.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Ask Pip to come over with you.",
+        story: `<span class="creature-name">Pip</span> comes immediately, already whistling a little song. The stranger looks up at Pip and almost — almost — smiles. <em>"What's that tune?"</em> they ask.\n\nPip plays it louder. You all end up sitting together listening to Pip play badly and happily until the sun moves.`,
+        lumen: `Asking for company before you're ready to go alone — that is wisdom, not weakness.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'stranger_2', cat: 'stranger',
+    location: "The Music Circle",
+    text: `A new traveler wandered into the music circle and sat down. They don't have an instrument. They're just listening, arms around their knees.\n\n<span class="creature-name">Coss</span> leans over to you. <em>"Should we give them something to play?"</em>\n\nThe traveler looks up — they heard Coss. Now they're looking at you both.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Offer them your sticks and sit out for a round to let them play.",
+        story: `The traveler takes the sticks slowly, like they're not sure they deserve them. Then they start — a small, uncertain rhythm. Then bigger. By the end they're grinning.\n\nYou clap the hardest when they finish.`,
+        lumen: `You gave something up so someone else could have it. The circle got wider.`,
+        axis: 'thread', delta: 11, axisClass: 'axis-note-thread' },
+      { text: "Ask the traveler if they play anything.",
+        story: `<em>"Do you play anything?"</em> you ask.\n\nThe traveler shrugs. <em>"I used to. Kind of."</em>\n\n<em>"That counts,"</em> <span class="creature-name">Coss</span> says, and hands them the second drum before they can say no.`,
+        lumen: `You opened a door. Coss walked them through it. That's how it works — one person at a time.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+      { text: "Keep playing and let them stay if they want to.",
+        story: `You keep playing. You don't make it into a thing. The traveler watches. After two songs they start tapping their foot. After four songs they start tapping their knee. After six songs <span class="creature-name">Pip</span> slides an extra instrument over without comment.\n\nThe traveler picks it up.`,
+        lumen: `You made space without making it obvious. That takes something.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+    ]
+  },
+  {
+    id: 'stranger_3', cat: 'stranger',
+    location: "Brin's Workshop",
+    text: `<span class="creature-name">Brin</span> has a visitor today — a young traveler who wants to learn to draw. They're standing in the middle of the workshop looking lost among all the supplies.\n\nBrin catches your eye. <em>"Could you show them where to start?"</em> she asks quietly.\n\nThe traveler looks at you hopefully.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Hand them a pencil and a blank page. Just start.",
+        story: `<em>"Here,"</em> you say. <em>"Just draw a line. Any line."</em>\n\nThey stare at the paper. Then they draw a wobbly line.\n\n<em>"Good,"</em> you say. <em>"Now another one."</em>\n\nAn hour later they have made a creature. They can't stop looking at it.`,
+        lumen: `You taught what you know. That's a kind of gift.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Show them your own drawings first so they know it's okay to start messy.",
+        story: `You pull out your early drawings — the ones that didn't work, the ones that went wrong in interesting ways. The traveler relaxes immediately.\n\n<em>"You save the bad ones?"</em> they ask.\n\n<em>"They're not bad,"</em> you say. <em>"They're the beginning."</em>`,
+        lumen: `Showing your imperfect work to help someone else is a generous and brave thing.`,
+        axis: 'flame', delta: 10, axisClass: 'axis-note-flame' },
+      { text: "Work on your own drawing nearby so they can watch without pressure.",
+        story: `You sit down and start on your own drawing without saying anything more. The traveler watches for a while. Then, quietly, they pick up a pencil and start.\n\nYou both work in comfortable silence. By the end you're both drawing and nobody had to say much of anything.`,
+        lumen: `Side-by-side is sometimes better than face-to-face.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+    ]
+  },
+  {
+    id: 'stranger_4', cat: 'stranger',
+    location: "The Forest Path",
+    text: `There's a traveler on the path who looks completely lost.\n\nThey have a map but they keep turning it around and around. They haven't noticed you yet.\n\nYou know exactly where they're trying to go — you can see it on the map.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Walk over and offer to show them the way.",
+        story: `<em>"I know where that is,"</em> you say. <em>"I'll walk you there."</em>\n\nThe traveler stares at you like they can't quite believe someone just appeared. They say thank you four times on the way.\n\nAt the end of the path they ask your name.`,
+        lumen: `You offered what you had — the knowledge of where to go. That's the simplest kindness.`,
+        axis: 'thread', delta: 10, axisClass: 'axis-note-thread' },
+      { text: "Point in the right direction from where you are.",
+        story: `<em>"That way,"</em> you say, pointing. <em>"Past the big stone, then left."</em>\n\nThe traveler beams. <em>"That's it?"</em> <em>"That's it,"</em> you say.\n\nThey go. You watch them find the right path and disappear around the corner. You feel good in a quiet way.`,
+        lumen: `Sometimes all someone needs is one true direction.`,
+        axis: 'stone', delta: 9, axisClass: 'axis-note-stone' },
+      { text: "Draw them a little map in the dirt so they have something to follow.",
+        story: `You crouch down and draw the path in the dirt with a stick. The traveler watches carefully. You add a small mark for the big stone and an arrow at the turn.\n\nThey copy it into their own notebook. <em>"You should have a map-making stall,"</em> they say.\n\nYou think: maybe I should.`,
+        lumen: `You made something with your hands to help someone find their way. That is yours.`,
+        axis: 'flame', delta: 9, axisClass: 'axis-note-flame' },
+    ]
+  },
+  {
+    id: 'stranger_5', cat: 'stranger',
+    location: "The Beach",
+    text: `A traveler is sitting alone on the beach, not doing anything. Not reading, not drawing, not looking at the water. Just sitting.\n\nThey look like you do sometimes when things are heavy.\n\nYou don't know them. But you recognize the sitting.`,
+    question: "What do you do?",
+    choices: [
+      { text: "Sit nearby. Not too close. Just close enough.",
+        story: `You sit. Not too close. You look at the water. They don't look up. But after a while they shift slightly — toward you, not away.\n\nYou don't say anything. Neither do they. But by the time the light changes you're both just two people sitting on the same beach and that's something.`,
+        lumen: `You recognized something in them and you showed up. That matters even without words.`,
+        axis: 'thread', delta: 11, axisClass: 'axis-note-thread' },
+      { text: "Bring them something — a good stone, a piece of fruit, anything.",
+        story: `You pick up the best stone you can find — smooth, pale, fits perfectly in a palm. You walk over and set it next to them without saying anything.\n\nThey look at it. Then they look at you. <em>"Thank you,"</em> they say, very quietly.\n\nYou nod and keep walking.`,
+        lumen: `You gave them something real and small and good. Sometimes that's the whole thing.`,
+        axis: 'flame', delta: 10, axisClass: 'axis-note-flame' },
+      { text: "Walk past without interrupting. Some sitting needs to stay private.",
+        story: `You walk past. You look out to sea instead of at them. You give them the privacy of being unseen.\n\nLater you find out from <span class="creature-name">Wellow</span> that they needed to sit with something for a while and then they were fine.\n\nSometimes not interrupting is its own kind of kindness.`,
+        lumen: `Knowing when not to act is its own kind of wisdom.`,
+        axis: 'stone', delta: 8, axisClass: 'axis-note-stone' },
+    ]
+  },
+];
+
+// ════════════════════════════════════════════
+// GAME ENGINE
+// ════════════════════════════════════════════
+function goToName() {
+  showScreen('screen-name');
+}
+
+function confirmName() {
+  const val = document.getElementById('lumen-name-input').value.trim();
+  lumenName = val || 'Luma';
+  startGame();
+}
+
+function skipName() {
+  lumenName = 'Luma';
+  startGame();
+}
+
+function startGame() {
+  axes = { flame: 50, thread: 50, stone: 50 };
+  choiceHistory = [];
+  currentIdx = 0;
+  buildPlaythrough();
+  buildProgressDots();
+  showScreen('screen-game');
+  renderScenario();
+}
+
+function buildPlaythrough() {
+  // Guaranteed one mirror; 5 others, one from each non-mirror cat
+  const cats = ['freeze','flip','storm','tangle','wait','stranger'];
+  const mirrors = SCENARIOS.filter(s=>s.cat==='mirror');
+  const mirrorPick = mirrors[Math.floor(Math.random()*mirrors.length)];
+
+  const others = [];
+  for(const cat of cats){
+    const pool = SCENARIOS.filter(s=>s.cat===cat);
+    others.push(pool[Math.floor(Math.random()*pool.length)]);
+  }
+
+  // Shuffle the 6 (mirror + 5 others, one cat removed randomly to keep at 6 total)
+  const combined = [mirrorPick, ...others.slice(0,5)];
+  playthroughScenarios = combined.sort(()=>Math.random()-0.5);
+}
+
+function buildProgressDots() {
+  const row = document.getElementById('progress-row');
+  row.innerHTML = '';
+  for(let i=0;i<TOTAL;i++){
+    const d = document.createElement('div');
+    d.className = 'progress-dot';
+    d.id = 'pdot-'+i;
+    row.appendChild(d);
+  }
+}
+
+function updateProgress() {
+  for(let i=0;i<TOTAL;i++){
+    const d = document.getElementById('pdot-'+i);
+    if(!d) continue;
+    if(i < currentIdx) d.classList.add('done');
+    else if(i === currentIdx) d.classList.add('current');
+    else { d.classList.remove('done','current'); }
+  }
+}
+
+function updateAxeBars() {
+  document.getElementById('flame-fill').style.width = axes.flame+'%';
+  document.getElementById('thread-fill').style.width = axes.thread+'%';
+  document.getElementById('stone-fill').style.width = axes.stone+'%';
+}
+
+const CAT_LOCATIONS = {
+  freeze: ["Brin's Workshop","Wellow's Kitchen","The Music Circle","The Market Bridge"],
+  flip:   ["Behind the Lighthouse","The Beach","The Market","Wellow's Kitchen","The Forest Path"],
+  storm:  ["The Beach","The Music Circle","The Market","Brin's Workshop","The Forest Path"],
+  tangle: ["The Bridge","The Music Circle","Wellow's Kitchen","Brin's Workshop","The Forest Path"],
+  wait:   ["Brin's Workshop","The Music Circle","Wellow's Kitchen","The Market","The Forest Path"],
+  mirror: ["The Beach","Wellow's Kitchen","Brin's Workshop","The Lighthouse Steps"],
+  stranger:["The Market","The Music Circle","Brin's Workshop","The Forest Path","The Beach"],
+};
+
+function renderScenario() {
+  const s = playthroughScenarios[currentIdx];
+  document.getElementById('location-text').textContent = s.location || 'The Island';
+  document.getElementById('scenario-text').innerHTML = s.text.replace(/\n/g,'<br>');
+  document.getElementById('scenario-question').textContent = s.question || 'What do you do?';
+
+  const cc = document.getElementById('choices-container');
+  cc.innerHTML = '';
+  s.choices.forEach((c,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c.text;
+    btn.onclick = () => makeChoice(i);
+    cc.appendChild(btn);
+  });
+
+  document.getElementById('feedback-box').classList.remove('show');
+  updateProgress();
+  updateAxeBars();
+
+  // scroll to top
+  document.getElementById('screen-game').scrollTo({top:0, behavior:'smooth'});
+}
+
+function makeChoice(idx) {
+  const s = playthroughScenarios[currentIdx];
+  const c = s.choices[idx];
+
+  // Record for callbacks
+  choiceHistory.push({ scenarioId: s.id, choiceIdx: idx, axis: c.axis, delta: c.delta });
+
+  // Update axes
+  axes[c.axis] = Math.min(100, Math.max(10, axes[c.axis] + c.delta));
+  // Small trickle to others
+  const others = ['flame','thread','stone'].filter(a=>a!==c.axis);
+  others.forEach(a => { axes[a] = Math.min(100, Math.max(10, axes[a] + 2)); });
+
+  updateAxeBars();
+
+  // Hide choices
+  document.getElementById('choices-container').style.opacity = '0.3';
+  document.getElementById('choices-container').style.pointerEvents = 'none';
+
+  // Build feedback
+  const lumenLine = c.lumen.replace(/LUMEN/g, lumenName);
+  document.getElementById('feedback-story').innerHTML = c.story.replace(/\n/g,'<br>');
+  document.getElementById('feedback-lumen-text').textContent = lumenLine;
+
+  const axNote = document.getElementById('feedback-axis-note');
+  const axLabels = {flame:'🔥 The Flame', thread:'🧵 The Thread', stone:'🪨 The Stone'};
+  axNote.innerHTML = `<span class="feedback-axis-note ${c.axisClass}">${axLabels[c.axis]}</span>`;
+
+  document.getElementById('feedback-box').classList.add('show');
+
+  // Scroll to feedback
+  setTimeout(() => {
+    document.getElementById('feedback-box').scrollIntoView({behavior:'smooth', block:'nearest'});
+  }, 100);
+}
+
+function nextScenario() {
+  currentIdx++;
+  if(currentIdx >= TOTAL){
+    showResults();
+    return;
+  }
+  document.getElementById('choices-container').style.opacity = '1';
+  document.getElementById('choices-container').style.pointerEvents = 'all';
+  document.getElementById('feedback-box').classList.remove('show');
+  renderScenario();
+}
+
+// ════════════════════════════════════════════
+// RESULTS
+// ════════════════════════════════════════════
+function showResults() {
+  showScreen('screen-results');
+
+  // Animate bars in after short delay
+  setTimeout(() => {
+    document.getElementById('result-flame-bar').style.width = axes.flame+'%';
+    document.getElementById('result-thread-bar').style.width = axes.thread+'%';
+    document.getElementById('result-stone-bar').style.width = axes.stone+'%';
+  }, 300);
+
+  // Axis notes
+  const flameNotes = [
+    "The Flame stayed steady on the hard days. That's courage — not the big dramatic kind, the everyday kind that nobody sees.",
+    "The Flame flickered sometimes. That's honest. Courage isn't not being scared. It's going anyway.",
+    "The Flame burned bright today. You walked into hard things. That takes something real."
+  ];
+  const threadNotes = [
+    "The Thread held. You thought about others today, even when it was hard to. That's kindness working.",
+    "The Thread glowed when you listened. That's the deeper kindness — not just doing nice things, but really hearing.",
+    "The Thread stretched today. Repair is hard. You tried. That's what it's made for."
+  ];
+  const stoneNotes = [
+    "The Stone felt steady. You held your ground when things got big. That's regulation — and it's a real skill.",
+    "The Stone was tested today. The testing is how it gets stronger.",
+    "The Stone warmed. That's what steadiness feels like from the inside — not cold and hard, warm and solid."
+  ];
+
+  const pick = (arr) => arr[Math.floor(Math.random()*arr.length)];
+  document.getElementById('result-flame-note').textContent = pick(flameNotes);
+  document.getElementById('result-thread-note').textContent = pick(threadNotes);
+  document.getElementById('result-stone-note').textContent = pick(stoneNotes);
+
+  // Lumen final note — based on highest axis
+  const top = ['flame','thread','stone'].sort((a,b)=>axes[b]-axes[a])[0];
+  const lumenFinals = {
+    flame: `${lumenName} noticed something today. You went toward the hard things more than once. Not because they were easy — because you decided to. That's not small. That's the whole thing, actually.`,
+    thread: `${lumenName} noticed something today. You thought about what the other person was feeling. More than once, in more than one way. That kind of noticing — it matters more than you know.`,
+    stone: `${lumenName} noticed something today. When things got big, you found a way to hold on. Not perfectly. But you held. And every time you do that, it gets a little easier next time.`
+  };
+  document.getElementById('results-lumen-note').textContent = lumenFinals[top];
+  document.getElementById('results-sub').textContent = `${lumenName} has something to say.`;
+}
+
+function playAgain() {
+  startGame();
+}
+
+// ════════════════════════════════════════════
+// TTS
+// ════════════════════════════════════════════
+let ttsActive = false;
+let currentUtterance = null;
+
+document.getElementById('tts-btn').addEventListener('click', () => {
+  if(ttsActive){
+    speechSynthesis.cancel();
+    ttsActive = false;
+    document.getElementById('tts-btn').classList.remove('speaking');
+    return;
+  }
+
+  // Collect readable text from active screen
+  let text = '';
+  const game = document.getElementById('screen-game');
+  const results = document.getElementById('screen-results');
+
+  if(game.classList.contains('active')){
+    const st = document.getElementById('scenario-text').innerText;
+    const sq = document.getElementById('scenario-question').innerText;
+    const fb = document.getElementById('feedback-box');
+    if(fb.classList.contains('show')){
+      text = document.getElementById('feedback-story').innerText + ' ' +
+             document.getElementById('feedback-lumen-text').innerText;
+    } else {
+      text = st + '. ' + sq;
+    }
+  } else if(results.classList.contains('active')){
+    text = document.getElementById('results-lumen-note').innerText;
+  }
+
+  if(!text) return;
+
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.92; utt.pitch = 1.05;
+  utt.onend = () => { ttsActive = false; document.getElementById('tts-btn').classList.remove('speaking'); };
+  currentUtterance = utt;
+  ttsActive = true;
+  document.getElementById('tts-btn').classList.add('speaking');
+  speechSynthesis.speak(utt);
+});
+
+// ════════════════════════════════════════════
+// SCREEN TRANSITIONS
+// ════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+  document.getElementById(id).scrollTo({top:0});
+}
+
+</script>
+</body>
+</html>
