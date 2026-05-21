@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Waystone: Creature Collector</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f1a;
+  --surface: #111827;
+  --surface2: #1a2538;
+  --gold: #f0c040;
+  --flame: #ff6b35;
+  --flame2: #ff9a5c;
+  --thread: #5ec4b0;
+  --thread2: #8fe8d8;
+  --stone: #8ba7c0;
+  --stone2: #b8d0e8;
+  --rare-glow: #d4a0ff;
+  --text: #e8e4d8;
+  --text-dim: #6a7890;
+  --border: rgba(255,255,255,0.07);
+  --r: 20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;}
+
+/* ── STARS ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 22% 5%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 38% 18%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 55% 8%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 15%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1px 1px at 85% 5%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 92% 22%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 15% 40%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 48% 35%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 78% 42%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 5% 65%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 95% 58%,rgba(255,255,255,.4) 0%,transparent 100%);
+}
+
+.screen{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transition:opacity .4s ease;}
+.screen.active{opacity:1;pointer-events:all;}
+
+/* ════════════════════════════════════════
+   TITLE SCREEN
+════════════════════════════════════════ */
+#s-title{
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 60%,rgba(240,192,64,.08) 0%,transparent 60%);
+}
+.title-wrap{display:flex;flex-direction:column;align-items:center;gap:0;text-align:center;padding:20px;}
+.title-island{width:320px;height:160px;position:relative;margin-bottom:16px;}
+.island-svg{width:100%;height:100%;}
+.title-logo{font-family:'Fredoka One',cursive;font-size:52px;color:var(--gold);
+  text-shadow:0 0 40px rgba(240,192,64,.5),0 4px 0 rgba(0,0,0,.4);
+  letter-spacing:3px;margin-bottom:4px;}
+.title-sub{font-size:14px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:24px;}
+.title-btns{display:flex;gap:12px;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#c89820);color:#1a1000;
+  border:none;border-radius:50px;font-family:'Nunito',sans-serif;
+  font-size:16px;font-weight:900;padding:13px 32px;cursor:pointer;
+  box-shadow:0 4px 20px rgba(240,192,64,.35);transition:all .2s;letter-spacing:.5px;}
+.btn-gold:active{transform:scale(.96);}
+.btn-outline{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.15);
+  border-radius:50px;color:var(--text);font-family:'Nunito',sans-serif;
+  font-size:16px;font-weight:700;padding:13px 32px;cursor:pointer;transition:all .2s;}
+.btn-outline:active{background:rgba(255,255,255,.1);}
+
+/* ════════════════════════════════════════
+   EXPLORE SCREEN
+════════════════════════════════════════ */
+#s-explore{flex-direction:row;}
+
+.explore-left{
+  width:42%;height:100%;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding-bottom:20px;overflow:hidden;
+}
+.explore-bg{position:absolute;inset:0;z-index:0;}
+.location-art{position:relative;z-index:1;width:240px;height:240px;}
+.location-label{position:relative;z-index:1;
+  font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:8px;}
+
+.explore-right{
+  width:58%;height:100%;display:flex;flex-direction:column;
+  padding:24px 28px 24px 16px;gap:14px;overflow-y:auto;
+}
+
+/* Axes */
+.axes-strip{display:flex;gap:10px;}
+.axis-chip{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);
+  border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:4px;}
+.axis-chip-label{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;}
+.axis-chip-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
+.axis-chip-fill{height:100%;border-radius:2px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.axis-chip.flame .axis-chip-label{color:var(--flame);}
+.axis-chip.flame .axis-chip-fill{background:var(--flame);}
+.axis-chip.thread .axis-chip-label{color:var(--thread);}
+.axis-chip.thread .axis-chip-fill{background:var(--thread);}
+.axis-chip.stone .axis-chip-label{color:var(--stone);}
+.axis-chip.stone .axis-chip-fill{background:var(--stone);}
+
+/* Progress */
+.progress-strip{display:flex;gap:5px;}
+.pdot{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.08);transition:background .4s;}
+.pdot.done{background:var(--gold);}
+.pdot.cur{background:rgba(240,192,64,.4);}
+
+/* Encounter */
+.encounter-box{background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:var(--r);padding:18px 20px;
+  font-family:'Lora',serif;font-size:14.5px;line-height:1.8;color:var(--text);}
+.encounter-box em{color:#f5edd8;font-style:italic;}
+.encounter-box .cn{color:var(--gold);font-weight:600;font-style:normal;}
+.enc-q{font-family:'Fredoka One',cursive;font-size:17px;color:var(--text);
+  text-align:center;letter-spacing:.5px;}
+
+/* Choices */
+.choices{display:flex;flex-direction:column;gap:8px;}
+.choice-btn{
+  background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:14px;color:var(--text);font-family:'Nunito',sans-serif;
+  font-size:13.5px;font-weight:700;line-height:1.5;
+  padding:13px 16px;text-align:left;cursor:pointer;transition:all .18s;width:100%;}
+.choice-btn:active,.choice-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);}
+
+/* Feedback */
+.feedback{display:none;flex-direction:column;gap:10px;animation:fadeUp .35s ease;}
+.feedback.show{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.fb-story{font-family:'Lora',serif;font-size:13.5px;line-height:1.8;color:var(--text);}
+.fb-story em{color:#f5edd8;font-style:italic;}
+.fb-note{font-size:12px;font-weight:700;padding:6px 14px;border-radius:50px;
+  display:inline-flex;align-items:center;gap:5px;align-self:flex-start;margin-top:2px;}
+.fb-note.flame{background:rgba(255,107,53,.15);color:var(--flame);}
+.fb-note.thread{background:rgba(94,196,176,.15);color:var(--thread);}
+.fb-note.stone{background:rgba(139,167,192,.15);color:var(--stone);}
+.btn-next{background:rgba(240,192,64,.12);border:1.5px solid rgba(240,192,64,.3);
+  border-radius:50px;color:var(--gold);font-family:'Nunito',sans-serif;
+  font-size:14px;font-weight:900;padding:12px 28px;cursor:pointer;
+  transition:all .2s;align-self:center;margin-top:4px;}
+.btn-next:active{background:rgba(240,192,64,.2);}
+
+/* Header nav */
+.explore-nav{position:absolute;top:14px;right:20px;z-index:10;
+  display:flex;gap:8px;}
+.nav-btn{background:rgba(255,255,255,.07);border:1px solid var(--border);
+  border-radius:50px;color:var(--text);font-family:'Nunito',sans-serif;
+  font-size:12px;font-weight:800;padding:6px 14px;cursor:pointer;
+  transition:background .2s;}
+.nav-btn:active{background:rgba(255,255,255,.15);}
+
+/* ════════════════════════════════════════
+   DISCOVERY SCREEN
+════════════════════════════════════════ */
+#s-discovery{
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 50%,rgba(240,192,64,.12) 0%,transparent 60%);
+}
+.disc-wrap{display:flex;flex-direction:row;align-items:center;gap:48px;
+  padding:32px;max-width:800px;width:100%;}
+.disc-art{width:220px;height:220px;flex-shrink:0;position:relative;}
+.disc-art svg{width:100%;height:100%;}
+.disc-particles{position:absolute;inset:0;pointer-events:none;overflow:visible;}
+.disc-info{display:flex;flex-direction:column;gap:14px;}
+.disc-new{font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);opacity:0;animation:fadeUp .5s .2s ease forwards;}
+.disc-name{font-family:'Fredoka One',cursive;font-size:48px;color:white;
+  line-height:1;opacity:0;animation:fadeUp .5s .4s ease forwards;
+  text-shadow:0 0 30px rgba(255,255,255,.3);}
+.disc-type{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  opacity:0;animation:fadeUp .5s .55s ease forwards;}
+.disc-type.flame{color:var(--flame);}
+.disc-type.thread{color:var(--thread);}
+.disc-type.stone{color:var(--stone);}
+.disc-type.rare{color:var(--rare-glow);}
+.disc-personality{font-family:'Lora',serif;font-size:15px;font-style:italic;
+  color:rgba(232,228,216,.8);line-height:1.7;
+  opacity:0;animation:fadeUp .5s .7s ease forwards;}
+.disc-nickname-wrap{display:flex;flex-direction:column;gap:8px;
+  opacity:0;animation:fadeUp .5s .9s ease forwards;}
+.disc-nickname-label{font-size:12px;font-weight:700;color:var(--text-dim);}
+.disc-nickname-row{display:flex;gap:8px;align-items:center;}
+.disc-nickname-input{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);
+  border-radius:50px;color:white;font-family:'Nunito',sans-serif;
+  font-size:15px;font-weight:700;padding:10px 18px;outline:none;flex:1;
+  transition:border-color .2s;}
+.disc-nickname-input:focus{border-color:rgba(255,255,255,.35);}
+.disc-nickname-input::placeholder{color:rgba(255,255,255,.2);}
+.disc-btns{display:flex;gap:10px;opacity:0;animation:fadeUp .5s 1.1s ease forwards;}
+
+/* ════════════════════════════════════════
+   COMPENDIUM SCREEN
+════════════════════════════════════════ */
+#s-compendium{flex-direction:column;padding:0;}
+.comp-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.comp-title{font-family:'Fredoka One',cursive;font-size:28px;color:var(--gold);}
+.comp-count{font-size:13px;font-weight:700;color:var(--text-dim);}
+.comp-grid{flex:1;overflow-y:auto;padding:20px 24px;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.comp-card{
+  background:rgba(255,255,255,.04);border:1.5px solid var(--border);
+  border-radius:16px;padding:14px 10px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.comp-card:active{transform:scale(.97);}
+.comp-card.found{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.07);}
+.comp-card.found:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);}
+.comp-card.rare.found{border-color:rgba(212,160,255,.3);
+  box-shadow:0 0 20px rgba(212,160,255,.1);}
+.comp-creature{width:72px;height:72px;}
+.comp-creature svg{width:100%;height:100%;}
+.comp-name{font-family:'Fredoka One',cursive;font-size:13px;color:var(--text);text-align:center;line-height:1.2;}
+.comp-name.unknown{color:var(--text-dim);}
+.comp-type-dot{width:8px;height:8px;border-radius:50%;}
+.comp-type-dot.flame{background:var(--flame);}
+.comp-type-dot.thread{background:var(--thread);}
+.comp-type-dot.stone{background:var(--stone);}
+.comp-type-dot.rare{background:var(--rare-glow);}
+.comp-nickname{font-size:10px;color:var(--text-dim);font-style:italic;text-align:center;}
+
+/* ════════════════════════════════════════
+   CREATURE DETAIL SCREEN
+════════════════════════════════════════ */
+#s-detail{flex-direction:row;align-items:center;justify-content:center;gap:48px;padding:32px;}
+.detail-art{width:260px;height:260px;flex-shrink:0;}
+.detail-art svg{width:100%;height:100%;}
+.detail-info{display:flex;flex-direction:column;gap:16px;max-width:360px;}
+.detail-name{font-family:'Fredoka One',cursive;font-size:44px;color:white;
+  text-shadow:0 0 30px rgba(255,255,255,.2);}
+.detail-nickname{font-size:14px;color:var(--text-dim);font-style:italic;margin-top:-8px;}
+.detail-type{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
+.detail-type.flame{color:var(--flame);}
+.detail-type.thread{color:var(--thread);}
+.detail-type.stone{color:var(--stone);}
+.detail-type.rare{color:var(--rare-glow);}
+.detail-personality{font-family:'Lora',serif;font-size:16px;font-style:italic;
+  color:rgba(232,228,216,.8);line-height:1.7;}
+.detail-nickname-edit{display:flex;flex-direction:column;gap:6px;}
+.detail-nickname-label{font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+.detail-nickname-row{display:flex;gap:8px;}
+.detail-nickname-input{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);
+  border-radius:50px;color:white;font-family:'Nunito',sans-serif;
+  font-size:14px;font-weight:700;padding:9px 16px;outline:none;flex:1;
+  transition:border-color .2s;}
+.detail-nickname-input:focus{border-color:rgba(255,255,255,.3);}
+.detail-nickname-input::placeholder{color:rgba(255,255,255,.18);}
+.btn-save{background:rgba(240,192,64,.15);border:1.5px solid rgba(240,192,64,.3);
+  border-radius:50px;color:var(--gold);font-family:'Nunito',sans-serif;
+  font-size:13px;font-weight:800;padding:9px 20px;cursor:pointer;}
+
+/* RUN COMPLETE */
+#s-runend{align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 50%,rgba(94,196,176,.07) 0%,transparent 60%);}
+.runend-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;padding:32px;max-width:480px;}
+.runend-icon{font-size:56px;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.runend-title{font-family:'Fredoka One',cursive;font-size:36px;color:var(--gold);}
+.runend-msg{font-family:'Lora',serif;font-size:16px;font-style:italic;
+  color:rgba(232,228,216,.8);line-height:1.7;}
+.runend-stir{font-size:13px;color:var(--text-dim);font-family:'Lora',serif;font-style:italic;}
+
+/* ════════════════════════════════════════
+   CREATURE SVG ANIMATIONS
+════════════════════════════════════════ */
+@keyframes breathe{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@keyframes wobble{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
+@keyframes spin-slow{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes flicker{0%,100%{opacity:1;}50%{opacity:.7;}75%{opacity:.9;}}
+@keyframes peek{0%,40%,100%{transform:translateY(0);}20%{transform:translateY(-12px);}}
+@keyframes streak{0%{transform:translateX(-20px);opacity:0;}50%{opacity:1;}100%{transform:translateX(20px);opacity:0;}}
+@keyframes pulse-glow{0%,100%{filter:drop-shadow(0 0 8px currentColor);}50%{filter:drop-shadow(0 0 20px currentColor);}}
+@keyframes tail-wag{0%,100%{transform:rotate(0deg);transform-origin:left center;}50%{transform:rotate(25deg);transform-origin:left center;}}
+@keyframes eye-blink{0%,90%,100%{scaleY:1;}95%{transform:scaleY(0.1);}}
+@keyframes rumble{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+@keyframes fade-in-out{0%,100%{opacity:.15;}50%{opacity:.85;}}
+@keyframes orbit{from{transform:rotate(0deg) translateX(28px) rotate(0deg);}to{transform:rotate(360deg) translateX(28px) rotate(-360deg);}}
+@keyframes spark{0%{transform:scale(0);opacity:1;}100%{transform:scale(1.5);opacity:0;}}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     TITLE SCREEN
+══════════════════════════════════════ -->
+<div class="screen active" id="s-title">
+  <div class="title-wrap">
+    <div class="title-island">
+      <svg class="island-svg" viewBox="0 0 320 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Sea -->
+        <ellipse cx="160" cy="130" rx="150" ry="30" fill="#0d2a4a" opacity=".8"/>
+        <ellipse cx="160" cy="128" rx="140" ry="22" fill="#0a2040" opacity=".6"/>
+        <!-- Island -->
+        <ellipse cx="160" cy="112" rx="90" ry="28" fill="#1a3a20"/>
+        <ellipse cx="160" cy="108" rx="85" ry="24" fill="#254830"/>
+        <!-- Lighthouse base -->
+        <rect x="152" y="60" width="16" height="50" fill="#2a3a50" rx="3"/>
+        <!-- Lighthouse tower -->
+        <rect x="154" y="30" width="12" height="35" fill="#3a4a60" rx="2"/>
+        <rect x="150" y="25" width="20" height="8" fill="#4a5a70" rx="2"/>
+        <!-- Light beam - animated -->
+        <g style="animation:spin-slow 4s linear infinite;transform-origin:160px 29px;">
+          <path d="M160 29 L220 0 L210 20 Z" fill="rgba(240,192,64,.15)"/>
+        </g>
+        <circle cx="160" cy="28" r="5" fill="#f0c040" style="animation:flicker 1.5s ease-in-out infinite;"/>
+        <!-- Trees -->
+        <ellipse cx="100" cy="95" rx="18" ry="22" fill="#1e4a25"/>
+        <ellipse cx="100" cy="85" rx="14" ry="16" fill="#256030"/>
+        <rect x="97" y="100" width="6" height="12" fill="#2a2010"/>
+        <ellipse cx="220" cy="98" rx="15" ry="18" fill="#1e4a25"/>
+        <ellipse cx="220" cy="90" rx="11" ry="13" fill="#256030"/>
+        <rect x="217" y="103" width="5" height="10" fill="#2a2010"/>
+        <!-- Silhouetted creatures in distance -->
+        <g opacity=".4">
+          <circle cx="130" cy="105" r="5" fill="#ff6b35"/>
+          <circle cx="185" cy="102" r="4" fill="#5ec4b0"/>
+          <circle cx="145" cy="100" r="3" fill="#8ba7c0"/>
+        </g>
+        <!-- Water sparkles -->
+        <circle cx="50" cy="138" r="2" fill="white" opacity=".3" style="animation:flicker 2s ease-in-out infinite;"/>
+        <circle cx="270" cy="135" r="1.5" fill="white" opacity=".25" style="animation:flicker 2.5s ease-in-out infinite .5s;"/>
+        <circle cx="160" cy="145" r="1.5" fill="white" opacity=".2" style="animation:flicker 3s ease-in-out infinite 1s;"/>
+      </svg>
+    </div>
+    <div class="title-logo">WAYSTONE</div>
+    <div class="title-sub">Creature Collector</div>
+    <div class="title-btns">
+      <button class="btn-gold" onclick="startExplore()">Explore the Island 🗺️</button>
+      <button class="btn-outline" onclick="showCompendium()">My Collection 📖</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     EXPLORE SCREEN
+══════════════════════════════════════ -->
+<div class="screen" id="s-explore">
+  <div class="explore-nav">
+    <button class="nav-btn" onclick="showCompendium()">📖 Collection</button>
+    <button class="nav-btn" onclick="showScreen('s-title')">🏠 Home</button>
+  </div>
+  <div class="explore-left">
+    <div class="explore-bg" id="explore-bg"></div>
+    <div class="location-art" id="location-art"></div>
+    <div class="location-label" id="location-label">The Beach</div>
+  </div>
+  <div class="explore-right">
+    <div class="axes-strip">
+      <div class="axis-chip flame">
+        <div class="axis-chip-label">🔥 Flame</div>
+        <div class="axis-chip-bar"><div class="axis-chip-fill" id="flame-fill" style="width:50%"></div></div>
+      </div>
+      <div class="axis-chip thread">
+        <div class="axis-chip-label">🧵 Thread</div>
+        <div class="axis-chip-bar"><div class="axis-chip-fill" id="thread-fill" style="width:50%"></div></div>
+      </div>
+      <div class="axis-chip stone">
+        <div class="axis-chip-label">🪨 Stone</div>
+        <div class="axis-chip-bar"><div class="axis-chip-fill" id="stone-fill" style="width:50%"></div></div>
+      </div>
+    </div>
+    <div class="progress-strip" id="progress-strip"></div>
+    <div class="encounter-box" id="enc-text"></div>
+    <div class="enc-q" id="enc-q"></div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-story" id="fb-story"></div>
+      <div id="fb-note-wrap"></div>
+      <button class="btn-next" id="btn-next" onclick="nextEncounter()">Keep exploring →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     DISCOVERY SCREEN
+══════════════════════════════════════ -->
+<div class="screen" id="s-discovery">
+  <div class="disc-wrap">
+    <div class="disc-art" id="disc-art">
+      <div class="disc-particles" id="disc-particles"></div>
+    </div>
+    <div class="disc-info">
+      <div class="disc-new">✨ NEW CREATURE FOUND</div>
+      <div class="disc-name" id="disc-name">Cinder</div>
+      <div class="disc-type" id="disc-type">Flame Type</div>
+      <div class="disc-personality" id="disc-personality">Small. Always slightly on fire but not bothered by it. Very confident.</div>
+      <div class="disc-nickname-wrap">
+        <div class="disc-nickname-label">Give it a nickname? (or leave it)</div>
+        <div class="disc-nickname-row">
+          <input class="disc-nickname-input" id="disc-nickname-input" type="text" maxlength="20" placeholder="Optional nickname..." autocomplete="off" autocorrect="off">
+          <button class="btn-gold" onclick="saveDiscovery()">Add to Collection!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     COMPENDIUM SCREEN
+══════════════════════════════════════ -->
+<div class="screen" id="s-compendium">
+  <div class="comp-header">
+    <div class="comp-title">📖 Creature Collection</div>
+    <div style="display:flex;gap:16px;align-items:center;">
+      <div class="comp-count" id="comp-count">0 / 15 found</div>
+      <button class="btn-outline" style="padding:8px 18px;font-size:13px;" onclick="showScreen('s-title')">← Back</button>
+    </div>
+  </div>
+  <div class="comp-grid" id="comp-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CREATURE DETAIL SCREEN
+══════════════════════════════════════ -->
+<div class="screen" id="s-detail">
+  <div class="detail-art" id="detail-art"></div>
+  <div class="detail-info">
+    <div>
+      <div class="detail-name" id="detail-name"></div>
+      <div class="detail-nickname" id="detail-nickname"></div>
+    </div>
+    <div class="detail-type" id="detail-type"></div>
+    <div class="detail-personality" id="detail-personality"></div>
+    <div class="detail-nickname-edit">
+      <div class="detail-nickname-label">Nickname</div>
+      <div class="detail-nickname-row">
+        <input class="detail-nickname-input" id="detail-nickname-input" type="text" maxlength="20" placeholder="Give it a nickname...">
+        <button class="btn-save" onclick="saveDetailNickname()">Save</button>
+      </div>
+    </div>
+    <button class="btn-outline" style="align-self:flex-start;padding:9px 20px;font-size:13px;" onclick="showCompendium()">← Back to Collection</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     RUN END SCREEN
+══════════════════════════════════════ -->
+<div class="screen" id="s-runend">
+  <div class="runend-wrap">
+    <div class="runend-icon" id="runend-icon">🌊</div>
+    <div class="runend-title" id="runend-title">Journey Complete</div>
+    <div class="runend-msg" id="runend-msg">The island is quiet now.</div>
+    <div class="runend-stir" id="runend-stir"></div>
+    <div style="display:flex;gap:12px;margin-top:8px;">
+      <button class="btn-gold" onclick="startExplore()">Explore Again 🗺️</button>
+      <button class="btn-outline" onclick="showCompendium()">My Collection 📖</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// CREATURE DEFINITIONS
+// ════════════════════════════════════════
+const CREATURES = [
+  // ── FLAME CREATURES ──────────────────────────────────────────────────────
+
+  {
+    id:'cinder', name:'Cinder', type:'flame',
+    personality:'Small. Always slightly on fire but completely unbothered. The most confident creature on the island.',
+    threshold:{flame:65}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="cinder-glow" cx="50%" cy="60%" r="50%">
+          <stop offset="0%" stop-color="#ff8040" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#ff4000" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="cinder-body" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#ff8050"/>
+          <stop offset="60%" stop-color="#e84020"/>
+          <stop offset="100%" stop-color="#c02010"/>
+        </radialGradient>
+      </defs>
+      <!-- Ground glow -->
+      <ellipse cx="100" cy="168" rx="38" ry="8" fill="url(#cinder-glow)"/>
+      <!-- Shadow -->
+      <ellipse cx="100" cy="167" rx="30" ry="6" fill="#ff3000" opacity="0.15"/>
+      <!-- Main body with breathing -->
+      <g style="animation:breathe 2s ease-in-out infinite;transform-origin:100px 125px;">
+        <ellipse cx="100" cy="128" rx="38" ry="40" fill="url(#cinder-body)"/>
+        <!-- Belly highlight -->
+        <ellipse cx="93" cy="118" rx="16" ry="14" fill="rgba(255,180,100,0.25)"/>
+        <!-- Confident smirk -->
+        <path d="M87 135 Q100 144 115 135" stroke="#a01800" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Stubby arms raised confidently -->
+        <ellipse cx="62" cy="120" rx="14" ry="9" fill="#e84020" transform="rotate(-30,62,120)"/>
+        <ellipse cx="138" cy="120" rx="14" ry="9" fill="#e84020" transform="rotate(30,138,120)"/>
+        <!-- Tiny fists -->
+        <circle cx="55" cy="113" r="6" fill="#ff6030"/>
+        <circle cx="145" cy="113" r="6" fill="#ff6030"/>
+        <!-- Stubby legs -->
+        <ellipse cx="86" cy="162" rx="12" ry="7" fill="#c02010"/>
+        <ellipse cx="114" cy="162" rx="12" ry="7" fill="#c02010"/>
+      </g>
+      <!-- Eyes - blink occasionally -->
+      <g style="animation:breathe 2s ease-in-out infinite;transform-origin:100px 125px;">
+        <circle cx="88" cy="116" r="10" fill="white"/>
+        <circle cx="112" cy="116" r="10" fill="white"/>
+        <circle cx="90" cy="118" r="5.5" fill="#1a0800"/>
+        <circle cx="114" cy="118" r="5.5" fill="#1a0800"/>
+        <circle cx="91" cy="117" r="2" fill="white"/>
+        <circle cx="115" cy="117" r="2" fill="white"/>
+        <!-- Cocky raised eyebrow -->
+        <path d="M82 107 Q88 103 95 107" stroke="#901800" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M106 106 Q113 104 119 107" stroke="#901800" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+      <!-- Flame crown - multi-layer flicker -->
+      <g style="animation:flicker 0.8s ease-in-out infinite;transform-origin:100px 88px;">
+        <path d="M78 92 Q72 68 90 52 Q100 44 110 52 Q128 68 122 92" fill="#ff9020" opacity="0.9"/>
+      </g>
+      <g style="animation:flicker 1.1s ease-in-out infinite 0.2s;transform-origin:100px 82px;">
+        <path d="M84 90 Q80 70 95 58 Q100 53 105 58 Q120 70 116 90" fill="#ffcc30" opacity="0.85"/>
+      </g>
+      <g style="animation:flicker 0.9s ease-in-out infinite 0.4s;transform-origin:100px 78px;">
+        <path d="M90 88 Q88 72 100 62 Q112 72 110 88" fill="#fff0a0" opacity="0.7"/>
+        <path d="M94 86 Q93 74 100 66 Q107 74 106 86" fill="white" opacity="0.5"/>
+      </g>
+      <!-- Floating embers -->
+      <circle cx="68" cy="72" r="2.5" fill="#ff8020" style="animation:bob 2.3s ease-in-out infinite; opacity:0.8;"/>
+      <circle cx="135" cy="68" r="2" fill="#ffcc40" style="animation:bob 1.8s ease-in-out infinite 0.5s; opacity:0.7;"/>
+      <circle cx="75" cy="58" r="1.5" fill="#ff6020" style="animation:bob 2.8s ease-in-out infinite 1s; opacity:0.6;"/>
+    </svg>`
+  },
+
+  {
+    id:'boldur', name:'Boldur', type:'flame',
+    personality:'Stomps everywhere. Never tiptoeing. Proudly announces itself. You always know when Boldur arrives.',
+    threshold:{flame:60}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="boldur-body" cx="40%" cy="30%" r="65%">
+          <stop offset="0%" stop-color="#f05030"/>
+          <stop offset="70%" stop-color="#cc2010"/>
+          <stop offset="100%" stop-color="#aa1000"/>
+        </radialGradient>
+      </defs>
+      <!-- Stomp impact lines on floor -->
+      <g style="animation:rumble 0.45s ease-in-out infinite;">
+        <line x1="55" y1="172" x2="42" y2="180" stroke="#ff5020" stroke-width="2" opacity="0.5"/>
+        <line x1="50" y1="168" x2="36" y2="173" stroke="#ff7040" stroke-width="1.5" opacity="0.4"/>
+        <line x1="145" y1="172" x2="158" y2="180" stroke="#ff5020" stroke-width="2" opacity="0.5"/>
+        <line x1="150" y1="168" x2="164" y2="173" stroke="#ff7040" stroke-width="1.5" opacity="0.4"/>
+      </g>
+      <g style="animation:rumble 0.45s ease-in-out infinite;transform-origin:100px 128px;">
+        <!-- Wide powerful body -->
+        <ellipse cx="100" cy="132" rx="56" ry="42" fill="#aa1000"/>
+        <ellipse cx="100" cy="128" rx="52" ry="38" fill="#cc2010"/>
+        <ellipse cx="100" cy="122" rx="46" ry="32" fill="url(#boldur-body)"/>
+        <!-- Puffed chest -->
+        <ellipse cx="100" cy="116" rx="30" ry="22" fill="#f06040" opacity="0.6"/>
+        <!-- Determined brow -->
+        <path d="M78 104 L98 109" stroke="#881000" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M102 109 L122 104" stroke="#881000" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- Eyes - fierce and small -->
+        <circle cx="86" cy="112" r="9" fill="white"/>
+        <circle cx="114" cy="112" r="9" fill="white"/>
+        <circle cx="88" cy="114" r="5" fill="#1a0500"/>
+        <circle cx="116" cy="114" r="5" fill="#1a0500"/>
+        <circle cx="89" cy="113" r="1.8" fill="white"/>
+        <circle cx="117" cy="113" r="1.8" fill="white"/>
+        <!-- Determined clenched mouth -->
+        <rect x="89" y="128" width="22" height="5" rx="2.5" fill="#881000"/>
+        <rect x="91" y="130" width="5" height="3" rx="1" fill="#cc2010"/>
+        <rect x="98" y="130" width="5" height="3" rx="1" fill="#cc2010"/>
+        <rect x="105" y="130" width="5" height="3" rx="1" fill="#cc2010"/>
+        <!-- Big raised fists -->
+        <circle cx="52" cy="118" r="18" fill="#cc2010"/>
+        <circle cx="53" cy="116" r="14" fill="#e03020"/>
+        <path d="M44 111 Q53 106 62 111" stroke="#aa1800" stroke-width="2" fill="none"/>
+        <circle cx="148" cy="118" r="18" fill="#cc2010"/>
+        <circle cx="147" cy="116" r="14" fill="#e03020"/>
+        <path d="M138 111 Q147 106 156 111" stroke="#aa1800" stroke-width="2" fill="none"/>
+        <!-- Stompy wide feet -->
+        <ellipse cx="78" cy="168" rx="22" ry="11" fill="#aa1000"/>
+        <ellipse cx="122" cy="168" rx="22" ry="11" fill="#aa1000"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'flicka', name:'Flicka', type:'flame',
+    personality:'Fast. Always moving. Leaves a warm streak behind. You blink and it\'s somewhere else.',
+    threshold:{flame:70}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="flicka-body" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#ff5000"/>
+          <stop offset="50%" stop-color="#ff8030"/>
+          <stop offset="100%" stop-color="#ffaa50"/>
+        </linearGradient>
+        <linearGradient id="flicka-trail" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#ff6020" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#ff6020" stop-opacity="0.5"/>
+        </linearGradient>
+      </defs>
+      <!-- Speed trail -->
+      <g style="animation:streak 1.4s ease-in-out infinite;">
+        <ellipse cx="55" cy="102" rx="38" ry="7" fill="url(#flicka-trail)"/>
+        <ellipse cx="48" cy="102" rx="28" ry="4" fill="url(#flicka-trail)" opacity="0.6"/>
+        <ellipse cx="40" cy="102" rx="18" ry="2.5" fill="url(#flicka-trail)" opacity="0.3"/>
+      </g>
+      <!-- Ember trail dots -->
+      <circle cx="72" cy="98" r="3.5" fill="#ff7020" style="animation:bob 1.2s ease-in-out infinite; opacity:0.6;"/>
+      <circle cx="58" cy="104" r="2.5" fill="#ffaa40" style="animation:bob 1.6s ease-in-out infinite 0.3s; opacity:0.5;"/>
+      <circle cx="44" cy="100" r="2" fill="#ffcc60" style="animation:bob 2s ease-in-out infinite 0.6s; opacity:0.35;"/>
+      <g style="animation:bob 1.6s ease-in-out infinite;transform-origin:110px 102px;">
+        <!-- Streamlined dart-like body -->
+        <ellipse cx="112" cy="102" rx="50" ry="20" fill="url(#flicka-body)" transform="rotate(-6,112,102)"/>
+        <ellipse cx="112" cy="101" rx="44" ry="15" fill="#ff9040" opacity="0.5" transform="rotate(-6,112,102)"/>
+        <!-- Pointed nose -->
+        <path d="M155 97 L175 102 L155 107 Z" fill="#ffaa50"/>
+        <!-- Forked tail fins -->
+        <path d="M64 88 L38 72 L58 102 L38 130 L64 116 Z" fill="#e04010"/>
+        <path d="M66 92 L46 80 L62 102 L46 124 L66 112 Z" fill="#ff6020" opacity="0.7"/>
+        <!-- Dorsal fin -->
+        <path d="M85 88 Q100 72 118 88" fill="#ff6020" opacity="0.6"/>
+        <!-- Whisker fins -->
+        <line x1="152" y1="94" x2="178" y2="80" stroke="#ffcc40" stroke-width="2" opacity="0.8"/>
+        <line x1="152" y1="110" x2="178" y2="124" stroke="#ffcc40" stroke-width="2" opacity="0.8"/>
+        <line x1="152" y1="96" x2="172" y2="86" stroke="#ffee80" stroke-width="1" opacity="0.6"/>
+        <!-- Single fierce eye -->
+        <circle cx="132" cy="99" r="9" fill="white"/>
+        <circle cx="134" cy="100" r="6" fill="#1a0800"/>
+        <circle cx="135" cy="99" r="2.5" fill="white"/>
+        <!-- Speed marking stripes -->
+        <path d="M82 90 Q108 86 124 92" stroke="#ffcc50" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M80 112 Q108 116 124 111" stroke="#ffcc50" stroke-width="1.5" fill="none" opacity="0.4"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'roarette', name:'Roarette', type:'flame',
+    personality:'Enormous voice in a tiny body. Overestimates itself completely. Absolutely fearless about everything.',
+    threshold:{flame:58,thread:55}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="roarette-body" cx="35%" cy="30%" r="65%">
+          <stop offset="0%" stop-color="#ff6040"/>
+          <stop offset="70%" stop-color="#dd3020"/>
+          <stop offset="100%" stop-color="#bb1010"/>
+        </radialGradient>
+      </defs>
+      <!-- Sound waves pulsing out -->
+      <g style="animation:pulse-glow 1.2s ease-in-out infinite;color:#ff6030;">
+        <path d="M118 100 Q140 86 158 100" stroke="#ff6030" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+        <path d="M120 100 Q148 80 170 100" stroke="#ff8040" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.35"/>
+        <path d="M122 100 Q154 74 178 100" stroke="#ffaa50" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.2"/>
+        <!-- Lower waves -->
+        <path d="M118 104 Q140 118 158 104" stroke="#ff6030" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.4"/>
+        <path d="M120 104 Q148 124 170 104" stroke="#ff8040" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.25"/>
+      </g>
+      <g style="animation:breathe 1.8s ease-in-out infinite;transform-origin:90px 118px;">
+        <!-- Tiny round body -->
+        <circle cx="90" cy="118" r="36" fill="#bb1010"/>
+        <circle cx="90" cy="115" r="32" fill="#dd3020"/>
+        <circle cx="90" cy="112" r="28" fill="url(#roarette-body)"/>
+        <!-- Belly lighter -->
+        <ellipse cx="84" cy="112" rx="14" ry="12" fill="rgba(255,160,100,0.2)"/>
+        <!-- THE ENORMOUS OPEN MOUTH -->
+        <path d="M67 105 Q90 158 116 105" fill="#1a0300"/>
+        <path d="M70 108 Q90 150 112 108" fill="#cc1000"/>
+        <!-- Big proud teeth - top row -->
+        <rect x="74" y="106" width="9" height="12" rx="2.5" fill="white"/>
+        <rect x="87" y="105" width="9" height="13" rx="2.5" fill="white"/>
+        <rect x="100" y="106" width="9" height="12" rx="2.5" fill="white"/>
+        <!-- Bottom teeth -->
+        <rect x="78" y="136" width="8" height="9" rx="2" fill="white"/>
+        <rect x="93" y="138" width="8" height="9" rx="2" fill="white"/>
+        <!-- Uvula -->
+        <ellipse cx="90" cy="125" rx="4" ry="7" fill="#ee1020"/>
+        <!-- Tiny triumphant eyes WAY up high above mouth -->
+        <circle cx="74" cy="96" r="7" fill="white"/>
+        <circle cx="76" cy="97" r="4" fill="#1a0400"/>
+        <circle cx="77" cy="96" r="1.5" fill="white"/>
+        <!-- Arms raised in triumph -->
+        <ellipse cx="57" cy="106" rx="10" ry="14" fill="#cc2010" transform="rotate(-35,57,106)"/>
+        <ellipse cx="123" cy="106" rx="10" ry="14" fill="#cc2010" transform="rotate(35,123,106)"/>
+        <!-- Tiny fists at top -->
+        <circle cx="51" cy="96" r="7" fill="#ee3020"/>
+        <circle cx="129" cy="96" r="7" fill="#ee3020"/>
+        <!-- Tiny feet -->
+        <ellipse cx="76" cy="150" rx="10" ry="6" fill="#aa1000"/>
+        <ellipse cx="104" cy="150" rx="10" ry="6" fill="#aa1000"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'embrix', name:'Embrix', type:'rare',
+    personality:'Ancient beyond counting. Has seen the island form and reform. Very still. Radiates heat you can feel from three steps away.',
+    threshold:{flame:75,stone:70}, rare:true,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="embrix-core" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ff8040"/>
+          <stop offset="50%" stop-color="#cc2000"/>
+          <stop offset="100%" stop-color="#660000"/>
+        </radialGradient>
+        <radialGradient id="embrix-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ff4000" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#ff4000" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <!-- Outer heat glow - slow pulse -->
+      <circle cx="100" cy="100" r="85" fill="url(#embrix-glow)" style="animation:breathe 4s ease-in-out infinite;"/>
+      <!-- Outermost dark geometric shell -->
+      <g style="animation:breathe 5s ease-in-out infinite;transform-origin:100px 100px;">
+        <polygon points="100,18 138,52 172,52 148,82 160,118 100,95 40,118 52,82 28,52 62,52" fill="#550000"/>
+        <polygon points="100,26 132,56 162,56 140,84 151,116 100,94 49,116 60,84 38,56 68,56" fill="#771100"/>
+        <polygon points="100,34 127,60 153,60 133,86 143,114 100,93 57,114 67,86 47,60 73,60" fill="#992200"/>
+        <polygon points="100,42 122,64 144,64 126,87 135,112 100,92 65,112 74,87 56,64 78,64" fill="url(#embrix-core)"/>
+        <!-- Inner bright polygon -->
+        <polygon points="100,52 116,68 134,68 120,88 128,108 100,90 72,108 80,88 66,68 84,68" fill="#cc3010"/>
+        <!-- Glowing crack lines -->
+        <line x1="100" y1="52" x2="100" y2="92" stroke="#ff8030" stroke-width="2.5" opacity="0.9"/>
+        <line x1="66" y1="68" x2="134" y2="68" stroke="#ff6020" stroke-width="2" opacity="0.8"/>
+        <line x1="74" y1="88" x2="126" y2="88" stroke="#ff5010" stroke-width="1.5" opacity="0.7"/>
+        <line x1="80" y1="108" x2="120" y2="108" stroke="#ff4000" stroke-width="1.5" opacity="0.6"/>
+        <!-- Diagonal cracks -->
+        <line x1="84" y1="68" x2="72" y2="108" stroke="#ff7020" stroke-width="1" opacity="0.5"/>
+        <line x1="116" y1="68" x2="128" y2="108" stroke="#ff7020" stroke-width="1" opacity="0.5"/>
+        <!-- Ancient slit eyes -->
+        <rect x="83" y="79" width="14" height="5" rx="2.5" fill="#ff6020"/>
+        <rect x="103" y="79" width="14" height="5" rx="2.5" fill="#ff6020"/>
+        <!-- Center gem -->
+        <polygon points="100,68 110,82 100,96 90,82" fill="#ff3000"/>
+        <polygon points="100,72 108,82 100,92 92,82" fill="#ff7030"/>
+        <ellipse cx="100" cy="82" rx="5" ry="5" fill="white" opacity="0.7"/>
+        <ellipse cx="100" cy="82" rx="3" ry="3" fill="#fff0a0" opacity="0.9" style="animation:flicker 1.5s ease-in-out infinite;"/>
+      </g>
+      <!-- Orbiting fire sparks -->
+      <circle r="5" fill="#ff8020" opacity="0.9" style="animation:orbit 3s linear infinite;transform-origin:100px 83px;"/>
+      <circle r="3.5" fill="#ffcc40" opacity="0.8" style="animation:orbit 4.5s linear infinite reverse;transform-origin:100px 83px;"/>
+      <circle r="2.5" fill="#ff4000" opacity="0.7" style="animation:orbit 6s linear infinite 1s;transform-origin:100px 83px;"/>
+      <!-- Heat shimmer particles -->
+      <circle cx="72" cy="50" r="2" fill="#ff6020" style="animation:bob 2s ease-in-out infinite; opacity:0.5;"/>
+      <circle cx="130" cy="46" r="2" fill="#ff8030" style="animation:bob 2.5s ease-in-out infinite 0.7s; opacity:0.5;"/>
+      <circle cx="100" cy="30" r="2.5" fill="#ffaa40" style="animation:bob 3s ease-in-out infinite 1.4s; opacity:0.6;"/>
+    </svg>`
+  },
+
+  // ── THREAD CREATURES ─────────────────────────────────────────────────────
+
+  {
+    id:'wibble', name:'Wibble', type:'thread',
+    personality:'Extremely shy. Loves being found more than anything. Hides first. Then peeks. Then stays forever.',
+    threshold:{thread:65}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="wibble-body" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#c090e8"/>
+          <stop offset="60%" stop-color="#9060c0"/>
+          <stop offset="100%" stop-color="#6030a0"/>
+        </radialGradient>
+      </defs>
+      <!-- Hiding tendrils that wave gently -->
+      <g style="animation:wobble 3s ease-in-out infinite;transform-origin:55px 125px;">
+        <path d="M68 130 Q50 115 46 96 Q44 86 50 80" stroke="#9060c0" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M64 140 Q44 130 38 116 Q34 106 40 100" stroke="#7a50a8" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <!-- Tendril tips glow -->
+        <circle cx="50" cy="80" r="7" fill="#d0a0f0"/>
+        <circle cx="40" cy="100" r="5" fill="#c090e0"/>
+      </g>
+      <g style="animation:wobble 3s ease-in-out infinite reverse;transform-origin:145px 125px;">
+        <path d="M132 130 Q150 115 154 96 Q156 86 150 80" stroke="#9060c0" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M136 140 Q156 130 162 116 Q166 106 160 100" stroke="#7a50a8" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="150" cy="80" r="7" fill="#d0a0f0"/>
+        <circle cx="160" cy="100" r="5" fill="#c090e0"/>
+      </g>
+      <!-- Main body with peek animation -->
+      <g style="animation:peek 4s ease-in-out infinite;transform-origin:100px 130px;">
+        <!-- Round shy body -->
+        <circle cx="100" cy="136" r="46" fill="#6030a0"/>
+        <circle cx="100" cy="133" r="42" fill="#8050b8"/>
+        <circle cx="100" cy="130" r="38" fill="url(#wibble-body)"/>
+        <!-- Soft belly -->
+        <ellipse cx="92" cy="126" rx="18" ry="15" fill="rgba(220,180,255,0.2)"/>
+        <!-- Big excited eyes peeking up -->
+        <circle cx="86" cy="110" r="12" fill="white"/>
+        <circle cx="114" cy="110" r="12" fill="white"/>
+        <!-- Sparkle eyes - very expressive -->
+        <circle cx="88" cy="112" r="7" fill="#3a1060"/>
+        <circle cx="116" cy="112" r="7" fill="#3a1060"/>
+        <circle cx="90" cy="110" r="2.5" fill="white"/>
+        <circle cx="118" cy="110" r="2.5" fill="white"/>
+        <circle cx="86" cy="115" r="1.2" fill="white" opacity="0.7"/>
+        <circle cx="114" cy="115" r="1.2" fill="white" opacity="0.7"/>
+        <!-- Shy blushes -->
+        <ellipse cx="76" cy="120" rx="10" ry="6" fill="#e080f0" opacity="0.45"/>
+        <ellipse cx="124" cy="120" rx="10" ry="6" fill="#e080f0" opacity="0.45"/>
+        <!-- Tentative smile -->
+        <path d="M88 132 Q100 140 112 132" stroke="#7050a0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'tangle', name:'Tangle', type:'thread',
+    personality:'Always accidentally attached to something nearby. Very apologetic about it. Incredibly kind.',
+    threshold:{thread:60}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="tangle-body" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#60b090"/>
+          <stop offset="60%" stop-color="#3a8068"/>
+          <stop offset="100%" stop-color="#206050"/>
+        </radialGradient>
+      </defs>
+      <!-- Loose trailing threads - animated to drift -->
+      <g style="animation:wobble 4s ease-in-out infinite;transform-origin:20px 55px;" opacity="0.7">
+        <path d="M68 78 Q48 62 28 55" stroke="#5ec4b0" stroke-width="2" fill="none" stroke-dasharray="5,4"/>
+        <circle cx="28" cy="55" r="3" fill="#8fe8d8"/>
+      </g>
+      <g style="animation:wobble 5s ease-in-out infinite reverse;transform-origin:180px 55px;" opacity="0.7">
+        <path d="M132 78 Q152 62 172 55" stroke="#5ec4b0" stroke-width="2" fill="none" stroke-dasharray="5,4"/>
+        <circle cx="172" cy="55" r="3" fill="#8fe8d8"/>
+      </g>
+      <g style="animation:wobble 3.5s ease-in-out infinite 0.5s;transform-origin:100px 25px;" opacity="0.7">
+        <path d="M100 72 Q95 48 92 28" stroke="#70d8c0" stroke-width="2" fill="none" stroke-dasharray="5,4"/>
+        <circle cx="92" cy="28" r="3" fill="#8fe8d8"/>
+      </g>
+      <g style="animation:wobble 4.5s ease-in-out infinite 1s;transform-origin:40px 175px;" opacity="0.6">
+        <path d="M72 158 Q56 170 42 178" stroke="#5ec4b0" stroke-width="1.5" fill="none" stroke-dasharray="4,4"/>
+        <circle cx="42" cy="178" r="2.5" fill="#8fe8d8"/>
+      </g>
+      <g style="animation:wobble 4s ease-in-out infinite 1.5s;transform-origin:160px 175px;" opacity="0.6">
+        <path d="M128 158 Q144 170 158 178" stroke="#5ec4b0" stroke-width="1.5" fill="none" stroke-dasharray="4,4"/>
+        <circle cx="158" cy="178" r="2.5" fill="#8fe8d8"/>
+      </g>
+      <g style="animation:wobble 2.8s ease-in-out infinite;transform-origin:100px 115px;">
+        <!-- Round apologetic body -->
+        <circle cx="100" cy="118" r="48" fill="#206050"/>
+        <circle cx="100" cy="115" r="44" fill="#3a8068"/>
+        <circle cx="100" cy="112" r="40" fill="url(#tangle-body)"/>
+        <!-- Mossy texture loops on surface -->
+        <path d="M70 100 Q62 88 76 82 Q90 76 88 92" stroke="#5ec4b0" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path d="M122 96 Q130 84 118 80 Q106 76 110 90" stroke="#5ec4b0" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path d="M84 138 Q76 150 90 153 Q104 156 100 140" stroke="#5ec4b0" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Worried apologetic eyes -->
+        <circle cx="87" cy="106" r="10" fill="white"/>
+        <circle cx="113" cy="106" r="10" fill="white"/>
+        <circle cx="89" cy="108" r="5.5" fill="#1a3028"/>
+        <circle cx="115" cy="108" r="5.5" fill="#1a3028"/>
+        <circle cx="90" cy="107" r="2" fill="white"/>
+        <circle cx="116" cy="107" r="2" fill="white"/>
+        <!-- Worried inner brows -->
+        <path d="M81 98 Q87 93 93 98" stroke="#256050" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M107 98 Q113 93 119 98" stroke="#256050" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- "Oh no" open mouth -->
+        <ellipse cx="100" cy="124" rx="8" ry="6" fill="#1a3028"/>
+        <ellipse cx="100" cy="123" rx="5" ry="4" fill="#409070"/>
+        <!-- Little apologetic hands out to sides -->
+        <ellipse cx="58" cy="114" rx="12" ry="9" fill="#3a8068" transform="rotate(15,58,114)"/>
+        <ellipse cx="142" cy="114" rx="12" ry="9" fill="#3a8068" transform="rotate(-15,142,114)"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'mosswhir', name:'Mosswhir', type:'thread',
+    personality:'Always has a tiny gift for whoever it meets. Warm as sunlight. Smells like fresh bread and pine.',
+    threshold:{thread:68}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="mosswhir-body" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#5a9830"/>
+          <stop offset="60%" stop-color="#3a7018"/>
+          <stop offset="100%" stop-color="#204a08"/>
+        </radialGradient>
+      </defs>
+      <!-- Warm light glow around gift -->
+      <circle cx="168" cy="108" r="20" fill="#f0c040" opacity="0.12" style="animation:breathe 2s ease-in-out infinite;"/>
+      <g style="animation:bob 2.8s ease-in-out infinite;transform-origin:100px 115px;">
+        <!-- Round mossy body -->
+        <circle cx="100" cy="118" r="48" fill="#204a08"/>
+        <circle cx="100" cy="115" r="44" fill="#3a7018"/>
+        <circle cx="100" cy="112" r="40" fill="url(#mosswhir-body)"/>
+        <!-- Moss bumps all over -->
+        <circle cx="78" cy="96" r="10" fill="#4a8820" opacity="0.85"/>
+        <circle cx="118" cy="90" r="9" fill="#4a8820" opacity="0.85"/>
+        <circle cx="132" cy="108" r="8" fill="#4a8820" opacity="0.8"/>
+        <circle cx="68" cy="118" r="9" fill="#4a8820" opacity="0.85"/>
+        <circle cx="108" cy="138" r="10" fill="#4a8820" opacity="0.8"/>
+        <circle cx="85" cy="132" r="7" fill="#5a9828" opacity="0.75"/>
+        <circle cx="92" cy="100" r="6" fill="#5a9828" opacity="0.7"/>
+        <!-- Little flowers in the moss -->
+        <circle cx="78" cy="96" r="4" fill="#f0e840" opacity="0.7"/>
+        <circle cx="118" cy="90" r="3.5" fill="#f8d030" opacity="0.7"/>
+        <!-- Warm loving eyes -->
+        <circle cx="87" cy="106" r="11" fill="#fff8e0"/>
+        <circle cx="113" cy="106" r="11" fill="#fff8e0"/>
+        <circle cx="89" cy="108" r="6" fill="#1a2800"/>
+        <circle cx="115" cy="108" r="6" fill="#1a2800"/>
+        <circle cx="90" cy="107" r="2.2" fill="white"/>
+        <circle cx="116" cy="107" r="2.2" fill="white"/>
+        <!-- Little heart shine in eyes -->
+        <path d="M87 104 Q89 102 91 104" stroke="white" stroke-width="1" fill="none" opacity="0.5"/>
+        <path d="M113 104 Q115 102 117 104" stroke="white" stroke-width="1" fill="none" opacity="0.5"/>
+        <!-- Big warm smile -->
+        <path d="M85 124 Q100 135 115 124" stroke="#1a4008" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Outstretched arm holding gift -->
+        <path d="M143 112 Q158 107 166 112" stroke="#3a7018" stroke-width="12" fill="none" stroke-linecap="round"/>
+        <!-- Gift - glowing golden parcel -->
+        <rect x="158" y="100" width="20" height="18" rx="3" fill="#d4a020"/>
+        <rect x="160" y="102" width="16" height="14" rx="2" fill="#f0c040"/>
+        <!-- Ribbon -->
+        <line x1="168" y1="100" x2="168" y2="118" stroke="#c08010" stroke-width="2"/>
+        <line x1="158" y1="109" x2="178" y2="109" stroke="#c08010" stroke-width="2"/>
+        <!-- Bow -->
+        <path d="M164 100 Q168 96 172 100" stroke="#c08010" stroke-width="1.5" fill="none"/>
+        <!-- Other little arm -->
+        <ellipse cx="55" cy="114" rx="12" ry="9" fill="#3a7018" transform="rotate(-10,55,114)"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'lumble', name:'Lumble', type:'thread',
+    personality:'Slow. Warm. Makes everything feel a little better without saying a word.',
+    threshold:{thread:72}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="lumble-body" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#f0c860"/>
+          <stop offset="50%" stop-color="#d0a030"/>
+          <stop offset="100%" stop-color="#a87020"/>
+        </radialGradient>
+        <radialGradient id="lumble-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f0c040" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#f0c040" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <!-- Warm glow aura - very slow breathing -->
+      <circle cx="100" cy="115" r="72" fill="url(#lumble-glow)" style="animation:breathe 4s ease-in-out infinite;"/>
+      <circle cx="100" cy="115" r="60" fill="url(#lumble-glow)" style="animation:breathe 4s ease-in-out infinite 1s;"/>
+      <!-- Floating warmth motes -->
+      <circle cx="60" cy="80" r="4" fill="#f0c040" style="animation:bob 3s ease-in-out infinite; opacity:0.5;"/>
+      <circle cx="142" cy="74" r="3" fill="#f0c040" style="animation:bob 3.5s ease-in-out infinite 0.8s; opacity:0.45;"/>
+      <circle cx="158" cy="98" r="2.5" fill="#f0d060" style="animation:bob 4s ease-in-out infinite 1.5s; opacity:0.4;"/>
+      <circle cx="44" cy="102" r="2.5" fill="#f0d060" style="animation:bob 3.2s ease-in-out infinite 0.4s; opacity:0.4;"/>
+      <g style="animation:breathe 4.5s ease-in-out infinite;transform-origin:100px 115px;">
+        <!-- Very round very chubby golden body -->
+        <circle cx="100" cy="118" r="54" fill="#a87020"/>
+        <circle cx="100" cy="114" r="50" fill="#c89030"/>
+        <circle cx="100" cy="110" r="46" fill="#d8a040"/>
+        <circle cx="100" cy="107" r="42" fill="url(#lumble-body)"/>
+        <!-- Soft highlight on upper body -->
+        <ellipse cx="84" cy="92" rx="22" ry="16" fill="rgba(255,240,180,0.25)"/>
+        <!-- Very soft droopy content eyes - almost closed -->
+        <path d="M80 108 Q88 102 96 108" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path d="M104 108 Q112 102 120 108" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Tiny glints in eyes -->
+        <circle cx="88" cy="109" r="2" fill="white" opacity="0.5"/>
+        <circle cx="112" cy="109" r="2" fill="white" opacity="0.5"/>
+        <!-- Slow wide warm smile -->
+        <path d="M82 126 Q100 140 118 126" stroke="rgba(255,255,255,0.65)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Chubby relaxed arms hanging low -->
+        <ellipse cx="50" cy="130" rx="20" ry="13" fill="#c89030" transform="rotate(22,50,130)"/>
+        <ellipse cx="150" cy="130" rx="20" ry="13" fill="#c89030" transform="rotate(-22,150,130)"/>
+        <!-- Little warm hands -->
+        <circle cx="41" cy="138" r="9" fill="#d4a040"/>
+        <circle cx="159" cy="138" r="9" fill="#d4a040"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'silkwynn', name:'Silkwynn', type:'rare',
+    personality:'Barely here. Weaves silver threads through everything it touches. Ancient and patient and almost invisible.',
+    threshold:{thread:75,flame:70}, rare:true,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="silk-body" cx="50%" cy="45%" r="50%">
+          <stop offset="0%" stop-color="rgba(230,225,255,0.6)"/>
+          <stop offset="60%" stop-color="rgba(180,170,230,0.35)"/>
+          <stop offset="100%" stop-color="rgba(130,120,200,0.15)"/>
+        </radialGradient>
+      </defs>
+      <!-- The whole creature phases in and out -->
+      <g style="animation:fade-in-out 5s ease-in-out infinite;">
+        <!-- Trailing silver threads drifting -->
+        <g style="animation:wobble 6s ease-in-out infinite;transform-origin:28px 40px;" opacity="0.5">
+          <path d="M68 72 Q48 58 28 42" stroke="silver" stroke-width="1" fill="none"/>
+          <path d="M64 82 Q44 68 28 55" stroke="#c8c0ff" stroke-width="0.7" fill="none"/>
+          <circle cx="28" cy="42" r="2" fill="silver"/>
+        </g>
+        <g style="animation:wobble 7s ease-in-out infinite reverse;transform-origin:172px 40px;" opacity="0.5">
+          <path d="M132 72 Q152 58 172 42" stroke="silver" stroke-width="1" fill="none"/>
+          <path d="M136 82 Q156 68 172 55" stroke="#c8c0ff" stroke-width="0.7" fill="none"/>
+          <circle cx="172" cy="42" r="2" fill="silver"/>
+        </g>
+        <g style="animation:wobble 5s ease-in-out infinite 1s;transform-origin:90px 20px;" opacity="0.55">
+          <path d="M96 62 Q92 40 90 22" stroke="silver" stroke-width="1.2" fill="none"/>
+          <path d="M104 62 Q108 40 110 22" stroke="#d4c8ff" stroke-width="0.8" fill="none"/>
+          <circle cx="90" cy="22" r="2" fill="silver"/>
+          <circle cx="110" cy="22" r="1.5" fill="#d4c8ff"/>
+        </g>
+        <g opacity="0.4">
+          <path d="M70 142 Q54 158 40 170" stroke="silver" stroke-width="0.8" fill="none"/>
+          <path d="M130 142 Q146 158 160 170" stroke="silver" stroke-width="0.8" fill="none"/>
+        </g>
+        <!-- Main translucent form -->
+        <ellipse cx="100" cy="108" rx="52" ry="60" fill="rgba(180,175,230,0.08)" stroke="rgba(220,215,255,0.25)" stroke-width="1.5"/>
+        <ellipse cx="100" cy="106" rx="44" ry="52" fill="rgba(200,195,240,0.12)" stroke="rgba(230,225,255,0.35)" stroke-width="1"/>
+        <ellipse cx="100" cy="104" rx="34" ry="42" fill="rgba(215,210,250,0.18)"/>
+        <!-- Inner translucent core -->
+        <ellipse cx="100" cy="102" rx="22" ry="28" fill="rgba(240,238,255,0.25)"/>
+        <!-- Star-shaped eyes -->
+        <path d="M85 94 L87 88 L89 94 L95 96 L89 98 L87 104 L85 98 L79 96 Z" fill="white" opacity="0.95"/>
+        <path d="M109 94 L111 88 L113 94 L119 96 L113 98 L111 104 L109 98 L103 96 Z" fill="white" opacity="0.95"/>
+        <!-- Gentle silver smile -->
+        <path d="M88 116 Q100 122 112 116" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Crown of threads -->
+        <line x1="78" y1="68" x2="72" y2="48" stroke="silver" stroke-width="2" opacity="0.65"/>
+        <line x1="87" y1="63" x2="83" y2="42" stroke="#d4c0ff" stroke-width="1.5" opacity="0.65"/>
+        <line x1="100" y1="60" x2="100" y2="38" stroke="silver" stroke-width="2" opacity="0.75"/>
+        <line x1="113" y1="63" x2="117" y2="42" stroke="#d4c0ff" stroke-width="1.5" opacity="0.65"/>
+        <line x1="122" y1="68" x2="128" y2="48" stroke="silver" stroke-width="2" opacity="0.65"/>
+        <!-- Crown tips -->
+        <circle cx="72" cy="48" r="2.5" fill="silver" opacity="0.7"/>
+        <circle cx="83" cy="42" r="2" fill="#d4c0ff" opacity="0.7"/>
+        <circle cx="100" cy="38" r="3" fill="white" opacity="0.8"/>
+        <circle cx="117" cy="42" r="2" fill="#d4c0ff" opacity="0.7"/>
+        <circle cx="128" cy="48" r="2.5" fill="silver" opacity="0.7"/>
+      </g>
+      <!-- Orbiting thread motes - always visible -->
+      <ellipse rx="5" ry="3" fill="rgba(220,215,255,0.8)" style="animation:orbit 5s linear infinite;transform-origin:100px 103px;"/>
+      <ellipse rx="3" ry="2" fill="rgba(255,255,255,0.7)" style="animation:orbit 7s linear infinite reverse 1s;transform-origin:100px 103px;"/>
+    </svg>`
+  },
+
+  // ── STONE CREATURES ──────────────────────────────────────────────────────
+
+  {
+    id:'grumble', name:'Grumble', type:'stone',
+    personality:'Not actually grumpy. Just sounds that way. Once it trusts you it follows you everywhere.',
+    threshold:{stone:62}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="grumble-body" cx="40%" cy="30%" r="65%">
+          <stop offset="0%" stop-color="#8890a0"/>
+          <stop offset="60%" stop-color="#60687a"/>
+          <stop offset="100%" stop-color="#404850"/>
+        </radialGradient>
+      </defs>
+      <!-- Ground shadow -->
+      <ellipse cx="100" cy="174" rx="56" ry="10" fill="#303840" opacity="0.5"/>
+      <g style="animation:breathe 5s ease-in-out infinite;transform-origin:100px 128px;">
+        <!-- Heavy layered body -->
+        <ellipse cx="100" cy="138" rx="62" ry="42" fill="#404850"/>
+        <ellipse cx="100" cy="133" rx="58" ry="38" fill="#505860"/>
+        <ellipse cx="100" cy="127" rx="52" ry="34" fill="#606870"/>
+        <ellipse cx="100" cy="122" rx="46" ry="28" fill="url(#grumble-body)"/>
+        <!-- Rocky surface cracks and texture -->
+        <path d="M62 122 Q78 115 94 122" stroke="#505868" stroke-width="2" fill="none" opacity="0.7"/>
+        <path d="M106 118 Q120 111 138 118" stroke="#505868" stroke-width="2" fill="none" opacity="0.7"/>
+        <path d="M68 132 Q92 138 112 132" stroke="#505868" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M76 142 Q100 148 124 142" stroke="#404858" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <!-- The famous permanent frown that means nothing -->
+        <path d="M82 125 Q100 118 118 125" stroke="#383e48" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Deep-set knowing eyes -->
+        <ellipse cx="86" cy="110" rx="12" ry="9" fill="#282e38"/>
+        <ellipse cx="114" cy="110" rx="12" ry="9" fill="#282e38"/>
+        <circle cx="87" cy="111" r="5.5" fill="#7090a8"/>
+        <circle cx="115" cy="111" r="5.5" fill="#7090a8"/>
+        <circle cx="88" cy="110" r="2" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="116" cy="110" r="2" fill="rgba(255,255,255,0.6)"/>
+        <!-- Heavy brow that looks mean but isn't -->
+        <path d="M76 102 Q86 97 96 102" stroke="#383e48" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path d="M104 102 Q114 97 124 102" stroke="#383e48" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Rock arms folded solidly -->
+        <ellipse cx="60" cy="128" rx="22" ry="14" fill="#505860" transform="rotate(-8,60,128)"/>
+        <ellipse cx="140" cy="128" rx="22" ry="14" fill="#505860" transform="rotate(8,140,128)"/>
+        <!-- Arms overlapping in front -->
+        <ellipse cx="100" cy="133" rx="34" ry="10" fill="#606870" opacity="0.7"/>
+        <!-- Chunky feet -->
+        <ellipse cx="78" cy="168" rx="24" ry="12" fill="#404850"/>
+        <ellipse cx="122" cy="168" rx="24" ry="12" fill="#404850"/>
+        <!-- Toe lines -->
+        <line x1="66" y1="172" x2="70" y2="168" stroke="#505860" stroke-width="1.5"/>
+        <line x1="78" y1="174" x2="78" y2="168" stroke="#505860" stroke-width="1.5"/>
+        <line x1="90" y1="172" x2="86" y2="168" stroke="#505860" stroke-width="1.5"/>
+        <line x1="110" y1="172" x2="114" y2="168" stroke="#505860" stroke-width="1.5"/>
+        <line x1="122" y1="174" x2="122" y2="168" stroke="#505860" stroke-width="1.5"/>
+        <line x1="134" y1="172" x2="130" y2="168" stroke="#505860" stroke-width="1.5"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'pebb', name:'Pebb', type:'stone',
+    personality:'Tiny and ancient. Has been everywhere and remembers every detail. Older than the lighthouse.',
+    threshold:{stone:58}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="pebb-body" cx="38%" cy="32%" r="62%">
+          <stop offset="0%" stop-color="#8898b0"/>
+          <stop offset="50%" stop-color="#607080"/>
+          <stop offset="100%" stop-color="#404e60"/>
+        </radialGradient>
+      </defs>
+      <!-- Iridescent shimmer rings -->
+      <g style="animation:spin-slow 10s linear infinite;transform-origin:100px 112px;opacity:0.35;">
+        <ellipse cx="100" cy="98" rx="32" ry="9" fill="#b0d0f0"/>
+        <ellipse cx="100" cy="112" rx="38" ry="7" fill="#d0b0f0" transform="rotate(65,100,112)"/>
+        <ellipse cx="100" cy="112" rx="38" ry="7" fill="#b0f0d8" transform="rotate(130,100,112)"/>
+        <ellipse cx="100" cy="112" rx="32" ry="5" fill="#f0d0b0" transform="rotate(195,100,112)"/>
+      </g>
+      <g style="animation:bob 3.5s ease-in-out infinite;transform-origin:100px 112px;">
+        <!-- Small smooth stone body - layered -->
+        <ellipse cx="100" cy="118" rx="40" ry="35" fill="#404e60"/>
+        <ellipse cx="100" cy="114" rx="36" ry="31" fill="#506070"/>
+        <ellipse cx="100" cy="110" rx="32" ry="27" fill="#607080"/>
+        <ellipse cx="100" cy="107" rx="28" ry="23" fill="url(#pebb-body)"/>
+        <!-- Surface iridescent patches -->
+        <ellipse cx="86" cy="98" rx="14" ry="10" fill="rgba(180,210,255,0.25)" transform="rotate(-20,86,98)"/>
+        <ellipse cx="114" cy="104" rx="10" ry="7" fill="rgba(200,180,255,0.2)" transform="rotate(10,114,104)"/>
+        <ellipse cx="100" cy="118" rx="12" ry="7" fill="rgba(160,230,210,0.2)"/>
+        <!-- Ancient knowing eyes - deep and wise -->
+        <circle cx="89" cy="106" r="9" fill="#202838"/>
+        <circle cx="111" cy="106" r="9" fill="#202838"/>
+        <!-- Iridescent irises -->
+        <circle cx="89" cy="107" r="5" fill="#6090c0"/>
+        <circle cx="111" cy="107" r="5" fill="#6090c0"/>
+        <circle cx="90" cy="106" r="2" fill="rgba(180,220,255,0.9)"/>
+        <circle cx="112" cy="106" r="2" fill="rgba(180,220,255,0.9)"/>
+        <!-- Tiny pupil glints of wisdom -->
+        <circle cx="91" cy="107" r="0.8" fill="white" opacity="0.7"/>
+        <circle cx="113" cy="107" r="0.8" fill="white" opacity="0.7"/>
+        <!-- Calm straight mouth - serene -->
+        <line x1="92" y1="118" x2="108" y2="118" stroke="#485868" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Tiny suggestion of marks - ancient scars/runes -->
+        <path d="M80 112 L82 116 L80 120" stroke="#506070" stroke-width="1" fill="none" opacity="0.5"/>
+        <path d="M120 112 L118 116 L120 120" stroke="#506070" stroke-width="1" fill="none" opacity="0.5"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'stonk', name:'Stonk', type:'stone',
+    personality:'Cannot be moved unless it wants to move. Then surprisingly, briefly, extremely fast. One eye. Perpetually sleepy.',
+    threshold:{stone:66}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="stonk-body" cx="50%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="#8a9098"/>
+          <stop offset="70%" stop-color="#606870"/>
+          <stop offset="100%" stop-color="#484e58"/>
+        </radialGradient>
+      </defs>
+      <!-- Shadow - very wide -->
+      <ellipse cx="100" cy="178" rx="72" ry="10" fill="#303440" opacity="0.5"/>
+      <g style="animation:breathe 7s ease-in-out infinite;transform-origin:100px 138px;">
+        <!-- Extremely flat wide body - like a stepping stone -->
+        <ellipse cx="100" cy="148" rx="74" ry="26" fill="#404650"/>
+        <ellipse cx="100" cy="142" rx="70" ry="24" fill="#505660"/>
+        <ellipse cx="100" cy="136" rx="65" ry="22" fill="#606870"/>
+        <ellipse cx="100" cy="130" rx="58" ry="20" fill="#787e88"/>
+        <!-- Completely flat top surface -->
+        <ellipse cx="100" cy="122" rx="52" ry="14" fill="url(#stonk-body)"/>
+        <!-- Surface detail - smooth stone texture -->
+        <path d="M56 124 Q72 120 88 124" stroke="#686e78" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M112 122 Q128 118 144 122" stroke="#686e78" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <!-- THE SINGLE SLEEPY EYE - huge, centered, drooping -->
+        <ellipse cx="100" cy="114" rx="26" ry="13" fill="#282e38"/>
+        <ellipse cx="100" cy="115" rx="22" ry="10" fill="#383e48"/>
+        <circle cx="100" cy="116" r="7" fill="#6090b0"/>
+        <circle cx="102" cy="115" r="3" fill="rgba(180,220,255,0.8)"/>
+        <!-- Hugely drooping eyelid covering 60% of eye -->
+        <path d="M74 112 Q100 106 126 112" fill="#606870"/>
+        <path d="M74 112 Q100 108 126 112" fill="#787e88" opacity="0.5"/>
+        <!-- Stubby little legs -->
+        <rect x="70" y="162" width="24" height="16" rx="6" fill="#484e58"/>
+        <rect x="106" y="162" width="24" height="16" rx="6" fill="#484e58"/>
+        <!-- Toe nubs -->
+        <circle cx="76" cy="178" r="4" fill="#404650"/>
+        <circle cx="86" cy="178" r="4" fill="#404650"/>
+        <circle cx="112" cy="178" r="4" fill="#404650"/>
+        <circle cx="122" cy="178" r="4" fill="#404650"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'murrock', name:'Murrock', type:'stone',
+    personality:'Ancient. Silent. Communicates only through vibrations you feel in your chest. Understands everything.',
+    threshold:{stone:74}, rare:false,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="murrock-body" cx="45%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#4a5468"/>
+          <stop offset="60%" stop-color="#303844"/>
+          <stop offset="100%" stop-color="#1e2430"/>
+        </radialGradient>
+      </defs>
+      <!-- Vibration rings emanating outward -->
+      <g style="animation:pulse-glow 2.5s ease-in-out infinite;color:#5a7890;">
+        <ellipse cx="100" cy="136" rx="58" ry="18" fill="none" stroke="#4a6880" stroke-width="1.5" opacity="0.5"/>
+        <ellipse cx="100" cy="136" rx="72" ry="24" fill="none" stroke="#3a5870" stroke-width="1" opacity="0.3"/>
+        <ellipse cx="100" cy="136" rx="85" ry="30" fill="none" stroke="#2a4860" stroke-width="0.7" opacity="0.18"/>
+        <!-- Side vibration lines -->
+        <line x1="28" y1="100" x2="20" y2="100" stroke="#4a6880" stroke-width="2" opacity="0.4"/>
+        <line x1="30" y1="90" x2="20" y2="86" stroke="#4a6880" stroke-width="1.5" opacity="0.3"/>
+        <line x1="30" y1="110" x2="20" y2="114" stroke="#4a6880" stroke-width="1.5" opacity="0.3"/>
+        <line x1="172" y1="100" x2="180" y2="100" stroke="#4a6880" stroke-width="2" opacity="0.4"/>
+        <line x1="170" y1="90" x2="180" y2="86" stroke="#4a6880" stroke-width="1.5" opacity="0.3"/>
+        <line x1="170" y1="110" x2="180" y2="114" stroke="#4a6880" stroke-width="1.5" opacity="0.3"/>
+      </g>
+      <g style="animation:rumble 2.5s ease-in-out infinite;transform-origin:100px 110px;">
+        <!-- Dark jagged multi-faceted body -->
+        <polygon points="100,42 142,68 168,68 148,100 162,138 100,115 38,138 52,100 32,68 58,68" fill="#1e2430"/>
+        <polygon points="100,50 136,72 160,72 142,102 155,136 100,114 45,136 58,102 40,72 64,72" fill="#2a3040"/>
+        <polygon points="100,58 130,76 152,76 136,104 148,134 100,113 52,134 64,104 48,76 70,76" fill="#36404e"/>
+        <polygon points="100,66 124,80 144,80 130,106 141,132 100,112 59,132 70,106 56,80 76,80" fill="url(#murrock-body)"/>
+        <!-- Jagged protrusions -->
+        <polygon points="58,72 44,54 66,62" fill="#2a3040"/>
+        <polygon points="142,72 156,54 134,62" fill="#2a3040"/>
+        <polygon points="100,42 90,26 110,26" fill="#2a3040"/>
+        <polygon points="32,68 16,72 28,88" fill="#2a3040"/>
+        <polygon points="168,68 184,72 172,88" fill="#2a3040"/>
+        <!-- Glowing slit eyes -->
+        <rect x="80" y="94" width="16" height="6" rx="3" fill="#6090b8"/>
+        <rect x="104" y="94" width="16" height="6" rx="3" fill="#6090b8"/>
+        <!-- Subtle glow on eyes -->
+        <rect x="80" y="94" width="16" height="6" rx="3" fill="#90c0e0" opacity="0.4" style="animation:flicker 3s ease-in-out infinite;"/>
+        <rect x="104" y="94" width="16" height="6" rx="3" fill="#90c0e0" opacity="0.4" style="animation:flicker 3s ease-in-out infinite 1s;"/>
+        <!-- Sound hole dimples -->
+        <circle cx="88" cy="112" r="3" fill="#1e2430"/>
+        <circle cx="100" cy="114" r="3" fill="#1e2430"/>
+        <circle cx="112" cy="112" r="3" fill="#1e2430"/>
+        <!-- Stone rune markings -->
+        <path d="M78 76 L80 84" stroke="#4a5868" stroke-width="1.5" opacity="0.6"/>
+        <path d="M84 74 L82 82" stroke="#4a5868" stroke-width="1" opacity="0.5"/>
+        <path d="M120 76 L118 84" stroke="#4a5868" stroke-width="1.5" opacity="0.6"/>
+        <path d="M114 74 L116 82" stroke="#4a5868" stroke-width="1" opacity="0.5"/>
+      </g>
+    </svg>`
+  },
+
+  {
+    id:'veilstone', name:'Veilstone', type:'rare',
+    personality:'Only appears in complete stillness. Barely visible at any angle. Ancient beyond ancient. Gentle.',
+    threshold:{stone:78,thread:72}, rare:true,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="veil-body" cx="50%" cy="45%" r="50%">
+          <stop offset="0%" stop-color="rgba(200,215,235,0.35)"/>
+          <stop offset="60%" stop-color="rgba(160,178,200,0.18)"/>
+          <stop offset="100%" stop-color="rgba(120,140,168,0.08)"/>
+        </radialGradient>
+      </defs>
+      <!-- Entire creature phases -->
+      <g style="animation:fade-in-out 6s ease-in-out infinite;">
+        <!-- Outer veil layers -->
+        <ellipse cx="100" cy="108" rx="62" ry="70" fill="rgba(160,180,210,0.06)" style="animation:breathe 8s ease-in-out infinite;"/>
+        <ellipse cx="100" cy="108" rx="55" ry="63" fill="rgba(170,188,215,0.08)" stroke="rgba(200,215,235,0.2)" stroke-width="1"/>
+        <ellipse cx="100" cy="108" rx="46" ry="54" fill="rgba(180,195,220,0.12)" stroke="rgba(210,222,238,0.28)" stroke-width="1.2"/>
+        <ellipse cx="100" cy="106" rx="36" ry="44" fill="rgba(190,205,225,0.18)" stroke="rgba(220,230,245,0.38)" stroke-width="1.5"/>
+        <!-- Inner form -->
+        <ellipse cx="100" cy="104" rx="26" ry="32" fill="url(#veil-body)" stroke="rgba(230,238,250,0.5)" stroke-width="1"/>
+        <!-- Core - slightly more visible -->
+        <ellipse cx="100" cy="102" rx="16" ry="20" fill="rgba(240,245,255,0.22)"/>
+        <!-- Veil texture - concentric rings -->
+        <ellipse cx="100" cy="104" rx="30" ry="37" fill="none" stroke="rgba(200,215,235,0.15)" stroke-width="0.8" stroke-dasharray="8,6"/>
+        <ellipse cx="100" cy="104" rx="40" ry="48" fill="none" stroke="rgba(190,205,225,0.1)" stroke-width="0.6" stroke-dasharray="10,8"/>
+        <!-- Ancient star eyes - barely there -->
+        <path d="M84 96 L86 90 L88 96 L94 98 L88 100 L86 106 L84 100 L78 98 Z" fill="rgba(230,240,255,0.85)"/>
+        <path d="M108 96 L110 90 L112 96 L118 98 L112 100 L110 106 L108 100 L102 98 Z" fill="rgba(230,240,255,0.85)"/>
+        <!-- Smile so faint it's almost not there -->
+        <path d="M90 118 Q100 123 110 118" stroke="rgba(210,225,245,0.4)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <!-- Veil tendrils -->
+        <path d="M66 76 Q54 62 50 48" stroke="rgba(200,215,235,0.35)" stroke-width="1.2" fill="none"/>
+        <path d="M134 76 Q146 62 150 48" stroke="rgba(200,215,235,0.35)" stroke-width="1.2" fill="none"/>
+        <path d="M70 144 Q60 158 56 170" stroke="rgba(200,215,235,0.28)" stroke-width="1" fill="none"/>
+        <path d="M130 144 Q140 158 144 170" stroke="rgba(200,215,235,0.28)" stroke-width="1" fill="none"/>
+        <path d="M100 62 Q100 46 100 32" stroke="rgba(210,225,240,0.4)" stroke-width="1.5" fill="none"/>
+        <!-- Tip glows -->
+        <circle cx="50" cy="48" r="2" fill="rgba(220,232,248,0.6)"/>
+        <circle cx="150" cy="48" r="2" fill="rgba(220,232,248,0.6)"/>
+        <circle cx="100" cy="32" r="2.5" fill="rgba(220,232,248,0.7)"/>
+      </g>
+      <!-- Orbiting motes - always visible to hint at presence -->
+      <circle r="3.5" fill="rgba(210,225,245,0.7)" style="animation:orbit 7s linear infinite;transform-origin:100px 104px;"/>
+      <circle r="2.5" fill="rgba(230,240,255,0.6)" style="animation:orbit 10s linear infinite reverse 2s;transform-origin:100px 104px;"/>
+      <circle r="2" fill="rgba(200,218,240,0.5)" style="animation:orbit 5s linear infinite 4s;transform-origin:100px 104px;"/>
+    </svg>`
+  },
+];
+const ENCOUNTERS = [
+  // FREEZE
+  {cat:'freeze',loc:'forest',
+   text:`<span class="cn">Brin</span> stands at her blank paper, ears flat. <em>"My brain knows what it wants but my hand won't move."</em> She pushes the paper toward you.`,
+   q:'What do you do?',
+   choices:[
+     {t:'Pick up the brush and make one small mark — just a dot.', s:`The dot sits there. Brin stares at it. <em>"Oh,"</em> she says. <em>"That's the nose."</em> Her hand starts moving.`, ax:'stone',d:8},
+     {t:'Ask Brin to describe what she sees and you draw the first line.', s:`Brin describes a creature with seven legs. You draw the first wobbly line. She laughs and picks up her own brush to fix it.`, ax:'thread',d:8},
+     {t:'Sit next to her and say nothing. Just stay.', s:`A whole minute passes. Then Brin picks up the brush herself. <em>"I just needed someone to not leave,"</em> she says.`, ax:'flame',d:8},
+   ]},
+  {cat:'freeze',loc:'lighthouse',
+   text:`<span class="cn">Wellow</span> sets a ball of dough in front of you. <em>"Your turn to knead. Just push and fold."</em> You stare at it. You know how. But somehow your hands feel stuck.`,
+   q:'What do you do?',
+   choices:[
+     {t:'Put your hands in. Don\'t think. Just push.', s:`The dough is warmer than you expected. Your hands figure out what to do before your brain does.`, ax:'stone',d:8},
+     {t:'Ask Wellow to put their hands on top of yours first.', s:`<em>"There,"</em> Wellow says. <em>"You already know."</em> Then Wellow steps back and you keep going.`, ax:'flame',d:7},
+     {t:'Tell Wellow your hands feel frozen and you don\'t know why.', s:`Wellow nods. <em>"The beginning has its own kind of hard. It doesn't mean you can't."</em>`, ax:'thread',d:9},
+   ]},
+  {cat:'freeze',loc:'market',
+   text:`There's a drawing competition at the market. You have a good drawing — you made it this morning. But standing here, it feels too small, too wrong, not good enough to show.`,
+   q:'What do you do?',
+   choices:[
+     {t:'Put it on the railing anyway. Don\'t look at the other drawings.', s:`You hang it up fast, before you can change your mind. An hour later there are three colored stones next to it.`, ax:'flame',d:10},
+     {t:'Ask Brin to stand with you while you hang it.', s:`<span class="cn">Brin</span> holds your hand. You hang the drawing. It looks right on the railing.`, ax:'thread',d:8},
+     {t:'Keep it in your pocket. Maybe next time.', s:`You keep it. On the way home you look at it again and notice: it's actually really good. <em>Next time,</em> you think. And you mean it.`, ax:'stone',d:6},
+   ]},
+  // FLIP
+  {cat:'flip',loc:'beach',
+   text:`<span class="cn">Coss</span> talked about the Tide Festival for three days. This morning you find him behind the lighthouse. Not drumming. Just sitting. <em>"I don't want to go,"</em> he says. <em>"I know I said I did. But now it's real and it's too much."</em>`,
+   q:'What do you do?',
+   choices:[
+     {t:'"You don\'t have to explain it."', s:`Coss lets out a huge breath. <em>"Everyone thinks I'm weird."</em> <em>"I don't,"</em> you say. The silence after feels softer.`, ax:'flame',d:8},
+     {t:'"What if we just walk to the edge and look? We don\'t have to go in."', s:`You walk to the edge together. Coss stands very still, listening. Then takes one step forward. Then another.`, ax:'stone',d:9},
+     {t:'Suggest making your own festival right here — just the two of you.', s:`Coss picks up his drum. You bang sticks on a rock. It sounds terrible. Coss starts laughing.`, ax:'thread',d:10},
+   ]},
+  {cat:'flip',loc:'beach',
+   text:`You've looked forward to the night swim all week. You packed your things. You ran to the beach. And now you're standing at the edge and it's darker than you thought and your feet will not move.`,
+   q:'What do you do?',
+   choices:[
+     {t:'Take one step in. Just your feet.', s:`Cold. Real. Your feet know what to do with cold — they feel it and then adjust. You take another step.`, ax:'flame',d:10},
+     {t:'Sit at the edge and put just your toes in first.', s:`Just toes. Cold. Real. Your ankles go in too. Your body knew before your brain decided.`, ax:'stone',d:8},
+     {t:'Tell Pip how you\'re feeling. Say it out loud.', s:`<em>"I really wanted to and now I really don't and I don't know what that means."</em> Pip says: <em>"That means you're brave for coming this far."</em>`, ax:'thread',d:9},
+   ]},
+  // STORM
+  {cat:'storm',loc:'beach',
+   text:`<span class="cn">Coss</span> ran past and knocked over your tower — driftwood and shells and one perfect blue stone. He didn't even notice. You feel it starting in your chest. Hot. Fast. Too big.`,
+   q:'What do you do?',
+   choices:[
+     {t:'Sit down where you are and don\'t move until it gets smaller.', s:`You sit. The feeling pushes. You let it push. After a while it gets a little smaller.`, ax:'stone',d:10},
+     {t:'Find the Lumen and tell it exactly how angry you are.', s:`The Lumen floats close. Its light pulses slowly, like breathing. You start breathing with it without meaning to.`, ax:'flame',d:8},
+     {t:'Call out to Coss and tell him what happened.', s:`Coss sees your face and the pile of driftwood. <em>"I didn't see it. I'm so sorry."</em> He helps you find the blue stone.`, ax:'thread',d:9},
+   ]},
+  {cat:'storm',loc:'bridge',
+   text:`You were almost done. The best drawing you've ever made. Then you made one wrong line — right through the best part. The urge to crumple the whole thing up is very strong.`,
+   q:'What do you do?',
+   choices:[
+     {t:'Put it face down and walk away for a little while.', s:`When you come back fifteen minutes later, the wrong line is still there. But somehow the rest of the drawing looks better than you remembered.`, ax:'stone',d:9},
+     {t:'Show Brin and tell her exactly what went wrong.', s:`<span class="cn">Brin</span> points at the wrong line. <em>"What if it's a crack in the creature's shell? Like it's hatching?"</em>`, ax:'thread',d:10},
+     {t:'Make the wrong line part of the drawing on purpose. Turn it into something.', s:`A scar. A river. A stripe on a wing. You choose the wing. When you're done the drawing is more alive.`, ax:'flame',d:10},
+   ]},
+  // TANGLE
+  {cat:'tangle',loc:'bridge',
+   text:`You said something sharp to <span class="cn">Pip</span> — not meaning it at Pip, but it landed wrong. Now Pip is sitting on the far side of the bridge. Not whistling. Pip always whistles. The silence is loud.`,
+   q:'What do you do?',
+   choices:[
+     {t:'Go sit next to Pip without saying anything yet.', s:`After a while Pip\'s tail starts tapping a tiny rhythm. Then one tiny whistle. Just one note. Then another.`, ax:'thread',d:9},
+     {t:'"I said something wrong. I didn\'t mean it at you."', s:`<em>"I know,"</em> Pip says. <em>"I could tell it wasn't really about me."</em> <em>"Me either,"</em> you say.`, ax:'thread',d:11},
+     {t:'Ask Wellow what to do first.', s:`<em>"Pip doesn't need the right words,"</em> Wellow says. <em>"Pip needs to know you came back."</em>`, ax:'stone',d:8},
+   ]},
+  {cat:'tangle',loc:'forest',
+   text:`<span class="cn">Wellow</span> asked you to stir the pot and you got distracted and it burned a little on the bottom. Wellow noticed. Didn't yell. But you can tell. Now Wellow cleans up without saying anything.`,
+   q:'What do you do?',
+   choices:[
+     {t:'Go over and help clean up without saying anything first.', s:`Wellow glances over. After a minute: <em>"These things happen. You know that."</em>`, ax:'thread',d:9},
+     {t:'"I\'m sorry. I got distracted and should have been more careful."', s:`Wellow stops. <em>"I know. And now you know too. That's enough."</em> The heavy thing in the kitchen lifts.`, ax:'stone',d:10},
+     {t:'"Can we start a new pot? I\'ll stir the whole time."', s:`<em>"Yes,"</em> Wellow says. You stir the whole time. Not once do you look away.`, ax:'flame',d:9},
+   ]},
+  // WAIT
+  {cat:'wait',loc:'forest',
+   text:`You are in the middle of the best drawing you have ever made. The creature has seventeen legs and you just figured out the eyes and it's almost — almost — exactly right. <span class="cn">Wellow</span> appears in the doorway. <em>"It's time."</em>`,
+   q:'What do you do?',
+   choices:[
+     {t:'Put the brush down and go. You can come back.', s:`You put the brush down. It takes everything. When you come back the drawing is still there, waiting.`, ax:'stone',d:10},
+     {t:'Ask Wellow for three more minutes — just enough to finish the eyes.', s:`<em>"Three minutes,"</em> Wellow says. You finish the eyes. They\'re right. You put the brush down with time to spare.`, ax:'flame',d:9},
+     {t:'Write three words on the corner so you remember where you were.', s:`You write <em>ribbon tail — eyes.</em> When you return, the words are waiting. You pick up exactly where you left off.`, ax:'thread',d:8},
+   ]},
+  {cat:'wait',loc:'market',
+   text:`One honey roll left. Two of you want it. You got here first. But the traveler next to you has been staring at it with such longing. The market vendor is watching you both.`,
+   q:'What do you do?',
+   choices:[
+     {t:'"You take it."', s:`The traveler stares. <em>"Are you sure?"</em> They take it. Then break it in half and hand you a piece. <em>"Thank you."</em>`, ax:'thread',d:11},
+     {t:'Suggest flipping a coin or playing rock-paper-sticks.', s:`The traveler laughs, surprised. You play three rounds. They win. They buy you a different pastry with their spare change.`, ax:'flame',d:9},
+     {t:'Claim it — you were here first.', s:`You take it. It tastes fine. But you think about the traveler\'s face the whole time. <em>Next time,</em> you think.`, ax:'stone',d:5},
+   ]},
+  // MIRROR
+  {cat:'mirror',loc:'beach',
+   text:`The storm came and went. You\'re sitting on the beach. <em>"I always do that,"</em> you say to the air. <em>"Make it worse. I always make it worse."</em> The Lumen is quiet for a moment. <em>"Always?"</em> it says.`,
+   q:'What do you say?',
+   choices:[
+     {t:'"Most of the time."', s:`<em>"Most of the time,"</em> the Lumen repeats. <em>"That's different from always."</em> Something shifts — like a door that was stuck moved one inch.`, ax:'stone',d:8},
+     {t:'"I don\'t know. It feels like always."', s:`<em>"Feelings say always and never because they're loud,"</em> the Lumen says. <em>"They're not always right about the facts."</em>`, ax:'flame',d:9},
+     {t:'Say nothing and throw a stone into the water.', s:`You throw four stones. After the fourth, something in your chest gets a little looser. <em>"Ready to talk?"</em> the Lumen asks. <em>"Maybe,"</em> you say.`, ax:'stone',d:9},
+   ]},
+  {cat:'mirror',loc:'lighthouse',
+   text:`The rolls didn't come out right. Not terrible — just not as good as last time. You tried hard. You followed every step. But <em>I can't do anything right</em> keeps playing in your head.`,
+   q:'What do you do with that thought?',
+   choices:[
+     {t:'Say back to it: "That\'s not actually true."', s:`The thought doesn't disappear. But it gets a little smaller. Like you reminded it that you know better.`, ax:'flame',d:10},
+     {t:'Tell Wellow what\'s going on inside your head.', s:`<em>"I keep thinking I can't do anything right."</em> Wellow says: <em>"You made bread today. With your hands. That is something right."</em>`, ax:'thread',d:10},
+     {t:'Ask if you can try the recipe again tomorrow.', s:`<em>"Yes,"</em> Wellow says immediately. There's something else now: tomorrow, and another try.`, ax:'stone',d:9},
+   ]},
+  // STRANGER
+  {cat:'stranger',loc:'market',
+   text:`Someone new is on the island — sitting alone at the market with a small notebook, drawing something very carefully. They glance up and see you looking. They don't wave. They don't look away either.`,
+   q:'What do you do?',
+   choices:[
+     {t:'Walk over and look at what they\'re drawing.', s:`Wings made of leaves and eyes like buttons. <em>"That's incredible,"</em> you say. And you mean it. They don\'t close the notebook.`, ax:'thread',d:10},
+     {t:'Find something to do nearby — not talking, just existing close.', s:`You sit nearby and do your own thing. At some point the distance between you is smaller than it was. Neither of you said anything.`, ax:'stone',d:9},
+     {t:'Ask Pip to come over with you.', s:`<span class="cn">Pip</span> immediately starts whistling. The stranger almost smiles. <em>"What's that tune?"</em> You all end up sitting together.`, ax:'flame',d:9},
+   ]},
+  {cat:'stranger',loc:'forest',
+   text:`There\'s a traveler on the path who looks completely lost. They keep turning their map around and around. You know exactly where they're trying to go — you can see it on the map.`,
+   q:'What do you do?',
+   choices:[
+     {t:'"I know where that is. I\'ll walk you there."', s:`They say thank you four times on the way. At the end of the path they ask your name.`, ax:'thread',d:10},
+     {t:'Point in the right direction from where you are.', s:`<em>"That way. Past the big stone, then left."</em> They beam. You watch them find the right path.`, ax:'stone',d:9},
+     {t:'Draw them a little map in the dirt with a stick.', s:`They copy it into their notebook. <em>"You should have a map-making stall,"</em> they say. You think: maybe I should.`, ax:'flame',d:9},
+   ]},
+];
+
+// ════════════════════════════════════════
+// GAME STATE
+// ════════════════════════════════════════
+let axes = {flame:50, thread:50, stone:50};
+let collection = {};   // id -> {found:bool, nickname:str}
+let runEncounters = [];
+let runIdx = 0;
+let totalRun = 6;
+let seenIds = new Set();
+let pendingDiscovery = null;
+let detailCreatureId = null;
+
+function loadCollection(){
+  try{
+    const s = localStorage.getItem('waystone_collection');
+    if(s) collection = JSON.parse(s);
+    CREATURES.forEach(c=>{ if(!collection[c.id]) collection[c.id]={found:false,nickname:''}; });
+  }catch(e){
+    CREATURES.forEach(c=>{ collection[c.id]={found:false,nickname:''}; });
+  }
+}
+
+function saveCollection(){
+  try{ localStorage.setItem('waystone_collection', JSON.stringify(collection)); }catch(e){}
+}
+
+function getSaveState(){
+  try{ return JSON.parse(localStorage.getItem('waystone_run')||'null'); }catch(e){return null;}
+}
+
+function clearRunState(){ try{localStorage.removeItem('waystone_run');}catch(e){} }
+
+// ════════════════════════════════════════
+// FISHER-YATES
+// ════════════════════════════════════════
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+// ════════════════════════════════════════
+// BUILD A RUN
+// ════════════════════════════════════════
+function buildRun(){
+  axes={flame:50,thread:50,stone:50};
+  const cats=['freeze','flip','storm','tangle','wait','mirror','stranger'];
+  const mirrorPool=ENCOUNTERS.filter(e=>e.cat==='mirror');
+  const otherPools={};
+  ['freeze','flip','storm','tangle','wait','stranger'].forEach(c=>{
+    otherPools[c]=ENCOUNTERS.filter(e=>e.cat===c);
+  });
+
+  function pickUnseen(pool){
+    const unseen=pool.filter(e=>!seenIds.has(e.text));
+    const src=unseen.length>0?unseen:pool;
+    return src[Math.floor(Math.random()*src.length)];
+  }
+
+  const mirror=pickUnseen(mirrorPool);
+  const others=[];
+  const otherCats=shuffle(['freeze','flip','storm','tangle','wait','stranger']);
+  for(let i=0;i<5;i++) others.push(pickUnseen(otherPools[otherCats[i]]));
+
+  runEncounters=shuffle([mirror,...others]);
+  runEncounters.forEach(e=>seenIds.add(e.text));
+  if(seenIds.size>=ENCOUNTERS.length) seenIds.clear();
+  runIdx=0;
+}
+
+// ════════════════════════════════════════
+// SCREEN MANAGEMENT
+// ════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ════════════════════════════════════════
+// EXPLORE
+// ════════════════════════════════════════
+function startExplore(){
+  buildRun();
+  buildProgress();
+  showScreen('s-explore');
+  renderEncounter();
+}
+
+function buildProgress(){
+  const strip=document.getElementById('progress-strip');
+  strip.innerHTML='';
+  for(let i=0;i<totalRun;i++){
+    const d=document.createElement('div');
+    d.className='pdot';d.id='pd'+i;
+    strip.appendChild(d);
+  }
+}
+
+function updateProgress(){
+  for(let i=0;i<totalRun;i++){
+    const d=document.getElementById('pd'+i);
+    if(!d)continue;
+    d.classList.toggle('done',i<runIdx);
+    d.classList.toggle('cur',i===runIdx);
+  }
+}
+
+function updateAxes(){
+  document.getElementById('flame-fill').style.width=axes.flame+'%';
+  document.getElementById('thread-fill').style.width=axes.thread+'%';
+  document.getElementById('stone-fill').style.width=axes.stone+'%';
+}
+
+const LOC_KEYS=Object.keys(LOCATIONS);
+function renderEncounter(){
+  const enc=runEncounters[runIdx];
+  // Location
+  const locKey=enc.loc||LOC_KEYS[runIdx%LOC_KEYS.length];
+  const loc=LOCATIONS[locKey]||LOCATIONS.beach;
+  document.getElementById('location-label').textContent=loc.label;
+  document.getElementById('explore-bg').style.background=loc.bg;
+  document.getElementById('location-art').innerHTML=loc.art;
+
+  document.getElementById('enc-text').innerHTML=enc.text;
+  document.getElementById('enc-q').textContent=enc.q;
+
+  const cc=document.getElementById('choices');
+  cc.innerHTML='';
+  enc.choices.forEach((c,i)=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';
+    btn.textContent=c.t;
+    btn.onclick=()=>makeChoice(i);
+    cc.appendChild(btn);
+  });
+
+  document.getElementById('feedback').classList.remove('show');
+  document.getElementById('choices').style.opacity='1';
+  document.getElementById('choices').style.pointerEvents='all';
+  updateProgress();
+  updateAxes();
+  document.getElementById('s-explore').scrollTo({top:0,behavior:'smooth'});
+}
+
+const AX_POOLS={
+  flame:[
+    "Because you acted when it was easier not to, the Flame burns brighter.",
+    "That choice took courage. The Flame steadies — not blazing, but sure.",
+    "You went toward the hard thing. The Flame holds because of that.",
+    "Something brave just happened. The Flame felt it.",
+    "Because you kept going, the Flame breathes in and holds steady.",
+    "Your choice lit something. The Flame warms from that.",
+    "You didn't have to do that. You did anyway. The Flame knows.",
+  ],
+  thread:[
+    "Because you thought about someone else, the Thread glows.",
+    "You listened before you acted. That's why the Thread tightens — in a good way.",
+    "Your kindness just wove one more strand in.",
+    "You reached toward someone. The Thread warms at your wrist because of that.",
+    "Because you showed up, the Thread holds. It always holds when you let it.",
+    "You made space for someone. The Thread expanded where you made it.",
+    "Connection happened because you made it happen. The Thread knows.",
+  ],
+  stone:[
+    "Because you held on when things got big, the Stone feels warmer.",
+    "You found your footing. The Stone grows heavier — in the good way.",
+    "You didn't rush. You didn't run. The Stone settles because of that.",
+    "You held your ground. The Stone steadied with you.",
+    "The wave came and you held. The Stone doesn't shake. Neither did you.",
+    "Because you stayed instead of leaving, the Stone clicks into place.",
+    "Still. After everything — still. Because you chose still.",
+  ]
+};
+
+function makeChoice(idx){
+  const enc=runEncounters[runIdx];
+  const c=enc.choices[idx];
+
+  axes[c.ax]=Math.min(100,Math.max(10,axes[c.ax]+c.d));
+  const others=['flame','thread','stone'].filter(a=>a!==c.ax);
+  others.forEach(a=>{axes[a]=Math.min(100,Math.max(10,axes[a]+2));});
+  updateAxes();
+
+  document.getElementById('choices').style.opacity='0.3';
+  document.getElementById('choices').style.pointerEvents='none';
+
+  document.getElementById('fb-story').innerHTML=c.s;
+  const pool=AX_POOLS[c.ax];
+  const note=pool[Math.floor(Math.random()*pool.length)];
+  const axColors={flame:'flame',thread:'thread',stone:'stone'};
+  const axIcons={flame:'🔥',thread:'🧵',stone:'🪨'};
+  document.getElementById('fb-note-wrap').innerHTML=
+    `<div class="fb-note ${axColors[c.ax]}">${axIcons[c.ax]} ${note}</div>`;
+
+  // Update continue button text
+  const isLast=runIdx>=totalRun-1;
+  document.getElementById('btn-next').textContent=isLast?'End Journey ✨':'Keep exploring →';
+
+  document.getElementById('feedback').classList.add('show');
+  setTimeout(()=>{
+    document.getElementById('feedback').scrollIntoView({behavior:'smooth',block:'nearest'});
+  },100);
+}
+
+function nextEncounter(){
+  runIdx++;
+  document.getElementById('choices').style.opacity='1';
+  document.getElementById('choices').style.pointerEvents='all';
+  document.getElementById('feedback').classList.remove('show');
+
+  if(runIdx>=totalRun){
+    endRun();
+    return;
+  }
+  renderEncounter();
+}
+
+// ════════════════════════════════════════
+// END RUN — CHECK FOR DISCOVERIES
+// ════════════════════════════════════════
+function endRun(){
+  // Check which creatures unlock based on axes
+  const discovered=[];
+  CREATURES.forEach(c=>{
+    if(collection[c.id].found) return; // already have it
+    const req=c.threshold;
+    const keys=Object.keys(req);
+    const unlocks=keys.every(k=>axes[k]>=req[k]);
+    if(unlocks) discovered.push(c);
+  });
+
+  if(discovered.length>0){
+    // Show first discovery
+    pendingDiscovery=[...discovered];
+    showDiscovery(pendingDiscovery.shift());
+  } else {
+    showRunEnd(false);
+  }
+}
+
+function showDiscovery(creature){
+  // Set art
+  document.getElementById('disc-art').innerHTML=
+    `<div class="disc-particles" id="disc-particles"></div>`+creature.svg;
+  document.getElementById('disc-name').textContent=creature.name;
+
+  const typeLabel={flame:'🔥 Flame Type',thread:'🧵 Thread Type',stone:'🪨 Stone Type',rare:'✨ Rare Creature'};
+  const typeClass={flame:'flame',thread:'thread',stone:'stone',rare:'rare'};
+  document.getElementById('disc-type').textContent=typeLabel[creature.type];
+  document.getElementById('disc-type').className='disc-type '+(typeClass[creature.type]||'');
+  document.getElementById('disc-personality').textContent=creature.personality;
+  document.getElementById('disc-nickname-input').value='';
+  document.getElementById('disc-nickname-input').placeholder=`Give ${creature.name} a nickname? (or leave it)`;
+  // Store which creature we're saving
+  document.getElementById('disc-nickname-input').dataset.creatureId=creature.id;
+
+  // Particles
+  spawnParticles();
+  showScreen('s-discovery');
+}
+
+function spawnParticles(){
+  const p=document.getElementById('disc-particles');
+  if(!p)return;
+  p.innerHTML='';
+  const colors=['#f0c040','#ff8030','#5ec4b0','#c0b0ff','white'];
+  for(let i=0;i<18;i++){
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    const angle=Math.random()*360;
+    const r=60+Math.random()*50;
+    const x=110+Math.cos(angle*Math.PI/180)*r;
+    const y=110+Math.sin(angle*Math.PI/180)*r;
+    dot.setAttribute('cx',x);dot.setAttribute('cy',y);
+    dot.setAttribute('r',2+Math.random()*4);
+    dot.setAttribute('fill',colors[Math.floor(Math.random()*colors.length)]);
+    dot.style.animation=`spark ${0.6+Math.random()*0.8}s ease-out ${Math.random()*0.5}s forwards`;
+    p.appendChild(dot);
+  }
+}
+
+function saveDiscovery(){
+  const input=document.getElementById('disc-nickname-input');
+  const id=input.dataset.creatureId;
+  const nickname=input.value.trim();
+  collection[id].found=true;
+  collection[id].nickname=nickname;
+  saveCollection();
+
+  if(pendingDiscovery && pendingDiscovery.length>0){
+    showDiscovery(pendingDiscovery.shift());
+  } else {
+    showRunEnd(true);
+  }
+}
+
+function showRunEnd(foundSomething){
+  const foundCount=CREATURES.filter(c=>collection[c.id].found).length;
+  if(foundSomething){
+    document.getElementById('runend-icon').textContent='✨';
+    document.getElementById('runend-title').textContent='New Creature Found!';
+    document.getElementById('runend-msg').textContent=
+      `Your collection now has ${foundCount} of 15 creatures. The island remembers every choice you make.`;
+    document.getElementById('runend-stir').textContent='';
+  } else {
+    const stirs=[
+      'Something stirred in the deep forest... but wasn\'t ready to appear yet.',
+      'A shadow passed the Lighthouse window. It\'ll come closer next time.',
+      'The Bridge creaked. Something is watching. It\'s not sure about you yet.',
+      'The island noticed. Keep exploring.',
+    ];
+    document.getElementById('runend-icon').textContent='🌊';
+    document.getElementById('runend-title').textContent='Journey Complete';
+    document.getElementById('runend-msg').textContent=
+      `${foundCount} of 15 creatures in your collection. Keep exploring to find more.`;
+    document.getElementById('runend-stir').textContent=
+      stirs[Math.floor(Math.random()*stirs.length)];
+  }
+  showScreen('s-runend');
+}
+
+// ════════════════════════════════════════
+// COMPENDIUM
+// ════════════════════════════════════════
+function showCompendium(){
+  const found=CREATURES.filter(c=>collection[c.id].found).length;
+  document.getElementById('comp-count').textContent=`${found} / 15 found`;
+
+  const grid=document.getElementById('comp-grid');
+  grid.innerHTML='';
+  CREATURES.forEach(c=>{
+    const isFound=collection[c.id].found;
+    const nickname=collection[c.id].nickname;
+    const card=document.createElement('div');
+    card.className='comp-card'+(isFound?' found':'')+(c.rare?' rare':'');
+
+    if(isFound){
+      card.innerHTML=`
+        <div class="comp-creature">${c.svg}</div>
+        <div class="comp-name">${c.name}</div>
+        <div class="comp-type-dot ${c.rare?'rare':c.type}"></div>
+        ${nickname?`<div class="comp-nickname">"${nickname}"</div>`:''}
+      `;
+      card.onclick=()=>showDetail(c.id);
+    } else {
+      // Silhouette - same SVG but all black
+      const silSvg=c.svg
+        .replace(/fill="[^"]*"/g,'fill="#1a1a1a"')
+        .replace(/stroke="[^"]*"/g,'stroke="#1a1a1a"')
+        .replace(/style="[^"]*"/g,'style="animation:breathe 3s ease-in-out infinite;"')
+        .replace(/color="[^"]*"/g,'color="#1a1a1a"');
+      card.innerHTML=`
+        <div class="comp-creature" style="filter:brightness(0.3);">${silSvg}</div>
+        <div class="comp-name unknown">???</div>
+        <div class="comp-type-dot" style="background:#2a2a2a;"></div>
+      `;
+    }
+    grid.appendChild(card);
+  });
+  showScreen('s-compendium');
+}
+
+// ════════════════════════════════════════
+// CREATURE DETAIL
+// ════════════════════════════════════════
+function showDetail(id){
+  const c=CREATURES.find(x=>x.id===id);
+  if(!c)return;
+  detailCreatureId=id;
+  document.getElementById('detail-art').innerHTML=c.svg;
+  document.getElementById('detail-name').textContent=c.name;
+  const nick=collection[id].nickname;
+  document.getElementById('detail-nickname').textContent=nick?`"${nick}"`:'';
+  const typeLabel={flame:'🔥 Flame Type',thread:'🧵 Thread Type',stone:'🪨 Stone Type',rare:'✨ Rare Creature'};
+  const typeClass={flame:'flame',thread:'thread',stone:'stone',rare:'rare'};
+  document.getElementById('detail-type').textContent=typeLabel[c.type];
+  document.getElementById('detail-type').className='detail-type '+(typeClass[c.type]||'');
+  document.getElementById('detail-personality').textContent=c.personality;
+  document.getElementById('detail-nickname-input').value=nick||'';
+  document.getElementById('detail-nickname-input').placeholder=`Give ${c.name} a nickname...`;
+  showScreen('s-detail');
+}
+
+function saveDetailNickname(){
+  if(!detailCreatureId)return;
+  const nick=document.getElementById('detail-nickname-input').value.trim();
+  collection[detailCreatureId].nickname=nick;
+  saveCollection();
+  document.getElementById('detail-nickname').textContent=nick?`"${nick}"`:'';
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+loadCollection();
+</script>
+</body>
+</html>
