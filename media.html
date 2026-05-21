@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Decision Deck — Transition Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --card-border: #2a2d3a;
+    --accent: #5b8c5a;
+    --accent-dim: #3d6b3c;
+    --warn: #ff6b6b;
+    --gold: #f7d354;
+    --text: #e8e6e3;
+    --text-dim: #8a8895;
+    --positive: #4ecdc4;
+    --negative: #ff6b6b;
+    --neutral: #f7d354;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+  .app {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+  .header { text-align: center; padding: 20px 0 10px; }
+  .header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+  .progress-wrap { margin: 16px 0; display: flex; align-items: center; gap: 10px; }
+  .progress-track { flex: 1; height: 4px; background: var(--card-border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; border-radius: 2px; }
+  .progress-label { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--text-dim); min-width: 45px; text-align: right; }
+  .score-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; padding: 10px 14px;
+    background: var(--card-bg); border-radius: 10px; border: 1px solid var(--card-border);
+  }
+  .score-item { text-align: center; }
+  .score-item .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 2px; }
+  .score-item .value { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; }
+  .score-item .value.focus { color: var(--accent); }
+  .score-item .value.leverage { color: var(--gold); }
+  .score-item .value.boundaries { color: #a78bfa; }
+  .card-container { flex: 1; display: flex; flex-direction: column; }
+  .card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 24px 20px;
+    flex: 1; display: flex; flex-direction: column;
+    animation: cardIn 0.4s ease; position: relative; overflow: hidden;
+  }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-dim)); }
+  .card.checkin::before { background: linear-gradient(90deg, #a78bfa, #6d5acd); }
+  .card.offwork::before { background: linear-gradient(90deg, var(--gold), #c4a530); }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .card-category { font-family: 'Space Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 8px; }
+  .card.checkin .card-category { color: #a78bfa; }
+  .card.offwork .card-category { color: var(--gold); }
+  .card-context { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 14px; line-height: 1.4; font-style: italic; padding-bottom: 12px; border-bottom: 1px solid var(--card-border); }
+  .card-question { font-size: 1.05rem; line-height: 1.55; font-weight: 500; margin-bottom: 24px; flex: 1; }
+  .card-ref { font-size: 0.72rem; color: var(--gold); margin-bottom: 12px; padding: 8px 10px; background: rgba(247, 211, 84, 0.08); border-radius: 8px; border-left: 3px solid var(--gold); }
+  .choices { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+  .choice-btn {
+    background: transparent; border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 16px;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+    text-align: left; cursor: pointer; transition: all 0.2s ease; line-height: 1.4;
+  }
+  .choice-btn:active { transform: scale(0.98); }
+  .choice-btn:hover { border-color: var(--accent); background: rgba(91, 140, 90, 0.06); }
+  .choice-btn.selected { border-color: var(--accent); background: rgba(91, 140, 90, 0.1); }
+  .choice-btn:disabled { cursor: default; opacity: 0.5; }
+  .result { animation: resultIn 0.3s ease; padding-top: 12px; }
+  @keyframes resultIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .result-score { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .result-score .delta { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; }
+  .result-score .delta.pos { color: var(--positive); }
+  .result-score .delta.neg { color: var(--negative); }
+  .result-score .delta.zero { color: var(--neutral); }
+  .result-score .stat-name { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .result-text { font-size: 0.88rem; line-height: 1.55; color: var(--text-dim); margin-bottom: 16px; }
+  .next-btn {
+    width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.5px;
+  }
+  .next-btn:active { transform: scale(0.97); }
+  .start-screen { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 20px; animation: cardIn 0.5s ease; }
+  .start-screen .icon { font-size: 3rem; margin-bottom: 10px; }
+  .start-screen p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; max-width: 320px; }
+  .start-screen .start-btn {
+    margin-top: 10px; padding: 14px 40px; background: var(--accent); color: #fff; border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
+  }
+  .end-screen { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 16px; animation: cardIn 0.5s ease; }
+  .end-screen .final-scores { display: flex; gap: 20px; margin: 10px 0; }
+  .end-screen .final-stat { text-align: center; }
+  .end-screen .final-stat .val { font-family: 'Space Mono', monospace; font-size: 2rem; font-weight: 700; }
+  .end-screen .final-stat .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-top: 2px; }
+  .end-screen .insight { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; max-width: 340px; margin: 10px 0; }
+  .end-screen .play-again {
+    margin-top: 10px; padding: 14px 40px; background: var(--accent); color: #fff; border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer;
+  }
+  .reflection-tag { display: inline-block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; background: rgba(167, 139, 250, 0.15); color: #a78bfa; }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+const SCENARIOS = [
+
+  // ===== LETTING GO =====
+  {
+    id: "lg-1", category: "Letting Go", type: "work",
+    context: "You're transitioning out of a role you've held for a long time. The person replacing you is capable but does things differently than you.",
+    question: "They're going to make mistakes you wouldn't have made. They're also going to solve problems you didn't see. Can you let both happen?",
+    choices: [
+      { text: "Yes — my job is to hand it off clean and let them own it, even the stumbles", scores: { focus: 5, leverage: 4, boundaries: 6 }, feedback: "Easier to say than to do. The first time they stumble on something you would have caught, every instinct will scream to step back in. That instinct is the enemy of the transition. Let it scream. Stay out." },
+      { text: "I'll stay close enough to catch the big mistakes — a safety net, not a crutch", scores: { focus: 2, leverage: 3, boundaries: 0 }, feedback: "Safety nets have a way of becoming permanent. And the person under the net knows it's there — which means they never fully commit to the trapeze. At some point you have to choose: are you transitioning or hovering?" },
+      { text: "I need to make sure things don't fall apart — the transition has to be managed carefully", scores: { focus: -2, leverage: 2, boundaries: -4 }, feedback: "Managed carefully by whom? If the answer is you, then you haven't transitioned — you've just added 'oversee my replacement' to your already full plate. The work of letting go is trusting that 'different' isn't the same as 'worse.' And if things do fall apart? That's information leadership needs to see, not something you should be quietly preventing." }
+    ],
+    tags: ["transition", "trust", "control"]
+  },
+  {
+    id: "lg-2", category: "Letting Go", type: "work",
+    context: "Something goes wrong in your old area. You know exactly how to fix it. Nobody has asked you for help.",
+    question: "Your hands are twitching. Do you reach in?",
+    choices: [
+      { text: "No — if they need me, they'll ask. Jumping in uninvited undermines the new structure.", scores: { focus: 6, leverage: 3, boundaries: 7 }, feedback: "The hardest kind of discipline. Watching something you care about struggle when you have the answer. But every time you fix it, you teach two things: they can't handle it, and you're still available as a crutch. Both lessons are wrong." },
+      { text: "Offer — 'Hey, I've seen this before, want me to walk you through it?'", scores: { focus: 1, leverage: 4, boundaries: -1 }, feedback: "Generous. And depending on how new the transition is, maybe appropriate. But track how often you're offering. If it's every week, you haven't let go — you've just changed the verb from 'doing' to 'advising.' The result is the same: they depend on you." },
+      { text: "Flag it quietly to the person who owns it now — just make sure it's on their radar", scores: { focus: 3, leverage: 3, boundaries: 3 }, feedback: "Reasonable if the issue genuinely might not be visible to them. Unreasonable if you're checking on their area regularly enough to spot problems. Ask yourself: how did you notice this? If the answer involves you monitoring work that's no longer yours, the problem isn't the issue — it's that you're still watching." }
+    ],
+    tags: ["transition", "boundaries", "control"]
+  },
+  {
+    id: "lg-3", category: "Letting Go", type: "work",
+    context: "Your replacement is about to make a decision you disagree with. It's not dangerous — just different from what you'd do. The outcome is uncertain.",
+    question: "Do you say something, or let the experiment play out?",
+    choices: [
+      { text: "Let it play out — they need to learn from their own decisions, not live inside mine", scores: { focus: 6, leverage: 2, boundaries: 6 }, feedback: "If it works, they've gained confidence you can't give them. If it doesn't, they've gained experience you can't shortcut. Either way, they own the result. That ownership is worth more than your prediction." },
+      { text: "Share your perspective — not as a directive, but as context they might not have", scores: { focus: 2, leverage: 4, boundaries: 1 }, feedback: "It depends entirely on whether you can actually deliver it as context and not as 'the right answer disguised as a suggestion.' Most people can't. And even if you can, hearing 'I would have done it differently' from the person you replaced lands heavy whether you intend it to or not." },
+      { text: "Say something — the risk isn't worth the learning opportunity", scores: { focus: -2, leverage: 3, boundaries: -3 }, feedback: "You said it's not dangerous. So what risk, exactly? The risk that it doesn't go perfectly? That's not a risk — that's management. The real question is whether you're protecting the work or protecting yourself from watching someone do it differently." }
+    ],
+    tags: ["transition", "trust", "control"]
+  },
+
+  // ===== BUILDING THE NEW =====
+  {
+    id: "bn-1", category: "Building the New", type: "work",
+    context: "You're launching a department that didn't exist before. There's no playbook, no predecessor, and no established credibility for the function yet.",
+    question: "How do you build something from nothing when nobody's sure it matters yet?",
+    choices: [
+      { text: "Deliver a visible win early — prove the value before asking for buy-in", scores: { focus: 6, leverage: 6, boundaries: 3 }, feedback: "The best strategy for a new function nobody asked for. A quick, tangible win does more than a year of explanation. People believe what they can see. Show them something they didn't know they needed, and the credibility follows." },
+      { text: "Build the infrastructure first — strategy, process, workflow — then deliver", scores: { focus: 3, leverage: 2, boundaries: 4 }, feedback: "Tempting for a planner. And wrong for this moment. Infrastructure for a department nobody values yet is invisible work that delays the proof they need to start valuing it. Build the plane in the air — fly first, refine later." },
+      { text: "Get leadership alignment first — make sure they understand what this department will do before you build it", scores: { focus: 1, leverage: 3, boundaries: 2 }, feedback: "Important eventually. But leadership alignment on a concept is different from leadership belief in a reality. You can present decks for months and still hear 'what does your department actually do?' Alignment comes from results, not from meetings about results." }
+    ],
+    tags: ["new-role", "leverage", "strategy"]
+  },
+  {
+    id: "bn-2", category: "Building the New", type: "work",
+    context: "You need approval from leadership to move forward on a project, but they're busy and your work isn't their top priority.",
+    question: "Your project is stalled waiting on a green light. How do you get it moving?",
+    choices: [
+      { text: "Keep it in front of them — follow up consistently until you get the answer", scores: { focus: 3, leverage: 4, boundaries: 2 }, feedback: "Persistence matters. But there's a line between 'keeping it visible' and 'becoming the person who always needs something.' If every interaction is you asking for approval, you become a task on their list instead of a partner in their vision." },
+      { text: "Build as much as you can without the approval and present a near-finished product", scores: { focus: 5, leverage: 5, boundaries: 3 }, feedback: "The 'ask for forgiveness' approach. Risky but effective for a new department. If you bring them something 90% done that looks great, the approval becomes a rubber stamp instead of a decision. Just make sure you're not building past a point where a 'no' wastes significant work." },
+      { text: "Reframe the ask — tie your project to something they already care about", scores: { focus: 4, leverage: 6, boundaries: 4 }, feedback: "The strategic play. Your project isn't competing for their attention — it's supporting their priority. 'I need approval for X' becomes 'X directly supports that initiative you mentioned last week.' Same project, different frame, completely different energy in the response." }
+    ],
+    tags: ["new-role", "leverage", "strategy"]
+  },
+  {
+    id: "bn-3", category: "Building the New", type: "work",
+    context: "You've been straddling two roles — the old one and the new one. Both are suffering because neither gets your full attention.",
+    question: "The transition was supposed to be clean. It's not. How do you force the split?",
+    choices: [
+      { text: "Set a hard date — after this date, old role responsibilities are fully transferred, no exceptions", scores: { focus: 6, leverage: 4, boundaries: 7 }, feedback: "The only answer that actually works. Without a hard line, the transition bleeds indefinitely because there's always one more thing that 'only you' can handle. Name the date. Communicate it. Hold it. The discomfort of the cutover is temporary. The cost of straddling is permanent." },
+      { text: "Gradually reduce — hand off one thing at a time until the old role is empty", scores: { focus: 2, leverage: 3, boundaries: 0 }, feedback: "Sounds reasonable. Rarely works. Gradual transitions give you permission to keep holding pieces that feel important, and the pile never fully empties because new things keep landing in it. You don't gradually leave a room — you walk through the door." },
+      { text: "Talk to leadership about what's not getting done and ask them to prioritize", scores: { focus: 3, leverage: 3, boundaries: 2 }, feedback: "Fair. But you've been talking to leadership about this for a while now. At some point the conversation has to become action, and you might be the one who has to force it. Waiting for someone above you to make the call you could make yourself is a form of avoiding the discomfort of drawing the line." }
+    ],
+    tags: ["transition", "focus", "boundaries"]
+  },
+  {
+    id: "bn-4", category: "Building the New", type: "work",
+    context: "Your new role requires skills you're still developing. You're producing work but you're not yet at the level you want to be.",
+    question: "You know what good looks like. You're not there yet. How do you manage the gap?",
+    choices: [
+      { text: "Ship imperfect work and iterate — done is better than perfect when you're building credibility", scores: { focus: 5, leverage: 5, boundaries: 3 }, feedback: "The builder's answer. Credibility comes from volume and visibility early on, not from one perfect piece nobody sees. Ship, learn, improve. The first five deliverables build your reputation for showing up. The next five build your reputation for quality." },
+      { text: "Take the time to get it right — your first impression sets the standard", scores: { focus: 2, leverage: 2, boundaries: 4 }, feedback: "True for a single deliverable. Dangerous as a philosophy. If you're waiting for everything to be perfect before you show it, you're not building a department — you're building a portfolio in private. Nobody gives you credit for work they haven't seen." },
+      { text: "Use tools and resources aggressively to close the gap — leverage everything available", scores: { focus: 4, leverage: 4, boundaries: 2 }, feedback: "Smart. The gap between what you know and what you need to deliver is exactly what tools are for. Just make sure you understand the output well enough to defend it. Delivering work you can't explain is borrowing credibility you haven't earned." }
+    ],
+    tags: ["new-role", "leverage", "growth"]
+  },
+
+  // ===== NAVIGATING UP =====
+  {
+    id: "nu-1", category: "Navigating Up", type: "work",
+    context: "You need leadership to make a decision, but you're not sure who the real decision-maker is. Two people above you have overlapping authority.",
+    question: "Going to the wrong person wastes time. Going to both creates confusion. How do you navigate it?",
+    choices: [
+      { text: "Go to the one you have the strongest relationship with — trust the channel that works", scores: { focus: 3, leverage: 4, boundaries: 2 }, feedback: "Effective for getting your immediate answer. But if the other person finds out they were bypassed — even unintentionally — you've created a problem you didn't need. Especially if they see themselves as the decision-maker for that area." },
+      { text: "Ask directly — 'Who should I be bringing this to?' — and let them sort out the overlap", scores: { focus: 4, leverage: 3, boundaries: 6 }, feedback: "Transparent. And it forces them to clarify something they may have been avoiding. The risk is that they punt it back to you: 'Use your judgment.' But even that's useful — it gives you permission to choose the channel and reference that they told you to." },
+      { text: "Present it to both at the same time — let them align in real time", scores: { focus: 2, leverage: 5, boundaries: 3 }, feedback: "Bold. Works if they have a good working relationship. Backfires if there's tension between them that you don't see, because now you've put them in a room where one of them has to defer. Know the dynamic before you create the meeting." }
+    ],
+    tags: ["strategy", "communication", "leverage"]
+  },
+  {
+    id: "nu-2", category: "Navigating Up", type: "work",
+    context: "Leadership keeps changing priorities. Something that was critical last week is now back-burnered, and what's urgent today wasn't mentioned yesterday.",
+    question: "You can't build anything sustainable if the foundation keeps shifting. How do you handle it?",
+    choices: [
+      { text: "Adapt quickly — match their speed and stay relevant to whatever they care about today", scores: { focus: -2, leverage: 4, boundaries: -1 }, feedback: "Responsive. And exhausting. If you reshape your work every time the wind changes, you'll be busy forever and finished with nothing. Some of leadership's shifting priorities are real. Some are just the most recent conversation. Knowing the difference is how you protect your own time." },
+      { text: "Push for clarity — 'Help me understand what's top priority so I can deliver on it'", scores: { focus: 5, leverage: 3, boundaries: 5 }, feedback: "The right question asked the right way. You're not pushing back — you're asking them to do the work of prioritizing instead of making everything urgent. If they can't answer, that's revealing. If they can, you've just saved yourself a week of split focus." },
+      { text: "Pick the thing you believe matters most, commit to it, and let them redirect you if they disagree", scores: { focus: 6, leverage: 4, boundaries: 4 }, feedback: "The most autonomous answer. You're making a bet on your own judgment and forcing leadership to actively disagree if they want something different. It works when your instincts are good — and yours usually are. The risk is small: if they redirect, you've only lost a day. If they don't, you've built something real while everyone else was chasing signals." }
+    ],
+    tags: ["focus", "strategy", "boundaries"]
+  },
+  {
+    id: "nu-3", category: "Navigating Up", type: "work",
+    context: "You've delivered something you're proud of. Leadership's response is lukewarm — not negative, just... not much.",
+    question: "You put real work into this. The reception doesn't match. What do you do with that?",
+    choices: [
+      { text: "Ask for specific feedback — 'What would make this more useful to you?'", scores: { focus: 4, leverage: 5, boundaries: 3 }, feedback: "Proactive. And it shows leadership that you're building for them, not for yourself. Their answer might sting — 'honestly, we needed Y more than X right now' — but that's exactly the information you need. Better to redirect now than to keep building in the wrong direction." },
+      { text: "Let it go — not everything needs a standing ovation. Ship and move on.", scores: { focus: 5, leverage: 2, boundaries: 4 }, feedback: "Mature. And sometimes right. Not every deliverable changes the room. But be honest about whether 'let it go' is resilience or resignation. If this keeps happening — you deliver, they shrug — the problem might not be your work. It might be that you're solving problems they don't know they have yet." },
+      { text: "Take it personally for about ten minutes, then get back to work", scores: { focus: 3, leverage: 3, boundaries: 2 }, feedback: "Honest. The ten minutes is human. Just don't let the sting drive you to overcompensate on the next one — making it bigger, flashier, more impressive to force the reaction you wanted. That's creating for validation, not for value. And validation-driven work always eventually feels hollow." }
+    ],
+    tags: ["leverage", "self-awareness", "strategy"]
+  },
+
+  // ===== PROTECTING YOUR PEOPLE =====
+  {
+    id: "pp-1", category: "Protecting Your People", type: "work",
+    context: "Someone you've been mentoring is getting frustrated because they feel unseen by leadership. You've been absorbing that frustration and trying to fix it for them.",
+    question: "How much of their fight is yours to fight?",
+    choices: [
+      { text: "All of it — if I don't advocate for them, nobody will", scores: { focus: -3, leverage: 2, boundaries: -4 }, feedback: "Maybe nobody will. Or maybe you've been so busy advocating that they've never had to advocate for themselves. There's a difference between opening a door and carrying someone through it. One builds their capability. The other builds their dependency on you." },
+      { text: "I'll create the opportunities, but they need to walk through them", scores: { focus: 4, leverage: 5, boundaries: 5 }, feedback: "The hardest version of caring. You're not abandoning them — you're positioning them to be seen on their own merits. The door is open. They have to step through it. And if they don't, that's information too." },
+      { text: "I need to be honest with them about what I can and can't control", scores: { focus: 3, leverage: 3, boundaries: 4 }, feedback: "Transparency about your limits is a gift most mentors never give. 'I can't make leadership see you, but here's what I can do' is more useful than silent advocacy they never know about. It also lets them decide how much of their own fight to pick up." }
+    ],
+    tags: ["trust", "boundaries", "leadership"]
+  },
+  {
+    id: "pp-2", category: "Protecting Your People", type: "work",
+    context: "You're watching someone you care about professionally get handled poorly by the organization. You have some leverage, but using it could cost you politically.",
+    question: "You could say something. It would help them and possibly hurt you. What do you do?",
+    choices: [
+      { text: "Say it — if I don't use my position to protect people, what's the point of having it?", scores: { focus: 2, leverage: -2, boundaries: 3 }, feedback: "Principled. And there's a real cost. The question isn't whether it's right — it probably is. The question is whether you can afford the cost right now, in the middle of your own transition, when your political capital is already stretched. Sometimes the timing of doing the right thing matters as much as the doing." },
+      { text: "Find a way to address it without exposing yourself — work the system instead of confronting it", scores: { focus: 4, leverage: 5, boundaries: 3 }, feedback: "The strategist's answer. And it can work — if the system is responsive enough. But be honest: is 'working the system' actually producing results, or is it just making you feel like you're doing something while the person you're protecting is still getting ground down?" },
+      { text: "Pick your moment — this isn't the battle to fight today, but it stays on the list", scores: { focus: 5, leverage: 4, boundaries: 4 }, feedback: "Wisdom or avoidance? The answer depends on whether 'the right moment' actually arrives and you take it. If this stays on the list for months, the list is where good intentions go to die. Put a date on it. If the moment hasn't come by then, force one." }
+    ],
+    tags: ["trust", "strategy", "leadership"]
+  },
+
+  // ===== MANAGING YOURSELF =====
+  {
+    id: "ms-1", category: "Managing Yourself", type: "work",
+    context: "You're preparing for a difficult conversation. You've been rehearsing it in your head for hours — different angles, different responses, different outcomes.",
+    question: "Is this preparation or avoidance?",
+    choices: [
+      { text: "Preparation — I think better when I've thought through the angles", scores: { focus: 3, leverage: 3, boundaries: 2 }, feedback: "True. And also the answer every over-preparer gives. The test: if you've rehearsed it more than twice, you're not preparing — you're trying to control the outcome. Conversations don't follow scripts. The other person hasn't read yours. At some point, preparation becomes a way to delay the discomfort of actually having the conversation." },
+      { text: "Probably some of both — I know I overthink, but the thinking helps", scores: { focus: 4, leverage: 2, boundaries: 4 }, feedback: "The honest answer. And knowing it's both is more useful than pretending it's purely strategic. Your brain processes through preparation — that's fine. But set a limit. Three bullet points. One clear ask. Then walk in and trust yourself to handle whatever happens." },
+      { text: "Avoidance — if I'm honest, the rehearsing is keeping me from doing it", scores: { focus: 5, leverage: 0, boundaries: 5 }, feedback: "That self-awareness is the preparation. You already know what you need to say. The rehearsal isn't adding anything — it's just making the gap between knowing and doing feel productive. Close the gap. Have the conversation. It will never be as bad as the version in your head." }
+    ],
+    tags: ["self-awareness", "control", "focus"]
+  },
+  {
+    id: "ms-2", category: "Managing Yourself", type: "work",
+    context: "You've been carrying stress from work into your home life. You know it's happening. You haven't stopped it yet.",
+    question: "Why not?",
+    choices: [
+      { text: "Because the stress is legitimate — the situation hasn't resolved yet", scores: { focus: 1, leverage: 2, boundaries: -2 }, feedback: "The stress is real. But 'it hasn't resolved' means you're waiting for the external situation to change before you give yourself permission to decompress. That's outsourcing your peace to your job. The situation might not resolve for weeks. Are you going to carry it home every night until then?" },
+      { text: "Because I don't have a good off switch — work and life bleed together", scores: { focus: 2, leverage: 1, boundaries: 0 }, feedback: "Knowing you don't have the switch is step one. Building it is step two. It doesn't have to be dramatic — a drive home ritual, a physical transition, a five-minute reset. Something that tells your brain 'that chapter is closed for today.' Without it, you're always in both worlds and fully in neither." },
+      { text: "Because the people at home need to understand what I'm dealing with", scores: { focus: -1, leverage: 1, boundaries: -3 }, feedback: "They probably do understand. Better than you think. But understanding and absorbing are different things. Telling your family about the stress isn't the problem — making them carry it is. You can be honest about a hard day without turning your home into an extension of the office." }
+    ],
+    tags: ["regulation", "boundaries", "self-awareness"]
+  },
+  {
+    id: "ms-3", category: "Managing Yourself", type: "work",
+    context: "You're spread across too many things. Some are genuinely yours. Some you inherited. Some you picked up because nobody else would.",
+    question: "Which ones do you put down?",
+    choices: [
+      { text: "The ones I picked up voluntarily — those are the first to go because they were never officially mine", scores: { focus: 6, leverage: 4, boundaries: 5 }, feedback: "Correct. And hard. Because the things you picked up voluntarily are usually the things you're best at or care about most. That's why you picked them up. But they're also the ones filling your plate so full that your actual job doesn't get your best energy." },
+      { text: "The ones that don't serve my new role — anything that isn't building toward where I'm going", scores: { focus: 5, leverage: 5, boundaries: 4 }, feedback: "Strategic. Filter everything through one question: does this move me toward the role I'm building, or does it keep me anchored in the role I'm leaving? Anything that anchors gets transferred, delegated, or dropped. No sentimentality." },
+      { text: "I can't put any down right now — everything is critical during the transition", scores: { focus: -3, leverage: 1, boundaries: -5 }, feedback: "That's the sound of someone who will still be saying this six months from now. Everything feels critical when you're holding it. But you're not the only capable person in the building. Some of these things will land softly if you set them down. And some will break — and the breaking will show everyone what actually needed a person, and what just needed a system." }
+    ],
+    tags: ["focus", "boundaries", "capacity"]
+  },
+  {
+    id: "ms-4", category: "Managing Yourself", type: "work",
+    context: "Someone vents to you about a work problem. You absorb it, strategize about it, and carry it with you. It wasn't really your problem to solve.",
+    question: "Did you help them, or did you just add their weight to yours?",
+    choices: [
+      { text: "Both — I can't hear about a problem without trying to solve it", scores: { focus: -2, leverage: 2, boundaries: -3 }, feedback: "That's a feature that becomes a bug at scale. When two people vent, you're strategizing for two. When five people vent, you're carrying five loads. Listening is kindness. Absorbing is a pattern. You don't have to solve every problem you hear about — some people just need to say it out loud and move on." },
+      { text: "I helped — they needed someone to think through it with them", scores: { focus: 2, leverage: 3, boundaries: 1 }, feedback: "Maybe. Or maybe they needed to be heard, and you escalated it to problem-solving because sitting with someone's discomfort without fixing it feels wrong. Check next time: did they ask for advice, or did they ask for an ear? The answer tells you what kind of support they actually needed." },
+      { text: "I need to get better at listening without absorbing — that's a boundary I don't have yet", scores: { focus: 4, leverage: 2, boundaries: 5 }, feedback: "That's a boundary most empathetic people never build because it feels like caring less. It's not. It's caring sustainably. You can be fully present for someone without taking their problem home. The mental model: hold it with them in the conversation, then set it down when you walk away." }
+    ],
+    tags: ["boundaries", "regulation", "self-awareness"]
+  },
+
+  // ===== POLITICAL NAVIGATION =====
+  {
+    id: "pn-1", category: "Political Navigation", type: "work",
+    context: "You see a colleague operating in a way that undermines the team. You've built your case. You've prepared your approach. You've rehearsed it.",
+    question: "You've spent days preparing to address this. What if the right move is just... saying it directly?",
+    choices: [
+      { text: "Direct is faster but riskier — the preparation protects me from saying it wrong", scores: { focus: 2, leverage: 3, boundaries: 2 }, feedback: "True to a point. But preparation past a certain threshold isn't protection — it's delay. If you've been preparing for days to say something that takes two minutes, the preparation has become the project. And the project is keeping you from doing the thing." },
+      { text: "I'll say it directly when the timing is right", scores: { focus: 1, leverage: 2, boundaries: 1 }, feedback: "When is the timing right? Specifically? If you can't name a date or a trigger, 'the right timing' is an indefinite postponement. The timing will never feel perfect. The question is whether waiting makes it better or makes it stale." },
+      { text: "Maybe direct is the move — I tend to overcomplicate things that just need a conversation", scores: { focus: 5, leverage: 4, boundaries: 5 }, feedback: "That self-awareness is rare. Most strategists would never admit that their strategy is sometimes overengineering. The direct path is uncomfortable because you can't control the other person's response. But the indirect path has costs too — time, energy, and the slow erosion of pretending something isn't bothering you while you build the perfect approach." }
+    ],
+    tags: ["communication", "strategy", "control"]
+  },
+  {
+    id: "pn-2", category: "Political Navigation", type: "work",
+    context: "You've been positioning yourself for a conversation with leadership. You've thought through angles, anticipated pushback, and built your framework. But you haven't actually had the conversation yet.",
+    question: "How many more days of preparation do you need?",
+    choices: [
+      { text: "I'm ready — I need to stop preparing and start talking", scores: { focus: 6, leverage: 5, boundaries: 4 }, feedback: "You were ready two days ago. Everything since then has been refinement for refinement's sake. Your instinct to prepare is a genuine strength, but it has a shadow: the preparation loop becomes self-sustaining because there's always one more angle. Walk in with your three key points and trust yourself." },
+      { text: "One more day — I want to tighten up one thing", scores: { focus: 2, leverage: 2, boundaries: 2 }, feedback: "It's always one more thing. And then one more after that. Your preparation is at diminishing returns. The difference between today's version and tomorrow's version is invisible to everyone except you. And the cost of waiting isn't measured in quality — it's measured in momentum you're losing." },
+      { text: "I'm not sure I'm ready — there are too many unknowns", scores: { focus: -1, leverage: 0, boundaries: 0 }, feedback: "There will always be unknowns. That's the nature of conversations with other human beings. You can't prepare for their mood, their priorities, or the curveball question you didn't anticipate. What you can prepare is your position and your ask. You have both. Go." }
+    ],
+    tags: ["strategy", "control", "self-awareness"]
+  },
+  {
+    id: "pn-3", category: "Political Navigation", type: "work",
+    context: "You've been framing yourself as the person trying to leave a role — 'I don't want this, please let me transition out.' It's been effective for showing you're not territorial.",
+    question: "But is 'please let me leave' the strongest way to frame your value?",
+    choices: [
+      { text: "No — I should be positioning what I'm moving toward, not what I'm escaping from", scores: { focus: 6, leverage: 6, boundaries: 4 }, feedback: "The difference between 'let me out of the lab' and 'here's what I'm building in media' is the difference between asking for permission and demonstrating value. One makes you a problem to solve. The other makes you an investment to protect. Lead with where you're going, not where you've been." },
+      { text: "The 'I don't want this' framing has worked — it disarms the territory argument", scores: { focus: 2, leverage: 3, boundaries: 3 }, feedback: "It has worked. But there's a shelf life. If you keep framing yourself as the person who doesn't want the role they have, eventually people stop seeing you as the person who wants the role you're building. You've proven you're not clinging to power. Now prove you're building something worth investing in." },
+      { text: "Both matter — I need leadership to know I'm committed to the transition AND excited about what's next", scores: { focus: 4, leverage: 5, boundaries: 3 }, feedback: "The balanced answer. And probably right. But notice the order you naturally default to — do you lead with the transition (leaving) or the vision (building)? Most of your conversations start with what you're leaving. Flip it. Start with what you're building. Let the transition be the natural consequence, not the headline." }
+    ],
+    tags: ["strategy", "leverage", "self-awareness"]
+  },
+
+  // ===== OFF THE CLOCK =====
+  {
+    id: "off-1", category: "Off the Clock", type: "offwork",
+    context: "Your brain processes problems by talking them through. You've been processing a lot of work problems out loud lately — to your partner, to colleagues, to anyone who'll listen.",
+    question: "Is the processing productive, or has it become its own loop?",
+    choices: [
+      { text: "It's productive — I genuinely think better when I talk things through", scores: { focus: 3, leverage: 2, boundaries: 1 }, feedback: "True. But track the ratio: how much of the talking leads to a new insight versus how much is rehearsing the same analysis you've already done? Processing out loud becomes a loop when you start having the same conversation with different people. That's not processing — that's distributing your anxiety." },
+      { text: "It's become a loop — I'm talking about the same things without new conclusions", scores: { focus: 4, leverage: 1, boundaries: 5 }, feedback: "Recognizing the loop is how you break it. The signal: if you finish a conversation about work and feel exactly the same as when you started, the conversation wasn't processing — it was venting. Venting has value, but it has a limit. Past that limit, you're just keeping the stress alive." },
+      { text: "I don't know — it feels necessary right now given everything that's happening", scores: { focus: 1, leverage: 2, boundaries: 0 }, feedback: "It might be necessary. But 'right now given everything' has a way of becoming permanent. At some point the situation stabilizes and you're still processing at crisis intensity. Give yourself permission to put it down — not forever, not even for a day. Just for an evening. See if the world survives your silence." }
+    ],
+    tags: ["regulation", "boundaries", "self-awareness"]
+  },
+  {
+    id: "off-2", category: "Off the Clock", type: "offwork",
+    context: "You haven't had a creative outlet in a while. All your creative energy has been going into work projects.",
+    question: "When was the last time you made something that was just for you?",
+    choices: [
+      { text: "The work IS the creative outlet — I'm building real things", scores: { focus: 3, leverage: 3, boundaries: -2 }, feedback: "Sometimes true. But work creativity and personal creativity serve different functions. Work creativity solves someone else's problem. Personal creativity refuels something that work can only spend. If the only canvas you have is the company's, you're borrowing creative energy from yourself and never paying it back." },
+      { text: "It's been a while — I miss it but there's no time right now", scores: { focus: 0, leverage: 0, boundaries: 0 }, feedback: "There's never time. There's only prioritization. Thirty minutes of something purely yours — not productive, not optimized, not deliverable — does more for your operating system than thirty minutes of work ever will. The time isn't missing. It's been allocated to things that feel more urgent but aren't more important." },
+      { text: "I've been meaning to get back to it — it's on the list", scores: { focus: 1, leverage: 1, boundaries: 1 }, feedback: "The list is where personal projects go to die a slow, guilty death. Don't put it on the list. Do it tonight. Not because it's productive. Not because it makes you a better worker. Because you're a person who creates things, and the version of you that doesn't create gets hollow in ways that show up everywhere." }
+    ],
+    tags: ["regulation", "self-awareness", "boundaries"]
+  },
+  {
+    id: "off-3", category: "Off the Clock", type: "offwork",
+    context: "You've been the strong one — for your team, for your family, for the person you're mentoring. Everyone leans on you.",
+    question: "Who do you lean on?",
+    choices: [
+      { text: "I've got people — I'm not carrying this alone", scores: { focus: 3, leverage: 3, boundaries: 3 }, feedback: "Good. Use them. Actually use them, not just have them. 'I've got people' means nothing if you're still processing alone at midnight. Reach out before you need to, not after the weight becomes visible." },
+      { text: "Honestly? I process most of it internally or through tools", scores: { focus: 2, leverage: 1, boundaries: 1 }, feedback: "Tools are useful. Internal processing is real. But neither one hugs you back. There's a version of self-sufficiency that's actually isolation wearing a productive mask. You don't have to perform strength for everyone all the time. The people who love you would rather you didn't." },
+      { text: "I don't really lean — I'm the one people come to, that's just how it is", scores: { focus: -1, leverage: 2, boundaries: -3 }, feedback: "That identity — 'the one people come to' — is both your greatest strength and the thing most likely to break you. If you never lean, you never let anyone close enough to actually support you. And the weight you're carrying doesn't get lighter because you're strong enough to hold it. It just gets quieter." }
+    ],
+    tags: ["regulation", "boundaries", "self-awareness"]
+  },
+
+  // ===== CHECK-INS =====
+  {
+    id: "chk-1", category: "Check-In", type: "checkin",
+    context: "No scenario. Just you.",
+    question: "Right now — are you building toward something, or running from something?",
+    choices: [
+      { text: "Building — I can see what I'm moving toward and it motivates me", scores: { focus: 3, leverage: 2, boundaries: 2 }, feedback: "Hold onto that vision. On the days when the politics and the personalities cloud everything, remember: you're not fighting for a position. You're building something that didn't exist before. That's a completely different kind of energy." },
+      { text: "A little of both — I'm excited about the new role but I'm also desperate to leave the old one", scores: { focus: 2, leverage: 1, boundaries: 2 }, feedback: "Honest. The desperation to leave can pollute the excitement of arriving if you're not careful. Make sure the new thing you're building is shaped by what you want, not by what you're running from. Otherwise you'll build a department that's defined by 'not the lab' instead of by its own vision." },
+      { text: "Running — if I'm being honest, I just need to get out of this situation", scores: { focus: 0, leverage: 0, boundaries: 1 }, feedback: "That's worth slowing down for. If escape is the primary driver, you might take the first exit instead of the right one. And once you're out, you'll need something pulling you forward or you'll just find a new situation to escape from. What does the destination look like, separate from the place you're leaving?" }
+    ],
+    tags: ["self-awareness", "focus", "transition"]
+  },
+  {
+    id: "chk-2", category: "Check-In", type: "checkin",
+    context: "No scenario. Just a question.",
+    question: "How many things on your plate today are actually yours — versus things you're holding for someone else because you don't trust them to handle it?",
+    choices: [
+      { text: "Most of it is mine — I've been getting better at letting things go", scores: { focus: 3, leverage: 3, boundaries: 3 }, feedback: "Progress. Real progress. Now keep going. Getting better at letting go is a practice, not an achievement. Tomorrow there'll be a new thing that feels like only you can handle. Notice it. Question it. Let it go if it isn't yours." },
+      { text: "Honestly, I'm still holding things that should be someone else's by now", scores: { focus: 1, leverage: 1, boundaries: 1 }, feedback: "Name one. Right now. The one that's most clearly not yours. What would happen if you set it down tomorrow? Not next week, not after the transition — tomorrow. The answer is probably 'someone would struggle with it for a day and then figure it out.' That's not failure. That's how capability transfers." },
+      { text: "I don't even know anymore — everything feels like mine", scores: { focus: -1, leverage: 0, boundaries: -2 }, feedback: "When everything feels like yours, nothing gets your best. That's not a capacity problem — it's a boundary problem. And it's one that only you can solve, because nobody else is going to walk up and take things off your plate. You have to set them down. Deliberately. Starting with the one that scares you least." }
+    ],
+    tags: ["boundaries", "self-awareness", "focus"]
+  },
+  {
+    id: "chk-3", category: "Check-In", type: "checkin",
+    context: "No scenario. Real talk.",
+    question: "When you look at the version of yourself that shows up at work — is that who you want to be, or who the situation requires you to be?",
+    choices: [
+      { text: "Who I want to be — I'm getting closer to leading the way I naturally lead", scores: { focus: 3, leverage: 3, boundaries: 3 }, feedback: "That alignment is worth everything. Protect it fiercely. The new role should be built around who you are, not who the org chart says you need to be. If you feel like yourself while doing the work, you're in the right place." },
+      { text: "Who the situation requires — I'm adapting constantly to what's in front of me", scores: { focus: 1, leverage: 2, boundaries: 0 }, feedback: "Adaptation is a survival skill. But if you've been adapting for months, the shape you're bending into starts to feel permanent. Who are you when nobody needs anything? That person hasn't gotten much airtime lately. Give them some." },
+      { text: "I'm not sure I know the difference anymore", scores: { focus: 0, leverage: 0, boundaries: 0 }, feedback: "That's the most important answer here. If the gap between who you are and who you perform has closed to the point where you can't see the seam — that's not adaptation. That's erosion. Find the thing that makes you feel like yourself — not a role, not a function, not a fixer. Yourself. Start there." }
+    ],
+    tags: ["self-awareness", "boundaries", "regulation"]
+  },
+  {
+    id: "chk-4", category: "Check-In", type: "checkin",
+    context: "No scenario. Just honesty.",
+    question: "What would you do with the energy you're currently spending on other people's problems?",
+    choices: [
+      { text: "Build — I'd pour it into the new department and make something people can't ignore", scores: { focus: 4, leverage: 4, boundaries: 3 }, feedback: "Then do it. Not eventually. Now. Every hour you spend strategizing about someone else's behavior is an hour you didn't spend building the thing that actually changes your life. The lab drama resolves itself or it doesn't. Your media department only gets built if you build it." },
+      { text: "Rest — I'd actually recover instead of running on empty", scores: { focus: 2, leverage: 1, boundaries: 4 }, feedback: "The fact that rest is what you'd choose tells you how depleted you are. That depletion isn't a badge. It's a warning. You can't build something new from empty. And the people you're carrying would survive a week of you putting the phone down. They might even grow from it." },
+      { text: "I don't know — I've been in problem-solving mode so long I'm not sure what I'd do without a problem", scores: { focus: 0, leverage: 0, boundaries: 1 }, feedback: "That's the most honest answer in this deck. And it's pointing at something real: you've built an identity around being the person who solves problems. When the problems stop, who are you? That question isn't a crisis. It's an invitation. You get to decide who you are when you're not fixing things. That person might be someone you haven't met yet." }
+    ],
+    tags: ["self-awareness", "focus", "boundaries"]
+  },
+  {
+    id: "chk-5", category: "Check-In", type: "checkin",
+    context: "No scenario. Just a mirror.",
+    question: "Is this conversation — right now, this tool, this exercise — another form of preparation? Or is it actually helping?",
+    choices: [
+      { text: "It's helping — I needed to think this through and now I have a clearer picture", scores: { focus: 3, leverage: 3, boundaries: 2 }, feedback: "Good. Then close it after this round and go do the thing. The clearest picture in the world is worthless if you look at it all night instead of acting on it in the morning." },
+      { text: "Honestly? It's a little of both — it's useful but it's also comfortable", scores: { focus: 2, leverage: 2, boundaries: 3 }, feedback: "The comfortable part is the part to watch. Tools like this can become their own preparation loop — another way to think about the situation instead of moving through it. Take what's useful. Leave the rest. And close the tab." },
+      { text: "I don't know — I keep coming back to it, which probably means something", scores: { focus: 1, leverage: 1, boundaries: 1 }, feedback: "It means you're looking for certainty in a situation that doesn't offer any. No tool, no framework, no amount of rehearsal will make the uncertain parts certain. At some point you have to trust that you've done enough thinking and your instincts will handle the rest. They will. They always have." }
+    ],
+    tags: ["self-awareness", "control", "regulation"]
+  },
+
+  // ===== CREATIVE LEADERSHIP =====
+  {
+    id: "cl-1", category: "Creative Leadership", type: "work",
+    context: "Someone in leadership has a strong opinion about a creative decision in your area. They're not the audience and they don't have a media background. But they're the boss.",
+    question: "Their input would weaken the work. They're not asking — they're directing. What do you do?",
+    choices: [
+      { text: "Push back with reasoning — 'Here's why I'd recommend the other approach' — and let them choose", scores: { focus: 5, leverage: 6, boundaries: 5 }, feedback: "The professional response. You're not refusing — you're informing the decision with your expertise. If they still want it their way after hearing your reasoning, that's their call to make. But they need the information first, and you're the only one who can give it to them. Silence in the face of bad creative direction isn't deference. It's malpractice." },
+      { text: "Make the change they're asking for — they're the decision-maker", scores: { focus: -3, leverage: 1, boundaries: -2 }, feedback: "If you make every change requested without pushback, you've made yourself a production resource, not a creative leader. The whole reason a media department exists is to provide the expertise leadership doesn't have. If your value is doing what you're told, you're easily replaceable. If your value is informed judgment, you're indispensable." },
+      { text: "Implement a hybrid — incorporate part of their input while preserving the core of your approach", scores: { focus: 3, leverage: 4, boundaries: 2 }, feedback: "Diplomatic. Sometimes works. But be honest about whether the 'hybrid' is genuinely better or just a way to avoid the confrontation. If you'd never have included their idea on its own merits, building it in to keep the peace is creative compromise wearing a strategic costume." }
+    ],
+    tags: ["creative", "leverage", "communication"]
+  },
+  {
+    id: "cl-2", category: "Creative Leadership", type: "work",
+    context: "You're getting pulled into producing things for everyone. Marketing wants this, operations wants that, someone else wants a quick video. Your actual strategic priorities are slipping.",
+    question: "You're becoming the 'department of yes.' How do you reset the relationship?",
+    choices: [
+      { text: "Introduce a request process — formalize how work comes into the department", scores: { focus: 6, leverage: 5, boundaries: 7 }, feedback: "The right structural answer. A request form, a queue, a clear prioritization process. It feels bureaucratic until you realize the alternative is being interrupted into ineffectiveness. The process protects the work — yours and theirs. It also gives you a tool to say 'we'll prioritize this against the other 12 things in the queue' instead of 'no.'" },
+      { text: "Start saying no to small things — preserve bandwidth for what matters most", scores: { focus: 5, leverage: 3, boundaries: 6 }, feedback: "Necessary but harder without structure. 'No' from a person feels personal. 'No' from a process feels neutral. If you say no without a system behind it, people will go around you to leadership and your no becomes the thing leadership has to litigate. Build the process first, then the no's land cleaner." },
+      { text: "Keep saying yes for now — you're building credibility and that takes goodwill", scores: { focus: -3, leverage: 1, boundaries: -4 }, feedback: "There's an expiration date on this strategy. Credibility built on always saying yes turns into a reputation as the person who can be asked for anything. By the time you try to reset expectations, the pattern is set. Goodwill is real, but it has limits. Spend it intentionally, not by default." }
+    ],
+    tags: ["creative", "boundaries", "focus"]
+  },
+  {
+    id: "cl-3", category: "Creative Leadership", type: "work",
+    context: "You're using AI tools heavily in your work. They make you faster and let you do things at a level you couldn't otherwise. But you sometimes wonder if you're leaning too hard.",
+    question: "The tools work. But is your work yours, or theirs?",
+    choices: [
+      { text: "Mine — I'm directing it, I'm shaping the output, the judgment is human", scores: { focus: 4, leverage: 5, boundaries: 3 }, feedback: "If that's true, you're using the tools the right way. The test: when AI gives you something, do you ever change it substantively? Or do you mostly accept and refine? If you're not changing the underlying logic or rejecting outputs, you might be leaning more than you realize." },
+      { text: "Somewhere in between — and I'm not always sure where the line is", scores: { focus: 3, leverage: 3, boundaries: 5 }, feedback: "Honest. That uncertainty is actually a sign you're using the tools mindfully. The people who don't worry about this are the ones to worry about. Stay aware of it. Periodically take on something without AI to make sure the skills you're not using haven't atrophied." },
+      { text: "More AI than I'd publicly admit — but the output is good, so does it matter?", scores: { focus: 1, leverage: 2, boundaries: 2 }, feedback: "It matters in two ways. One: your ability to evaluate the output depends on having done the work yourself enough times to know what good looks like. Two: there's a credibility risk if anyone ever asks how you produced something and the answer is 'I just prompted it.' Use the tools, but make sure you could defend the work without them if you had to." }
+    ],
+    tags: ["creative", "tools", "self-awareness"]
+  },
+
+  // ===== FAMILY & SELF =====
+  {
+    id: "fam-1", category: "Family & Self", type: "offwork",
+    context: "You've been distracted at home — physically present but mentally still at work. Someone in your family has noticed and made a small comment about it.",
+    question: "It wasn't a confrontation. Just an observation. How do you respond?",
+    choices: [
+      { text: "Acknowledge it directly and put the phone down — start there", scores: { focus: 4, leverage: 3, boundaries: 6 }, feedback: "The small comment is usually the warning before the bigger conversation. They're telling you they've noticed and they're not okay with it, but they're being gentle about it. Honor the gentleness by actually responding to it. Action means more than apology — and the action they need is your full presence, not your defense." },
+      { text: "Explain what's been on your mind — they should know what you're dealing with", scores: { focus: 1, leverage: 1, boundaries: -2 }, feedback: "Context is good. But context isn't a substitute for presence. If your response to 'you've been distracted' is to explain the work problems causing the distraction, you've made it about you and your stress instead of about them and what they need. Save the work context for a different conversation." },
+      { text: "Promise to do better — the situation is temporary and you'll be back to normal soon", scores: { focus: -2, leverage: 0, boundaries: -3 }, feedback: "How many times have you used some version of 'when this is over' as a placeholder for actual presence? Promises about the future cost nothing. The thing that matters is what you do in the next hour. Don't promise to be present later. Be present now." }
+    ],
+    tags: ["relationships", "regulation", "boundaries"]
+  },
+  {
+    id: "fam-2", category: "Family & Self", type: "offwork",
+    context: "You have a creative project that's just for you. It's been sitting untouched for weeks because work has been consuming you.",
+    question: "There's an hour you could spend on it tonight. Or you could use that hour to get ahead on tomorrow.",
+    choices: [
+      { text: "Work on the personal project — the work hour won't actually get you ahead", scores: { focus: 5, leverage: 3, boundaries: 6 }, feedback: "Right answer. The hour spent on work tonight will be replaced by an hour of new work tomorrow. The hour spent on the personal project is irreplaceable — it's the only one that refuels the part of you that isn't a worker. Without that fuel, the work suffers anyway. Counterintuitive, but true." },
+      { text: "Get ahead on work — the personal project will still be there next week", scores: { focus: -2, leverage: 2, boundaries: -3 }, feedback: "Will it? When? Next week is going to look exactly like this week. There will always be a work reason to push the personal thing further out. The only way personal work ever happens is if you treat it with the same protectedness as work commitments. Otherwise it stays untouched forever." },
+      { text: "Split it — thirty minutes on each", scores: { focus: 2, leverage: 2, boundaries: 1 }, feedback: "Compromise. Sometimes works. But thirty minutes on a personal project is rarely enough to get into the flow that makes it satisfying. And thirty minutes of work is rarely enough to actually move anything forward. You might end the hour feeling like you did neither well." }
+    ],
+    tags: ["regulation", "self-awareness", "boundaries"]
+  },
+
+  // ===== MORE TRANSITION =====
+  {
+    id: "tr-1", category: "Letting Go", type: "work",
+    context: "Someone in your old area is struggling with something you used to handle. They haven't asked for help. You know they're not going to ask.",
+    question: "Your help would be welcomed even if it's not requested. Or would it?",
+    choices: [
+      { text: "Wait to be asked — unsolicited help reinforces that they can't do it without me", scores: { focus: 6, leverage: 3, boundaries: 7 }, feedback: "Right answer. Even if your help would be welcomed, the act of offering it without being asked sends a message: 'I'm watching, I can see you're struggling, I think you need me.' That message is the opposite of what builds confidence. Let them struggle. If they need help, they know where to find you." },
+      { text: "Reach out — pretending not to notice is its own kind of message", scores: { focus: -2, leverage: 2, boundaries: -3 }, feedback: "Sometimes true with close friends. With someone who's stepping into your old role, 'I noticed you're struggling' lands very differently. Even gently delivered, it tells them you're watching their performance and assessing it. That's a heavier weight than they need from you." },
+      { text: "Mention it casually next time you see them — leave the door open without forcing it", scores: { focus: 2, leverage: 2, boundaries: 1 }, feedback: "Better than offering directly. Still risky. Anything that signals you're aware of their struggle puts you in evaluator mode in their head. The cleanest move is to act like you haven't noticed and trust them to ask if they need you. If they don't ask, they didn't need you." }
+    ],
+    tags: ["transition", "boundaries", "trust"]
+  },
+  {
+    id: "tr-2", category: "Navigating Up", type: "work",
+    context: "You've negotiated your transition timeline. Then something happens — a new urgent project, a staffing change, a leadership ask — that would justify extending it.",
+    question: "There's a legitimate reason to push your full transition back. Do you accept the extension or hold the line?",
+    choices: [
+      { text: "Hold the line — every extension teaches that the timeline is flexible", scores: { focus: 6, leverage: 5, boundaries: 7 }, feedback: "The first extension creates the template for every extension after it. If you accept this one, the next legitimate reason will get the same treatment, and you'll still be straddling roles a year from now. Hold the timeline you negotiated. If you can't fully transition because of the new reality, that's a renegotiation conversation, not an automatic extension." },
+      { text: "Accept the extension — the situation has legitimately changed", scores: { focus: -2, leverage: 1, boundaries: -3 }, feedback: "Reasonable on the surface. Dangerous in pattern. The situation will always be 'legitimately changing.' If the criterion for extending is 'something important came up,' you'll extend forever. The whole point of a negotiated timeline is that it survives normal organizational chaos." },
+      { text: "Propose a modified plan — partial transition by the original date, full by a new date", scores: { focus: 3, leverage: 4, boundaries: 3 }, feedback: "Negotiation rather than acceptance. Better than caving entirely, worse than holding firm. The risk is that 'partial by date one, full by date two' becomes 'partial forever' because date two is also flexible. If you go this route, the second date needs to be as firm as the first." }
+    ],
+    tags: ["transition", "boundaries", "strategy"]
+  },
+
+  // ===== CHECK-IN =====
+  {
+    id: "chk-6", category: "Check-In", type: "checkin",
+    context: "No scenario. Just a thought to sit with.",
+    question: "If you imagine yourself in this new role six months from now, fully transitioned, doing the work you actually wanted to do — what does the day look like?",
+    choices: [
+      { text: "I can see it clearly — that's what I'm building toward", scores: { focus: 4, leverage: 3, boundaries: 3 }, feedback: "Hold onto that picture. On the days when the politics and the personalities cloud everything, that vision is your compass. Most people in transitions can't articulate where they're going. You can. That's an advantage." },
+      { text: "I have a fuzzy picture — I know the direction but not the details", scores: { focus: 2, leverage: 2, boundaries: 2 }, feedback: "Fuzzy is honest. Six months out is far enough that the details shouldn't be sharp yet. But the fuzziness can also mean you haven't taken the time to actually envision it. Try this: spend ten minutes writing what an ideal Tuesday in that role looks like, hour by hour. Specifics turn fuzzy pictures into actionable targets." },
+      { text: "Honestly? I've been so focused on the transition itself that I haven't pictured the destination clearly", scores: { focus: 0, leverage: 1, boundaries: 2 }, feedback: "That's worth fixing. If you can't see the destination, you can't tell if you're heading toward it. You can spend your whole transition managing the exit and arrive somewhere you didn't choose. Take the time to picture it — not as escape from the current situation, but as the actual life you want to be living. Then steer toward that, not just away from this." }
+    ],
+    tags: ["self-awareness", "focus", "transition"]
+  }
+];
+
+// ========== GAME ENGINE ==========
+class DecisionDeck {
+  constructor() {
+    this.state = 'start';
+    this.scores = { focus: 50, leverage: 50, boundaries: 50 };
+    this.round = 0;
+    this.totalRounds = 14;
+    this.history = [];
+    this.currentScenario = null;
+    this.selectedChoice = null;
+    this.usedIds = new Set();
+    this.deck = [];
+    this.render();
+  }
+
+  buildDeck() {
+    let pool = SCENARIOS.filter(s => !this.usedIds.has(s.id));
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    const selected = [];
+    const catCount = {};
+    const typeCount = { work: 0, offwork: 0, checkin: 0 };
+    const guarantees = [
+      pool.find(s => s.type === 'checkin'),
+      pool.find(s => s.type === 'checkin' && !selected.includes(s)),
+      pool.find(s => s.type === 'offwork'),
+      pool.find(s => s.type === 'offwork' && !selected.includes(s)),
+      pool.find(s => s.category === 'Letting Go'),
+      pool.find(s => s.category === 'Building the New'),
+      pool.find(s => s.category === 'Managing Yourself'),
+    ].filter(Boolean);
+    for (const s of guarantees) {
+      if (!selected.includes(s)) {
+        selected.push(s);
+        catCount[s.category] = (catCount[s.category] || 0) + 1;
+        typeCount[s.type] = (typeCount[s.type] || 0) + 1;
+      }
+    }
+    for (const s of pool) {
+      if (selected.length >= this.totalRounds) break;
+      if (selected.includes(s)) continue;
+      const cc = catCount[s.category] || 0;
+      if (cc >= 2) continue;
+      if (s.type === 'checkin' && typeCount.checkin >= 3) continue;
+      if (s.type === 'offwork' && typeCount.offwork >= 3) continue;
+      selected.push(s);
+      catCount[s.category] = cc + 1;
+      typeCount[s.type] = (typeCount[s.type] || 0) + 1;
+    }
+    for (const s of pool) {
+      if (selected.length >= this.totalRounds) break;
+      if (!selected.includes(s)) selected.push(s);
+    }
+    for (let i = selected.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [selected[i], selected[j]] = [selected[j], selected[i]];
+    }
+    if (selected[0] && selected[0].type === 'checkin') {
+      const swapIdx = selected.findIndex((s, i) => i > 2 && s.type === 'work');
+      if (swapIdx > 0) [selected[0], selected[swapIdx]] = [selected[swapIdx], selected[0]];
+    }
+    this.deck = selected;
+  }
+
+  findCallback(history) {
+    if (history.length < 3) return null;
+    const current = this.currentScenario;
+    if (!current) return null;
+    const tagOverlap = history.filter(h => {
+      const past = SCENARIOS.find(s => s.id === h.id);
+      if (!past) return false;
+      return past.tags.some(t => current.tags.includes(t));
+    });
+    if (tagOverlap.length > 0) {
+      const ref = tagOverlap[tagOverlap.length - 1];
+      const past = SCENARIOS.find(s => s.id === ref.id);
+      return { text: `Earlier, when faced with a ${past.category.toLowerCase()} situation, you chose: "${ref.choiceText}" — how does that shape your thinking here?` };
+    }
+    return null;
+  }
+
+  applyScoreVariance(scores) {
+    const modified = { ...scores };
+    const roll = Math.random();
+    if (roll < 0.18 && modified.focus > 3) {
+      modified.focus = Math.round(modified.focus * 0.3);
+    } else if (roll < 0.30 && modified.focus < -2) {
+      modified.leverage = Math.abs(modified.leverage) + 3;
+    } else if (roll < 0.42) {
+      const stats = Object.keys(modified);
+      const pick = stats[Math.floor(Math.random() * stats.length)];
+      if (Math.abs(modified[pick]) > 2) { modified[pick] = -Math.round(modified[pick] * 0.5); }
+    } else if (roll < 0.50) {
+      const stats = Object.keys(modified);
+      const pick = stats[Math.floor(Math.random() * stats.length)];
+      modified[pick] = modified[pick] + (Math.random() > 0.5 ? 4 : -4);
+    }
+    return modified;
+  }
+
+  nextRound() {
+    if (this.round >= this.totalRounds) { this.state = 'end'; this.render(); return; }
+    this.currentScenario = this.deck[this.round];
+    this.usedIds.add(this.currentScenario.id);
+    this.selectedChoice = null;
+    this.state = 'play';
+    this.render();
+  }
+
+  selectChoice(index) {
+    if (this.selectedChoice !== null) return;
+    this.selectedChoice = index;
+    const choice = this.currentScenario.choices[index];
+    const modifiedScores = this.applyScoreVariance(choice.scores);
+    this.scores.focus = Math.max(0, Math.min(100, this.scores.focus + modifiedScores.focus));
+    this.scores.leverage = Math.max(0, Math.min(100, this.scores.leverage + modifiedScores.leverage));
+    this.scores.boundaries = Math.max(0, Math.min(100, this.scores.boundaries + modifiedScores.boundaries));
+    this.history.push({ id: this.currentScenario.id, choiceIndex: index, choiceText: choice.text, scores: modifiedScores });
+    this.round++;
+    this.render();
+  }
+
+  getEndInsight() {
+    const { focus, leverage, boundaries } = this.scores;
+    const sorted = [
+      { name: 'focus', val: focus }, { name: 'leverage', val: leverage }, { name: 'boundaries', val: boundaries }
+    ].sort((a, b) => b.val - a.val);
+    const highest = sorted[0].name;
+    const lowest = sorted[2].name;
+    const insights = {
+      focus: {
+        high: "You know where you're going. The noise doesn't pull you off course as much as it used to. That clarity of direction is what separates someone in transition from someone who's arrived.",
+        low: "Focus took some hits. That usually means other people's problems got more of your energy than your own forward motion. Understandable in a chaotic environment. But at some point, their chaos stops being your responsibility and your direction starts being your priority."
+      },
+      leverage: {
+        high: "You know how to make your work visible and your position strong. That strategic instinct is genuine. Just make sure the strategy serves the work, not the other way around — building something real is always more durable than positioning.",
+        low: "Leverage dipped. That might mean you chose depth over visibility, substance over positioning. That's not always wrong. But invisible work has a ceiling. At some point, what you build has to be seen by the people who decide what gets resourced."
+      },
+      boundaries: {
+        high: "You're getting better at knowing where you end and other people's problems begin. That line is the hardest thing for someone who cares deeply to draw — and the most important.",
+        low: "Boundaries got soft. That's the cost of caring about people and being good at too many things — you end up holding everything because you can. But 'can' and 'should' aren't the same word. The things you're holding for other people are the things keeping you from building what's yours."
+      }
+    };
+    const checkinHistory = this.history.filter(h => {
+      const s = SCENARIOS.find(sc => sc.id === h.id);
+      return s && s.type === 'checkin';
+    });
+    let checkinNote = '';
+    if (checkinHistory.length >= 2) {
+      const heavyCount = checkinHistory.filter(h => {
+        const s = SCENARIOS.find(sc => sc.id === h.id);
+        const choice = s.choices[h.choiceIndex];
+        return choice.scores.boundaries < 1 || choice.scores.focus < 1;
+      }).length;
+      if (heavyCount >= 2) {
+        checkinNote = "\n\nThe check-ins painted a picture worth looking at. You're carrying more than you need to, processing longer than necessary, and giving away energy that belongs to your own next chapter. That pattern doesn't break itself. You break it — by choosing, every day, to put your own oxygen mask on first.";
+      } else {
+        checkinNote = "\n\nThe check-ins suggest you're self-aware about where you are and what you're carrying. That awareness is your biggest asset — it means the adjustments you need to make are refinements, not overhauls. Keep checking in with yourself. The mirror is the tool.";
+      }
+    }
+    return `Your strongest instinct: ${highest}. ${insights[highest].high}\n\nWhere to reflect: ${lowest}. ${insights[lowest].low}${checkinNote}`;
+  }
+
+  start() {
+    this.scores = { focus: 50, leverage: 50, boundaries: 50 };
+    this.round = 0; this.history = []; this.selectedChoice = null;
+    this.buildDeck(); this.nextRound();
+  }
+
+  getCardClass() {
+    if (!this.currentScenario) return '';
+    if (this.currentScenario.type === 'checkin') return 'checkin';
+    if (this.currentScenario.type === 'offwork') return 'offwork';
+    return '';
+  }
+
+  render() {
+    const app = document.getElementById('app');
+    if (this.state === 'start') {
+      app.innerHTML = `
+        <div class="header">
+          <h1>Decision Deck</h1>
+          <div class="subtitle">Transition Edition</div>
+        </div>
+        <div class="start-screen">
+          <div class="icon">◆</div>
+          <p>14 scenarios. No perfect answers.<br><br>
+          You'll be scored on three axes: <strong style="color:var(--accent)">Focus</strong>, <strong style="color:var(--gold)">Leverage</strong>, and <strong style="color:#a78bfa">Boundaries</strong>.<br><br>
+          The scoring won't always make sense. Transitions never do.<br><br>
+          Letting go. Building new. Navigating the space between.<br><br>
+          Your earlier decisions will follow you.</p>
+          <button class="start-btn" onclick="game.start()">Deal Me In</button>
+        </div>`;
+      return;
+    }
+    if (this.state === 'end') {
+      const insight = this.getEndInsight();
+      const paras = insight.split('\n\n');
+      app.innerHTML = `
+        <div class="header"><h1>Decision Deck</h1><div class="subtitle">Results</div></div>
+        <div class="end-screen">
+          <div class="final-scores">
+            <div class="final-stat"><div class="val" style="color:var(--accent)">${this.scores.focus}</div><div class="lbl">Focus</div></div>
+            <div class="final-stat"><div class="val" style="color:var(--gold)">${this.scores.leverage}</div><div class="lbl">Leverage</div></div>
+            <div class="final-stat"><div class="val" style="color:#a78bfa">${this.scores.boundaries}</div><div class="lbl">Boundaries</div></div>
+          </div>
+          ${paras.map(p => `<p class="insight">${p}</p>`).join('')}
+          <button class="play-again" onclick="game.start()">Play Again</button>
+        </div>`;
+      return;
+    }
+    const s = this.currentScenario;
+    const cardClass = this.getCardClass();
+    const callback = this.findCallback(this.history);
+    const selected = this.selectedChoice;
+    const choice = selected !== null ? s.choices[selected] : null;
+    const modScores = selected !== null ? this.history[this.history.length - 1].scores : null;
+    let choicesHTML = '';
+    if (selected === null) {
+      choicesHTML = `<div class="choices">${s.choices.map((c, i) => `<button class="choice-btn" onclick="game.selectChoice(${i})">${c.text}</button>`).join('')}</div>`;
+    } else {
+      const dominant = Object.entries(modScores).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
+      const deltaVal = dominant[1];
+      const deltaClass = deltaVal > 0 ? 'pos' : deltaVal < 0 ? 'neg' : 'zero';
+      const deltaSign = deltaVal > 0 ? '+' : '';
+      const statLabels = { focus: 'Focus', leverage: 'Leverage', boundaries: 'Boundaries' };
+      choicesHTML = `
+        <div class="choices">${s.choices.map((c, i) => `<button class="choice-btn${i === selected ? ' selected' : ''}" disabled>${c.text}</button>`).join('')}</div>
+        <div class="result">
+          <div class="result-score"><div class="delta ${deltaClass}">${deltaSign}${deltaVal}</div><div class="stat-name">${statLabels[dominant[0]]}</div></div>
+          <div class="result-text">${choice.feedback}</div>
+          <button class="next-btn" onclick="game.nextRound()">${this.round >= this.totalRounds ? 'See Results' : 'Next Scenario'}</button>
+        </div>`;
+    }
+    app.innerHTML = `
+      <div class="header"><h1>Decision Deck</h1></div>
+      <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" style="width:${(this.round / this.totalRounds) * 100}%"></div></div><div class="progress-label">${this.round}/${this.totalRounds}</div></div>
+      <div class="score-bar">
+        <div class="score-item"><div class="label">Focus</div><div class="value focus">${this.scores.focus}</div></div>
+        <div class="score-item"><div class="label">Leverage</div><div class="value leverage">${this.scores.leverage}</div></div>
+        <div class="score-item"><div class="label">Boundaries</div><div class="value boundaries">${this.scores.boundaries}</div></div>
+      </div>
+      <div class="card-container">
+        <div class="card ${cardClass}" key="${s.id}-${selected}">
+          <div class="card-category">${s.category}</div>
+          <div class="card-context">${s.context}</div>
+          ${callback && selected === null ? `<div class="card-ref"><span class="reflection-tag">Callback</span><br>${callback.text}</div>` : ''}
+          <div class="card-question">${s.question}</div>
+          ${choicesHTML}
+        </div>
+      </div>`;
+  }
+}
+const game = new DecisionDeck();
+</script>
+</body>
+</html>

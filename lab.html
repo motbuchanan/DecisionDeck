@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Decision Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --card-border: #2a2d3a;
+    --accent: #4ecdc4;
+    --accent-dim: #2a7a74;
+    --warn: #ff6b6b;
+    --gold: #f7d354;
+    --text: #e8e6e3;
+    --text-dim: #8a8895;
+    --positive: #4ecdc4;
+    --negative: #ff6b6b;
+    --neutral: #f7d354;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+  .app {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+  .header { text-align: center; padding: 20px 0 10px; }
+  .header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+  .progress-wrap { margin: 16px 0; display: flex; align-items: center; gap: 10px; }
+  .progress-track {
+    flex: 1; height: 4px; background: var(--card-border);
+    border-radius: 2px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    transition: width 0.5s ease; border-radius: 2px;
+  }
+  .progress-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem; color: var(--text-dim);
+    min-width: 45px; text-align: right;
+  }
+  .score-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; padding: 10px 14px;
+    background: var(--card-bg); border-radius: 10px;
+    border: 1px solid var(--card-border);
+  }
+  .score-item { text-align: center; }
+  .score-item .label {
+    font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 2px;
+  }
+  .score-item .value { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; }
+  .score-item .value.trust { color: var(--accent); }
+  .score-item .value.momentum { color: var(--gold); }
+  .score-item .value.clarity { color: #a78bfa; }
+  .card-container { flex: 1; display: flex; flex-direction: column; }
+  .card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 24px 20px;
+    flex: 1; display: flex; flex-direction: column;
+    animation: cardIn 0.4s ease; position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-dim));
+  }
+  .card.checkin::before { background: linear-gradient(90deg, #a78bfa, #6d5acd); }
+  .card.offwork::before { background: linear-gradient(90deg, var(--gold), #c4a530); }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .card-category {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .card.checkin .card-category { color: #a78bfa; }
+  .card.offwork .card-category { color: var(--gold); }
+  .card-context {
+    font-size: 0.78rem; color: var(--text-dim); margin-bottom: 14px;
+    line-height: 1.4; font-style: italic;
+    padding-bottom: 12px; border-bottom: 1px solid var(--card-border);
+  }
+  .card-question {
+    font-size: 1.05rem; line-height: 1.55;
+    font-weight: 500; margin-bottom: 24px; flex: 1;
+  }
+  .card-ref {
+    font-size: 0.72rem; color: var(--gold); margin-bottom: 12px;
+    padding: 8px 10px; background: rgba(247, 211, 84, 0.08);
+    border-radius: 8px; border-left: 3px solid var(--gold);
+  }
+  .choices { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+  .choice-btn {
+    background: transparent; border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 14px 16px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+    text-align: left; cursor: pointer; transition: all 0.2s ease; line-height: 1.4;
+  }
+  .choice-btn:active { transform: scale(0.98); }
+  .choice-btn:hover { border-color: var(--accent); background: rgba(78, 205, 196, 0.06); }
+  .choice-btn.selected { border-color: var(--accent); background: rgba(78, 205, 196, 0.1); }
+  .choice-btn:disabled { cursor: default; opacity: 0.5; }
+  .result { animation: resultIn 0.3s ease; padding-top: 12px; }
+  @keyframes resultIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .result-score { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .result-score .delta { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; }
+  .result-score .delta.pos { color: var(--positive); }
+  .result-score .delta.neg { color: var(--negative); }
+  .result-score .delta.zero { color: var(--neutral); }
+  .result-score .stat-name {
+    font-size: 0.75rem; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .result-text { font-size: 0.88rem; line-height: 1.55; color: var(--text-dim); margin-bottom: 16px; }
+  .next-btn {
+    width: 100%; padding: 14px; background: var(--accent); color: var(--bg);
+    border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer;
+    transition: all 0.2s ease; letter-spacing: 0.5px;
+  }
+  .next-btn:active { transform: scale(0.97); }
+  .start-screen {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    gap: 20px; animation: cardIn 0.5s ease;
+  }
+  .start-screen .icon { font-size: 3rem; margin-bottom: 10px; }
+  .start-screen p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; max-width: 320px; }
+  .start-screen .start-btn {
+    margin-top: 10px; padding: 14px 40px; background: var(--accent);
+    color: var(--bg); border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem;
+    font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
+  }
+  .end-screen {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    gap: 16px; animation: cardIn 0.5s ease;
+  }
+  .end-screen .final-scores { display: flex; gap: 20px; margin: 10px 0; }
+  .end-screen .final-stat { text-align: center; }
+  .end-screen .final-stat .val { font-family: 'Space Mono', monospace; font-size: 2rem; font-weight: 700; }
+  .end-screen .final-stat .lbl {
+    font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--text-dim); margin-top: 2px;
+  }
+  .end-screen .insight {
+    font-size: 0.9rem; color: var(--text-dim);
+    line-height: 1.6; max-width: 340px; margin: 10px 0;
+  }
+  .end-screen .play-again {
+    margin-top: 10px; padding: 14px 40px; background: var(--accent);
+    color: var(--bg); border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem;
+    font-weight: 700; cursor: pointer;
+  }
+  .reflection-tag {
+    display: inline-block; font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 1.5px; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px;
+    background: rgba(167, 139, 250, 0.15); color: #a78bfa;
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+const SCENARIOS = [
+  // ===== DELEGATION =====
+  {
+    id: "del-1", category: "Delegation", type: "work",
+    context: "A technician asks you how to handle a device modification they've done before.",
+    question: "They know the process. They're really asking for permission. What do you do?",
+    choices: [
+      { text: "Walk them through it step by step to be safe", scores: { trust: -5, momentum: 3, clarity: 0 }, feedback: "They already knew. You just told them their experience doesn't count. Sometimes helping is the thing that slows everyone down." },
+      { text: "Tell them you trust their judgment and to flag you if something unexpected comes up", scores: { trust: 8, momentum: 5, clarity: 3 }, feedback: "They walked away standing taller. That cost you nothing and bought you something you can't fake." },
+      { text: "Ask them what they think the right approach is, then confirm it", scores: { trust: 4, momentum: 0, clarity: 5 }, feedback: "Solid middle ground. They got the validation, you got the verification. Just know — do this every time and it starts to feel like a test, not trust." }
+    ],
+    tags: ["trust", "autonomy"]
+  },
+  {
+    id: "del-2", category: "Delegation", type: "work",
+    context: "A job is running behind. You could jump in and do it yourself faster.",
+    question: "You know you can get it done quicker. But should you?",
+    choices: [
+      { text: "Jump in and get it done — production comes first", scores: { trust: -3, momentum: 8, clarity: -2 }, feedback: "The job got done. But your team just learned that when things get tight, you don't trust them to deliver. They'll wait for you next time too." },
+      { text: "Check in on the bottleneck and help them problem-solve it", scores: { trust: 5, momentum: 3, clarity: 4 }, feedback: "Slower today. Faster every day after. They solved it with your support, not your hands — that's the difference between a supervisor and a technician who gives orders." },
+      { text: "Let it run late — they need to feel the consequences", scores: { trust: -2, momentum: -5, clarity: 2 }, feedback: "There's a version of this that works: when someone needs to learn from failure. But letting production slip to teach a lesson? That's a cost the whole team pays for one person's education." }
+    ],
+    tags: ["delegation", "production"]
+  },
+  {
+    id: "del-3", category: "Delegation", type: "work",
+    context: "You delegated a task last week. It got done, but not the way you would have done it. The result is fine.",
+    question: "Do you say something?",
+    choices: [
+      { text: "No — the result met the standard, their method is their business", scores: { trust: 7, momentum: 4, clarity: 2 }, feedback: "This is one of the hardest things for a good technician turned supervisor. Your way isn't the only way. It might not even be the best way. Letting go of method when the outcome is solid is how you build a team that can function without you." },
+      { text: "Mention your preferred approach for next time", scores: { trust: -3, momentum: 2, clarity: 3 }, feedback: "You just told them the right answer didn't count because they got there the wrong way. Next time they'll do it your way — not because it's better, but because it's safer. That's compliance, not growth." },
+      { text: "Ask them to walk you through their process — you might learn something", scores: { trust: 6, momentum: 2, clarity: 5 }, feedback: "Bold move. Most supervisors never ask this question because it means admitting someone else might have a better method. The ones who do ask it get smarter every week." }
+    ],
+    tags: ["delegation", "trust"]
+  },
+
+  // ===== CONFLICT =====
+  {
+    id: "con-1", category: "Conflict", type: "work",
+    context: "Two technicians are arguing about the right way to do a setup. Both approaches work.",
+    question: "How do you handle it?",
+    choices: [
+      { text: "Pick the better method and settle it", scores: { trust: -4, momentum: 5, clarity: 3 }, feedback: "Fast. Clean. And one of them just became the person who was wrong in front of their peer. They'll remember that longer than the method." },
+      { text: "Separate them, hear both sides privately, and decide later", scores: { trust: 3, momentum: -3, clarity: 2 }, feedback: "Respectful, but now you've turned a 5-minute disagreement into a process. Sometimes the best move is to not make it bigger than it is." },
+      { text: "Ask them to test both and go with whatever gets better results", scores: { trust: 6, momentum: 2, clarity: 5 }, feedback: "Nobody lost. The work decided. And you just built a decision-making framework they'll use without you next time." }
+    ],
+    tags: ["conflict", "team"]
+  },
+  {
+    id: "con-2", category: "Conflict", type: "work",
+    context: "A staff member comes to you frustrated about another supervisor giving them contradictory instructions.",
+    question: "They're telling you they're confused. What do you do?",
+    choices: [
+      { text: "Tell them to follow your instructions and you'll handle the rest", scores: { trust: 2, momentum: 3, clarity: -3 }, feedback: "You solved their immediate problem. But you just drew a line that might not hold, and there's a power question in the air that everyone can smell." },
+      { text: "Acknowledge the confusion and tell them you'll get clarification on the chain", scores: { trust: 5, momentum: 0, clarity: 7 }, feedback: "They didn't need you to win a fight. They needed to know someone heard them and would bring order. That's exactly what leadership looks like when things are messy." },
+      { text: "Ask what the other supervisor told them so you can understand the conflict", scores: { trust: 3, momentum: -2, clarity: 4 }, feedback: "Good instinct. But be careful — if they think you're gathering intel instead of solving the problem, you've turned a confused employee into an informant." }
+    ],
+    tags: ["conflict", "clarity"]
+  },
+
+  // ===== ACCOUNTABILITY =====
+  {
+    id: "acc-1", category: "Accountability", type: "work",
+    context: "Someone made a mistake on a device. Not their first time. But they caught it themselves and brought it to you.",
+    question: "They self-reported. How do you handle it?",
+    choices: [
+      { text: "Thank them for catching it, fix it together, and document it", scores: { trust: 7, momentum: 2, clarity: 4 }, feedback: "They just learned that honesty is safe here. That's worth more than any write-up. The documentation keeps it real without making it punitive." },
+      { text: "Address the pattern — this keeps happening and it needs to stop", scores: { trust: -3, momentum: 0, clarity: 5 }, feedback: "You're right that the pattern matters. But you just punished the one time they came to you voluntarily. Next time they'll hide it." },
+      { text: "Let it go this time since they caught it", scores: { trust: 2, momentum: 4, clarity: -4 }, feedback: "Generous. But no documentation means no trail, and if it happens again you're starting from scratch. Kindness without structure is just avoidance." }
+    ],
+    tags: ["accountability", "trust"]
+  },
+  {
+    id: "acc-2", category: "Accountability", type: "work",
+    context: "A strong performer has been showing up late for the third time this month. No one has said anything because their work is excellent.",
+    question: "Their output is great. Their punctuality isn't. Does it matter?",
+    choices: [
+      { text: "Pull them aside privately — the standard applies to everyone", scores: { trust: 3, momentum: 0, clarity: 8 }, feedback: "Hardest conversation to have because they'll feel singled out. But the rest of the team is watching, and they already noticed you haven't said anything." },
+      { text: "Let it slide — results matter more than the clock", scores: { trust: -2, momentum: 3, clarity: -5 }, feedback: "You just set the precedent that rules are flexible for people you like. Your weaker performers just noticed." },
+      { text: "Check in casually — 'Hey, noticed you've been running late, everything ok?'", scores: { trust: 4, momentum: 2, clarity: 2 }, feedback: "Checking in before correcting. That's human. Just don't let 'checking in' become a pattern of never actually addressing it." }
+    ],
+    tags: ["accountability", "standards"]
+  },
+  {
+    id: "acc-3", category: "Accountability", type: "work",
+    context: "You discover a process has been done incorrectly for weeks. Multiple people were involved but nobody flagged it.",
+    question: "It's systemic, not individual. But someone needs to own the fix. What do you do?",
+    choices: [
+      { text: "Own it yourself — you should have caught it sooner", scores: { trust: 5, momentum: -2, clarity: 3 }, feedback: "Honorable. And probably partially true. But be careful not to train your team that quality control is your job, not theirs. Absorbing every failure eventually teaches people not to look." },
+      { text: "Gather the group, explain the issue, and build the fix together", scores: { trust: 4, momentum: 3, clarity: 6 }, feedback: "No blame, no hero. Just a problem and a team solving it. This is what 'we' actually looks like when it's not a performance." },
+      { text: "Find the root cause and address it with whoever started the chain", scores: { trust: -2, momentum: 4, clarity: 4 }, feedback: "Efficient. Targeted. But the person at the root might not even know they started it. And everyone who continued the pattern without questioning it — they just got a pass they didn't earn." }
+    ],
+    tags: ["accountability", "systems"]
+  },
+
+  // ===== COMMUNICATION =====
+  {
+    id: "com-1", category: "Communication", type: "work",
+    context: "Leadership made a decision you disagree with. Your team is going to ask you about it.",
+    question: "You didn't make this call. You might not agree with it. But you have to deliver it.",
+    choices: [
+      { text: "Own it as if it were yours", scores: { trust: -2, momentum: 5, clarity: 3 }, feedback: "Clean delivery. But if they find out you disagreed and said nothing, they'll wonder what else you're not telling them." },
+      { text: "Deliver it, acknowledge their concerns, and commit to being their voice upward", scores: { trust: 8, momentum: 2, clarity: 5 }, feedback: "You didn't throw anyone under the bus. You gave them the truth and a reason to trust that their perspective matters." },
+      { text: "Be honest that you disagree but the decision is made", scores: { trust: 4, momentum: -3, clarity: 0 }, feedback: "Honest. But you just gave your team permission to not respect the decision because their boss doesn't either. That ripples." }
+    ],
+    tags: ["communication", "leadership"]
+  },
+  {
+    id: "com-2", category: "Communication", type: "work",
+    context: "You overheard a staff member venting about you to a coworker. It wasn't flattering.",
+    question: "It stings. What do you do with it?",
+    choices: [
+      { text: "Address it directly — 'I heard what you said, can we talk?'", scores: { trust: 3, momentum: -2, clarity: 5 }, feedback: "Brave. But the line between 'approachable leader' and 'you can't say anything around here' is thinner than you think." },
+      { text: "Let it go — people vent, it's not personal", scores: { trust: 2, momentum: 3, clarity: -2 }, feedback: "Mature. But if what they said had a kernel of truth, you just chose comfort over growth." },
+      { text: "Don't address it, but reflect on whether there's truth in it", scores: { trust: 5, momentum: 2, clarity: 6 }, feedback: "The hardest option because it requires you to sit with discomfort without reacting. This is how good leaders get better — they listen even when people aren't talking to them." }
+    ],
+    tags: ["communication", "self-awareness"]
+  },
+
+  // ===== PRESSURE =====
+  {
+    id: "pre-1", category: "Under Pressure", type: "work",
+    context: "End of day. You're behind. Your team is tired. Pushing means the job gets done but morale takes a hit.",
+    question: "The work matters. So do the people. What wins tonight?",
+    choices: [
+      { text: "Push through — sometimes the job comes first", scores: { trust: -4, momentum: 7, clarity: 0 }, feedback: "Got it done. But tomorrow your team walks in tired and resentful. You made a withdrawal from an account that takes a long time to refill." },
+      { text: "Call it — hit it fresh tomorrow", scores: { trust: 5, momentum: -4, clarity: 2 }, feedback: "Your team went home feeling like a human being decided their schedule, not a spreadsheet. They'll attack it harder tomorrow because you didn't burn them out tonight." },
+      { text: "Give them the choice", scores: { trust: 6, momentum: 3, clarity: 3 }, feedback: "They chose. Either way, it was theirs. The difference between being told and being asked is the whole difference between compliance and commitment." }
+    ],
+    tags: ["pressure", "morale"]
+  },
+  {
+    id: "pre-2", category: "Under Pressure", type: "work",
+    context: "Someone above you is pressuring you for a status update on something you don't have full visibility on.",
+    question: "You could give a partial answer, stall, or admit the gap.",
+    choices: [
+      { text: "Give the best answer you have and fill in gaps later", scores: { trust: -3, momentum: 4, clarity: -3 }, feedback: "Fast response. But if the gaps turn out to be wrong, you've got credibility damage on top of the original problem." },
+      { text: "Say 'I don't have the full picture — give me an hour and I'll get you a solid answer'", scores: { trust: 5, momentum: 0, clarity: 7 }, feedback: "One of the most powerful sentences a manager can say. It tells them accuracy matters more to you than looking good." },
+      { text: "Go get the information immediately and respond once you have it", scores: { trust: 3, momentum: 2, clarity: 4 }, feedback: "Good instinct. Just make sure urgency doesn't make you cut corners on the answer." }
+    ],
+    tags: ["pressure", "integrity"]
+  },
+
+  // ===== BOUNDARIES =====
+  {
+    id: "bnd-1", category: "Boundaries", type: "work",
+    context: "A peer in a different role starts giving direction to your team without talking to you first.",
+    question: "Your people are getting instructions from someone outside your chain. How do you respond?",
+    choices: [
+      { text: "Talk to the peer directly — 'Can you run things through me so we're not sending mixed signals?'", scores: { trust: 4, momentum: 2, clarity: 7 }, feedback: "Direct, professional, kept between the two of you. It only fails if they don't respect the boundary — and then that's information you need." },
+      { text: "Tell your team to check with you before acting on outside direction", scores: { trust: 3, momentum: 0, clarity: 3 }, feedback: "Protects the workflow. But you put the burden on your team instead of handling it at the source." },
+      { text: "Escalate it — leadership needs to define the lanes", scores: { trust: 0, momentum: -2, clarity: 5 }, feedback: "Sometimes necessary. But going up before going sideways can look like you can't handle peer relationships. Try direct first." }
+    ],
+    tags: ["boundaries", "authority"]
+  },
+  {
+    id: "bnd-2", category: "Boundaries", type: "work",
+    context: "A team member wants to be friends outside of work. They're pushing for a social dynamic that blurs the line.",
+    question: "You like them. But you're their supervisor. Where's the line?",
+    choices: [
+      { text: "Keep it professional — friendly at work, but that's it", scores: { trust: 2, momentum: 2, clarity: 6 }, feedback: "Clean. Safe. And a little lonely. But the first time you have to give them critical feedback, you'll be grateful for the boundary." },
+      { text: "Be human about it — grab a beer sometimes, keep the work relationship clear", scores: { trust: 5, momentum: 3, clarity: -2 }, feedback: "It can work. But the moment there's a performance issue, that beer becomes a complication. Know that going in." },
+      { text: "Match their energy without initiating more", scores: { trust: 4, momentum: 2, clarity: 3 }, feedback: "Responsive without leading. Emotionally intelligent. Just make sure it doesn't look like favoritism to the rest of the team." }
+    ],
+    tags: ["boundaries", "relationships"]
+  },
+
+  // ===== SELF-MANAGEMENT =====
+  {
+    id: "self-1", category: "Self-Management", type: "work",
+    context: "You had a terrible morning. Personal stuff. You can feel it affecting your tone.",
+    question: "You're not at your best and you know it. Now what?",
+    choices: [
+      { text: "Push through — everyone has bad days", scores: { trust: -2, momentum: 3, clarity: -2 }, feedback: "You pushed through. Your team noticed anyway. They always do." },
+      { text: "Give yourself five minutes, reset, and be intentional about your interactions", scores: { trust: 4, momentum: 2, clarity: 5 }, feedback: "Five minutes now saves an hour of cleanup later. Being aware you're off is already better than most managers ever get." },
+      { text: "Tell your team — 'Having a rough day, bear with me'", scores: { trust: 6, momentum: 0, clarity: 3 }, feedback: "Vulnerable. Human. Do this rarely enough that it carries weight and doesn't become an excuse." }
+    ],
+    tags: ["self-awareness", "regulation"]
+  },
+  {
+    id: "self-2", category: "Self-Management", type: "work",
+    context: "You made a call yesterday that turned out to be wrong. There's rework now.",
+    question: "Everyone knows it was your decision. How do you handle it?",
+    choices: [
+      { text: "Own it openly — 'My call, I was wrong. Here's how we fix it.'", scores: { trust: 8, momentum: 3, clarity: 5 }, feedback: "The hardest sentence in management. Your team just learned that accountability flows up, not just down." },
+      { text: "Fix it quietly and move on", scores: { trust: -4, momentum: 4, clarity: -3 }, feedback: "They know. Even if you don't say it. Now they also know you won't admit it." },
+      { text: "Frame it as a team decision — 'We made a call, it didn't work'", scores: { trust: -1, momentum: 2, clarity: 0 }, feedback: "Everyone was in the room. They know whose call it was. Softening 'I' into 'we' when things go wrong but keeping 'I' when they go right — people notice that fast." }
+    ],
+    tags: ["accountability", "leadership"]
+  },
+
+  // ===== GROWTH =====
+  {
+    id: "gro-1", category: "Growth", type: "work",
+    context: "A junior team member wants to take on a task above their skill level. There's real risk they'll mess it up.",
+    question: "They want to grow. The timing isn't ideal. What do you do?",
+    choices: [
+      { text: "Let them try with guardrails — check in at key milestones", scores: { trust: 7, momentum: 2, clarity: 4 }, feedback: "Growth requires risk. The guardrails protect the work, the opportunity protects their development. Sweet spot." },
+      { text: "Not this time — stakes are too high, but you'll find them a chance soon", scores: { trust: 0, momentum: 4, clarity: 3 }, feedback: "'Soon' is dangerous. If you mean it, put a date on it. If you don't, you just told someone their ambition is inconvenient." },
+      { text: "Give them a meaningful piece of it, not the whole task", scores: { trust: 5, momentum: 4, clarity: 5 }, feedback: "Smart. Exposure without full risk. Just make sure it's real work, not busywork. People can tell." }
+    ],
+    tags: ["growth", "delegation"]
+  },
+  {
+    id: "gro-2", category: "Growth", type: "work",
+    context: "You're developing a skill you've never used before. It's uncomfortable.",
+    question: "You're used to being competent. Right now you're not. How do you handle it?",
+    choices: [
+      { text: "Grind through it — competence comes from reps", scores: { trust: 2, momentum: 5, clarity: 2 }, feedback: "True. But grinding without reflection is just repetition, not learning." },
+      { text: "Find someone good at it and ask for help", scores: { trust: 5, momentum: 3, clarity: 4 }, feedback: "The willingness to be a student when you're used to being the expert is one of the rarest qualities in leadership." },
+      { text: "Accept it takes time and stop judging yourself against an impossible standard", scores: { trust: 3, momentum: 0, clarity: 6 }, feedback: "The standard you're holding yourself to — where did it come from? If it's someone else's timeline, let it go. Your pace isn't slow. It's yours." }
+    ],
+    tags: ["growth", "self-awareness"]
+  },
+
+  // ===== HARD CALLS =====
+  {
+    id: "hard-1", category: "Hard Calls", type: "work",
+    context: "You need to give critical feedback to someone who doesn't take it well. Last time they got defensive.",
+    question: "The feedback is necessary. The reaction is predictable. How do you deliver it?",
+    choices: [
+      { text: "Be direct and clear — they need to hear it regardless", scores: { trust: 2, momentum: 4, clarity: 5 }, feedback: "The feedback landed. But did it land inside them or just bounce off their armor? Delivery isn't about being honest. It's about making sure the other person can actually hear you." },
+      { text: "Lead with what they're doing well, then transition to the growth area", scores: { trust: 4, momentum: 2, clarity: 2 }, feedback: "The compliment sandwich. Everyone knows what it is. Some people still need it. Just make sure the positives are genuine." },
+      { text: "Ask them to self-assess first — 'How do you think that went?'", scores: { trust: 6, momentum: 0, clarity: 6 }, feedback: "If they already know, you're coaching, not criticizing. If they don't know, you've learned something about their self-awareness. Either way, conversation instead of verdict." }
+    ],
+    tags: ["feedback", "hard calls"]
+  },
+  {
+    id: "hard-2", category: "Hard Calls", type: "work",
+    context: "Short-staffed and an employee asks for a day off. Coverage will be brutal.",
+    question: "You can say yes or no. Both have consequences.",
+    choices: [
+      { text: "Approve it — they asked, it's available, burning people out protects nothing", scores: { trust: 7, momentum: -3, clarity: 2 }, feedback: "Hard day for the team. But the person who got their day will remember you treated them like a human when it was hard to." },
+      { text: "Deny it — explain honestly and help them find another day", scores: { trust: -1, momentum: 4, clarity: 4 }, feedback: "Honest. Practical. But 'find another day' better happen or you made a promise the system won't let you keep." },
+      { text: "Approve it but tell them what it costs the team", scores: { trust: 3, momentum: 0, clarity: 3 }, feedback: "You said yes and made them feel guilty about it. That's not transparency — that's a tax on asking. Either say yes and mean it, or say no and own it." }
+    ],
+    tags: ["hard calls", "people"]
+  },
+
+  // ===== VEILED DAVE SCENARIOS =====
+  {
+    id: "vd-1", category: "Dynamics", type: "work",
+    context: "Someone in a parallel role has started attending meetings you lead and offering 'suggestions' that feel more like directives. Leadership seems to encourage it.",
+    question: "They're not technically overstepping their title. But they're reshaping your space. What do you do?",
+    choices: [
+      { text: "Let the work speak — if your results are solid, the territory holds itself", scores: { trust: 3, momentum: 5, clarity: 2 }, feedback: "Sometimes true. But territory that isn't actively defined gets passively absorbed. Results protect your reputation, not your role. Those are different things." },
+      { text: "Have a direct conversation with them about lanes before it becomes a pattern", scores: { trust: 5, momentum: 2, clarity: 7 }, feedback: "Early and direct. Most people won't do this because it feels confrontational. But a five-minute conversation now prevents a six-month turf war later." },
+      { text: "Go to leadership and ask them to clarify the structure", scores: { trust: 2, momentum: -2, clarity: 6 }, feedback: "If leadership is encouraging the overlap, they might not see a problem to fix. You could end up drawing attention to a dynamic that gets resolved in the other person's favor. Know the room before you escalate." }
+    ],
+    tags: ["boundaries", "authority", "politics"]
+  },
+  {
+    id: "vd-2", category: "Dynamics", type: "work",
+    context: "A colleague who doesn't work on the floor day-to-day keeps proposing process changes based on data and theory. Some ideas are good. Some miss how things actually work.",
+    question: "They have leadership's ear. You have the floor knowledge. How do you handle the disconnect?",
+    choices: [
+      { text: "Push back on the bad ideas with evidence from the floor", scores: { trust: 3, momentum: 4, clarity: 4 }, feedback: "Good if your evidence is specific and delivered calmly. Bad if it comes across as 'I know better because I'm in the trenches.' Data vs. experience arguments rarely have clean winners." },
+      { text: "Propose a pilot — test their idea on a small scale before full rollout", scores: { trust: 5, momentum: 3, clarity: 6 }, feedback: "Smart. You're not saying no, you're saying 'prove it.' And if it works, you adopted a good idea. If it doesn't, the pilot did the arguing for you." },
+      { text: "Stop fighting it — implement what leadership wants and document the results", scores: { trust: -2, momentum: 6, clarity: 0 }, feedback: "Path of least resistance. But if you know something won't work and you let it fail silently, you chose peace over the people who have to live with the failure. That's not compliance — that's avoidance wearing a professional mask." }
+    ],
+    tags: ["politics", "authority", "systems"]
+  },
+  {
+    id: "vd-3", category: "Dynamics", type: "work",
+    context: "You find out a colleague has been characterizing your performance to leadership in a way that doesn't match reality. It's not overtly negative — it's subtle repositioning.",
+    question: "They're not lying exactly. They're narrating. And the narrative doesn't include your best work. What do you do?",
+    choices: [
+      { text: "Start making sure your own results are visible to leadership directly", scores: { trust: 3, momentum: 5, clarity: 4 }, feedback: "Solid long game. If your work is visible, someone else's narrative has less power. Just don't let 'making results visible' turn into self-promotion that feels forced." },
+      { text: "Confront them — 'I've heard you've been framing my work a certain way, and I want to clear the air'", scores: { trust: 4, momentum: -2, clarity: 5 }, feedback: "Direct. Risky. If they're the type to deny it, you've just shown your hand and they'll be more careful — not more honest. But if they respect directness, this could actually fix it." },
+      { text: "Build your relationship with leadership so their perspective comes from direct experience, not secondhand", scores: { trust: 6, momentum: 2, clarity: 6 }, feedback: "The best defense against a bad narrator is being known directly. It takes time. But once leadership has their own read on you, no one else's version sticks." }
+    ],
+    tags: ["politics", "trust", "authority"]
+  },
+  {
+    id: "vd-4", category: "Dynamics", type: "work",
+    context: "A colleague takes credit for a group effort in front of leadership. Not your effort specifically — but the team's. They framed it as something they drove.",
+    question: "The team did the work. The credit went somewhere else. Do you correct the record?",
+    choices: [
+      { text: "Yes — in the moment, calmly redirect: 'The team really drove that, especially [names]'", scores: { trust: 7, momentum: -1, clarity: 5 }, feedback: "Your team just watched you stand up for them in a room that matters. That deposits trust you can't buy any other way. The colleague might not appreciate it, but your people will never forget it." },
+      { text: "Let it go in the moment, but mention it to leadership privately later", scores: { trust: 3, momentum: 3, clarity: 3 }, feedback: "Safer. Less confrontational. But your team was in that room too, and they saw who got credit and who stayed quiet. The private correction helps your reputation with leadership. The silence hurts your reputation with your team." },
+      { text: "Let it go entirely — fighting for credit looks petty", scores: { trust: -3, momentum: 4, clarity: -2 }, feedback: "It's not about credit for you — it's about credit for the people who did the work and are watching to see if it matters. When leaders let credit slide, teams learn that effort is invisible." }
+    ],
+    tags: ["politics", "trust", "team"]
+  },
+  {
+    id: "vd-5", category: "Dynamics", type: "work",
+    context: "Someone in the organization keeps volunteering to 'help' with areas outside their responsibility. It comes across as helpfulness to leadership but feels like encroachment to you.",
+    question: "Their intent might be good. The impact isn't. How do you handle it?",
+    choices: [
+      { text: "Accept the help publicly and redirect it privately into something actually useful", scores: { trust: 4, momentum: 4, clarity: 3 }, feedback: "Diplomatic. You look collaborative to leadership while channeling the energy somewhere it doesn't do damage. The risk is that 'accepting help' becomes 'accepting authority' over time if you don't draw a line." },
+      { text: "Thank them but be clear: 'I've got this area covered — here's where I could actually use your help'", scores: { trust: 3, momentum: 3, clarity: 7 }, feedback: "Boundary with an olive branch. You said 'no' to the encroachment and 'yes' to collaboration — on your terms. That's a hard sentence to deliver without sounding territorial. If you can pull it off, it's the best move." },
+      { text: "Let leadership see the overlap and trust them to sort it out", scores: { trust: -2, momentum: 2, clarity: -3 }, feedback: "Leadership might not see it as an overlap. They might see it as initiative. Waiting for someone else to draw your boundaries means you've already ceded the authority to draw them yourself." }
+    ],
+    tags: ["boundaries", "politics", "authority"]
+  },
+  {
+    id: "vd-6", category: "Dynamics", type: "work",
+    context: "A colleague with more access to leadership than you has been making decisions about how your area should function — without ever asking you.",
+    question: "The decisions aren't terrible. But they weren't theirs to make. What matters more — the process or the outcome?",
+    choices: [
+      { text: "The outcome — if the decision is fine, fighting about who made it looks small", scores: { trust: -3, momentum: 5, clarity: -4 }, feedback: "Practical. And wrong in the long run. Every decision you let someone else make about your area is a brick in the wall of their authority. The outcome might be fine. The precedent is not." },
+      { text: "The process — they need to loop you in, full stop, even if the answer would have been the same", scores: { trust: 4, momentum: -1, clarity: 8 }, feedback: "It's not about ego. It's about information flow. If they're making decisions without floor-level input, eventually they'll make a bad one — and your team will pay for it while they take the credit for the good ones." },
+      { text: "Both — address the process gap while acknowledging the outcome was acceptable this time", scores: { trust: 5, momentum: 3, clarity: 5 }, feedback: "The mature answer. You're not saying the decision was wrong. You're saying the method was. That's a much harder position for anyone to argue against." }
+    ],
+    tags: ["authority", "boundaries", "politics"]
+  },
+
+  // ===== OFF-WORK / PERSONAL =====
+  {
+    id: "off-1", category: "Off the Clock", type: "offwork",
+    context: "You get home after a brutal day. Your partner asks how work was. You're still wound up.",
+    question: "Do you unload, deflect, or process it yourself?",
+    choices: [
+      { text: "Unload — they asked, and you need to get it out", scores: { trust: 2, momentum: -2, clarity: -1 }, feedback: "Getting it out helps you. But be honest — are you venting to process, or venting to avoid processing? One leads somewhere. The other just moves the weight from your shoulders to theirs." },
+      { text: "Deflect — 'It was fine' — and deal with it later", scores: { trust: -3, momentum: 3, clarity: -2 }, feedback: "They know 'fine' isn't fine. And 'later' almost never comes. You protected them from the mess, but you also shut a door they were trying to open." },
+      { text: "Be honest but contained — 'Rough day. I need ten minutes and then I'm here'", scores: { trust: 5, momentum: 2, clarity: 5 }, feedback: "You told the truth without making it their problem. The ten minutes is for you. Coming back present is for them. That's not deflection — that's self-management in real time." }
+    ],
+    tags: ["regulation", "relationships"]
+  },
+  {
+    id: "off-2", category: "Off the Clock", type: "offwork",
+    context: "A friend asks for a big favor that'll take your whole Saturday. You've had no downtime in weeks.",
+    question: "You want to help. You also know you're running on empty. What wins?",
+    choices: [
+      { text: "Help them — that's what friends do", scores: { trust: 3, momentum: -4, clarity: -2 }, feedback: "Good friend. Depleted human. There's a version of generosity that costs you more than it gives them. If you show up exhausted and resentful, you've helped no one." },
+      { text: "Say no honestly — 'I'm tapped out, I need this weekend'", scores: { trust: 4, momentum: 4, clarity: 6 }, feedback: "Hard to say. Easy to live with. Real friends respect the boundary. If they don't, that's information too." },
+      { text: "Offer a smaller version — 'I can't do the whole day but I can give you a couple hours'", scores: { trust: 5, momentum: 2, clarity: 3 }, feedback: "Compromise that keeps the relationship intact without emptying your tank. Just make sure 'a couple hours' doesn't turn into the whole day because you couldn't hold the line." }
+    ],
+    tags: ["boundaries", "regulation"]
+  },
+  {
+    id: "off-3", category: "Off the Clock", type: "offwork",
+    context: "You're scrolling your phone at 11 PM, replaying a work conversation in your head. You know you should sleep.",
+    question: "Your brain won't let it go. What do you actually do?",
+    choices: [
+      { text: "Write it down — get it out of your head and onto paper, then put the phone away", scores: { trust: 3, momentum: 3, clarity: 5 }, feedback: "Your brain is holding onto it because it's afraid you'll forget. Writing it down is permission to let go. Simple. Effective. Underused." },
+      { text: "Keep turning it over — you'll work it out if you think about it enough", scores: { trust: -2, momentum: -3, clarity: -1 }, feedback: "You won't. You'll just rehearse the same loop until exhaustion shuts your brain off. Thinking and processing aren't the same thing at 11 PM." },
+      { text: "Force the shutdown — put the phone in another room, lights out", scores: { trust: 2, momentum: 4, clarity: 2 }, feedback: "Discipline. It works. But if the thing you're avoiding thinking about is actually important, you'll wake up at 3 AM with it anyway. Sometimes a five-minute brain dump beats a forced shutdown." }
+    ],
+    tags: ["regulation", "self-awareness"]
+  },
+  {
+    id: "off-4", category: "Off the Clock", type: "offwork",
+    context: "Someone you care about is going through something hard. They haven't asked for help.",
+    question: "You can see they're struggling. But they haven't opened the door. Do you knock?",
+    choices: [
+      { text: "Yes — reach out directly and let them know you see it", scores: { trust: 5, momentum: 0, clarity: 3 }, feedback: "Some people are waiting to be asked. The knock itself is the help. Just be ready for them to say 'I'm fine' — and decide whether to accept that or gently push." },
+      { text: "No — respect their space and be available when they're ready", scores: { trust: 3, momentum: 2, clarity: 4 }, feedback: "Respectful. But 'being available' only works if they know you are. Sometimes silence looks like distance, not patience." },
+      { text: "Don't ask about the problem — just show up. Bring food. Be present.", scores: { trust: 6, momentum: 2, clarity: 2 }, feedback: "Presence without pressure. You didn't make them perform their pain. You just showed up. Sometimes that's the whole thing." }
+    ],
+    tags: ["relationships", "trust"]
+  },
+  {
+    id: "off-5", category: "Off the Clock", type: "offwork",
+    context: "You realize you've been short-tempered with everyone at home for days. It's not about them.",
+    question: "You're leaking work stress into your personal life. What do you do about it?",
+    choices: [
+      { text: "Name it out loud — 'I've been short lately and it's not about you. I'm working on it.'", scores: { trust: 6, momentum: 2, clarity: 5 }, feedback: "Three sentences that prevent a week of silent tension. Naming it doesn't fix it, but it stops the people around you from making up their own explanations — which are usually worse than the truth." },
+      { text: "Just try harder to keep it together", scores: { trust: -2, momentum: 3, clarity: -3 }, feedback: "White-knuckling it. It works for a day, maybe two. Then it breaks. And when it breaks, it breaks bigger than if you'd dealt with it at the start." },
+      { text: "Take a day — genuinely disconnect and reset", scores: { trust: 3, momentum: -2, clarity: 4 }, feedback: "If you can actually disconnect. Most people take the day off and spend it thinking about work from the couch. A day off is only a reset if you let it be one." }
+    ],
+    tags: ["regulation", "relationships", "self-awareness"]
+  },
+
+  // ===== SELF CHECK-IN =====
+  {
+    id: "chk-1", category: "Check-In", type: "checkin",
+    context: "No scenario. Just you.",
+    question: "When you think about walking into work tomorrow morning — what's the first feeling?",
+    choices: [
+      { text: "Ready — I know what I'm doing and I'm good at it", scores: { trust: 2, momentum: 2, clarity: 2 }, feedback: "Hold onto that. On the days when everything is sideways, remember that this version of you exists. Confidence isn't arrogance when it's earned." },
+      { text: "Tired — I'll show up but I'm running on fumes", scores: { trust: 1, momentum: -1, clarity: 1 }, feedback: "Fumes run out. You already know that. The question isn't whether you can push through — you obviously can. The question is how many days in a row you should have to." },
+      { text: "Anxious — there's something waiting for me that I'm not sure I can handle", scores: { trust: 1, momentum: 1, clarity: 1 }, feedback: "Name it. Right now, in your head — what's the specific thing? Anxiety shrinks when it has a name. It grows when it stays 'something.' You don't have to fix it tonight. Just know what it is." }
+    ],
+    tags: ["self-awareness", "regulation"]
+  },
+  {
+    id: "chk-2", category: "Check-In", type: "checkin",
+    context: "No scenario. Just a question.",
+    question: "Who on your team do you trust the most right now? Why?",
+    choices: [
+      { text: "The one who just does their job without drama", scores: { trust: 2, momentum: 3, clarity: 1 }, feedback: "Reliable. Invisible. And probably underappreciated. The people who don't cause problems rarely get told they're valued. When's the last time you told them?" },
+      { text: "The one who pushes back on me when I'm wrong", scores: { trust: 3, momentum: 1, clarity: 3 }, feedback: "That takes courage on their part and maturity on yours. Protect that relationship. People who tell you the truth are rare. Don't accidentally punish them for it." },
+      { text: "Honestly? I'm not sure I fully trust anyone right now", scores: { trust: -1, momentum: 0, clarity: 2 }, feedback: "That's worth sitting with. Is it them, or is it the environment? Trust erodes when the structure around it is unstable. Sometimes rebuilding the system rebuilds the trust." }
+    ],
+    tags: ["trust", "self-awareness"]
+  },
+  {
+    id: "chk-3", category: "Check-In", type: "checkin",
+    context: "No scenario. Just honesty.",
+    question: "Are you managing the way you want to, or the way the situation is forcing you to?",
+    choices: [
+      { text: "The way I want to — I've found my style and it works", scores: { trust: 3, momentum: 2, clarity: 3 }, feedback: "Good. Protect that. External pressure will try to reshape you into someone more convenient for the system. Knowing your style — and choosing it consciously — is the anchor." },
+      { text: "Somewhere in between — I have a style but I compromise it more than I'd like", scores: { trust: 2, momentum: 1, clarity: 2 }, feedback: "Most honest answer. Every manager lives here. The goal isn't perfection — it's awareness. Knowing when you're compromising means you're choosing, not drifting." },
+      { text: "The situation is driving — I'm mostly reacting", scores: { trust: 0, momentum: -1, clarity: 1 }, feedback: "That's what chaos feels like from inside it. But here's the thing — you recognized it. Reactive managers who know they're reactive are already halfway back to intentional. What's one thing you could take back control of tomorrow?" }
+    ],
+    tags: ["self-awareness", "leadership"]
+  },
+  {
+    id: "chk-4", category: "Check-In", type: "checkin",
+    context: "No scenario. Just you and the question.",
+    question: "What's the thing you're avoiding dealing with right now?",
+    choices: [
+      { text: "A conversation I know I need to have", scores: { trust: 1, momentum: 0, clarity: 2 }, feedback: "The conversation gets harder every day you don't have it. Not because the topic changes — but because the story you're telling yourself about it gets more dramatic. The real conversation is almost never as bad as the one in your head." },
+      { text: "A decision I keep putting off", scores: { trust: 0, momentum: -1, clarity: 2 }, feedback: "Delaying a decision is making a decision — you're choosing the status quo and the cost of waiting. Sometimes that's right. But if you've been putting it off for more than a week, the cost is probably higher than the discomfort of choosing." },
+      { text: "Nothing — I'm pretty caught up", scores: { trust: 2, momentum: 3, clarity: 2 }, feedback: "Maybe. Or maybe you're so deep in the weeds that the thing you're avoiding has become invisible. When everything feels urgent, the important stuff hides in plain sight." }
+    ],
+    tags: ["self-awareness", "regulation"]
+  },
+  {
+    id: "chk-5", category: "Check-In", type: "checkin",
+    context: "No scenario. Real talk.",
+    question: "When you leave work at the end of the day, do you feel like what you did mattered?",
+    choices: [
+      { text: "Most days, yeah — I can see the impact", scores: { trust: 3, momentum: 3, clarity: 2 }, feedback: "Don't take that for granted. A lot of people in management roles lose that feeling. The fact that you can still see the line between your effort and the outcome means you're still connected to the work. That connection is fuel." },
+      { text: "Sometimes — depends on the day", scores: { trust: 2, momentum: 1, clarity: 1 }, feedback: "The days it doesn't feel like it matters — what's different about those days? Is it the type of work? The people? The amount of firefighting vs. building? That gap is telling you something about where your energy belongs." },
+      { text: "Honestly, not lately", scores: { trust: 0, momentum: -2, clarity: 1 }, feedback: "That's heavy. And it's worth paying attention to. Burnout doesn't always feel like exhaustion — sometimes it feels like apathy. Like the work stopped meaning something. If that's where you are, the answer isn't 'try harder.' It's 'figure out what would make it matter again.'" }
+    ],
+    tags: ["self-awareness", "regulation"]
+  },
+
+  // ===== TAKING AUTHORITY =====
+  {
+    id: "auth-1", category: "Taking Authority", type: "work",
+    context: "You've been handed responsibility you don't fully feel ready for. Old habit: you'd check with someone before making a call. Now there's no one to check with — the call is yours.",
+    question: "You can sense the team waiting for a decision. What do you do?",
+    choices: [
+      { text: "Make the call — even if it's not perfect, the team needs a direction more than they need certainty", scores: { trust: 5, momentum: 6, clarity: 4 }, feedback: "Right answer. A team without direction stalls. A team with imperfect direction adjusts. The fastest way to grow into authority is to use it — even when it feels uncomfortable. Confidence comes from reps, not from waiting until you feel ready." },
+      { text: "Buy yourself time — 'Let me think about this and get back to you in an hour'", scores: { trust: 2, momentum: 0, clarity: 3 }, feedback: "Sometimes legitimate. But there's a version of 'let me think about it' that's actually 'let me see if someone above me will weigh in.' Track which one this is. If you genuinely need information, an hour is fine. If you're avoiding ownership, an hour is just delay." },
+      { text: "Check with someone above you first — better to be aligned than to make the wrong call", scores: { trust: -3, momentum: -2, clarity: -1 }, feedback: "Familiar move. And it served you well in your old role. But in the new one, checking up the chain on calls you should be making teaches three things: the team that you're not really the decision-maker, leadership that you can't be trusted with the authority, and you that you don't have it. Time to break the habit." }
+    ],
+    tags: ["authority", "trust", "leadership"]
+  },
+  {
+    id: "auth-2", category: "Taking Authority", type: "work",
+    context: "A staff member challenges your call directly. 'That's not how we usually do it' or 'the old way worked fine.'",
+    question: "You're new in the role. They're pushing on the change. How do you respond?",
+    choices: [
+      { text: "Hold the line — 'I hear you, and we're going to try it this way. If it doesn't work, we'll adjust.'", scores: { trust: 4, momentum: 5, clarity: 6 }, feedback: "You acknowledged them without folding. The 'we'll adjust if it doesn't work' is real — it shows you're not married to the decision, just committed to seeing it through. That's confidence without arrogance. The team can work with that." },
+      { text: "Reverse course — they've been here longer than you've been a supervisor, maybe they're right", scores: { trust: -2, momentum: -4, clarity: -3 }, feedback: "Sometimes the experienced voice is right and you should listen. But reversing the moment someone pushes back teaches the team that pressure works. Next time, every call you make becomes a negotiation. Decisions need a higher bar to overturn than 'someone disagreed.'" },
+      { text: "Open it up — 'What's your concern specifically? Let's talk through it.'", scores: { trust: 6, momentum: 1, clarity: 4 }, feedback: "Smart. You haven't backed down — you've invited them in. If their concern is legitimate, you'll hear something useful. If it's just resistance to change, opening the conversation usually reveals that and they back down on their own. Either way, you stayed in charge while making them feel heard." }
+    ],
+    tags: ["authority", "leadership", "communication"]
+  },
+  {
+    id: "auth-3", category: "Taking Authority", type: "work",
+    context: "You catch yourself about to defer a decision to someone else — a peer, a supervisor, anyone. It's a call you're qualified to make.",
+    question: "Why are you about to hand it off?",
+    choices: [
+      { text: "Habit — I've always escalated and I haven't shaken it yet", scores: { trust: 4, momentum: 3, clarity: 5 }, feedback: "Naming it is half the fight. Every time you catch yourself about to escalate, that's a chance to make a different choice. Don't beat yourself up about the habit — just notice it, then make the call yourself. The reps build the new pattern." },
+      { text: "Risk aversion — if I make the call and it's wrong, it's on me", scores: { trust: 2, momentum: 1, clarity: 3 }, feedback: "Honest. And worth examining. If the call goes wrong, yes, you own it. But if you escalate every uncertain call, you're not building the judgment you need to grow into the role. The cost of a wrong call you own is learning. The cost of always deferring is staying small." },
+      { text: "Maybe I'm not as ready as I thought — this would be safer with someone else's input", scores: { trust: 0, momentum: -2, clarity: 1 }, feedback: "That's the imposter syndrome talking. Probably wrong. The voice that says you're not ready is the same voice that will say you're not ready in six months, and a year. Readiness comes from doing the thing, not from feeling ready before you do it. You're more capable than that voice tells you." }
+    ],
+    tags: ["authority", "self-awareness", "leadership"]
+  },
+
+  // ===== DATA & FLOOR KNOWLEDGE =====
+  {
+    id: "df-1", category: "Data vs Floor", type: "work",
+    context: "Someone presents you with a graph or analysis about your area. The numbers don't match what you know is actually happening on the floor.",
+    question: "The data says one thing. Your direct experience says another. What do you do?",
+    choices: [
+      { text: "Trust the data — they probably know things you don't, and numbers don't lie", scores: { trust: -3, momentum: 2, clarity: -3 }, feedback: "Numbers definitely lie — when the inputs are wrong, the date range is off, or the analysis is missing context. Floor knowledge isn't a feeling. It's pattern recognition built over months of being there. Don't dismiss it because someone made a pretty graph from a spreadsheet." },
+      { text: "Push back with specifics — 'That doesn't match what I'm seeing, can we look at the source data together?'", scores: { trust: 6, momentum: 3, clarity: 7 }, feedback: "The right move. You're not saying their analysis is wrong — you're saying something doesn't reconcile, and you want to understand why. Nine times out of ten, the issue is in the inputs or the context. You'll either help them improve their analysis or learn something you didn't know. Both are wins." },
+      { text: "Let it slide — picking a fight over data isn't worth the political cost", scores: { trust: -4, momentum: 1, clarity: -2 }, feedback: "Bad numbers presented to leadership lead to bad decisions. If you stay quiet because pushing back is awkward, you're letting the wrong story shape decisions about your area. Your silence isn't neutral — it's an endorsement. Speak up early, calmly, with specifics. That's not picking a fight. That's doing your job." }
+    ],
+    tags: ["data", "authority", "integrity"]
+  },
+  {
+    id: "df-2", category: "Data vs Floor", type: "work",
+    context: "Someone asks you to provide numbers or data about your area for a report or analysis. You could give them the snapshot they're asking for or the fuller picture with context.",
+    question: "They want a number. Do you give them the number, or the story behind it?",
+    choices: [
+      { text: "Give them the number with the context they need to interpret it correctly", scores: { trust: 5, momentum: 3, clarity: 7 }, feedback: "Numbers without context are how bad decisions get made. A '12' that needs to be a '7' because of an outage that week is going to drive a wrong conclusion. Giving them the number and the context is more work for you and saves everyone downstream from a flawed analysis. Always include the context." },
+      { text: "Give them what they asked for — they're the one doing the analysis, that's their job", scores: { trust: -2, momentum: 3, clarity: -3 }, feedback: "Technically true. Operationally short-sighted. If they don't know the context of the number, they can't interpret it correctly. And when the resulting analysis turns out to be wrong, you'll be the one explaining why your team's numbers 'looked bad.' Five minutes of context now saves an hour of cleanup later." },
+      { text: "Ask them what they're trying to figure out — then give them the data that actually answers it", scores: { trust: 4, momentum: 4, clarity: 6 }, feedback: "Even better. The number they're asking for might not be the right one to answer their actual question. By understanding the goal, you can guide them to the data that actually helps. That's not gatekeeping — that's being the expert on your own area." }
+    ],
+    tags: ["data", "integrity", "communication"]
+  },
+
+  // ===== MENTORING OTHERS =====
+  {
+    id: "ment-1", category: "Mentoring Others", type: "work",
+    context: "Someone newer than you on the team asks how to do something. You could show them, or you could let them try and figure it out.",
+    question: "Showing them is faster. Letting them try is slower. Which is the right call?",
+    choices: [
+      { text: "Let them try — set them up with the goal and let them work the problem", scores: { trust: 6, momentum: 1, clarity: 5 }, feedback: "Growth requires struggle. If you do it for them every time, you become the bottleneck and they become dependent. Watching someone fumble through something you could do in two minutes is uncomfortable, but it's the only way they actually learn. Your job isn't to be the answer key — it's to develop the next answer key." },
+      { text: "Show them once, then have them do it next time", scores: { trust: 4, momentum: 4, clarity: 4 }, feedback: "Solid middle ground. They get a model, then they get the rep. Just make sure 'next time' actually arrives. The trap is showing them every time because it's faster, and the 'next time' becomes 'someday.'" },
+      { text: "Show them — they need to see it done right before they try", scores: { trust: -1, momentum: 5, clarity: 0 }, feedback: "Sometimes true — for safety-critical work or when the stakes of a mistake are real. Most of the time, though, this is the answer of someone who hasn't yet realized that doing it for people is the slow path, not the fast one. Every time you do it for them, you reset the clock on their learning to zero." }
+    ],
+    tags: ["mentorship", "delegation", "trust"]
+  },
+  {
+    id: "ment-2", category: "Mentoring Others", type: "work",
+    context: "Someone you're developing makes a mistake. It's not catastrophic, but it's the kind of thing you would have caught.",
+    question: "Do you correct them, let them discover it themselves, or use it as a teaching moment?",
+    choices: [
+      { text: "Point it out specifically — what went wrong, why it matters, what to do next time", scores: { trust: 5, momentum: 4, clarity: 7 }, feedback: "Clear feedback delivered without judgment is how people grow. The structure matters: name the mistake, explain the impact, give them a path forward. Vague 'be more careful' feedback teaches nothing. Specific feedback teaches a skill." },
+      { text: "Let them discover it — they'll learn more from finding it themselves", scores: { trust: 2, momentum: -2, clarity: 1 }, feedback: "Sometimes works. More often, they don't discover it and the mistake propagates. Discovery learning is romantic in theory and inefficient in practice. Tell them. That's what mentorship is." },
+      { text: "Fix it quietly — they're new, no need to make them feel bad", scores: { trust: -3, momentum: 3, clarity: -4 }, feedback: "You protected their feelings and stunted their growth. They'll make the same mistake again because nobody told them it was a mistake. Kindness without honesty isn't kindness — it's avoidance dressed up as nice." }
+    ],
+    tags: ["mentorship", "feedback", "growth"]
+  }
+];
+
+// ========== GAME ENGINE ==========
+class DecisionDeck {
+  constructor() {
+    this.state = 'start';
+    this.scores = { trust: 50, momentum: 50, clarity: 50 };
+    this.round = 0;
+    this.totalRounds = 14;
+    this.history = [];
+    this.currentScenario = null;
+    this.selectedChoice = null;
+    this.usedIds = new Set();
+    this.deck = [];
+    this.render();
+  }
+
+  buildDeck() {
+    let pool = SCENARIOS.filter(s => !this.usedIds.has(s.id));
+    // Shuffle
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+
+    const selected = [];
+    const catCount = {};
+    const typeCount = { work: 0, offwork: 0, checkin: 0 };
+
+    // Guarantees: at least 2 offwork, at least 2 checkins, at least 1 dynamics
+    const guarantees = [
+      pool.find(s => s.type === 'checkin'),
+      pool.find(s => s.type === 'checkin' && s !== (selected[0])),
+      pool.find(s => s.type === 'offwork'),
+      pool.find(s => s.type === 'offwork' && !selected.includes(s)),
+      pool.find(s => s.category === 'Dynamics'),
+    ].filter(Boolean);
+
+    for (const s of guarantees) {
+      if (!selected.includes(s)) {
+        selected.push(s);
+        catCount[s.category] = (catCount[s.category] || 0) + 1;
+        typeCount[s.type] = (typeCount[s.type] || 0) + 1;
+      }
+    }
+
+    // Fill rest with variety
+    for (const s of pool) {
+      if (selected.length >= this.totalRounds) break;
+      if (selected.includes(s)) continue;
+      const cc = catCount[s.category] || 0;
+      if (cc >= 2) continue;
+      // Cap types
+      if (s.type === 'checkin' && typeCount.checkin >= 3) continue;
+      if (s.type === 'offwork' && typeCount.offwork >= 3) continue;
+
+      selected.push(s);
+      catCount[s.category] = cc + 1;
+      typeCount[s.type] = (typeCount[s.type] || 0) + 1;
+    }
+
+    // Fill any remaining slots
+    for (const s of pool) {
+      if (selected.length >= this.totalRounds) break;
+      if (!selected.includes(s)) selected.push(s);
+    }
+
+    // Shuffle the final deck but ensure checkins aren't first or back-to-back
+    for (let i = selected.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [selected[i], selected[j]] = [selected[j], selected[i]];
+    }
+
+    // Move checkins away from position 0
+    if (selected[0] && selected[0].type === 'checkin') {
+      const swapIdx = selected.findIndex((s, i) => i > 2 && s.type === 'work');
+      if (swapIdx > 0) [selected[0], selected[swapIdx]] = [selected[swapIdx], selected[0]];
+    }
+
+    this.deck = selected;
+  }
+
+  findCallback(history) {
+    if (history.length < 3) return null;
+    const current = this.currentScenario;
+    if (!current) return null;
+    const tagOverlap = history.filter(h => {
+      const past = SCENARIOS.find(s => s.id === h.id);
+      if (!past) return false;
+      return past.tags.some(t => current.tags.includes(t));
+    });
+    if (tagOverlap.length > 0) {
+      const ref = tagOverlap[tagOverlap.length - 1];
+      const past = SCENARIOS.find(s => s.id === ref.id);
+      return {
+        text: `Earlier, when faced with a ${past.category.toLowerCase()} situation, you chose: "${ref.choiceText}" — how does that shape your thinking here?`,
+      };
+    }
+    return null;
+  }
+
+  applyScoreVariance(scores) {
+    const modified = { ...scores };
+    const roll = Math.random();
+    if (roll < 0.18 && modified.trust > 3) {
+      modified.trust = Math.round(modified.trust * 0.3);
+    } else if (roll < 0.30 && modified.trust < -2) {
+      modified.momentum = Math.abs(modified.momentum) + 3;
+    } else if (roll < 0.42) {
+      const stats = Object.keys(modified);
+      const pick = stats[Math.floor(Math.random() * stats.length)];
+      if (Math.abs(modified[pick]) > 2) {
+        modified[pick] = -Math.round(modified[pick] * 0.5);
+      }
+    } else if (roll < 0.50) {
+      // Bonus: unexpected stat spike
+      const stats = Object.keys(modified);
+      const pick = stats[Math.floor(Math.random() * stats.length)];
+      modified[pick] = modified[pick] + (Math.random() > 0.5 ? 4 : -4);
+    }
+    return modified;
+  }
+
+  nextRound() {
+    if (this.round >= this.totalRounds) {
+      this.state = 'end';
+      this.render();
+      return;
+    }
+    this.currentScenario = this.deck[this.round];
+    this.usedIds.add(this.currentScenario.id);
+    this.selectedChoice = null;
+    this.state = 'play';
+    this.render();
+  }
+
+  selectChoice(index) {
+    if (this.selectedChoice !== null) return;
+    this.selectedChoice = index;
+    const choice = this.currentScenario.choices[index];
+    const modifiedScores = this.applyScoreVariance(choice.scores);
+    this.scores.trust = Math.max(0, Math.min(100, this.scores.trust + modifiedScores.trust));
+    this.scores.momentum = Math.max(0, Math.min(100, this.scores.momentum + modifiedScores.momentum));
+    this.scores.clarity = Math.max(0, Math.min(100, this.scores.clarity + modifiedScores.clarity));
+    this.history.push({
+      id: this.currentScenario.id,
+      choiceIndex: index,
+      choiceText: choice.text,
+      scores: modifiedScores
+    });
+    this.round++;
+    this.render();
+  }
+
+  getEndInsight() {
+    const { trust, momentum, clarity } = this.scores;
+    const sorted = [
+      { name: 'trust', val: trust }, { name: 'momentum', val: momentum }, { name: 'clarity', val: clarity }
+    ].sort((a, b) => b.val - a.val);
+    const highest = sorted[0].name;
+    const lowest = sorted[2].name;
+
+    const insights = {
+      trust: {
+        high: "Your instinct is to lead through relationships. People follow you because they believe in you, not because they have to. Guard that — it's rare and it's real.",
+        low: "Trust took some hits. That doesn't mean you're untrustworthy — it means some choices prioritized speed or control over connection. Sometimes that's the right call. Sometimes it costs more than it saves."
+      },
+      momentum: {
+        high: "You keep things moving. Production doesn't stall under you. Just watch that the pace isn't outrunning the people. A machine that runs hot eventually breaks.",
+        low: "You chose people over pace more than once. That's not weakness. But be honest about whether 'taking care of the team' sometimes lets you avoid the harder push."
+      },
+      clarity: {
+        high: "You think in systems. Roles, structure, expectations — you want everyone to know where they stand. That's a foundation other people can build on.",
+        low: "Some situations stayed murkier than they had to. Clarity isn't rigidity — it's making sure no one has to guess what you expect or where they stand."
+      }
+    };
+
+    // Count check-in sentiment
+    const checkinHistory = this.history.filter(h => {
+      const s = SCENARIOS.find(sc => sc.id === h.id);
+      return s && s.type === 'checkin';
+    });
+
+    let checkinNote = '';
+    if (checkinHistory.length >= 2) {
+      const negCount = checkinHistory.filter(h => {
+        const s = SCENARIOS.find(sc => sc.id === h.id);
+        const choice = s.choices[h.choiceIndex];
+        return choice.scores.momentum < 0 || choice.scores.trust < 0;
+      }).length;
+      if (negCount >= 2) {
+        checkinNote = "\n\nThe check-ins told a story too. You're carrying more than you're letting on — not to anyone else, but to yourself. That weight is real. Don't wait until it breaks something to address it.";
+      } else {
+        checkinNote = "\n\nThe check-ins suggest you've got a handle on where you are right now. That self-awareness is a tool. Use it before things get heavy, not just after.";
+      }
+    }
+
+    return `Your strongest instinct: ${highest}. ${insights[highest].high}\n\nWhere to reflect: ${lowest}. ${insights[lowest].low}${checkinNote}`;
+  }
+
+  start() {
+    this.scores = { trust: 50, momentum: 50, clarity: 50 };
+    this.round = 0;
+    this.history = [];
+    this.selectedChoice = null;
+    this.buildDeck();
+    this.nextRound();
+  }
+
+  getCardClass() {
+    if (!this.currentScenario) return '';
+    if (this.currentScenario.type === 'checkin') return 'checkin';
+    if (this.currentScenario.type === 'offwork') return 'offwork';
+    return '';
+  }
+
+  render() {
+    const app = document.getElementById('app');
+
+    if (this.state === 'start') {
+      app.innerHTML = `
+        <div class="header">
+          <h1>Decision Deck</h1>
+          <div class="subtitle">A leadership exercise</div>
+        </div>
+        <div class="start-screen">
+          <div class="icon">◆</div>
+          <p>14 scenarios. No perfect answers.<br><br>
+          You'll be scored on three axes: <strong style="color:var(--accent)">Trust</strong>, <strong style="color:var(--gold)">Momentum</strong>, and <strong style="color:#a78bfa">Clarity</strong>.<br><br>
+          The scoring won't always make sense. That's the point.<br><br>
+          Some cards are about work. Some aren't. All of them count.<br><br>
+          Your earlier decisions will follow you.</p>
+          <button class="start-btn" onclick="game.start()">Deal Me In</button>
+        </div>`;
+      return;
+    }
+
+    if (this.state === 'end') {
+      const insight = this.getEndInsight();
+      const paras = insight.split('\n\n');
+      app.innerHTML = `
+        <div class="header">
+          <h1>Decision Deck</h1>
+          <div class="subtitle">Results</div>
+        </div>
+        <div class="end-screen">
+          <div class="final-scores">
+            <div class="final-stat">
+              <div class="val" style="color:var(--accent)">${this.scores.trust}</div>
+              <div class="lbl">Trust</div>
+            </div>
+            <div class="final-stat">
+              <div class="val" style="color:var(--gold)">${this.scores.momentum}</div>
+              <div class="lbl">Momentum</div>
+            </div>
+            <div class="final-stat">
+              <div class="val" style="color:#a78bfa">${this.scores.clarity}</div>
+              <div class="lbl">Clarity</div>
+            </div>
+          </div>
+          ${paras.map(p => `<p class="insight">${p}</p>`).join('')}
+          <button class="play-again" onclick="game.start()">Play Again</button>
+        </div>`;
+      return;
+    }
+
+    const s = this.currentScenario;
+    const cardClass = this.getCardClass();
+    const callback = this.findCallback(this.history);
+    const selected = this.selectedChoice;
+    const choice = selected !== null ? s.choices[selected] : null;
+    const modScores = selected !== null ? this.history[this.history.length - 1].scores : null;
+
+    let choicesHTML = '';
+    if (selected === null) {
+      choicesHTML = `<div class="choices">
+        ${s.choices.map((c, i) => `
+          <button class="choice-btn" onclick="game.selectChoice(${i})">${c.text}</button>
+        `).join('')}
+      </div>`;
+    } else {
+      const dominant = Object.entries(modScores).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
+      const deltaVal = dominant[1];
+      const deltaClass = deltaVal > 0 ? 'pos' : deltaVal < 0 ? 'neg' : 'zero';
+      const deltaSign = deltaVal > 0 ? '+' : '';
+      const statLabels = { trust: 'Trust', momentum: 'Momentum', clarity: 'Clarity' };
+      choicesHTML = `
+        <div class="choices">
+          ${s.choices.map((c, i) => `
+            <button class="choice-btn${i === selected ? ' selected' : ''}" disabled>${c.text}</button>
+          `).join('')}
+        </div>
+        <div class="result">
+          <div class="result-score">
+            <div class="delta ${deltaClass}">${deltaSign}${deltaVal}</div>
+            <div class="stat-name">${statLabels[dominant[0]]}</div>
+          </div>
+          <div class="result-text">${choice.feedback}</div>
+          <button class="next-btn" onclick="game.nextRound()">${this.round >= this.totalRounds ? 'See Results' : 'Next Scenario'}</button>
+        </div>`;
+    }
+
+    app.innerHTML = `
+      <div class="header"><h1>Decision Deck</h1></div>
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${(this.round / this.totalRounds) * 100}%"></div>
+        </div>
+        <div class="progress-label">${this.round}/${this.totalRounds}</div>
+      </div>
+      <div class="score-bar">
+        <div class="score-item"><div class="label">Trust</div><div class="value trust">${this.scores.trust}</div></div>
+        <div class="score-item"><div class="label">Momentum</div><div class="value momentum">${this.scores.momentum}</div></div>
+        <div class="score-item"><div class="label">Clarity</div><div class="value clarity">${this.scores.clarity}</div></div>
+      </div>
+      <div class="card-container">
+        <div class="card ${cardClass}" key="${s.id}-${selected}">
+          <div class="card-category">${s.category}</div>
+          <div class="card-context">${s.context}</div>
+          ${callback && selected === null ? `<div class="card-ref"><span class="reflection-tag">Callback</span><br>${callback.text}</div>` : ''}
+          <div class="card-question">${s.question}</div>
+          ${choicesHTML}
+        </div>
+      </div>`;
+  }
+}
+
+const game = new DecisionDeck();
+</script>
+</body>
+</html>

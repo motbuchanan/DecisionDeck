@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Decision Deck — Site Lead Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --card-border: #2a2d3a;
+    --accent: #e8963e;
+    --accent-dim: #9e6428;
+    --warn: #ff6b6b;
+    --gold: #f7d354;
+    --text: #e8e6e3;
+    --text-dim: #8a8895;
+    --positive: #4ecdc4;
+    --negative: #ff6b6b;
+    --neutral: #f7d354;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+  .app {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+  .header { text-align: center; padding: 20px 0 10px; }
+  .header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+  .progress-wrap { margin: 16px 0; display: flex; align-items: center; gap: 10px; }
+  .progress-track {
+    flex: 1; height: 4px; background: var(--card-border);
+    border-radius: 2px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    transition: width 0.5s ease; border-radius: 2px;
+  }
+  .progress-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem; color: var(--text-dim);
+    min-width: 45px; text-align: right;
+  }
+  .score-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; padding: 10px 14px;
+    background: var(--card-bg); border-radius: 10px;
+    border: 1px solid var(--card-border);
+  }
+  .score-item { text-align: center; }
+  .score-item .label {
+    font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 2px;
+  }
+  .score-item .value { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; }
+  .score-item .value.influence { color: var(--accent); }
+  .score-item .value.execution { color: var(--gold); }
+  .score-item .value.alignment { color: #a78bfa; }
+  .card-container { flex: 1; display: flex; flex-direction: column; }
+  .card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 24px 20px;
+    flex: 1; display: flex; flex-direction: column;
+    animation: cardIn 0.4s ease; position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-dim));
+  }
+  .card.checkin::before { background: linear-gradient(90deg, #a78bfa, #6d5acd); }
+  .card.offwork::before { background: linear-gradient(90deg, var(--gold), #c4a530); }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .card-category {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .card.checkin .card-category { color: #a78bfa; }
+  .card.offwork .card-category { color: var(--gold); }
+  .card-context {
+    font-size: 0.78rem; color: var(--text-dim); margin-bottom: 14px;
+    line-height: 1.4; font-style: italic;
+    padding-bottom: 12px; border-bottom: 1px solid var(--card-border);
+  }
+  .card-question {
+    font-size: 1.05rem; line-height: 1.55;
+    font-weight: 500; margin-bottom: 24px; flex: 1;
+  }
+  .card-ref {
+    font-size: 0.72rem; color: var(--gold); margin-bottom: 12px;
+    padding: 8px 10px; background: rgba(247, 211, 84, 0.08);
+    border-radius: 8px; border-left: 3px solid var(--gold);
+  }
+  .choices { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+  .choice-btn {
+    background: transparent; border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 14px 16px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+    text-align: left; cursor: pointer; transition: all 0.2s ease; line-height: 1.4;
+  }
+  .choice-btn:active { transform: scale(0.98); }
+  .choice-btn:hover { border-color: var(--accent); background: rgba(232, 150, 62, 0.06); }
+  .choice-btn.selected { border-color: var(--accent); background: rgba(232, 150, 62, 0.1); }
+  .choice-btn:disabled { cursor: default; opacity: 0.5; }
+  .result { animation: resultIn 0.3s ease; padding-top: 12px; }
+  @keyframes resultIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .result-score { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .result-score .delta { font-family: 'Space Mono', monospace; font-size: 1.5rem; font-weight: 700; }
+  .result-score .delta.pos { color: var(--positive); }
+  .result-score .delta.neg { color: var(--negative); }
+  .result-score .delta.zero { color: var(--neutral); }
+  .result-score .stat-name {
+    font-size: 0.75rem; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .result-text { font-size: 0.88rem; line-height: 1.55; color: var(--text-dim); margin-bottom: 16px; }
+  .next-btn {
+    width: 100%; padding: 14px; background: var(--accent); color: var(--bg);
+    border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer;
+    transition: all 0.2s ease; letter-spacing: 0.5px;
+  }
+  .next-btn:active { transform: scale(0.97); }
+  .start-screen {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    gap: 20px; animation: cardIn 0.5s ease;
+  }
+  .start-screen .icon { font-size: 3rem; margin-bottom: 10px; }
+  .start-screen p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; max-width: 320px; }
+  .start-screen .start-btn {
+    margin-top: 10px; padding: 14px 40px; background: var(--accent);
+    color: var(--bg); border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem;
+    font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
+  }
+  .end-screen {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    gap: 16px; animation: cardIn 0.5s ease;
+  }
+  .end-screen .final-scores { display: flex; gap: 20px; margin: 10px 0; }
+  .end-screen .final-stat { text-align: center; }
+  .end-screen .final-stat .val { font-family: 'Space Mono', monospace; font-size: 2rem; font-weight: 700; }
+  .end-screen .final-stat .lbl {
+    font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--text-dim); margin-top: 2px;
+  }
+  .end-screen .insight {
+    font-size: 0.9rem; color: var(--text-dim);
+    line-height: 1.6; max-width: 340px; margin: 10px 0;
+  }
+  .end-screen .play-again {
+    margin-top: 10px; padding: 14px 40px; background: var(--accent);
+    color: var(--bg); border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem;
+    font-weight: 700; cursor: pointer;
+  }
+  .reflection-tag {
+    display: inline-block; font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 1.5px; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px;
+    background: rgba(167, 139, 250, 0.15); color: #a78bfa;
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+const SCENARIOS = [
+
+  // ===== PROJECT MANAGEMENT =====
+  {
+    id: "pm-1", category: "Project Management", type: "work",
+    context: "You're managing three projects simultaneously. Two are on track. One is slipping because you haven't had time to focus on it.",
+    question: "Something has to give. How do you handle the slipping project?",
+    choices: [
+      { text: "Double down — work longer hours to get all three back on track", scores: { influence: -2, execution: 4, alignment: -3 }, feedback: "Brute force works short-term. But the version of you running on 12-hour days makes worse decisions than the version working 8 focused ones. You're not saving the project — you're borrowing against next week." },
+      { text: "Delegate portions of the slipping project to someone capable", scores: { influence: 6, execution: 3, alignment: 5 }, feedback: "Hardest thing for a project owner to do — hand off a piece of something with your name on it. But the project doesn't care who finishes it. It only cares that it gets finished." },
+      { text: "Flag it to leadership — reset the timeline with transparency", scores: { influence: 4, execution: -1, alignment: 6 }, feedback: "Feels like failure. It's not. A reset timeline with buy-in is infinitely better than a quiet miss that surprises everyone at the deadline. Leadership would rather adjust expectations than discover a problem you hid." }
+    ],
+    tags: ["projects", "capacity"]
+  },
+  {
+    id: "pm-2", category: "Project Management", type: "work",
+    context: "You've built a detailed project plan. A team member on the floor suggests a shortcut that would save time but skips a step you think matters.",
+    question: "Their shortcut works. Your step is theoretically important but might be overengineered. What do you do?",
+    choices: [
+      { text: "Stick with the plan — the step exists for a reason", scores: { influence: -2, execution: 2, alignment: 4 }, feedback: "Maybe. But does the reason still hold, or did you build it for a scenario that hasn't happened? Plans are tools, not scripture. Defending a step because it's in the plan is process worship." },
+      { text: "Test the shortcut on a small scale and compare results", scores: { influence: 5, execution: 4, alignment: 5 }, feedback: "You kept the plan alive while letting reality challenge it. If the shortcut works, you just improved your process. If it doesn't, the test proved your step matters — and now the team believes it too, not just you." },
+      { text: "Adopt the shortcut — trust the floor knowledge", scores: { influence: 4, execution: 5, alignment: -1 }, feedback: "Bold. And it tells the floor their input matters, which is valuable. But if the step you skipped turns out to have prevented a downstream problem, you own that. Make sure you're cutting because it's smart, not because you want to be liked." }
+    ],
+    tags: ["projects", "process", "trust"]
+  },
+  {
+    id: "pm-3", category: "Project Management", type: "work",
+    context: "A project you championed is delivering results, but the team that executed it isn't getting recognized.",
+    question: "You built the plan. They built the thing. Who gets the spotlight?",
+    choices: [
+      { text: "Highlight the team's execution — the plan means nothing without delivery", scores: { influence: 7, execution: 2, alignment: 5 }, feedback: "This is how you build people who want to execute your next project. Credit flows down, accountability flows up. That's not a slogan — it's a leadership architecture." },
+      { text: "Share the credit — the plan and the execution were both essential", scores: { influence: 3, execution: 3, alignment: 3 }, feedback: "Fair and accurate. But 'sharing credit' often reads as 'making sure I'm included.' If the team delivered, let them have the moment. Your reputation as a project leader is built on their success stories, not your co-billing." },
+      { text: "Present the results yourself — you drove the vision", scores: { influence: -4, execution: 5, alignment: -3 }, feedback: "The data looks great in your presentation. But the people who built it are watching. And they're learning that effort here is invisible — your framework gets the stage, their hands don't. Next project, they'll give you compliance, not commitment." }
+    ],
+    tags: ["projects", "trust", "team"]
+  },
+  {
+    id: "pm-4", category: "Project Management", type: "work",
+    context: "You're in a meeting presenting a project update. Someone asks a question about a detail you don't have the answer to.",
+    question: "You could estimate, deflect, or admit the gap. The room is watching.",
+    choices: [
+      { text: "Give your best estimate based on what you know", scores: { influence: -2, execution: 3, alignment: -3 }, feedback: "You kept the meeting moving. But if that estimate turns out to be wrong, every number you present after this carries an asterisk. Credibility is built one accurate answer at a time and lost one guess at a time." },
+      { text: "Say you don't have that specific data and will follow up by end of day", scores: { influence: 5, execution: 1, alignment: 6 }, feedback: "'I don't know, but I'll find out' is the most underrated power move in a meeting room. It requires security most people don't have. The follow-through is what makes it land — so actually follow through." },
+      { text: "Redirect to what you do know and steer the conversation forward", scores: { influence: 2, execution: 4, alignment: 0 }, feedback: "Smooth. And sometimes appropriate. But the person who asked the question noticed you didn't answer it. If they ask again later and you still don't have it, the redirect becomes a pattern." }
+    ],
+    tags: ["projects", "integrity", "communication"]
+  },
+
+  // ===== PROCESS & SYSTEMS =====
+  {
+    id: "proc-1", category: "Process & Systems", type: "work",
+    context: "You've designed a new workflow that should improve efficiency. The team hasn't been consulted on it yet.",
+    question: "It's a good system. Do you roll it out or bring the team in first?",
+    choices: [
+      { text: "Roll it out — the data supports it, and discussion will just slow things down", scores: { influence: -5, execution: 6, alignment: -4 }, feedback: "Efficient. And doomed. A process the team didn't help build is a process the team will work around. You'll get compliance for a week and quiet sabotage for a month. The best system in the world fails if the people using it don't believe in it." },
+      { text: "Present it to the team, get feedback, and adjust before launch", scores: { influence: 7, execution: 2, alignment: 6 }, feedback: "Slower to launch. Faster to stick. When people see their fingerprints on a process, they protect it instead of resisting it. The 20% you adjust based on their feedback is usually the 20% that would have broken it anyway." },
+      { text: "Roll it out as a pilot with a clear feedback window — adjust based on results", scores: { influence: 4, execution: 5, alignment: 3 }, feedback: "Pragmatic. You get real data instead of hypothetical objections. Just make sure the 'feedback window' is real. If people give feedback and nothing changes, you've taught them that input is theater." }
+    ],
+    tags: ["process", "trust", "systems"]
+  },
+  {
+    id: "proc-2", category: "Process & Systems", type: "work",
+    context: "A process you implemented six months ago isn't being followed consistently. Some people skip steps. Results are mixed.",
+    question: "Is the process wrong, the compliance wrong, or something else entirely?",
+    choices: [
+      { text: "Enforce compliance — the process was designed correctly, people need to follow it", scores: { influence: -3, execution: 5, alignment: 2 }, feedback: "Maybe. Or maybe the process has a friction point that makes skipping rational. When smart people consistently skip a step, the step might be the problem. Enforcement works for safety. For workflow, understanding works better." },
+      { text: "Talk to the people skipping steps — understand why before deciding", scores: { influence: 6, execution: 2, alignment: 5 }, feedback: "The answer is almost always in the room with the people doing the work. They're not skipping steps because they're lazy — they're skipping because something about the step doesn't work in practice. Find out what, and you'll fix the real problem." },
+      { text: "Audit the results — if the skip doesn't affect quality, maybe the step isn't needed", scores: { influence: 3, execution: 4, alignment: 4 }, feedback: "Data-driven. And honest. Some processes accumulate steps like sediment — each one made sense when it was added, but the pile becomes its own problem. Cutting a step that doesn't affect outcomes isn't lowering standards. It's improving the system." }
+    ],
+    tags: ["process", "systems", "trust"]
+  },
+  {
+    id: "proc-3", category: "Process & Systems", type: "work",
+    context: "You see a better way to do something in an area that isn't your direct responsibility.",
+    question: "You have a legitimate improvement. But it's someone else's domain. What do you do?",
+    choices: [
+      { text: "Bring it directly to the person who owns that area — 'Hey, I noticed something that might help'", scores: { influence: 5, execution: 3, alignment: 6 }, feedback: "Respectful. Collaborative. And the way it should work. The key is delivery: 'I noticed something' is an offer. 'You should change this' is an intrusion. Same information, completely different impact." },
+      { text: "Bring it to leadership and let them decide whether to implement it", scores: { influence: -2, execution: 2, alignment: -3 }, feedback: "You just went over someone's head about their own area. Even if the idea is good, the person who owns that domain now has to defend their process to their boss because of you. That's not collaboration — that's politics, even if you didn't mean it that way." },
+      { text: "Implement a version of it in your own area and let the results speak", scores: { influence: 3, execution: 5, alignment: 1 }, feedback: "Lead by example. If it works in your area, the other person might adopt it organically. If it doesn't translate, you've learned something. Just make sure 'letting results speak' doesn't turn into 'showing someone up.'" }
+    ],
+    tags: ["boundaries", "process", "authority"]
+  },
+  {
+    id: "proc-4", category: "Process & Systems", type: "work",
+    context: "You built a tracking system — graphs, metrics, dashboards. Leadership loves the visibility. The floor team finds it burdensome to maintain.",
+    question: "The data is valuable. The data entry is killing morale. Something has to adjust.",
+    choices: [
+      { text: "Simplify the inputs — find the minimum data that still gives useful output", scores: { influence: 5, execution: 4, alignment: 5 }, feedback: "The best systems collect the least data that answers the most questions. If your dashboard needs 20 inputs but only 8 of them drive decisions, cut the 12. Your system serves the work — the work doesn't serve your system." },
+      { text: "Keep it as-is — the data matters and they'll get used to it", scores: { influence: -4, execution: 3, alignment: -2 }, feedback: "They won't get used to it. They'll start entering garbage data to get through it faster, and your beautiful dashboard will be built on sand. A system people resent is a system people undermine." },
+      { text: "Automate what you can and reduce manual entry to only what can't be captured automatically", scores: { influence: 4, execution: 6, alignment: 4 }, feedback: "The engineering solution. If you can pull it off, everyone wins — leadership gets data, the floor gets their time back. Just don't let the automation project become its own burden. Sometimes the simplest fix is fewer fields, not more code." }
+    ],
+    tags: ["systems", "process", "team"]
+  },
+
+  // ===== SITE OVERSIGHT =====
+  {
+    id: "site-1", category: "Site Oversight", type: "work",
+    context: "Two different areas of your operation are both asking for your attention at the same time. One is a technical problem you know how to solve. The other is a people problem you don't.",
+    question: "Where do you go first?",
+    choices: [
+      { text: "The technical problem — solve what you can control, then deal with the people issue", scores: { influence: -2, execution: 5, alignment: -1 }, feedback: "Comfortable. And that's the problem. The technical problem will wait for you or someone else can solve it. The people problem is actively deteriorating while you're in your comfort zone. Leaders who default to technical work when people problems exist aren't leading — they're hiding." },
+      { text: "The people problem — technical issues have solutions, people issues have timers", scores: { influence: 6, execution: -1, alignment: 5 }, feedback: "Harder. Less satisfying. And exactly right. A technical problem at 2 PM is still solvable at 4 PM. A people problem at 2 PM is a different and worse problem by 4 PM. Triage by consequence, not comfort." },
+      { text: "Quickly assess both, delegate the simpler one, and handle the harder one yourself", scores: { influence: 4, execution: 4, alignment: 4 }, feedback: "The site-level answer. You're not choosing between two problems — you're building a system where both get handled. That only works if you trust the person you delegate to. And if you don't have someone to delegate to, that's a third problem." }
+    ],
+    tags: ["oversight", "capacity", "leadership"]
+  },
+  {
+    id: "site-2", category: "Site Oversight", type: "work",
+    context: "You're reviewing operations from the big picture. You spot an inefficiency that's been there for years. Nobody's complained because they've worked around it.",
+    question: "It's not broken, but it's not right. Is this worth fixing?",
+    choices: [
+      { text: "Fix it — that's your job. Inefficiency costs compound over time.", scores: { influence: 3, execution: 5, alignment: 2 }, feedback: "True. But timing and delivery matter. If you walk into an area that's been running a certain way for years and announce what's wrong, you've just told everyone who's been there that they missed something obvious. Be right about the problem and smart about the introduction." },
+      { text: "Flag it, but let the people in that area own the fix", scores: { influence: 6, execution: 2, alignment: 6 }, feedback: "The difference between 'I found the problem' and 'I gave the team a chance to solve it' is the difference between being a consultant and being a leader. Same outcome, completely different ownership." },
+      { text: "Leave it — if it's not causing problems, disrupting it creates risk for no gain", scores: { influence: -1, execution: 3, alignment: 0 }, feedback: "Sometimes the right call. Not every inefficiency needs a project. But if you make a habit of leaving things alone because fixing them is uncomfortable, your operation slowly calcifies around its worst habits." }
+    ],
+    tags: ["oversight", "process", "systems"]
+  },
+  {
+    id: "site-3", category: "Site Oversight", type: "work",
+    context: "You're responsible for the big picture, but you keep getting pulled into daily details on the floor. It feels productive but your actual projects are stalling.",
+    question: "The floor work is tangible and immediate. The project work is abstract and long-term. Where does your time go?",
+    choices: [
+      { text: "Stay on the floor — this is where the real work happens and people need you", scores: { influence: -3, execution: 3, alignment: -4 }, feedback: "It feels good because it's visible. You can point to what you did today. But your projects are stalling because you're doing someone else's job while yours sits idle. Being busy and being productive aren't the same thing. And the person whose job you're doing? They just learned to wait for you." },
+      { text: "Set clear blocks — mornings for projects, afternoons available for floor issues", scores: { influence: 4, execution: 5, alignment: 6 }, feedback: "Structure protects your time from other people's urgency. The key is holding the line — the first time you break your morning block for a floor issue that wasn't an emergency, you've set a precedent." },
+      { text: "Delegate floor responsiveness to someone you trust and stay focused on projects", scores: { influence: 5, execution: 4, alignment: 5 }, feedback: "The right call if you have the right person. And the hard part isn't letting go — it's not jumping back in when they handle it differently than you would. Your way isn't the only way. It might not even be the best way for the floor." }
+    ],
+    tags: ["oversight", "capacity", "delegation"]
+  },
+  {
+    id: "site-4", category: "Site Oversight", type: "work",
+    context: "You have strong opinions about how every area should run. You can see improvements everywhere. But not all of it is in your lane.",
+    question: "You see problems. You have solutions. But some of these areas have people who own them. How do you manage the urge to fix everything?",
+    choices: [
+      { text: "Focus on your lane — do your job exceptionally and let others do theirs", scores: { influence: 3, execution: 5, alignment: 6 }, feedback: "Disciplined. Respectful. And it builds trust with the people who own those other areas. The hardest part of site-level oversight isn't seeing problems — it's knowing which ones are yours to solve." },
+      { text: "Offer help where you see gaps — most people will appreciate the extra set of eyes", scores: { influence: 2, execution: 4, alignment: -2 }, feedback: "'Most people' is doing a lot of work in that sentence. Some people appreciate unsolicited help. Others experience it as a judgment on their competence. The question isn't whether your help is good — it's whether it was asked for." },
+      { text: "Bring the observations to leadership and let them prioritize what gets addressed", scores: { influence: -1, execution: 2, alignment: -1 }, feedback: "This positions you as the person who sees problems and reports upward instead of solving them — or worse, the person who goes around peers to their boss. If leadership acts on your observations, the people in those areas feel surveilled, not supported." }
+    ],
+    tags: ["boundaries", "oversight", "authority"]
+  },
+
+  // ===== PEOPLE & COMMUNICATION =====
+  {
+    id: "ppl-1", category: "People & Communication", type: "work",
+    context: "You've been given authority over a team that didn't choose you. Some of them have more floor experience than you in their area.",
+    question: "They're watching you to see if you deserve the role. How do you start?",
+    choices: [
+      { text: "Lead with your strengths — show them what you bring that they don't have", scores: { influence: -1, execution: 4, alignment: 0 }, feedback: "Proving yourself by demonstrating superiority is a trap. You'll impress some and alienate others. The ones with more floor experience than you will see it as a competition — and they have home court advantage." },
+      { text: "Listen first — spend time understanding how things work before changing anything", scores: { influence: 7, execution: 0, alignment: 6 }, feedback: "The single most effective thing a new leader can do is shut up and learn for the first two weeks. Not because you don't have good ideas — but because ideas delivered before trust is built are just noise." },
+      { text: "Be direct — 'I know this is new for all of us. Here's how I want to work together.'", scores: { influence: 4, execution: 3, alignment: 4 }, feedback: "Transparent. Confident. And the honesty helps. Just make sure 'how I want to work together' includes space for how they want to work. A one-way speech about collaboration isn't collaborative." }
+    ],
+    tags: ["leadership", "trust", "authority"]
+  },
+  {
+    id: "ppl-2", category: "People & Communication", type: "work",
+    context: "A team member does something differently than you would. It's not wrong — it's just different. It bugs you.",
+    question: "Your way would be better. Probably. But theirs works. Do you intervene?",
+    choices: [
+      { text: "No — their method, their ownership. If the result meets the standard, it's not your place", scores: { influence: 6, execution: 3, alignment: 4 }, feedback: "This is where control disguises itself as quality. If the outcome is the same, your preference for your method is about comfort, not standards. Letting people own their approach is how you build a team that thinks instead of one that copies." },
+      { text: "Suggest your approach — 'Have you tried it this way?'", scores: { influence: 1, execution: 3, alignment: 0 }, feedback: "'Have you tried it this way' from a boss isn't a suggestion — it's an instruction wearing a question mark. They'll switch to your method because you asked, not because it's better. And now they've stopped trusting their own judgment in your area." },
+      { text: "Mention it if it comes up naturally, but don't seek out the conversation", scores: { influence: 3, execution: 2, alignment: 3 }, feedback: "The passive version of the same impulse. If it's not worth a direct conversation, it's probably not worth mentioning at all. Either it matters enough to address or it doesn't." }
+    ],
+    tags: ["trust", "autonomy", "boundaries"]
+  },
+  {
+    id: "ppl-3", category: "People & Communication", type: "work",
+    context: "Someone you supervise has more hands-on experience than you in their specific area. They know it. You know it.",
+    question: "How do you lead someone who knows more than you about the work they do?",
+    choices: [
+      { text: "Acknowledge it openly — 'You know this better than me. My job is to support you, not teach you.'", scores: { influence: 7, execution: 2, alignment: 5 }, feedback: "Most leaders never say this because it feels like surrendering authority. It's not. It's the most honest thing you can say, and it immediately reframes the relationship from 'boss/subordinate' to 'different roles, same team.' The people who hear this from their supervisor never forget it." },
+      { text: "Focus on what you do bring — systems thinking, project coordination, the bigger picture", scores: { influence: 4, execution: 5, alignment: 3 }, feedback: "True and valid. Your value isn't in matching their floor expertise — it's in what you see that they can't from their position. Just make sure 'bigger picture' doesn't become code for 'my contribution is more strategic than yours.' They'll hear the subtext." },
+      { text: "Learn from them quietly — close the knowledge gap without making it obvious", scores: { influence: 2, execution: 3, alignment: -1 }, feedback: "Why quietly? If you're learning from them, that's a compliment — unless you're hiding it because admitting you're learning feels like admitting weakness. It's not weakness. It's growth. And they'd respect you more for being open about it." }
+    ],
+    tags: ["trust", "authority", "leadership"]
+  },
+  {
+    id: "ppl-4", category: "People & Communication", type: "work",
+    context: "You need something done and you know exactly how it should be done. It would be fastest to just explain every step.",
+    question: "Do you give detailed instructions or give the goal and let them figure out the path?",
+    choices: [
+      { text: "Give the goal and the deadline — let them figure out the method", scores: { influence: 6, execution: 2, alignment: 5 }, feedback: "They might take longer. They might do it differently. They might even surprise you with something better. But mostly — they'll own it. And a team that owns their work doesn't need you standing over them next time." },
+      { text: "Give the full instructions — this isn't the time for a learning exercise", scores: { influence: -3, execution: 6, alignment: -1 }, feedback: "Fast. Accurate. And you just trained someone to wait for your instructions instead of think for themselves. Do this enough and you'll wonder why nobody takes initiative. The answer will be in the mirror." },
+      { text: "Give the goal with a few key guardrails — the non-negotiables — and let them navigate the rest", scores: { influence: 5, execution: 5, alignment: 4 }, feedback: "The sweet spot. You've protected the outcome without micromanaging the path. The guardrails tell them what matters most. The freedom tells them you trust their judgment. Both messages land." }
+    ],
+    tags: ["delegation", "trust", "autonomy"]
+  },
+  {
+    id: "ppl-5", category: "People & Communication", type: "work",
+    context: "You're explaining a decision to someone who's going to push back. You can feel it before you even finish talking.",
+    question: "Do you hold firm, open it up for discussion, or adjust preemptively?",
+    choices: [
+      { text: "Hold firm — the decision is made and relitigating it undermines your authority", scores: { influence: 0, execution: 4, alignment: 2 }, feedback: "Sometimes right. But 'the decision is made' can become a wall you hide behind when you don't want to defend your reasoning. If you can't explain why, maybe the pushback is pointing at something real." },
+      { text: "Invite the pushback — 'I can tell you have thoughts. Let me hear them.'", scores: { influence: 6, execution: 1, alignment: 5 }, feedback: "Dangerous and powerful. You might hear something that changes your mind. You might hear something that strengthens your position. Either way, they were heard — and a person who's heard is a person who can accept even a decision they don't like." },
+      { text: "Adjust slightly before they push — show flexibility to prevent the conflict", scores: { influence: 2, execution: 3, alignment: -2 }, feedback: "You just negotiated with yourself. And they noticed. Now they know that resistance — or even the threat of it — moves you. That's a pattern you can't undo without a harder conversation later." }
+    ],
+    tags: ["communication", "leadership", "authority"]
+  },
+
+  // ===== CROSS-FUNCTIONAL =====
+  {
+    id: "xf-1", category: "Working Across Lanes", type: "work",
+    context: "A colleague manages an area you have no authority over but strong opinions about. You've noticed things that could be better.",
+    question: "The improvements seem obvious to you. How do you handle it?",
+    choices: [
+      { text: "Share your observations directly with them — peer to peer", scores: { influence: 5, execution: 2, alignment: 6 }, feedback: "The right first move. How you deliver it determines everything. 'I noticed something in your area' can land as either helpful or territorial depending on three things: your tone, your relationship, and whether you've earned the right to comment. If you haven't invested in the relationship first, even good observations feel like surveillance." },
+      { text: "Mention it upward — let leadership decide if it's worth addressing", scores: { influence: -3, execution: 2, alignment: -4 }, feedback: "You just went around a peer to their boss. Even if the observation is valid, the method tells your colleague — and everyone watching — that you operate through hierarchy, not relationships. That costs you more than the improvement gains." },
+      { text: "Stay in your lane — lead by example in your area and let them manage theirs", scores: { influence: 3, execution: 4, alignment: 4 }, feedback: "Respectful. Safe. And sometimes the right call. But if the problem affects more than just their area — if it touches production, quality, or people you share — silence isn't respect. It's avoidance." }
+    ],
+    tags: ["boundaries", "authority", "communication"]
+  },
+  {
+    id: "xf-2", category: "Working Across Lanes", type: "work",
+    context: "You're in a meeting and someone presents work that you contributed to but they don't mention your involvement.",
+    question: "It stings. But is it worth saying something?",
+    choices: [
+      { text: "Add context naturally — 'Yeah, when we worked on that together I thought...'", scores: { influence: 4, execution: 3, alignment: 3 }, feedback: "Smooth. Factual. Not accusatory. You've placed yourself in the narrative without making it a confrontation. The room heard it. The person heard it. And you didn't make an enemy." },
+      { text: "Let it go — credit isn't the point, the work getting done is", scores: { influence: 2, execution: 4, alignment: 0 }, feedback: "Noble. And sometimes true. But if this is a pattern — if someone consistently presents shared work as solo work — letting it go trains them to keep doing it. Generosity has a limit before it becomes erasure." },
+      { text: "Bring it up privately after — 'Hey, I'd appreciate being included when we present shared work'", scores: { influence: 5, execution: 1, alignment: 5 }, feedback: "Direct. Private. Professional. This is how adults handle it. The only risk is that they didn't do it intentionally and now feel accused. Lead with assumption of good intent: 'I'm sure it wasn't deliberate, but...' goes a long way." }
+    ],
+    tags: ["communication", "trust", "boundaries"]
+  },
+  {
+    id: "xf-3", category: "Working Across Lanes", type: "work",
+    context: "You and a colleague both report to the same leader but have very different styles. They're more relational. You're more systems-oriented. Your leader seems to respond to both.",
+    question: "Do you need to adapt your style, or stay in your strength?",
+    choices: [
+      { text: "Stay in your strength — you were put here for what you bring, not to be someone else", scores: { influence: 3, execution: 4, alignment: 3 }, feedback: "True to a point. But leadership isn't a fixed trait — it's a toolkit. If your only tool is systems thinking, every problem looks like a process to build. Some problems are people. And people don't respond to frameworks." },
+      { text: "Study what works about their style and incorporate pieces that fit you naturally", scores: { influence: 6, execution: 3, alignment: 5 }, feedback: "Growth without losing yourself. The best leaders steal shamelessly from other leaders — not their personality, but their techniques. If the relational approach works in certain situations, adding it to your toolkit makes you more effective, not less authentic." },
+      { text: "Recognize it's not a competition — different styles serve different needs", scores: { influence: 4, execution: 3, alignment: 4 }, feedback: "Mature. And accurate. But make sure 'it's not a competition' isn't actually 'I don't want to examine where I'm weaker.' Acknowledging different strengths is easy. Acknowledging you could learn from someone is harder — and more valuable." }
+    ],
+    tags: ["leadership", "self-awareness", "communication"]
+  },
+
+  // ===== SELF-MANAGEMENT =====
+  {
+    id: "sm-1", category: "Self-Management", type: "work",
+    context: "Your task list is overwhelming. You've got project work, floor issues, process builds, and leadership requests all competing.",
+    question: "You can't do all of it well. How do you decide what gets your best energy?",
+    choices: [
+      { text: "Prioritize what leadership is asking for — that's who you're accountable to", scores: { influence: 2, execution: 4, alignment: 2 }, feedback: "Logical. But if you only optimize for upward visibility, the floor-level work that keeps the operation running starts to degrade. Leadership sees your reports. Your team feels your absence. Both matter." },
+      { text: "Prioritize what has the most downstream impact if it doesn't get done", scores: { influence: 4, execution: 5, alignment: 5 }, feedback: "Triage by consequence, not urgency. That's the difference between reactive and strategic. The hard part is that high-impact work is often the least urgent — and the most uncomfortable." },
+      { text: "Acknowledge you're overloaded and push back on scope with your leader", scores: { influence: 5, execution: -1, alignment: 6 }, feedback: "The bravest answer and the one most people avoid because it feels like admitting failure. It's not. A leader who takes on everything without pushing back isn't strong — they're just quiet about drowning. Your leader can't help you prioritize if they don't know you're overloaded." }
+    ],
+    tags: ["capacity", "leadership", "integrity"]
+  },
+  {
+    id: "sm-2", category: "Self-Management", type: "work",
+    context: "You've been working on something for weeks and it's not getting the traction or recognition you expected.",
+    question: "The work is good. The response is lukewarm. How do you handle the gap?",
+    choices: [
+      { text: "Push harder — the work will speak for itself eventually", scores: { influence: -1, execution: 4, alignment: -1 }, feedback: "Maybe. But 'the work speaks for itself' is one of the most expensive beliefs in management. Good work that nobody sees or understands is invisible good work. If you need buy-in, the quality of the work is necessary but not sufficient — the communication around it matters just as much." },
+      { text: "Ask for feedback — find out what's missing between your effort and the impact", scores: { influence: 5, execution: 2, alignment: 5 }, feedback: "Uncomfortable. And exactly right. The gap between effort and recognition usually isn't about the work — it's about how the work connects to what people actually need. Feedback is how you find the connection point." },
+      { text: "Let it go and move on to the next thing — don't get attached to any single project", scores: { influence: 2, execution: 3, alignment: 1 }, feedback: "Resilient. But be honest — are you moving on because you've genuinely learned from it, or because it's easier than asking why it didn't land? Moving on without understanding why is just repeating the pattern somewhere new." }
+    ],
+    tags: ["self-awareness", "capacity", "leadership"]
+  },
+
+  // ===== OFF THE CLOCK =====
+  {
+    id: "off-1", category: "Off the Clock", type: "offwork",
+    context: "You're at home but your brain is still at work. You keep checking messages, thinking about tomorrow, planning.",
+    question: "You know you need to disconnect. Can you?",
+    choices: [
+      { text: "Brain dump into a note — get it out of your head, then close the door", scores: { influence: 3, execution: 3, alignment: 5 }, feedback: "Your brain is holding on because it doesn't trust you to remember. Writing it down is permission to let go. Simple, effective, underused." },
+      { text: "Keep going — momentum matters and you'll sleep when it's done", scores: { influence: -2, execution: 4, alignment: -3 }, feedback: "You won't sleep when it's done because it's never done. You'll find one more thing. And one more after that. The work expands to fill the time you give it, and right now you're giving it all of it." },
+      { text: "Put the phone in another room and be present with whatever's in front of you", scores: { influence: 2, execution: 2, alignment: 4 }, feedback: "Discipline. And it works if you actually let go instead of just relocating your anxiety. Being physically present and mentally at work is worse than just working — at least when you're working, someone's getting your full attention." }
+    ],
+    tags: ["regulation", "capacity"]
+  },
+  {
+    id: "off-2", category: "Off the Clock", type: "offwork",
+    context: "You've been so focused on work that a personal relationship has started to show strain. The other person hasn't said anything directly, but you can feel the distance.",
+    question: "You can see it happening. Do you address it or hope it passes?",
+    choices: [
+      { text: "Name it — 'I know I've been absent. I'm working on it and I don't want it to cost us.'", scores: { influence: 5, execution: 1, alignment: 5 }, feedback: "Three sentences that prevent three months of slow erosion. Naming the problem isn't fixing it — but it stops the other person from filling the silence with their own story, which is usually worse than the truth." },
+      { text: "Try to be more present without making it a conversation — show, don't tell", scores: { influence: 3, execution: 3, alignment: 2 }, feedback: "Works if they notice. Falls flat if the distance has gone far enough that they've stopped watching for signs. Sometimes showing up isn't enough — you have to say 'I'm showing up' so they know to look." },
+      { text: "It'll settle when work settles — this is temporary", scores: { influence: -3, execution: 2, alignment: -3 }, feedback: "It's always temporary. Until it isn't. Every season of 'I'll get to it when things calm down' teaches the people around you that they're on the other side of a door that only opens when work allows it." }
+    ],
+    tags: ["relationships", "regulation", "self-awareness"]
+  },
+  {
+    id: "off-3", category: "Off the Clock", type: "offwork",
+    context: "Someone asks you what you do outside of work. You realize you don't have a great answer.",
+    question: "When did work become the whole identity?",
+    choices: [
+      { text: "It's temporary — this season of work demands it", scores: { influence: 1, execution: 3, alignment: -2 }, feedback: "Maybe. But check the calendar — how many months has this 'season' lasted? If work has been the whole identity for more than a quarter, it's not a season. It's a drift." },
+      { text: "You're building something — the sacrifice is worth the outcome", scores: { influence: 2, execution: 4, alignment: 0 }, feedback: "The builder's justification. And sometimes it's true. But building something that requires you to stop being a person outside of it isn't a sacrifice — it's a trade you might not have agreed to if you'd read the fine print." },
+      { text: "It's a wake-up call — time to reclaim something outside of work", scores: { influence: 4, execution: 0, alignment: 5 }, feedback: "The answer that doesn't feel productive but might be the most important one. You can't lead people well if you've forgotten what it feels like to be a person. Rest isn't weakness. Hobbies aren't laziness. They're the things that keep the version of you that leads from being hollow." }
+    ],
+    tags: ["regulation", "self-awareness"]
+  },
+
+  // ===== CHECK-INS =====
+  {
+    id: "chk-1", category: "Check-In", type: "checkin",
+    context: "No scenario. Just you.",
+    question: "When you walk into work tomorrow — are you excited, braced, or just going through the motions?",
+    choices: [
+      { text: "Excited — I've got things to build and I'm good at what I do", scores: { influence: 2, execution: 2, alignment: 2 }, feedback: "That energy is real. And it's contagious — people around you can feel it. Just make sure your excitement is about the right things. Building systems is energizing. Building relationships is harder and less satisfying in the moment. Both matter." },
+      { text: "Braced — there's something waiting for me that I'm already tense about", scores: { influence: 1, execution: 0, alignment: 1 }, feedback: "What is it? Name it right now in your head. The brace is your body telling you something needs attention. If you walk in braced every day, that's not readiness — that's chronic stress wearing a productive costume." },
+      { text: "Motions — showing up because that's what I do", scores: { influence: 0, execution: 1, alignment: 0 }, feedback: "That happens. It doesn't make you bad at your job. But if this has been the answer for more than a few weeks, something in the work has stopped feeding you. Figure out what used to make it matter and see if that thing still exists." }
+    ],
+    tags: ["self-awareness", "regulation"]
+  },
+  {
+    id: "chk-2", category: "Check-In", type: "checkin",
+    context: "No scenario. Just honesty.",
+    question: "How many things on your plate right now are things only you can do — versus things you're holding because letting go feels like losing control?",
+    choices: [
+      { text: "Most of it is genuinely mine — nobody else has the skills or context", scores: { influence: 1, execution: 2, alignment: 0 }, feedback: "Maybe true. But ask yourself: is nobody else capable because the work is truly specialized, or because you haven't invested in making someone else capable? If only you can do it, that's not strength — that's a single point of failure." },
+      { text: "Honestly, some of it could be handed off — I just don't trust it'll get done right", scores: { influence: 0, execution: 1, alignment: 2 }, feedback: "That trust gap is worth examining. Is it about their capability, or about your standard? If your standard is 'exactly how I'd do it,' nobody will ever qualify. If your standard is 'meets the requirement,' more people qualify than you think." },
+      { text: "I'm holding too much — I know it, I just haven't figured out how to let go yet", scores: { influence: 1, execution: 0, alignment: 2 }, feedback: "Knowing it is the first step. But 'figuring out how to let go' isn't a puzzle to solve in your head — it's a muscle you build by actually letting go of one thing and surviving the discomfort. Start small. Start tomorrow." }
+    ],
+    tags: ["capacity", "self-awareness", "delegation"]
+  },
+  {
+    id: "chk-3", category: "Check-In", type: "checkin",
+    context: "No scenario. Real talk.",
+    question: "When someone on the team succeeds without your involvement — how does that make you feel? Be honest.",
+    choices: [
+      { text: "Great — that's the whole point. I want them to not need me.", scores: { influence: 3, execution: 2, alignment: 2 }, feedback: "If that's genuinely true, you're further along than most leaders. The real test is whether you feel the same way when their success is visible to leadership and yours isn't." },
+      { text: "Good, but... a small part of me wants to be part of it", scores: { influence: 1, execution: 1, alignment: 2 }, feedback: "Honest. And human. That 'but' is worth knowing about yourself. It doesn't make you a bad leader — it makes you a person who gets energy from contribution. The key is not letting that need for involvement turn into unnecessary insertion." },
+      { text: "It depends on what it is — some things I should have been involved in", scores: { influence: 0, execution: 2, alignment: 0 }, feedback: "Sometimes true. But 'should have been involved' is a phrase that deserves scrutiny every time you use it. Should have been involved because the work required it? Or should have been involved because it felt like your territory? Those are very different things." }
+    ],
+    tags: ["self-awareness", "trust", "autonomy"]
+  },
+  {
+    id: "chk-4", category: "Check-In", type: "checkin",
+    context: "No scenario. Just a mirror.",
+    question: "If the people you manage described your leadership style to someone who doesn't know you — what would they say?",
+    choices: [
+      { text: "Smart, structured, always thinking three steps ahead", scores: { influence: 2, execution: 3, alignment: 1 }, feedback: "That's the version you hope for. Is it the version they'd give? Sometimes the person three steps ahead forgets that the team is still on step one. Thinking ahead is a strength. Communicating where you are along the way is what makes it leadership instead of isolation." },
+      { text: "Intense, dedicated, expects a lot", scores: { influence: 1, execution: 2, alignment: 1 }, feedback: "High standards are good. But there's a line between 'expects a lot' and 'expects everything.' One builds people up. The other burns them out. The difference is usually whether they feel like they can ever satisfy you." },
+      { text: "Honestly? I'm not sure what they'd say", scores: { influence: 0, execution: 0, alignment: 2 }, feedback: "That uncertainty is worth more than a confident wrong answer. If you don't know how your team experiences you, you're leading blind. Not because you're bad at it — but because no one has told you, which might mean they don't feel safe enough to." }
+    ],
+    tags: ["self-awareness", "leadership", "trust"]
+  },
+  {
+    id: "chk-5", category: "Check-In", type: "checkin",
+    context: "No scenario. Just you and the question.",
+    question: "What would happen if you took a full week off tomorrow and told no one to contact you?",
+    choices: [
+      { text: "Things would fall apart — too much depends on me right now", scores: { influence: -1, execution: 2, alignment: -1 }, feedback: "If that's true, it's not a badge of honor — it's a structural failure. A well-run operation survives a week without any single person. If yours can't, the most important project on your list is making yourself less essential." },
+      { text: "Things would stumble but survive — people would figure it out", scores: { influence: 3, execution: 2, alignment: 3 }, feedback: "That 'figure it out' is the whole point of leadership. You've built enough that the system can absorb your absence, even if it's not pretty. That's what delegation and trust look like in practice." },
+      { text: "Things would be fine — I've built systems that run without me", scores: { influence: 4, execution: 3, alignment: 4 }, feedback: "Either you've built something genuinely resilient — which is the goal — or you're further from the work than you realize. The honest answer is probably somewhere between 'fine' and 'stumble.' And that's healthy." }
+    ],
+    tags: ["capacity", "delegation", "self-awareness"]
+  },
+
+  // ===== DATA & TOOLS =====
+  {
+    id: "dt-1", category: "Data & Tools", type: "work",
+    context: "You've used a tool to generate an analysis. The output looks clean, professional, and the numbers seem reasonable. A colleague glances at it and says one of the inputs looks off.",
+    question: "The tool did the math correctly. But was the input right? How do you respond?",
+    choices: [
+      { text: "Review the input together — if the foundation is wrong, the whole thing is wrong", scores: { influence: 6, execution: 3, alignment: 6 }, feedback: "A perfectly calculated answer built on a bad input is a perfectly wrong answer. The tool didn't make a mistake — it did exactly what you told it to. The question is whether what you told it was accurate. Checking isn't weakness. It's the difference between confidence and overconfidence." },
+      { text: "Defend the output — the tool processed the data correctly, the methodology is sound", scores: { influence: -4, execution: 3, alignment: -3 }, feedback: "The methodology can be flawless and the conclusion can still be wrong. A GPS gives perfect directions — from wherever you tell it you're starting. If you entered the wrong starting point, the route is useless no matter how precise the turn-by-turn is. Defending the tool isn't defending the answer." },
+      { text: "Acknowledge you'll double-check, but you're fairly confident it's right", scores: { influence: 2, execution: 2, alignment: 1 }, feedback: "Better than dismissing it. But 'fairly confident' is a feeling, not a verification. The five minutes it takes to actually check the input is worth more than the five hours you'll spend explaining why the analysis was wrong after you've already presented it." }
+    ],
+    tags: ["data", "integrity", "tools"]
+  },
+  {
+    id: "dt-2", category: "Data & Tools", type: "work",
+    context: "You need to present production data to leadership. You have several weeks of data available. One week clearly shows better numbers than the others.",
+    question: "Do you pick the best week, the worst week, or something else?",
+    choices: [
+      { text: "Use an average across multiple weeks — that's the honest picture", scores: { influence: 5, execution: 3, alignment: 7 }, feedback: "An average smooths out the anomalies — the sick days, the outages, the unusually good runs. It's the closest thing to truth you can give leadership. A single week is a snapshot. An average is a portrait. Leaders who present snapshots are optimizing for impression. Leaders who present portraits are optimizing for trust." },
+      { text: "Use the best week — you want to show what's possible at peak performance", scores: { influence: -3, execution: 4, alignment: -4 }, feedback: "What's possible and what's typical are two different stories. If leadership plans around your peak week, they'll expect peak performance every week. And when reality doesn't match — and it won't — you'll be explaining why the numbers 'dropped' from a baseline that was never real." },
+      { text: "Use the most recent week — it's the most current picture", scores: { influence: 2, execution: 3, alignment: 1 }, feedback: "Recency has value. But what if the most recent week had an equipment issue, or a staffing gap, or an unusually light schedule? One week is one data point. If you're going to use a single week, at least know whether it was representative. And if you don't know — that's the problem to solve before you present anything." }
+    ],
+    tags: ["data", "integrity", "leadership"]
+  },
+  {
+    id: "dt-3", category: "Data & Tools", type: "work",
+    context: "You've built a report using an automated tool. It's thorough and well-formatted. But you haven't manually verified the key numbers against the source data.",
+    question: "It looks right. The tool is reliable. Do you verify before sending it up, or trust the output?",
+    choices: [
+      { text: "Verify the key numbers — every time, no exceptions", scores: { influence: 5, execution: 2, alignment: 6 }, feedback: "Tedious. Essential. The tool doesn't know if the source data was entered wrong, if a field was blank, if a date range was off by a week. You do — or you should. The five minutes of checking is insurance against the career cost of presenting something wrong to leadership and having someone else catch it." },
+      { text: "Trust the tool — it's been accurate before and re-checking everything defeats the purpose of automation", scores: { influence: -3, execution: 5, alignment: -2 }, feedback: "The purpose of automation is to save time on calculation, not to save you from thinking. A tool that's been accurate ten times creates confidence. Confidence without verification creates the eleventh time — the one where a bad input goes unnoticed and you present fiction as fact." },
+      { text: "Spot-check a few key figures — not everything, but the numbers that matter most", scores: { influence: 4, execution: 4, alignment: 4 }, feedback: "Pragmatic. You can't verify everything every time, but you can verify the numbers that would embarrass you if they were wrong. The question to ask yourself: if leadership challenged this specific number, could I explain where it came from? If the answer is 'the tool gave it to me,' that's not an explanation. That's a liability." }
+    ],
+    tags: ["data", "tools", "integrity"]
+  },
+  {
+    id: "dt-4", category: "Data & Tools", type: "work",
+    context: "You're troubleshooting a problem. Your instinct is to build a system to solve it — a database, a tracker, an automated workflow. A colleague suggests a simpler manual fix.",
+    question: "The system would be better long-term. The manual fix would work right now. Which do you choose?",
+    choices: [
+      { text: "Build the system — solve it right once instead of patching it forever", scores: { influence: 2, execution: -2, alignment: 2 }, feedback: "Sometimes the right call. But be honest about the timeline. If the system takes three weeks to build and the problem needs to be solved today, you've chosen an engineering project over an operational need. The team doesn't need the perfect solution next month — they need a working solution now." },
+      { text: "Apply the manual fix now, then build the system when there's bandwidth", scores: { influence: 5, execution: 5, alignment: 5 }, feedback: "Fix the bleeding, then build the hospital. This is the hardest answer for a systems thinker because the manual fix feels like a step backward. It's not. It's triage. And the system you build later will be better because you understand the problem from having lived with it, not just theorized about it." },
+      { text: "Evaluate honestly — is a system actually needed, or does the manual fix solve this permanently?", scores: { influence: 4, execution: 3, alignment: 6 }, feedback: "The question nobody wants to ask because the system is more interesting to build. Not every problem needs infrastructure. Some problems need a Post-it note and a five-minute conversation. Building a system for a Post-it problem isn't engineering — it's avoidance of the simpler, less impressive solution." }
+    ],
+    tags: ["tools", "systems", "capacity"]
+  },
+  {
+    id: "dt-5", category: "Data & Tools", type: "work",
+    context: "A graph you created tells one story. A person on the floor who lives with the data every day tells a different story. The graph is technically accurate.",
+    question: "The data says one thing. The human says another. Who's right?",
+    choices: [
+      { text: "The data — feelings aren't metrics, and you can't manage what you can't measure", scores: { influence: -3, execution: 4, alignment: -3 }, feedback: "Data without context is just numbers in a pretty frame. A graph can be technically accurate and completely misleading — wrong date range, missing variables, ignoring an outage, averaging away an anomaly. 'The data says' is only as reliable as 'the data includes.' If the person on the floor sees something the graph doesn't show, the graph is incomplete, not the person." },
+      { text: "Dig deeper — if they disagree, something is missing from one side or the other", scores: { influence: 6, execution: 2, alignment: 7 }, feedback: "The right answer is almost always 'both are seeing something real.' The graph captures what's measurable. The floor person captures what isn't — morale, workarounds, context that doesn't fit in a column. The leader who listens to both and synthesizes gets the truest picture. The one who picks a side gets a comfortable one." },
+      { text: "Trust the floor — they live with this every day and data can be misleading", scores: { influence: 4, execution: -1, alignment: 3 }, feedback: "Often right. Floor knowledge is earned in a way data can't replicate. But floor knowledge also has blind spots — people get used to problems and stop seeing them. The best approach isn't choosing the floor over the data. It's using the floor to interrogate the data and the data to challenge the floor." }
+    ],
+    tags: ["data", "trust", "tools"]
+  },
+  {
+    id: "dt-6", category: "Data & Tools", type: "work",
+    context: "You've spent days building an automated solution for a workflow problem. It works. But the team preferred the old way and is resistant to adopting it.",
+    question: "Your solution is objectively better. They don't want it. What wins — the engineering or the people?",
+    choices: [
+      { text: "Implement it — they'll see the value once they're using it", scores: { influence: -4, execution: 5, alignment: -3 }, feedback: "Maybe. Or maybe they'll use it wrong, blame it when things break, and quietly go back to the old way when you're not watching. Adoption isn't a technical problem — it's a human one. You can't engineer your way past people who don't trust the change." },
+      { text: "Involve them in refining it — let their feedback shape the final version", scores: { influence: 6, execution: 2, alignment: 5 }, feedback: "Slower. Better. When the team's fingerprints are on the solution, they protect it instead of resisting it. The 20% they change might bruise your ego, but it's usually the 20% that makes it actually work in practice instead of just in theory." },
+      { text: "Shelve it — if they don't want it, forcing it creates more problems than it solves", scores: { influence: 2, execution: -2, alignment: 3 }, feedback: "Sometimes the right call. Not every good idea survives contact with the people who have to use it. But before you shelve it, ask yourself: did they reject the solution, or did they reject how it was introduced? Those are very different problems with very different answers." }
+    ],
+    tags: ["tools", "trust", "systems"]
+  },
+  {
+    id: "dt-7", category: "Data & Tools", type: "work",
+    context: "Someone catches an error in something you've already sent to leadership. The error changes the conclusion meaningfully.",
+    question: "It's already out there. Do you correct it, minimize it, or let it ride?",
+    choices: [
+      { text: "Correct it immediately — send the updated version with a clear note about what changed", scores: { influence: 7, execution: 2, alignment: 7 }, feedback: "Painful. And the only real option. A corrected analysis with a transparent note builds more credibility than a perfect one — because it shows you care about accuracy more than looking good. Leadership remembers who corrects themselves. They also remember who doesn't." },
+      { text: "Correct it quietly in the next update — no need to draw attention to the mistake", scores: { influence: -3, execution: 3, alignment: -4 }, feedback: "If someone else notices the discrepancy between versions — and someone always does — you've now got two problems: the original error and the appearance that you tried to cover it. Quiet corrections are loud when they're discovered." },
+      { text: "Evaluate whether the error actually changes anything material before deciding", scores: { influence: 2, execution: 3, alignment: 1 }, feedback: "Fair — not every error is significant enough to warrant a correction notice. But be honest about who's evaluating: you, the person who made the error, might not be the most objective judge of whether it matters. If someone else caught it, it probably matters to them." }
+    ],
+    tags: ["data", "integrity", "leadership"]
+  },
+  {
+    id: "dt-8", category: "Data & Tools", type: "work",
+    context: "You have access to a powerful tool that can generate reports, analyses, and solutions faster than doing it manually. You've been leaning on it heavily.",
+    question: "Be honest: are you using the tool to enhance your work, or to replace your thinking?",
+    choices: [
+      { text: "Enhance — I use it for speed but I still make the decisions and verify the output", scores: { influence: 4, execution: 4, alignment: 4 }, feedback: "Good — if it's actually true. Here's the test: when was the last time you changed something the tool gave you? Not formatted it or cleaned it up — actually changed a conclusion or caught an error in the logic. If you can't remember, you might be verifying less than you think." },
+      { text: "Honestly, it's become a crutch — I trust the output more than I should", scores: { influence: 3, execution: 0, alignment: 5 }, feedback: "That honesty is worth more than the tool. Most people never admit this because the output looks so professional that questioning it feels unnecessary. But professional-looking wrong is worse than rough-looking right. Knowing you have a crutch is the first step to putting weight back on the leg." },
+      { text: "Replace, but strategically — my value is in knowing what to ask, not in doing the manual work", scores: { influence: 1, execution: 3, alignment: 0 }, feedback: "Knowing what to ask is genuinely valuable. But if you never do the manual work, you lose the ability to know when the answer is wrong. Expertise isn't just asking good questions — it's recognizing when the answer doesn't pass the smell test. That instinct atrophies when you stop getting your hands dirty." }
+    ],
+    tags: ["tools", "self-awareness", "integrity"]
+  },
+
+  // ===== ADDITIONAL CHECK-INS (data/tools theme) =====
+  {
+    id: "chk-6", category: "Check-In", type: "checkin",
+    context: "No scenario. Just honesty.",
+    question: "When was the last time you changed your mind because someone on the floor told you something that contradicted your data?",
+    choices: [
+      { text: "Recently — it happens, and I adjust", scores: { influence: 3, execution: 2, alignment: 3 }, feedback: "That's flexibility. It means your data informs your decisions instead of dictating them. The best leaders hold their analyses loosely enough that reality can update them." },
+      { text: "I can't remember a specific time", scores: { influence: 0, execution: 2, alignment: 0 }, feedback: "That's worth sitting with. Either the data has been right every time — which is statistically unlikely — or there have been moments you dismissed floor input in favor of your numbers. Not because you're stubborn, but because the numbers feel more solid. They're not always more solid. They're just more comfortable." },
+      { text: "The data is usually more reliable than gut feelings", scores: { influence: -1, execution: 3, alignment: -1 }, feedback: "Sometimes true. Gut feelings can be wrong. But 'gut feeling' and 'floor expertise' aren't the same thing. A technician who's done something for 15 years telling you a number doesn't look right isn't going on gut — they're going on pattern recognition that no dataset captures. Dismissing that as 'feelings vs. data' is a category error." }
+    ],
+    tags: ["data", "self-awareness", "trust"]
+  },
+  {
+    id: "chk-7", category: "Check-In", type: "checkin",
+    context: "No scenario. Just a mirror.",
+    question: "When someone points out an error in your work — what's your first internal reaction before you respond?",
+    choices: [
+      { text: "Curiosity — show me, I want to see what I missed", scores: { influence: 3, execution: 2, alignment: 3 }, feedback: "That's the reaction of someone who cares about being right more than being seen as right. If that's genuinely your first instinct, protect it. Most people lose that reflex the more authority they gain." },
+      { text: "Defensiveness — then I override it and try to listen", scores: { influence: 2, execution: 1, alignment: 2 }, feedback: "Honest. And the override is what matters. Everyone's first reaction to being told they're wrong is some version of resistance. The people who notice it and choose to listen anyway are rare. The gap between the impulse and the action is where leadership lives." },
+      { text: "It depends on who's pointing it out", scores: { influence: 0, execution: 1, alignment: 0 }, feedback: "That's worth examining. If you'd accept the same correction from leadership but push back when it comes from the floor, the issue isn't the correction — it's whose opinion you value. An error is an error regardless of who finds it. If anything, the person closest to the work is most likely to find the real ones." }
+    ],
+    tags: ["self-awareness", "integrity", "trust"]
+  },
+
+  // ===== LEADING WHEN YOU KNOW LESS =====
+  {
+    id: "lk-1", category: "Leading When You Know Less", type: "work",
+    context: "Someone reporting to you has significantly more day-to-day floor experience than you in the work they do. You're responsible for their area, but they know it better.",
+    question: "Your authority is structural. Their authority is earned through experience. How do you actually lead them?",
+    choices: [
+      { text: "Defer to their judgment on their work and focus on what you can add", scores: { influence: 7, execution: 3, alignment: 6 }, feedback: "The mature answer. You're not abandoning your role — you're recognizing that leadership isn't about being the best at everything. Your value is in seeing connections they can't see from their position, advocating for them upward, and removing obstacles. Trying to out-knowledge someone in their own domain just creates friction and resentment." },
+      { text: "Stay involved in their decisions — your role requires you to have visibility into the work", scores: { influence: -2, execution: 4, alignment: -3 }, feedback: "Visibility and involvement aren't the same thing. You can know what's happening without inserting yourself into how it's done. The line between 'staying informed' and 'micromanaging' usually depends on whether your input was asked for or volunteered. Volunteered input from a boss with less knowledge feels like a test, even when it isn't." },
+      { text: "Match their expertise — invest the time to understand the work as deeply as they do", scores: { influence: 1, execution: -2, alignment: 0 }, feedback: "Aspirational. And mostly impossible. They've been doing this for years and they do it every day. You're not going to catch up by studying it on the side. The fantasy that you can be both the strategic leader and the floor expert is what makes leaders try to do too much and do it all worse. Pick a lane." }
+    ],
+    tags: ["leadership", "trust", "authority", "boundaries"]
+  },
+  {
+    id: "lk-2", category: "Leading When You Know Less", type: "work",
+    context: "You've been giving direction in someone's area, and you notice they've started to hesitate before making calls they used to make confidently on their own.",
+    question: "Something has shifted. They're checking with you more. Is that a good thing?",
+    choices: [
+      { text: "No — that's a warning sign. They've stopped trusting their own judgment because I've been overriding it.", scores: { influence: 6, execution: 2, alignment: 7 }, feedback: "Sharp observation. The shift from confident to deferential is one of the clearest signals that your involvement is now a brake on the work, not a help to it. The fix isn't to encourage more autonomy with words — it's to stop overriding their calls. They'll feel the change in a week." },
+      { text: "It's fine — checking in shows engagement and collaboration", scores: { influence: -3, execution: 3, alignment: -2 }, feedback: "Reframe what you're seeing. Checking in with a peer is collaboration. Checking in with a boss who keeps overriding them is self-protection. They're not engaging — they're managing your reactions. Big difference." },
+      { text: "Probably my fault — but it's hard to stop without losing oversight", scores: { influence: 2, execution: 1, alignment: 3 }, feedback: "Honest. And here's the thing: oversight doesn't require involvement in decisions. You can see results without shaping every call. The trade-off you're worried about — autonomy vs. oversight — is a false one. The way to oversee well is to let people own their work and look at outcomes, not to be in every decision." }
+    ],
+    tags: ["self-awareness", "leadership", "trust", "boundaries"]
+  },
+
+  // ===== RECOGNIZING ENCROACHMENT =====
+  {
+    id: "enc-1", category: "Recognizing Encroachment", type: "work",
+    context: "Be honest. In the last month, how many times have you weighed in on, made decisions about, or 'helped with' something that wasn't strictly in your lane?",
+    question: "Where's the line between proactive leadership and stepping on someone else's territory?",
+    choices: [
+      { text: "More than I'd like to admit — and I justified each one in the moment", scores: { influence: 4, execution: 1, alignment: 6 }, feedback: "That's the hardest answer to give yourself. The justifications are usually real — you saw a gap, you had the skills, you were trying to help. But the cumulative effect of repeatedly stepping in is that other people's authority erodes. Each individual instance is defensible. The pattern isn't. The fix starts with noticing it." },
+      { text: "Rarely — when I weigh in, it's because nobody else is addressing it", scores: { influence: 1, execution: 3, alignment: 1 }, feedback: "Possibly true. Also the default story everyone tells themselves about their encroachment. Worth asking: have you actually checked whether the person responsible knows about the issue, or did you act on the assumption that they hadn't seen it? If you didn't ask, you don't actually know whether you were filling a gap or jumping in front of someone." },
+      { text: "Not at all — I respect the lanes and stay in mine", scores: { influence: -2, execution: 2, alignment: -3 }, feedback: "That answer is worth double-checking. Most people who encroach don't realize they're doing it. The behaviors that feel like 'being helpful' or 'spotting opportunities' from your side often feel like 'jumping in front of me' from the other side. Confidence that you're not doing it is a flag to check more carefully, not a guarantee that you're clear." }
+    ],
+    tags: ["self-awareness", "boundaries", "authority"]
+  },
+  {
+    id: "enc-2", category: "Recognizing Encroachment", type: "work",
+    context: "You see a problem in an area that isn't yours. Your instinct is immediate: build a solution, draft a fix, write up a recommendation.",
+    question: "Before you act on that instinct — what's the move?",
+    choices: [
+      { text: "Bring it to the person who owns that area first — let them decide if they want input", scores: { influence: 6, execution: 2, alignment: 7 }, feedback: "Respect routed through the right channel. Even if your idea is good, the way you introduce it determines whether it's received as collaboration or as overreach. 'I noticed something — want me to think through it with you?' is a question. Writing up a solution before talking to them is a statement: 'I've already decided what you should do.'" },
+      { text: "Build the solution and present it as an option — they can take it or leave it", scores: { influence: -3, execution: 4, alignment: -4 }, feedback: "Presenting a finished solution to someone for their area is almost never received as 'take it or leave it.' It's received as 'I've made this decision and now I'm being polite about it.' Even when you don't mean it that way. The work itself is the message: you spent time deciding what they should do." },
+      { text: "Wait and see — if it's their area, they'll address it when they're ready", scores: { influence: 3, execution: 1, alignment: 4 }, feedback: "Sometimes the right call. Especially if they might already be working on it. But total passivity isn't always right either — if the problem genuinely affects shared outcomes, mentioning it (not solving it) can be the right move. The order matters: ask first, offer second, never solve unsolicited." }
+    ],
+    tags: ["boundaries", "authority", "self-awareness"]
+  }
+];
+
+// ========== GAME ENGINE ==========
+class DecisionDeck {
+  constructor() {
+    this.state = 'start';
+    this.scores = { influence: 50, execution: 50, alignment: 50 };
+    this.round = 0;
+    this.totalRounds = 14;
+    this.history = [];
+    this.currentScenario = null;
+    this.selectedChoice = null;
+    this.usedIds = new Set();
+    this.deck = [];
+    this.render();
+  }
+
+  buildDeck() {
+    let pool = SCENARIOS.filter(s => !this.usedIds.has(s.id));
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    const selected = [];
+    const catCount = {};
+    const typeCount = { work: 0, offwork: 0, checkin: 0 };
+    const guarantees = [
+      pool.find(s => s.type === 'checkin'),
+      pool.find(s => s.type === 'checkin' && !selected.includes(s)),
+      pool.find(s => s.type === 'offwork'),
+      pool.find(s => s.type === 'offwork' && !selected.includes(s)),
+      pool.find(s => s.category === 'Working Across Lanes'),
+      pool.find(s => s.category === 'Site Oversight'),
+      pool.find(s => s.category === 'Data & Tools'),
+    ].filter(Boolean);
+    for (const s of guarantees) {
+      if (!selected.includes(s)) {
+        selected.push(s);
+        catCount[s.category] = (catCount[s.category] || 0) + 1;
+        typeCount[s.type] = (typeCount[s.type] || 0) + 1;
+      }
+    }
+    for (const s of pool) {
+      if (selected.length >= this.totalRounds) break;
+      if (selected.includes(s)) continue;
+      const cc = catCount[s.category] || 0;
+      if (cc >= 2) continue;
+      if (s.type === 'checkin' && typeCount.checkin >= 3) continue;
+      if (s.type === 'offwork' && typeCount.offwork >= 3) continue;
+      selected.push(s);
+      catCount[s.category] = cc + 1;
+      typeCount[s.type] = (typeCount[s.type] || 0) + 1;
+    }
+    for (const s of pool) {
+      if (selected.length >= this.totalRounds) break;
+      if (!selected.includes(s)) selected.push(s);
+    }
+    for (let i = selected.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [selected[i], selected[j]] = [selected[j], selected[i]];
+    }
+    if (selected[0] && selected[0].type === 'checkin') {
+      const swapIdx = selected.findIndex((s, i) => i > 2 && s.type === 'work');
+      if (swapIdx > 0) [selected[0], selected[swapIdx]] = [selected[swapIdx], selected[0]];
+    }
+    this.deck = selected;
+  }
+
+  findCallback(history) {
+    if (history.length < 3) return null;
+    const current = this.currentScenario;
+    if (!current) return null;
+    const tagOverlap = history.filter(h => {
+      const past = SCENARIOS.find(s => s.id === h.id);
+      if (!past) return false;
+      return past.tags.some(t => current.tags.includes(t));
+    });
+    if (tagOverlap.length > 0) {
+      const ref = tagOverlap[tagOverlap.length - 1];
+      const past = SCENARIOS.find(s => s.id === ref.id);
+      return {
+        text: `Earlier, when faced with a ${past.category.toLowerCase()} situation, you chose: "${ref.choiceText}" — how does that shape your thinking here?`,
+      };
+    }
+    return null;
+  }
+
+  applyScoreVariance(scores) {
+    const modified = { ...scores };
+    const roll = Math.random();
+    if (roll < 0.18 && modified.influence > 3) {
+      modified.influence = Math.round(modified.influence * 0.3);
+    } else if (roll < 0.30 && modified.influence < -2) {
+      modified.execution = Math.abs(modified.execution) + 3;
+    } else if (roll < 0.42) {
+      const stats = Object.keys(modified);
+      const pick = stats[Math.floor(Math.random() * stats.length)];
+      if (Math.abs(modified[pick]) > 2) {
+        modified[pick] = -Math.round(modified[pick] * 0.5);
+      }
+    } else if (roll < 0.50) {
+      const stats = Object.keys(modified);
+      const pick = stats[Math.floor(Math.random() * stats.length)];
+      modified[pick] = modified[pick] + (Math.random() > 0.5 ? 4 : -4);
+    }
+    return modified;
+  }
+
+  nextRound() {
+    if (this.round >= this.totalRounds) {
+      this.state = 'end';
+      this.render();
+      return;
+    }
+    this.currentScenario = this.deck[this.round];
+    this.usedIds.add(this.currentScenario.id);
+    this.selectedChoice = null;
+    this.state = 'play';
+    this.render();
+  }
+
+  selectChoice(index) {
+    if (this.selectedChoice !== null) return;
+    this.selectedChoice = index;
+    const choice = this.currentScenario.choices[index];
+    const modifiedScores = this.applyScoreVariance(choice.scores);
+    this.scores.influence = Math.max(0, Math.min(100, this.scores.influence + modifiedScores.influence));
+    this.scores.execution = Math.max(0, Math.min(100, this.scores.execution + modifiedScores.execution));
+    this.scores.alignment = Math.max(0, Math.min(100, this.scores.alignment + modifiedScores.alignment));
+    this.history.push({
+      id: this.currentScenario.id,
+      choiceIndex: index,
+      choiceText: choice.text,
+      scores: modifiedScores
+    });
+    this.round++;
+    this.render();
+  }
+
+  getEndInsight() {
+    const { influence, execution, alignment } = this.scores;
+    const sorted = [
+      { name: 'influence', val: influence },
+      { name: 'execution', val: execution },
+      { name: 'alignment', val: alignment }
+    ].sort((a, b) => b.val - a.val);
+    const highest = sorted[0].name;
+    const lowest = sorted[2].name;
+
+    const insights = {
+      influence: {
+        high: "Your instinct is to lead through credibility and relationships. When people follow your direction, it's because you've earned it, not because the org chart says so. That kind of influence outlasts any title.",
+        low: "Influence took some hits. That usually means choices prioritized getting things done over bringing people along. Execution without buy-in gets the job done once. Influence gets it done every time after."
+      },
+      execution: {
+        high: "You get things done. Projects move, systems ship, deadlines hold. That's rare and valuable. Just make sure the drive to execute isn't outrunning the people who have to live with what you build.",
+        low: "Execution softened in some places. That might mean you were choosing relationships over output — which isn't always wrong. But be honest about whether 'building consensus' is sometimes a way of avoiding the harder push."
+      },
+      alignment: {
+        high: "You think about how the pieces fit together — not just your work, but how it connects to everyone else's. That systems view is what separates a project runner from a site leader.",
+        low: "Alignment dipped. That usually means decisions were made in isolation or without enough context from the people affected. The best individual decision can be the wrong organizational one if it doesn't account for the system around it."
+      }
+    };
+
+    const checkinHistory = this.history.filter(h => {
+      const s = SCENARIOS.find(sc => sc.id === h.id);
+      return s && s.type === 'checkin';
+    });
+    let checkinNote = '';
+    if (checkinHistory.length >= 2) {
+      const controlCount = checkinHistory.filter(h => {
+        const s = SCENARIOS.find(sc => sc.id === h.id);
+        const choice = s.choices[h.choiceIndex];
+        return choice.scores.alignment < 1;
+      }).length;
+      if (controlCount >= 2) {
+        checkinNote = "\n\nThe check-ins surfaced a pattern worth examining. There's a tension between your drive to build and your ability to let go. The best site leaders aren't the ones who do the most — they're the ones who make the most possible without being in the middle of all of it.";
+      } else {
+        checkinNote = "\n\nThe check-ins suggest you're reflective about your role and aware of your patterns. That self-awareness is a genuine asset — most people in leadership positions don't pause long enough to examine how they're showing up.";
+      }
+    }
+
+    return `Your strongest instinct: ${highest}. ${insights[highest].high}\n\nWhere to reflect: ${lowest}. ${insights[lowest].low}${checkinNote}`;
+  }
+
+  start() {
+    this.scores = { influence: 50, execution: 50, alignment: 50 };
+    this.round = 0;
+    this.history = [];
+    this.selectedChoice = null;
+    this.buildDeck();
+    this.nextRound();
+  }
+
+  getCardClass() {
+    if (!this.currentScenario) return '';
+    if (this.currentScenario.type === 'checkin') return 'checkin';
+    if (this.currentScenario.type === 'offwork') return 'offwork';
+    return '';
+  }
+
+  render() {
+    const app = document.getElementById('app');
+    if (this.state === 'start') {
+      app.innerHTML = `
+        <div class="header">
+          <h1>Decision Deck</h1>
+          <div class="subtitle">Site Lead Edition</div>
+        </div>
+        <div class="start-screen">
+          <div class="icon">◆</div>
+          <p>14 scenarios. No perfect answers.<br><br>
+          You'll be scored on three axes: <strong style="color:var(--accent)">Influence</strong>, <strong style="color:var(--gold)">Execution</strong>, and <strong style="color:#a78bfa">Alignment</strong>.<br><br>
+          The scoring won't always make sense. Leadership never does.<br><br>
+          Projects. People. Processes. The intersection is where it gets hard.<br><br>
+          Your earlier decisions will follow you.</p>
+          <button class="start-btn" onclick="game.start()">Deal Me In</button>
+        </div>`;
+      return;
+    }
+    if (this.state === 'end') {
+      const insight = this.getEndInsight();
+      const paras = insight.split('\n\n');
+      app.innerHTML = `
+        <div class="header">
+          <h1>Decision Deck</h1>
+          <div class="subtitle">Results</div>
+        </div>
+        <div class="end-screen">
+          <div class="final-scores">
+            <div class="final-stat">
+              <div class="val" style="color:var(--accent)">${this.scores.influence}</div>
+              <div class="lbl">Influence</div>
+            </div>
+            <div class="final-stat">
+              <div class="val" style="color:var(--gold)">${this.scores.execution}</div>
+              <div class="lbl">Execution</div>
+            </div>
+            <div class="final-stat">
+              <div class="val" style="color:#a78bfa">${this.scores.alignment}</div>
+              <div class="lbl">Alignment</div>
+            </div>
+          </div>
+          ${paras.map(p => `<p class="insight">${p}</p>`).join('')}
+          <button class="play-again" onclick="game.start()">Play Again</button>
+        </div>`;
+      return;
+    }
+    const s = this.currentScenario;
+    const cardClass = this.getCardClass();
+    const callback = this.findCallback(this.history);
+    const selected = this.selectedChoice;
+    const choice = selected !== null ? s.choices[selected] : null;
+    const modScores = selected !== null ? this.history[this.history.length - 1].scores : null;
+    let choicesHTML = '';
+    if (selected === null) {
+      choicesHTML = `<div class="choices">
+        ${s.choices.map((c, i) => `
+          <button class="choice-btn" onclick="game.selectChoice(${i})">${c.text}</button>
+        `).join('')}
+      </div>`;
+    } else {
+      const dominant = Object.entries(modScores).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
+      const deltaVal = dominant[1];
+      const deltaClass = deltaVal > 0 ? 'pos' : deltaVal < 0 ? 'neg' : 'zero';
+      const deltaSign = deltaVal > 0 ? '+' : '';
+      const statLabels = { influence: 'Influence', execution: 'Execution', alignment: 'Alignment' };
+      choicesHTML = `
+        <div class="choices">
+          ${s.choices.map((c, i) => `
+            <button class="choice-btn${i === selected ? ' selected' : ''}" disabled>${c.text}</button>
+          `).join('')}
+        </div>
+        <div class="result">
+          <div class="result-score">
+            <div class="delta ${deltaClass}">${deltaSign}${deltaVal}</div>
+            <div class="stat-name">${statLabels[dominant[0]]}</div>
+          </div>
+          <div class="result-text">${choice.feedback}</div>
+          <button class="next-btn" onclick="game.nextRound()">${this.round >= this.totalRounds ? 'See Results' : 'Next Scenario'}</button>
+        </div>`;
+    }
+    app.innerHTML = `
+      <div class="header"><h1>Decision Deck</h1></div>
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${(this.round / this.totalRounds) * 100}%"></div>
+        </div>
+        <div class="progress-label">${this.round}/${this.totalRounds}</div>
+      </div>
+      <div class="score-bar">
+        <div class="score-item"><div class="label">Influence</div><div class="value influence">${this.scores.influence}</div></div>
+        <div class="score-item"><div class="label">Execution</div><div class="value execution">${this.scores.execution}</div></div>
+        <div class="score-item"><div class="label">Alignment</div><div class="value alignment">${this.scores.alignment}</div></div>
+      </div>
+      <div class="card-container">
+        <div class="card ${cardClass}" key="${s.id}-${selected}">
+          <div class="card-category">${s.category}</div>
+          <div class="card-context">${s.context}</div>
+          ${callback && selected === null ? `<div class="card-ref"><span class="reflection-tag">Callback</span><br>${callback.text}</div>` : ''}
+          <div class="card-question">${s.question}</div>
+          ${choicesHTML}
+        </div>
+      </div>`;
+  }
+}
+const game = new DecisionDeck();
+</script>
+</body>
+</html>
