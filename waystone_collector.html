@@ -115,7 +115,31 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;color:#e8e4d
 @keyframes pulse-glow{0%,100%{opacity:.5;}50%{opacity:1;}}
 @keyframes fade-in-out{0%,100%{opacity:.15;}50%{opacity:.85;}}
 @keyframes orbit{from{transform:rotate(0deg) translateX(28px) rotate(0deg);}to{transform:rotate(360deg) translateX(28px) rotate(-360deg);}}
+
+.sil-wrap{position:relative;animation:sil-pulse 3s ease-in-out infinite;}
+.sil-wrap::after{content:'';position:absolute;inset:-4px;border-radius:50%;
+  background:radial-gradient(circle,rgba(100,120,180,.18) 0%,transparent 70%);
+  animation:sil-pulse 3s ease-in-out infinite;}
+@keyframes sil-pulse{0%,100%{opacity:.35;filter:blur(0px);}50%{opacity:.55;filter:blur(0.5px);}}
+@keyframes wave1{0%,100%{transform:translateX(0);}50%{transform:translateX(12px);}}
+@keyframes wave2{0%,100%{transform:translateX(0);}50%{transform:translateX(-15px);}}
 @keyframes spark{0%{transform:scale(0);opacity:1;}100%{transform:scale(1.5);opacity:0;}}
+
+/* Discovery ceremony */
+#s-discovery{align-items:center;justify-content:center;overflow:hidden;}
+.disc-overlay{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;z-index:20;pointer-events:none;}
+.disc-silhouette{width:220px;height:220px;position:relative;}
+.disc-silhouette svg{width:100%;height:100%;}
+.disc-burst{position:absolute;inset:-40px;z-index:0;pointer-events:none;}
+.disc-burst circle{transform-origin:center;}
+@keyframes burst-out{0%{transform:scale(0) rotate(0deg);opacity:1;}100%{transform:scale(2.5) rotate(180deg);opacity:0;}}
+@keyframes reveal-creature{0%{opacity:0;transform:scale(0.4);}60%{opacity:1;transform:scale(1.08);}100%{transform:scale(1);}}
+@keyframes name-fadein{0%{opacity:0;transform:translateY(12px);}100%{opacity:1;transform:translateY(0);}}
+@keyframes flash-white{0%,100%{opacity:0;}50%{opacity:1;}}
+.ceremony-flash{position:fixed;inset:0;background:white;z-index:100;
+  pointer-events:none;animation:flash-white .25s ease-out forwards;}
+.disc-wrap{position:relative;z-index:2;}
 </style>
 </head>
 <body>
@@ -1062,72 +1086,253 @@ const CREATURES = [
 const LOCATIONS = {
   beach: {
     label:`The Beach`,
-    bg:'linear-gradient(180deg,#0a1a30 0%,#0d2a4a 40%,#1a3a20 80%)',
+    bg:`#0a1a2e`,
     art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="120" cy="200" rx="100" ry="20" fill="#1a3010" opacity=".8"/>
-      <path d="M20 180 Q60 160 120 168 Q180 160 220 180 L220 220 L20 220 Z" fill="#c8a850"/>
-      <path d="M20 185 Q60 170 120 175 Q180 170 220 185 L220 200 L20 200 Z" fill="#d8b860"/>
-      <path d="M0 190 Q40 182 80 188 Q120 194 160 188 Q200 182 240 190 L240 210 L0 210 Z" fill="#0d3a6a" opacity=".9"/>
-      <circle cx="170" cy="60" r="30" fill="#f0a820" opacity=".7"/>
-      <path d="M30 120 Q45 100 55 80 Q50 110 60 120" fill="#2a5a18" opacity=".8"/>
-      <circle cx="40" cy="175" r="4" fill="rgba(255,255,255,.5)" style="animation:flicker 2s ease-in-out infinite;"/>
+      <!-- Sky gradient -->
+      <defs>
+        <linearGradient id="sky-b" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#060e1a"/>
+          <stop offset="100%" stop-color="#0d2a4a"/>
+        </linearGradient>
+        <linearGradient id="sea-b" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0d3a6a"/>
+          <stop offset="100%" stop-color="#061828"/>
+        </linearGradient>
+      </defs>
+      <rect width="240" height="240" fill="url(#sky-b)"/>
+      <!-- Moon -->
+      <circle cx="185" cy="45" r="18" fill="#f8f0d0" opacity=".7"/>
+      <circle cx="192" cy="40" r="15" fill="#0a1828"/>
+      <!-- Stars -->
+      <circle cx="40" cy="30" r="1.5" fill="white" opacity=".8" style="animation:flicker 2s ease-in-out infinite;"/>
+      <circle cx="80" cy="18" r="1" fill="white" opacity=".6" style="animation:flicker 3s ease-in-out infinite .5s;"/>
+      <circle cx="130" cy="25" r="1.5" fill="white" opacity=".7" style="animation:flicker 2.5s ease-in-out infinite 1s;"/>
+      <circle cx="60" cy="55" r="1" fill="white" opacity=".5" style="animation:flicker 3.5s ease-in-out infinite .3s;"/>
+      <!-- Horizon sea -->
+      <rect x="0" y="140" width="240" height="100" fill="url(#sea-b)"/>
+      <!-- Slow wave layers -->
+      <g style="animation:wave1 6s ease-in-out infinite;">
+        <path d="M-20 155 Q20 148 60 155 Q100 162 140 155 Q180 148 220 155 Q260 162 280 155" stroke="#1a5a8a" stroke-width="3" fill="none" opacity=".5"/>
+      </g>
+      <g style="animation:wave2 8s ease-in-out infinite;">
+        <path d="M-20 165 Q30 158 70 165 Q110 172 150 165 Q190 158 230 165 Q270 172 280 165" stroke="#1a6a9a" stroke-width="2.5" fill="none" opacity=".4"/>
+      </g>
+      <g style="animation:wave1 10s ease-in-out infinite 2s;">
+        <path d="M-20 175 Q25 168 65 175 Q105 182 145 175 Q185 168 225 175 Q265 182 280 175" stroke="#1a7aaa" stroke-width="2" fill="none" opacity=".3"/>
+      </g>
+      <!-- Sand -->
+      <path d="M0 190 Q60 182 120 186 Q180 190 240 184 L240 240 L0 240 Z" fill="#2a1e0a" opacity=".9"/>
+      <path d="M0 196 Q60 188 120 192 Q180 196 240 190 L240 210 L0 210 Z" fill="#c8a850" opacity=".7"/>
+      <!-- Lighthouse silhouette far -->
+      <rect x="110" y="100" width="12" height="45" fill="#0a1020" opacity=".6"/>
+      <circle cx="116" cy="99" r="4" fill="#f0c040" opacity=".5" style="animation:flicker 1.5s ease-in-out infinite;"/>
+      <!-- Palm silhouette -->
+      <rect x="28" y="160" width="5" height="35" fill="#1a0a00" opacity=".7"/>
+      <ellipse cx="30" cy="158" rx="18" ry="12" fill="#1a2a08" opacity=".6" transform="rotate(-15,30,158)"/>
+      <!-- Water sparkles -->
+      <circle cx="55" cy="168" r="2" fill="white" opacity=".3" style="animation:flicker 2s ease-in-out infinite;"/>
+      <circle cx="140" cy="162" r="1.5" fill="white" opacity=".25" style="animation:flicker 3s ease-in-out infinite .8s;"/>
+      <circle cx="200" cy="170" r="1.5" fill="white" opacity=".2" style="animation:flicker 2.5s ease-in-out infinite 1.5s;"/>
     </svg>`
   },
   forest: {
     label:`The Forest`,
-    bg:'linear-gradient(180deg,#051008 0%,#0a2010 50%,#142a14 100%)',
+    bg:`#020c04`,
     art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-      <rect x="108" y="140" width="24" height="80" fill="#2a1a08"/>
-      <ellipse cx="120" cy="100" rx="55" ry="65" fill="#1a4a10"/>
-      <ellipse cx="120" cy="90" rx="48" ry="55" fill="#255a18"/>
-      <ellipse cx="120" cy="80" rx="40" ry="44" fill="#306828"/>
-      <rect x="38" y="165" width="14" height="55" fill="#2a1a08"/>
-      <ellipse cx="45" cy="130" rx="30" ry="38" fill="#1a4010"/>
-      <ellipse cx="45" cy="120" rx="25" ry="30" fill="#255018"/>
-      <circle cx="75" cy="165" r="3" fill="#a0e060" opacity=".5" style="animation:flicker 2.5s ease-in-out infinite;"/>
+      <defs>
+        <linearGradient id="for-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#020804"/>
+          <stop offset="100%" stop-color="#071408"/>
+        </linearGradient>
+      </defs>
+      <rect width="240" height="240" fill="url(#for-sky)"/>
+      <!-- Distant canopy layers -->
+      <ellipse cx="120" cy="80" rx="110" ry="70" fill="#0a1e0a" opacity=".8"/>
+      <ellipse cx="120" cy="70" rx="100" ry="60" fill="#0e2810" opacity=".9"/>
+      <!-- Mid trees -->
+      <rect x="55" y="140" width="16" height="100" fill="#0a0800"/>
+      <ellipse cx="63" cy="128" rx="32" ry="40" fill="#102808"/>
+      <ellipse cx="63" cy="112" rx="26" ry="32" fill="#153410"/>
+      <ellipse cx="63" cy="100" rx="20" ry="24" fill="#1a3e14"/>
+      <rect x="158" y="148" width="16" height="92" fill="#0a0800"/>
+      <ellipse cx="166" cy="136" rx="30" ry="36" fill="#102808"/>
+      <ellipse cx="166" cy="122" rx="24" ry="28" fill="#153410"/>
+      <ellipse cx="166" cy="112" rx="18" ry="20" fill="#1a3e14"/>
+      <!-- Center tall tree -->
+      <rect x="108" y="120" width="18" height="120" fill="#080600"/>
+      <ellipse cx="117" cy="108" rx="36" ry="46" fill="#0c2208"/>
+      <ellipse cx="117" cy="92" rx="28" ry="36" fill="#112c0c"/>
+      <ellipse cx="117" cy="78" rx="22" ry="28" fill="#163812"/>
+      <!-- Forest floor glow - bioluminescent -->
+      <ellipse cx="120" cy="220" rx="100" ry="20" fill="#1a4a10" opacity=".3"/>
+      <!-- Firefly dots -->
+      <circle cx="45" cy="175" r="2.5" fill="#a0e060" opacity=".6" style="animation:flicker 2s ease-in-out infinite;"/>
+      <circle cx="85" cy="188" r="2" fill="#80d040" opacity=".5" style="animation:flicker 3s ease-in-out infinite .7s;"/>
+      <circle cx="155" cy="178" r="2.5" fill="#a0e060" opacity=".6" style="animation:flicker 2.5s ease-in-out infinite 1.4s;"/>
+      <circle cx="195" cy="190" r="2" fill="#60c030" opacity=".4" style="animation:flicker 3.5s ease-in-out infinite .3s;"/>
+      <circle cx="120" cy="200" r="2" fill="#80d040" opacity=".5" style="animation:flicker 2.2s ease-in-out infinite 2s;"/>
+      <!-- Fog wisps low to ground -->
+      <g style="animation:wave1 12s ease-in-out infinite;">
+        <ellipse cx="60" cy="210" rx="50" ry="8" fill="white" opacity=".04"/>
+        <ellipse cx="180" cy="215" rx="45" ry="7" fill="white" opacity=".03"/>
+      </g>
+      <!-- Moon peek through canopy -->
+      <circle cx="120" cy="50" r="12" fill="#e8e0c0" opacity=".2"/>
+      <circle cx="120" cy="50" r="10" fill="#e8e0c0" opacity=".15"/>
     </svg>`
   },
   market: {
     label:`The Market`,
-    bg:'linear-gradient(180deg,#1a0a2a 0%,#2a1040 50%,#1a1228 100%)',
+    bg:`#0e0818`,
     art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-      <rect x="20" y="130" width="90" height="80" fill="#2a1a38" rx="4"/>
-      <rect x="130" y="140" width="90" height="70" fill="#2a1838" rx="4"/>
-      <path d="M15 135 L65 100 L115 135 Z" fill="#8a3040"/>
-      <path d="M125 145 L175 108 L225 145 Z" fill="#3a5080"/>
-      <circle cx="42" cy="158" r="3" fill="#f0c040" style="animation:flicker 1.8s ease-in-out infinite;"/>
-      <circle cx="152" cy="165" r="3" fill="#40c0f0" style="animation:flicker 2.8s ease-in-out infinite .8s;"/>
+      <defs>
+        <linearGradient id="mkt-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0a0414"/>
+          <stop offset="100%" stop-color="#180828"/>
+        </linearGradient>
+      </defs>
+      <rect width="240" height="240" fill="url(#mkt-sky)"/>
+      <!-- Market stalls silhouette -->
+      <rect x="10" y="130" width="90" height="110" fill="#18101e" rx="3"/>
+      <rect x="120" y="140" width="110" height="100" fill="#18101e" rx="3"/>
+      <!-- Awning triangles -->
+      <path d="M5 136 L55 96 L105 136 Z" fill="#6a2040" opacity=".8"/>
+      <path d="M115 146 L170 104 L225 146 Z" fill="#2a3a6a" opacity=".8"/>
+      <!-- Bunting lights string -->
+      <line x1="5" y1="96" x2="235" y2="104" stroke="#5a4a30" stroke-width="1" opacity=".6"/>
+      <!-- Lantern lights hanging -->
+      <circle cx="35" cy="102" r="5" fill="#f0c040" opacity=".8" style="animation:flicker 1.8s ease-in-out infinite;"/>
+      <circle cx="35" cy="102" r="10" fill="#f0c040" opacity=".15" style="animation:flicker 1.8s ease-in-out infinite;"/>
+      <circle cx="85" cy="106" r="5" fill="#f08040" opacity=".8" style="animation:flicker 2.3s ease-in-out infinite .4s;"/>
+      <circle cx="85" cy="106" r="10" fill="#f08040" opacity=".15" style="animation:flicker 2.3s ease-in-out infinite .4s;"/>
+      <circle cx="140" cy="109" r="5" fill="#40b0f0" opacity=".8" style="animation:flicker 2.8s ease-in-out infinite .8s;"/>
+      <circle cx="140" cy="109" r="10" fill="#40b0f0" opacity=".15" style="animation:flicker 2.8s ease-in-out infinite .8s;"/>
+      <circle cx="195" cy="106" r="5" fill="#c040f0" opacity=".8" style="animation:flicker 2s ease-in-out infinite 1.2s;"/>
+      <circle cx="195" cy="106" r="10" fill="#c040f0" opacity=".15" style="animation:flicker 2s ease-in-out infinite 1.2s;"/>
+      <!-- Window glow -->
+      <rect x="25" y="148" width="28" height="22" rx="2" fill="#f0c040" opacity=".15"/>
+      <rect x="62" y="152" width="28" height="18" rx="2" fill="#f0a040" opacity=".12"/>
+      <rect x="130" y="158" width="28" height="20" rx="2" fill="#40b0f0" opacity=".12"/>
+      <rect x="172" y="152" width="28" height="22" rx="2" fill="#c040f0" opacity=".10"/>
+      <!-- Ground cobbles suggested -->
+      <rect x="0" y="210" width="240" height="30" fill="#100a18" opacity=".8"/>
+      <path d="M0 212 Q40 208 80 212 Q120 216 160 212 Q200 208 240 212" stroke="#1e1428" stroke-width="1.5" fill="none" opacity=".6"/>
+      <!-- Stars -->
+      <circle cx="160" cy="30" r="1.5" fill="white" opacity=".6" style="animation:flicker 3s ease-in-out infinite;"/>
+      <circle cx="50" cy="45" r="1" fill="white" opacity=".5" style="animation:flicker 2.5s ease-in-out infinite .6s;"/>
+      <circle cx="210" cy="55" r="1.5" fill="white" opacity=".4" style="animation:flicker 4s ease-in-out infinite 1s;"/>
     </svg>`
   },
   lighthouse: {
     label:`The Lighthouse`,
-    bg:'linear-gradient(180deg,#060810 0%,#0a1020 50%,#101828 100%)',
+    bg:`#060a14`,
     art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-      <rect x="100" y="100" width="40" height="120" fill="#1a2840" rx="3"/>
-      <rect x="104" y="40" width="32" height="68" fill="#243450" rx="2"/>
-      <rect x="96" y="30" width="48" height="14" fill="#304060" rx="2"/>
-      <g style="animation:spin-slow 4s linear infinite;transform-origin:120px 32px;">
-        <path d="M120 32 L180 0 L165 25 Z" fill="rgba(240,192,64,.2)"/>
+      <defs>
+        <linearGradient id="lh-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#040810"/>
+          <stop offset="100%" stop-color="#0a1628"/>
+        </linearGradient>
+        <radialGradient id="beam-glow" cx="50%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#f0c040" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#f0c040" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="240" height="240" fill="url(#lh-sky)"/>
+      <!-- Rotating beam -->
+      <g style="animation:spin-slow 5s linear infinite;transform-origin:120px 62px;">
+        <path d="M120 62 L220 0 L200 30 Z" fill="rgba(240,192,64,.18)"/>
+        <path d="M120 62 L180 0 L165 35 Z" fill="rgba(240,192,64,.12)"/>
       </g>
-      <circle cx="120" cy="30" r="8" fill="#f0c040" opacity=".9" style="animation:flicker 1.2s ease-in-out infinite;"/>
+      <!-- Beam glow on environment -->
+      <ellipse cx="120" cy="120" rx="90" ry="60" fill="url(#beam-glow)" style="animation:spin-slow 5s linear infinite;transform-origin:120px 62px;"/>
+      <!-- Lighthouse structure -->
+      <rect x="105" y="62" width="30" height="178" fill="#1a2840" rx="2"/>
+      <rect x="108" y="40" width="24" height="28" fill="#243450" rx="2"/>
+      <rect x="104" y="33" width="32" height="10" fill="#2a3a5a" rx="2"/>
+      <rect x="100" y="27" width="40" height="9" fill="#364870" rx="2"/>
+      <!-- Light room -->
+      <circle cx="120" cy="30" r="10" fill="#f0c040" opacity=".9" style="animation:flicker 1s ease-in-out infinite;"/>
+      <circle cx="120" cy="30" r="16" fill="#f0c040" opacity=".2" style="animation:flicker 1s ease-in-out infinite;"/>
+      <circle cx="120" cy="30" r="22" fill="#f0c040" opacity=".08" style="animation:flicker 1s ease-in-out infinite;"/>
+      <!-- Windows -->
+      <rect x="113" y="90" width="14" height="20" rx="7" fill="#304060" opacity=".7"/>
+      <rect x="113" y="130" width="14" height="20" rx="7" fill="#304060" opacity=".7"/>
+      <rect x="113" y="170" width="14" height="20" rx="7" fill="#f0c040" opacity=".2" style="animation:flicker 3s ease-in-out infinite;"/>
+      <!-- Rocky base -->
+      <ellipse cx="120" cy="230" rx="80" ry="20" fill="#121e2a" opacity=".9"/>
+      <path d="M50 225 Q80 215 120 220 Q160 215 190 225 L195 240 L45 240 Z" fill="#0e1820"/>
+      <!-- Stars -->
+      <circle cx="30" cy="40" r="1.5" fill="white" opacity=".7" style="animation:flicker 2s ease-in-out infinite;"/>
+      <circle cx="65" cy="20" r="1" fill="white" opacity=".5" style="animation:flicker 3s ease-in-out infinite .5s;"/>
+      <circle cx="200" cy="35" r="1.5" fill="white" opacity=".6" style="animation:flicker 2.5s ease-in-out infinite 1s;"/>
+      <circle cx="168" cy="58" r="1" fill="white" opacity=".4" style="animation:flicker 3.5s ease-in-out infinite .8s;"/>
+      <!-- Mist at base -->
+      <g style="animation:wave1 14s ease-in-out infinite;">
+        <ellipse cx="120" cy="232" rx="90" ry="10" fill="white" opacity=".05"/>
+      </g>
     </svg>`
   },
   bridge: {
     label:`The Bridge`,
-    bg:'linear-gradient(180deg,#080c18 0%,#0c1828 50%,#101a2a 100%)',
+    bg:`#070a12`,
     art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 180 Q60 150 120 155 Q180 150 240 180" fill="#1a2838" stroke="#243448" stroke-width="2"/>
-      <path d="M0 190 Q60 160 120 165 Q180 160 240 190 L240 210 L0 210 Z" fill="#0d2a4a" opacity=".8"/>
-      <rect x="10" y="148" width="12" height="50" fill="#2a3848" rx="2"/>
-      <rect x="90" y="140" width="12" height="58" fill="#2a3848" rx="2"/>
-      <rect x="170" y="142" width="12" height="56" fill="#2a3848" rx="2"/>
-      <line x1="16" y1="150" x2="96" y2="143" stroke="#404e5e" stroke-width="1.5"/>
-      <line x1="96" y1="143" x2="176" y2="145" stroke="#404e5e" stroke-width="1.5"/>
-      <circle cx="80" cy="178" r="3" fill="rgba(180,220,255,.4)" style="animation:flicker 2s ease-in-out infinite;"/>
+      <defs>
+        <linearGradient id="br-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#050810"/>
+          <stop offset="100%" stop-color="#0c1428"/>
+        </linearGradient>
+        <linearGradient id="mist" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#a0b8d0" stop-opacity="0.08"/>
+          <stop offset="50%" stop-color="#a0b8d0" stop-opacity="0.14"/>
+          <stop offset="100%" stop-color="#a0b8d0" stop-opacity="0.08"/>
+        </linearGradient>
+      </defs>
+      <rect width="240" height="240" fill="url(#br-sky)"/>
+      <!-- Stars -->
+      <circle cx="25" cy="25" r="1.5" fill="white" opacity=".6" style="animation:flicker 2.5s ease-in-out infinite;"/>
+      <circle cx="80" cy="15" r="1" fill="white" opacity=".5" style="animation:flicker 3s ease-in-out infinite .4s;"/>
+      <circle cx="160" cy="22" r="1.5" fill="white" opacity=".6" style="animation:flicker 2s ease-in-out infinite .9s;"/>
+      <circle cx="210" cy="40" r="1" fill="white" opacity=".4" style="animation:flicker 3.5s ease-in-out infinite 1.3s;"/>
+      <!-- Moon reflection in water -->
+      <circle cx="120" cy="38" r="12" fill="#d8d0b0" opacity=".4"/>
+      <ellipse cx="120" cy="195" rx="8" ry="4" fill="#d8d0b0" opacity=".15" style="animation:breathe 4s ease-in-out infinite;"/>
+      <!-- Mist layers drifting -->
+      <g style="animation:wave1 18s ease-in-out infinite;">
+        <rect x="-40" y="140" width="320" height="30" fill="url(#mist)" rx="15"/>
+      </g>
+      <g style="animation:wave2 22s ease-in-out infinite 3s;">
+        <rect x="-40" y="155" width="320" height="25" fill="url(#mist)" rx="12"/>
+      </g>
+      <g style="animation:wave1 16s ease-in-out infinite 6s;">
+        <rect x="-40" y="168" width="320" height="20" fill="url(#mist)" rx="10"/>
+      </g>
+      <!-- Water -->
+      <rect x="0" y="175" width="240" height="65" fill="#080e1a" opacity=".9"/>
+      <path d="M0 178 Q30 174 60 178 Q90 182 120 178 Q150 174 180 178 Q210 182 240 178" stroke="#1a3050" stroke-width="2" fill="none" opacity=".5"/>
+      <path d="M0 188 Q40 184 80 188 Q120 192 160 188 Q200 184 240 188" stroke="#1a3558" stroke-width="1.5" fill="none" opacity=".3"/>
+      <!-- Bridge arch -->
+      <path d="M0 160 Q60 130 120 125 Q180 130 240 160" stroke="#2a3848" stroke-width="4" fill="none"/>
+      <path d="M0 164 Q60 134 120 129 Q180 134 240 164" stroke="#343e50" stroke-width="3" fill="#181e2a"/>
+      <!-- Bridge deck -->
+      <rect x="0" y="158" width="240" height="18" fill="#1e2838" rx="2"/>
+      <rect x="0" y="160" width="240" height="3" fill="#2a3848"/>
+      <!-- Bridge pillars -->
+      <rect x="6" y="148" width="14" height="92" fill="#1a2232" rx="2"/>
+      <rect x="82" y="130" width="14" height="110" fill="#1a2232" rx="2"/>
+      <rect x="144" y="130" width="14" height="110" fill="#1a2232" rx="2"/>
+      <rect x="220" y="148" width="14" height="92" fill="#1a2232" rx="2"/>
+      <!-- Cable lines -->
+      <line x1="13" y1="150" x2="89" y2="133" stroke="#2e3a4e" stroke-width="1.5"/>
+      <line x1="89" y1="133" x2="151" y2="133" stroke="#2e3a4e" stroke-width="1.5"/>
+      <line x1="151" y1="133" x2="227" y2="150" stroke="#2e3a4e" stroke-width="1.5"/>
+      <!-- Bridge lanterns -->
+      <circle cx="89" cy="126" r="4" fill="#f0d080" opacity=".7" style="animation:flicker 2s ease-in-out infinite;"/>
+      <circle cx="89" cy="126" r="8" fill="#f0d080" opacity=".1" style="animation:flicker 2s ease-in-out infinite;"/>
+      <circle cx="151" cy="126" r="4" fill="#f0d080" opacity=".7" style="animation:flicker 2.8s ease-in-out infinite .6s;"/>
+      <circle cx="151" cy="126" r="8" fill="#f0d080" opacity=".1" style="animation:flicker 2.8s ease-in-out infinite .6s;"/>
     </svg>`
   }
 };
-
 
 const ENCOUNTERS = [
   // FREEZE
@@ -1450,15 +1655,96 @@ function endRun(){
 }
 
 function showDiscovery(creature){
+  var typeColors={flame:'#ff6b35',thread:'#5ec4b0',stone:'#8ba7c0',rare:'#d4a0ff'};
+  var col=typeColors[creature.type]||'#f0c040';
+
+  // Build silhouette SVG
+  var silSvg=creature.svg
+    .replace(/fill="[^"]*"/g,'fill="'+col+'"')
+    .replace(/stroke="[^"]*"/g,'stroke="'+col+'"')
+    .replace(/style="[^"]*"/g,'');
+
+  // Set discovery screen content but hide creature + info initially
+  document.getElementById('disc-art').style.cssText='opacity:0;transform:scale(0.4);transition:none;';
   document.getElementById('disc-art').innerHTML=creature.svg;
+  document.getElementById('disc-name').style.cssText='opacity:0;transform:translateY(12px);transition:none;';
   document.getElementById('disc-name').textContent=creature.name;
-  var tl={flame:'&#x1F525; Flame Type',thread:'&#x1F9F5; Thread Type',stone:'&#x1FAA8; Stone Type',rare:'&#x2728; Rare Creature'};
-  document.getElementById('disc-type').innerHTML=tl[creature.type]||creature.type;
-  document.getElementById('disc-type').className='disc-type '+creature.type;
+  document.getElementById('disc-type').innerHTML='';
+  document.getElementById('disc-personality').style.cssText='opacity:0;transition:none;';
   document.getElementById('disc-personality').textContent=creature.personality;
   document.getElementById('disc-input').value='';
   document.getElementById('disc-input').dataset.id=creature.id;
+
   show('s-discovery');
+
+  // Phase 1 (0ms): Show silhouette breathing on screen
+  var sil=document.createElement('div');
+  sil.id='disc-sil-overlay';
+  sil.style.cssText='position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(8,12,22,0.92);';
+  sil.innerHTML='<div style="width:220px;height:220px;animation:sil-pulse 1.2s ease-in-out infinite;">'+silSvg+'</div>';
+  document.body.appendChild(sil);
+
+  // Phase 2 (800ms): Flash white + remove silhouette + reveal creature
+  setTimeout(function(){
+    var flash=document.createElement('div');
+    flash.className='ceremony-flash';
+    document.body.appendChild(flash);
+    setTimeout(function(){
+      if(flash.parentNode) flash.parentNode.removeChild(flash);
+    },300);
+
+    if(sil.parentNode) sil.parentNode.removeChild(sil);
+
+    // Animate creature in
+    document.getElementById('disc-art').style.cssText=
+      'opacity:1;transform:scale(1);transition:opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);';
+
+    // Burst particles
+    spawnBurst(col);
+
+    // Phase 3 (1200ms): Animate name + type
+    setTimeout(function(){
+      var tl={flame:'&#x1F525; Flame Type',thread:'&#x1F9F5; Thread Type',stone:'&#x1FAA8; Stone Type',rare:'&#x2728; Rare Creature'};
+      document.getElementById('disc-type').innerHTML=tl[creature.type]||creature.type;
+      document.getElementById('disc-type').className='disc-type '+creature.type;
+      document.getElementById('disc-name').style.cssText=
+        'opacity:1;transform:translateY(0);transition:opacity 0.4s ease, transform 0.4s ease;';
+
+      // Phase 4 (1600ms): personality + input appear
+      setTimeout(function(){
+        document.getElementById('disc-personality').style.cssText=
+          'opacity:1;transition:opacity 0.5s ease;';
+      },400);
+    },400);
+  },900);
+}
+
+function spawnBurst(color){
+  var disc=document.getElementById('disc-art');
+  if(!disc) return;
+  var rect=disc.getBoundingClientRect();
+  var cx=rect.left+rect.width/2;
+  var cy=rect.top+rect.height/2;
+  for(var i=0;i<16;i++){
+    var dot=document.createElement('div');
+    var angle=(i/16)*360;
+    var dist=60+Math.random()*60;
+    var size=4+Math.random()*6;
+    var dx=Math.cos(angle*Math.PI/180)*dist;
+    var dy=Math.sin(angle*Math.PI/180)*dist;
+    dot.style.cssText='position:fixed;width:'+size+'px;height:'+size+'px;'+
+      'border-radius:50%;background:'+color+';z-index:200;pointer-events:none;'+
+      'left:'+(cx-size/2)+'px;top:'+(cy-size/2)+'px;'+
+      'transition:transform 0.6s ease-out, opacity 0.6s ease-out;';
+    document.body.appendChild(dot);
+    (function(el,ddx,ddy){
+      setTimeout(function(){
+        el.style.transform='translate('+ddx+'px,'+ddy+'px) scale(0)';
+        el.style.opacity='0';
+        setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},700);
+      },20);
+    })(dot,dx,dy);
+  }
 }
 
 function saveDiscovery(){
@@ -1501,8 +1787,8 @@ function showCompendium(){
         (nick?'<div class="comp-nick">"'+nick+'"</div>':'');
       (function(id){card.onclick=function(){showDetail(id);};})(c.id);
     } else {
-      var sil=c.svg.replace(/fill="[^"]*"/g,'fill="#1a1e28"').replace(/stroke="[^"]*"/g,'stroke="#1a1e28"').replace(/style="[^"]*"/g,'');
-      card.innerHTML='<div class="comp-creature" style="opacity:.35;">'+sil+'</div>'+
+      var sil=c.svg.replace(/fill="[^"]*"/g,'fill="#1e2230"').replace(/stroke="[^"]*"/g,'stroke="#1e2230"').replace(/style="[^"]*"/g,'style="animation:breathe 3s ease-in-out infinite;"');
+      card.innerHTML='<div class="comp-creature sil-wrap">'+sil+'</div>'+
         '<div class="comp-cname unk">???</div>'+
         '<div class="type-dot unk"></div>';
     }
