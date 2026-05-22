@@ -3,1572 +3,937 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Decision Deck v2</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<title>Lab & Fabrication — Yanke Bionics</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #080c14;
-    --bg2: #0d1420;
-    --card-bg: #111827;
-    --card-bg2: #162035;
-    --card-border: #1e2d45;
-    --card-border-bright: #2a4060;
-    --accent: #38bdf8;
-    --accent-dim: #0e6a9e;
-    --accent-glow: rgba(56, 189, 248, 0.15);
-    --trust: #38bdf8;
-    --momentum: #fb923c;
-    --clarity: #a78bfa;
-    --trust-glow: rgba(56, 189, 248, 0.2);
-    --momentum-glow: rgba(251, 146, 60, 0.2);
-    --clarity-glow: rgba(167, 139, 250, 0.2);
-    --positive: #34d399;
-    --negative: #f87171;
-    --neutral: #fb923c;
-    --text: #e2e8f0;
-    --text-dim: #64748b;
-    --text-mid: #94a3b8;
-    --radius: 14px;
-    --radius-sm: 8px;
-  }
+:root {
+  --black:  #231f20;
+  --dark:   #141112;
+  --dark2:  #1a1718;
+  --mid:    #252122;
+  --mid2:   #2e2a2b;
+  --muted:  #7a7475;
+  --muted2: #9e9a9b;
+  --green:  #b0d235;
+  --green2: #c8e84e;
+  --gd:     rgba(176,210,53,0.12);
+  --gg:     rgba(176,210,53,0.3);
+  --white:  #ffffff;
+  --neg:    #e05a4e;
+  --neu:    #e8a838;
+  --cascade-color: #f0a030;
+  --cascade-glow:  rgba(240,160,48,0.25);
+  --constrained-color: #e05a4e;
+  --constrained-glow:  rgba(224,90,78,0.22);
+  --rad:  8px;
+  --rad2: 12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:'Barlow',sans-serif;
+  background:var(--dark);color:var(--white);
+  min-height:100dvh;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -5%,rgba(176,210,53,0.04) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 90% 100%,rgba(176,210,53,0.025) 0%,transparent 50%);
+  pointer-events:none;z-index:0;
+}
+.screen{display:none;min-height:100dvh;flex-direction:column;position:relative;z-index:1;}
+.screen.active{display:flex;}
+.app{max-width:440px;margin:0 auto;padding:18px 16px 36px;min-height:100dvh;display:flex;flex-direction:column;width:100%;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* HEADER */
+.deck-header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 16px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:18px;}
+.brand{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:800;letter-spacing:3.5px;text-transform:uppercase;color:var(--muted);}
+.brand span{color:var(--green);}
+.v3-pill{display:inline-block;font-size:0.52rem;font-weight:900;letter-spacing:1.5px;padding:2px 6px;border-radius:3px;background:linear-gradient(135deg,var(--green),#8ab818);color:var(--black);margin-left:6px;vertical-align:middle;box-shadow:0 0 10px var(--gg);}
+.header-right{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:1px;color:var(--muted);}
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    background-image:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(56,189,248,0.07) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(167,139,250,0.05) 0%, transparent 50%);
-    color: var(--text);
-    min-height: 100dvh;
-    overflow-x: hidden;
-  }
+/* START SCREEN */
+#screen-start .app{justify-content:flex-start;}
+.start-icon{font-size:2rem;margin-bottom:14px;width:58px;height:58px;background:rgba(255,255,255,0.03);border:1px solid rgba(176,210,53,0.18);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(176,210,53,0.06);}
+.start-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.start-title{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;line-height:1.1;color:var(--white);margin-bottom:8px;}
+.start-desc{font-size:0.83rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:18px;}
+.start-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.meta-tag{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 9px;border-radius:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:var(--muted);}
+.meta-cascade{background:rgba(240,160,48,0.1);border-color:rgba(240,160,48,0.22);color:var(--cascade-color);}
+.meta-constrained{background:rgba(224,90,78,0.1);border-color:rgba(224,90,78,0.2);color:var(--constrained-color);}
+.meta-highlight{background:var(--gd);border-color:rgba(176,210,53,0.2);color:var(--green);}
+.axes-row{display:flex;gap:7px;margin-bottom:18px;}
+.axis-pill{flex:1;text-align:center;background:var(--mid);border:1px solid rgba(255,255,255,0.06);border-radius:var(--rad);padding:9px 5px;}
+.ap-name{font-family:'Barlow Condensed',sans-serif;font-size:0.76rem;font-weight:700;margin-bottom:2px;}
+.ap-desc{font-size:0.6rem;color:var(--muted);line-height:1.4;}
 
-  .app {
-    max-width: 420px;
-    margin: 0 auto;
-    padding: 18px 16px 28px;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-  }
+.privacy-block{background:rgba(176,210,53,0.05);border:1px solid rgba(176,210,53,0.14);border-radius:var(--rad);padding:11px 13px;margin-bottom:18px;display:flex;gap:9px;align-items:flex-start;}
+.privacy-icon{font-size:0.9rem;flex-shrink:0;margin-top:1px;}
+.privacy-text{font-size:0.72rem;color:rgba(255,255,255,0.42);line-height:1.55;}
+.privacy-text strong{color:rgba(255,255,255,0.7);font-weight:600;}
 
-  /* ── HEADER ── */
-  .header {
-    text-align: center;
-    padding: 14px 0 8px;
-    position: relative;
-  }
-  .header-lockup {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-  .header h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--text);
-  }
-  .v2-badge {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    padding: 3px 7px;
-    border-radius: 4px;
-    background: linear-gradient(135deg, var(--accent), #818cf8);
-    color: #fff;
-    text-transform: uppercase;
-    box-shadow: 0 0 12px rgba(56,189,248,0.3);
-  }
-  .header .subtitle {
-    font-size: 0.72rem;
-    color: var(--text-dim);
-    margin-top: 5px;
-    letter-spacing: 0.5px;
-  }
+.start-btn{width:100%;padding:13px;background:var(--green);color:var(--black);border:none;border-radius:var(--rad);font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px rgba(176,210,53,0.2);}
+.start-btn:hover{background:var(--green2);box-shadow:0 0 30px rgba(176,210,53,0.32);}
 
-  /* ── PROGRESS ── */
-  .progress-wrap {
-    margin: 12px 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .progress-track {
-    flex: 1;
-    height: 3px;
-    background: var(--card-border);
-    border-radius: 2px;
-    overflow: hidden;
-    position: relative;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), #818cf8);
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 2px;
-    box-shadow: 0 0 8px var(--accent-glow);
-  }
-  .progress-label {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: var(--text-dim);
-    min-width: 40px;
-    text-align: right;
-    letter-spacing: 0.5px;
-  }
+/* PROGRESS */
+.progress-wrap{margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.progress-track{flex:1;height:2px;background:rgba(255,255,255,0.07);border-radius:1px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#8ab818,var(--green));border-radius:1px;transition:width 0.5s ease;box-shadow:0 0 8px var(--gg);}
+.progress-label{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1px;color:var(--muted);min-width:36px;text-align:right;}
 
-  /* ── SCORE BAR ── */
-  .score-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    margin-bottom: 14px;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .score-item {
-    flex: 1;
-    text-align: center;
-    padding: 10px 8px;
-    position: relative;
-    transition: background 0.3s ease;
-  }
-  .score-item + .score-item {
-    border-left: 1px solid var(--card-border);
-  }
-  .score-item.trust-item { background: linear-gradient(180deg, rgba(56,189,248,0.06) 0%, transparent 100%); }
-  .score-item.momentum-item { background: linear-gradient(180deg, rgba(251,146,60,0.06) 0%, transparent 100%); }
-  .score-item.clarity-item { background: linear-gradient(180deg, rgba(167,139,250,0.06) 0%, transparent 100%); }
-  .score-item .label {
-    font-size: 0.58rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-dim);
-    margin-bottom: 3px;
-  }
-  .score-item .value {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    line-height: 1;
-  }
-  .score-item .value.trust { color: var(--trust); text-shadow: 0 0 12px var(--trust-glow); }
-  .score-item .value.momentum { color: var(--momentum); text-shadow: 0 0 12px var(--momentum-glow); }
-  .score-item .value.clarity { color: var(--clarity); text-shadow: 0 0 12px var(--clarity-glow); }
+/* AXIS BAR */
+.axis-bar{display:flex;background:var(--mid);border:1px solid rgba(255,255,255,0.06);border-radius:var(--rad);overflow:hidden;margin-bottom:14px;}
+.axis-item{flex:1;text-align:center;padding:9px 5px;}
+.axis-item+.axis-item{border-left:1px solid rgba(255,255,255,0.06);}
+.ax-label{font-family:'Barlow Condensed',sans-serif;font-size:0.55rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.ax-val{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:900;line-height:1;}
 
-  /* Score change flash animation */
-  @keyframes scoreUp {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.25); }
-    100% { transform: scale(1); }
-  }
-  @keyframes scoreDown {
-    0% { transform: scale(1); }
-    40% { transform: scale(0.85); }
-    100% { transform: scale(1); }
-  }
-  .score-flash-up { animation: scoreUp 0.4s ease; }
-  .score-flash-down { animation: scoreDown 0.4s ease; }
+/* CARDS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes cardFlash{0%{box-shadow:0 0 0 0 rgba(176,210,53,0);}40%{box-shadow:0 0 0 3px rgba(176,210,53,0.3),0 0 40px rgba(176,210,53,0.1);}100%{box-shadow:0 0 0 0 rgba(176,210,53,0);}}
+@keyframes cascadeFlash{0%{box-shadow:0 0 0 0 rgba(240,160,48,0);}40%{box-shadow:0 0 0 3px rgba(240,160,48,0.5),0 0 50px rgba(240,160,48,0.14);}100%{box-shadow:0 0 0 1px rgba(240,160,48,0.18);}}
+@keyframes constrainedFlash{0%{box-shadow:0 0 0 0 rgba(224,90,78,0);}40%{box-shadow:0 0 0 3px rgba(224,90,78,0.5),0 0 50px rgba(224,90,78,0.16);}100%{box-shadow:0 0 0 1px rgba(224,90,78,0.18);}}
+@keyframes interruptIn{from{opacity:0;transform:scale(0.97);}to{opacity:1;transform:scale(1);}}
 
-  /* ── CARD ── */
-  .card-container { flex: 1; display: flex; flex-direction: column; }
+.card{background:var(--mid);border:1px solid rgba(255,255,255,0.07);border-radius:var(--rad2);padding:18px 16px;flex:1;display:flex;flex-direction:column;animation:fadeUp 0.32s ease,cardFlash 0.7s ease;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(176,210,53,0.22),transparent);}
+.card.cascade-card{border-color:rgba(240,160,48,0.22);background:linear-gradient(160deg,var(--mid2),rgba(240,160,48,0.04));animation:fadeUp 0.32s ease,cascadeFlash 0.7s ease;}
+.card.cascade-card::before{background:linear-gradient(90deg,transparent,rgba(240,160,48,0.38),transparent);}
+.card.constrained-card{border-color:rgba(224,90,78,0.22);background:linear-gradient(160deg,var(--mid2),rgba(224,90,78,0.04));animation:fadeUp 0.32s ease,constrainedFlash 0.7s ease;}
+.card.constrained-card::before{background:linear-gradient(90deg,transparent,rgba(224,90,78,0.38),transparent);}
+.card.interrupt-card{border-color:rgba(240,160,48,0.32);background:linear-gradient(160deg,rgba(240,160,48,0.07),var(--mid2));animation:interruptIn 0.4s ease,cascadeFlash 0.7s ease;}
+.card.interrupt-card::before{background:linear-gradient(90deg,transparent,rgba(240,160,48,0.45),transparent);}
 
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    padding: 22px 20px 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    animation: cardIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-  }
+.type-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-size:0.57rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:4px 9px;border-radius:4px;margin-bottom:10px;width:fit-content;}
+.type-badge.cascade{background:rgba(240,160,48,0.14);color:var(--cascade-color);border:1px solid rgba(240,160,48,0.24);}
+.type-badge.constrained{background:rgba(224,90,78,0.12);color:var(--constrained-color);border:1px solid rgba(224,90,78,0.2);}
+.badge-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.type-badge.cascade .badge-dot{background:var(--cascade-color);box-shadow:0 0 6px var(--cascade-glow);}
+.type-badge.constrained .badge-dot{background:var(--constrained-color);box-shadow:0 0 6px var(--constrained-glow);}
 
-  /* Glow top border */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, var(--accent) 70%, transparent 100%);
-    opacity: 0.7;
-  }
-  /* Subtle inner glow */
-  .card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 60px;
-    background: linear-gradient(180deg, var(--accent-glow) 0%, transparent 100%);
-    pointer-events: none;
-  }
+.card-category{font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.card-category::before{content:'';display:inline-block;width:14px;height:1px;background:var(--green);opacity:0.5;}
+.card-context{font-size:0.83rem;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.card-question{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;font-weight:700;line-height:1.3;color:var(--white);margin-bottom:16px;}
 
-  .card.checkin {
-    border-color: rgba(167,139,250,0.3);
-    background: linear-gradient(160deg, rgba(167,139,250,0.04) 0%, var(--card-bg) 40%);
-  }
-  .card.checkin::before {
-    background: linear-gradient(90deg, transparent 0%, var(--clarity) 30%, var(--clarity) 70%, transparent 100%);
-  }
-  .card.checkin::after {
-    background: linear-gradient(180deg, rgba(167,139,250,0.08) 0%, transparent 100%);
-  }
+.interrupt-banner{background:linear-gradient(135deg,rgba(240,160,48,0.14),rgba(240,160,48,0.05));border:1px solid rgba(240,160,48,0.28);border-radius:var(--rad);padding:12px 14px;margin-bottom:14px;animation:fadeUp 0.3s ease;}
+.interrupt-label{font-family:'Barlow Condensed',sans-serif;font-size:0.58rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--cascade-color);margin-bottom:5px;}
+.interrupt-text{font-size:0.82rem;color:rgba(255,255,255,0.68);line-height:1.6;}
+.interrupt-sub{font-size:0.74rem;color:rgba(240,160,48,0.65);margin-top:5px;font-style:italic;}
 
-  .card.offwork {
-    border-color: rgba(251,146,60,0.25);
-    background: linear-gradient(160deg, rgba(251,146,60,0.04) 0%, var(--card-bg) 40%);
-  }
-  .card.offwork::before {
-    background: linear-gradient(90deg, transparent 0%, var(--momentum) 30%, var(--momentum) 70%, transparent 100%);
-  }
-  .card.offwork::after {
-    background: linear-gradient(180deg, rgba(251,146,60,0.07) 0%, transparent 100%);
-  }
+.constraint-banner{background:linear-gradient(135deg,rgba(224,90,78,0.12),rgba(224,90,78,0.04));border:1px solid rgba(224,90,78,0.26);border-radius:var(--rad);padding:12px 14px;margin-bottom:14px;animation:fadeUp 0.3s ease;}
+.constraint-label{font-family:'Barlow Condensed',sans-serif;font-size:0.58rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--constrained-color);margin-bottom:5px;}
+.constraint-text{font-size:0.82rem;color:rgba(255,255,255,0.68);line-height:1.6;}
 
-  @keyframes cardIn {
-    from { opacity: 0; transform: translateY(16px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
+/* CHOICES */
+.choices{display:flex;flex-direction:column;gap:7px;margin-top:auto;}
+.choice-btn{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:var(--rad);color:var(--white);font-family:'Barlow',sans-serif;font-size:0.83rem;font-weight:500;line-height:1.5;padding:12px 13px;text-align:left;cursor:pointer;transition:all 0.16s;width:100%;}
+.choice-btn:hover{background:rgba(176,210,53,0.07);border-color:rgba(176,210,53,0.28);}
+.choice-btn:active{transform:scale(0.99);}
+.choice-btn.chosen{background:rgba(176,210,53,0.1);border-color:rgba(176,210,53,0.35);cursor:default;}
+.choice-btn.unchosen{opacity:0.28;cursor:default;}
+.choice-btn.cascade-style:hover{background:rgba(240,160,48,0.08);border-color:rgba(240,160,48,0.28);}
+.choice-btn.cascade-style.chosen{background:rgba(240,160,48,0.1);border-color:rgba(240,160,48,0.32);}
 
-  .card-category {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.62rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--accent);
-    margin-bottom: 10px;
-    position: relative;
-    z-index: 1;
-  }
-  .card.checkin .card-category { color: var(--clarity); }
-  .card.offwork .card-category { color: var(--momentum); }
+/* FEEDBACK */
+.feedback-block{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);animation:fadeUp 0.28s ease;}
+.feedback-deltas{display:flex;align-items:center;gap:7px;margin-bottom:9px;flex-wrap:wrap;}
+.delta-badge{font-family:'Barlow Condensed',sans-serif;font-size:0.76rem;font-weight:800;letter-spacing:0.5px;padding:3px 9px;border-radius:4px;}
+.delta-badge.pos{background:rgba(176,210,53,0.14);color:var(--green);}
+.delta-badge.neg{background:rgba(224,90,78,0.14);color:var(--neg);}
+.delta-badge.zero{background:rgba(255,255,255,0.05);color:var(--muted);}
+.delta-badge.adapt{background:rgba(232,168,56,0.14);color:var(--neu);}
+.delta-axis{font-family:'Barlow Condensed',sans-serif;font-size:0.67rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.feedback-text{font-size:0.83rem;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:13px;}
 
-  .card-context {
-    font-size: 0.8rem;
-    color: var(--text-mid);
-    margin-bottom: 14px;
-    line-height: 1.5;
-    font-style: italic;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--card-border);
-    position: relative;
-    z-index: 1;
-  }
+.next-btn{width:100%;padding:12px;background:var(--green);color:var(--black);border:none;border-radius:var(--rad);font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;box-shadow:0 0 20px rgba(176,210,53,0.18);}
+.next-btn:hover{background:var(--green2);box-shadow:0 0 28px rgba(176,210,53,0.3);}
+.next-btn:active{transform:scale(0.99);}
+.next-btn.amber{background:var(--cascade-color);color:var(--black);box-shadow:0 0 20px var(--cascade-glow);}
+.next-btn.amber:hover{background:#f8b84a;box-shadow:0 0 28px rgba(240,160,48,0.38);}
+.next-btn.red{background:var(--constrained-color);color:var(--white);box-shadow:0 0 20px var(--constrained-glow);}
+.next-btn.red:hover{background:#e8706a;box-shadow:0 0 28px rgba(224,90,78,0.35);}
 
-  .card-question {
-    font-size: 1.08rem;
-    line-height: 1.58;
-    font-weight: 500;
-    margin-bottom: 22px;
-    flex: 1;
-    color: var(--text);
-    position: relative;
-    z-index: 1;
-  }
+/* RESULTS */
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.results-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:0.67rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:8px;margin-top:2px;}
+.results-title{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:900;line-height:1.1;color:var(--white);margin-bottom:16px;}
+.results-scores{display:flex;background:var(--mid);border:1px solid rgba(255,255,255,0.07);border-radius:var(--rad2);overflow:hidden;margin-bottom:14px;}
+.rs-item{flex:1;text-align:center;padding:13px 5px;}
+.rs-item+.rs-item{border-left:1px solid rgba(255,255,255,0.06);}
+.rs-val{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:900;line-height:1;margin-bottom:3px;}
+.rs-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.54rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.adapt-block{background:linear-gradient(135deg,rgba(232,168,56,0.1),rgba(232,168,56,0.03));border:1px solid rgba(232,168,56,0.2);border-radius:var(--rad);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.adapt-val{font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:900;color:var(--neu);line-height:1;flex-shrink:0;}
+.adapt-label{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--neu);margin-bottom:4px;}
+.adapt-desc{font-size:0.74rem;color:rgba(255,255,255,0.45);line-height:1.5;}
+.results-divider{height:1px;background:rgba(255,255,255,0.05);margin:14px 0;}
+.results-insight{font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.75;margin-bottom:8px;}
+.tendency-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;margin-top:2px;}
+.tendency-pill{font-family:'Barlow Condensed',sans-serif;font-size:0.64rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:var(--gd);border:1px solid rgba(176,210,53,0.18);color:var(--green);}
+.results-btn-row{display:flex;gap:9px;margin-top:18px;}
+.btn-ghost{flex:1;padding:12px;background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:var(--rad);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.28);color:var(--white);}
+.btn-green{flex:1;padding:12px;background:var(--green);border:none;border-radius:var(--rad);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;box-shadow:0 0 16px rgba(176,210,53,0.2);}
+.btn-green:hover{background:var(--green2);}
 
-  .card-ref {
-    font-size: 0.74rem;
-    color: var(--momentum);
-    margin-bottom: 12px;
-    padding: 9px 12px;
-    background: rgba(251,146,60,0.07);
-    border-radius: var(--radius-sm);
-    border-left: 2px solid var(--momentum);
-    position: relative;
-    z-index: 1;
-    line-height: 1.5;
-  }
-
-  /* ── CHOICES ── */
-  .choices {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .choice-btn {
-    background: var(--bg2);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    padding: 13px 15px;
-    color: var(--text-mid);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.18s ease;
-    line-height: 1.45;
-    position: relative;
-    overflow: hidden;
-  }
-  .choice-btn::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: var(--accent);
-    opacity: 0;
-    transition: opacity 0.18s ease;
-  }
-  .choice-btn:hover {
-    border-color: var(--accent);
-    color: var(--text);
-    background: linear-gradient(90deg, var(--accent-glow), transparent);
-    transform: translateX(2px);
-  }
-  .choice-btn:hover::before { opacity: 1; }
-  .choice-btn:active { transform: translateX(1px) scale(0.99); }
-  .choice-btn.selected {
-    border-color: var(--accent);
-    color: var(--text);
-    background: linear-gradient(90deg, var(--accent-glow), transparent);
-  }
-  .choice-btn.selected::before { opacity: 1; }
-  .choice-btn:disabled { cursor: default; }
-  .choice-btn:disabled:not(.selected) { opacity: 0.35; }
-
-  /* ── RESULT ── */
-  .result {
-    animation: resultIn 0.3s ease;
-    padding-top: 14px;
-    position: relative;
-    z-index: 1;
-  }
-  @keyframes resultIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .result-score {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    padding: 10px 12px;
-    background: var(--bg2);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--card-border);
-  }
-  .result-score .delta {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    min-width: 44px;
-  }
-  .result-score .delta.pos { color: var(--positive); }
-  .result-score .delta.neg { color: var(--negative); }
-  .result-score .delta.zero { color: var(--neutral); }
-  .result-score .stat-info { display: flex; flex-direction: column; }
-  .result-score .stat-name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: var(--text-mid);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .result-score .stat-sub {
-    font-size: 0.68rem;
-    color: var(--text-dim);
-    margin-top: 1px;
-  }
-
-  .result-text {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: var(--text-mid);
-    margin-bottom: 16px;
-  }
-
-  .next-btn {
-    width: 100%;
-    padding: 13px;
-    background: linear-gradient(135deg, var(--accent), #6366f1);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    letter-spacing: 0.3px;
-    box-shadow: 0 4px 20px rgba(56,189,248,0.2);
-  }
-  .next-btn:hover { box-shadow: 0 4px 24px rgba(56,189,248,0.35); transform: translateY(-1px); }
-  .next-btn:active { transform: translateY(0) scale(0.99); }
-
-  /* ── START SCREEN ── */
-  .start-screen {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    gap: 0;
-    animation: cardIn 0.5s ease;
-    padding: 20px 0;
-  }
-
-  .start-logo {
-    width: 72px;
-    height: 72px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(129,140,248,0.15));
-    border: 1px solid rgba(56,189,248,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    margin-bottom: 20px;
-    box-shadow: 0 0 30px rgba(56,189,248,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
-  }
-
-  .start-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-
-  .start-version {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    background: linear-gradient(90deg, var(--accent), var(--clarity));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 24px;
-  }
-
-  .start-divider {
-    width: 100%;
-    max-width: 300px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--card-border-bright), transparent);
-    margin: 20px auto;
-  }
-
-  .start-axes {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .axis-pill {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    border: 1px solid;
-  }
-  .axis-pill.t { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3); color: var(--trust); }
-  .axis-pill.m { background: rgba(251,146,60,0.1); border-color: rgba(251,146,60,0.3); color: var(--momentum); }
-  .axis-pill.c { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.3); color: var(--clarity); }
-
-  .start-screen p {
-    font-size: 0.88rem;
-    color: var(--text-mid);
-    line-height: 1.7;
-    max-width: 310px;
-    margin-bottom: 28px;
-  }
-
-  .start-btn {
-    padding: 14px 48px;
-    background: linear-gradient(135deg, var(--accent), #6366f1);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 24px rgba(56,189,248,0.25);
-    transition: all 0.2s ease;
-  }
-  .start-btn:hover { box-shadow: 0 4px 32px rgba(56,189,248,0.4); transform: translateY(-1px); }
-  .start-btn:active { transform: translateY(0); }
-
-  .start-note {
-    margin-top: 14px;
-    font-size: 0.72rem;
-    color: var(--text-dim);
-    letter-spacing: 0.3px;
-  }
-
-  /* ── END SCREEN ── */
-  .end-screen {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    gap: 14px;
-    animation: cardIn 0.5s ease;
-    padding: 10px 0;
-  }
-
-  .end-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-  }
-
-  .end-screen .final-scores {
-    display: flex;
-    gap: 0;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    width: 100%;
-    max-width: 300px;
-  }
-  .end-screen .final-stat {
-    flex: 1;
-    text-align: center;
-    padding: 14px 8px;
-  }
-  .end-screen .final-stat + .final-stat { border-left: 1px solid var(--card-border); }
-  .end-screen .final-stat.t { background: linear-gradient(180deg, rgba(56,189,248,0.06), transparent); }
-  .end-screen .final-stat.m { background: linear-gradient(180deg, rgba(251,146,60,0.06), transparent); }
-  .end-screen .final-stat.c { background: linear-gradient(180deg, rgba(167,139,250,0.06), transparent); }
-  .end-screen .final-stat .val {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.9rem;
-    font-weight: 700;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .end-screen .final-stat .lbl {
-    font-size: 0.58rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-dim);
-  }
-
-  .end-divider {
-    width: 100%;
-    max-width: 320px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--card-border-bright), transparent);
-  }
-
-  .end-screen .insight {
-    font-size: 0.9rem;
-    color: var(--text-mid);
-    line-height: 1.7;
-    max-width: 340px;
-    text-align: left;
-  }
-
-  .play-again {
-    padding: 13px 44px;
-    background: linear-gradient(135deg, var(--accent), #6366f1);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(56,189,248,0.2);
-    transition: all 0.2s ease;
-    letter-spacing: 0.3px;
-  }
-  .play-again:hover { box-shadow: 0 4px 28px rgba(56,189,248,0.35); transform: translateY(-1px); }
-
-  /* ── CALLBACK TAG ── */
-  .reflection-tag {
-    display: inline-block;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.6rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-bottom: 6px;
-    background: rgba(167, 139, 250, 0.12);
-    color: var(--clarity);
-    border: 1px solid rgba(167,139,250,0.2);
-  }
+.tagline-footer{text-align:center;padding-top:20px;font-family:'Barlow Condensed',sans-serif;font-size:0.66rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(176,210,53,0.2);}
 </style>
 </head>
 <body>
-<div class="app" id="app"></div>
+
+<!-- START -->
+<div id="screen-start" class="screen active">
+  <div class="app">
+    <div class="deck-header">
+      <div class="brand"><span>Yanke</span> Bionics<span class="v3-pill">v3</span></div>
+      <div class="header-right">Lab & Fabrication</div>
+    </div>
+    <div class="start-icon">⚙️</div>
+    <div class="start-eyebrow">Tier 2 · Lab Staff · Supervision</div>
+    <div class="start-title">Lab &amp;<br>Fabrication</div>
+    <div class="start-desc">Real situations from the fabrication floor — delegation, quality calls, conflict, accountability, and the decisions that define what kind of supervisor you're becoming. v3 introduces cascades and curveballs: your first call gets tested the moment you make it.</div>
+    <div class="start-meta">
+      <span class="meta-tag">10 Scenarios per run</span>
+      <span class="meta-tag">14 in pool</span>
+      <span class="meta-tag meta-cascade">⚡ Cascades</span>
+      <span class="meta-tag meta-constrained">⛔ Curveballs</span>
+    </div>
+    <div class="axes-row" id="axes-intro"></div>
+    <div class="privacy-block">
+      <div class="privacy-icon">🔒</div>
+      <div class="privacy-text"><strong>Your responses stay on this device.</strong> Scores and choices are saved in your browser only — never transmitted to Yanke Bionics or anyone else. This is a personal reflection tool, not a performance evaluation.</div>
+    </div>
+    <button class="start-btn" onclick="Deck.start()">Begin Deck</button>
+    <div class="tagline-footer">Patient Focused · Technology Driven</div>
+  </div>
+</div>
+
+<!-- PLAY -->
+<div id="screen-play" class="screen">
+  <div class="app" id="play-app"></div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="app">
+    <div class="deck-header">
+      <div class="brand"><span>Yanke</span> Bionics<span class="v3-pill">v3</span></div>
+      <div class="header-right">Lab & Fabrication</div>
+    </div>
+    <div class="scroll-body" id="results-body"></div>
+  </div>
+</div>
+
 <script>
-const SCENARIOS = [
-  // ===== DELEGATION =====
-  {
-    id: "del-1", category: "Delegation", type: "work",
-    context: "A technician asks you how to handle a device modification they've done before.",
-    question: "They know the process. They're really asking for permission. What do you do?",
-    choices: [
-      { text: "Walk them through it step by step to be safe", scores: { trust: -5, momentum: 3, clarity: 0 }, feedback: "They already knew. You just told them their experience doesn't count. Sometimes helping is the thing that slows everyone down." },
-      { text: "Tell them you trust their judgment and to flag you if something unexpected comes up", scores: { trust: 8, momentum: 5, clarity: 3 }, feedback: "They walked away standing taller. That cost you nothing and bought you something you can't fake." },
-      { text: "Ask them what they think the right approach is, then confirm it", scores: { trust: 4, momentum: 0, clarity: 5 }, feedback: "Solid middle ground. They got the validation, you got the verification. Just know — do this every time and it starts to feel like a test, not trust." }
-    ],
-    tags: ["trust", "autonomy"]
-  },
-  {
-    id: "del-2", category: "Delegation", type: "work",
-    context: "A job is running behind. You could jump in and do it yourself faster.",
-    question: "You know you can get it done quicker. But should you?",
-    choices: [
-      { text: "Jump in and get it done — production comes first", scores: { trust: -3, momentum: 8, clarity: -2 }, feedback: "The job got done. But your team just learned that when things get tight, you don't trust them to deliver. They'll wait for you next time too." },
-      { text: "Check in on the bottleneck and help them problem-solve it", scores: { trust: 5, momentum: 3, clarity: 4 }, feedback: "Slower today. Faster every day after. They solved it with your support, not your hands — that's the difference between a supervisor and a technician who gives orders." },
-      { text: "Let it run late — they need to feel the consequences", scores: { trust: -2, momentum: -5, clarity: 2 }, feedback: "There's a version of this that works: when someone needs to learn from failure. But letting production slip to teach a lesson? That's a cost the whole team pays for one person's education." }
-    ],
-    tags: ["delegation", "production"]
-  },
-  {
-    id: "del-3", category: "Delegation", type: "work",
-    context: "You delegated a task last week. It got done, but not the way you would have done it. The result is fine.",
-    question: "Do you say something?",
-    choices: [
-      { text: "No — the result met the standard, their method is their business", scores: { trust: 7, momentum: 4, clarity: 2 }, feedback: "This is one of the hardest things for a good technician turned supervisor. Your way isn't the only way. It might not even be the best way. Letting go of method when the outcome is solid is how you build a team that can function without you." },
-      { text: "Mention your preferred approach for next time", scores: { trust: -3, momentum: 2, clarity: 3 }, feedback: "You just told them the right answer didn't count because they got there the wrong way. Next time they'll do it your way — not because it's better, but because it's safer. That's compliance, not growth." },
-      { text: "Ask them to walk you through their process — you might learn something", scores: { trust: 6, momentum: 2, clarity: 5 }, feedback: "Bold move. Most supervisors never ask this question because it means admitting someone else might have a better method. The ones who do ask it get smarter every week." }
-    ],
-    tags: ["delegation", "trust"]
-  },
+// ═══════════════════════════════════════════════════
+// LAB & FABRICATION — v3
+// 4 axes: trust, momentum, clarity, adaptability
+// adaptability only scores on cascade/constrained beat 2
+// Scenario types: standard | cascade | constrained
+// ═══════════════════════════════════════════════════
 
-  // ===== CONFLICT =====
-  {
-    id: "con-1", category: "Conflict", type: "work",
-    context: "Two technicians are arguing about the right way to do a setup. Both approaches work.",
-    question: "How do you handle it?",
-    choices: [
-      { text: "Pick the better method and settle it", scores: { trust: -4, momentum: 5, clarity: 3 }, feedback: "Fast. Clean. And one of them just became the person who was wrong in front of their peer. They'll remember that longer than the method." },
-      { text: "Separate them, hear both sides privately, and decide later", scores: { trust: 3, momentum: -3, clarity: 2 }, feedback: "Respectful, but now you've turned a 5-minute disagreement into a process. Sometimes the best move is to not make it bigger than it is." },
-      { text: "Ask them to test both and go with whatever gets better results", scores: { trust: 6, momentum: 2, clarity: 5 }, feedback: "Nobody lost. The work decided. And you just built a decision-making framework they'll use without you next time." }
-    ],
-    tags: ["conflict", "team"]
-  },
-  {
-    id: "con-2", category: "Conflict", type: "work",
-    context: "A staff member comes to you frustrated about another supervisor giving them contradictory instructions.",
-    question: "They're telling you they're confused. What do you do?",
-    choices: [
-      { text: "Tell them to follow your instructions and you'll handle the rest", scores: { trust: 2, momentum: 3, clarity: -3 }, feedback: "You solved their immediate problem. But you just drew a line that might not hold, and there's a power question in the air that everyone can smell." },
-      { text: "Acknowledge the confusion and tell them you'll get clarification on the chain", scores: { trust: 5, momentum: 0, clarity: 7 }, feedback: "They didn't need you to win a fight. They needed to know someone heard them and would bring order. That's exactly what leadership looks like when things are messy." },
-      { text: "Ask what the other supervisor told them so you can understand the conflict", scores: { trust: 3, momentum: -2, clarity: 4 }, feedback: "Good instinct. But be careful — if they think you're gathering intel instead of solving the problem, you've turned a confused employee into an informant." }
-    ],
-    tags: ["conflict", "clarity"]
-  },
-
-  // ===== ACCOUNTABILITY =====
-  {
-    id: "acc-1", category: "Accountability", type: "work",
-    context: "Someone made a mistake on a device. Not their first time. But they caught it themselves and brought it to you.",
-    question: "They self-reported. How do you handle it?",
-    choices: [
-      { text: "Thank them for catching it, fix it together, and document it", scores: { trust: 7, momentum: 2, clarity: 4 }, feedback: "They just learned that honesty is safe here. That's worth more than any write-up. The documentation keeps it real without making it punitive." },
-      { text: "Address the pattern — this keeps happening and it needs to stop", scores: { trust: -3, momentum: 0, clarity: 5 }, feedback: "You're right that the pattern matters. But you just punished the one time they came to you voluntarily. Next time they'll hide it." },
-      { text: "Let it go this time since they caught it", scores: { trust: 2, momentum: 4, clarity: -4 }, feedback: "Generous. But no documentation means no trail, and if it happens again you're starting from scratch. Kindness without structure is just avoidance." }
-    ],
-    tags: ["accountability", "trust"]
-  },
-  {
-    id: "acc-2", category: "Accountability", type: "work",
-    context: "A strong performer has been showing up late for the third time this month. No one has said anything because their work is excellent.",
-    question: "Their output is great. Their punctuality isn't. Does it matter?",
-    choices: [
-      { text: "Pull them aside privately — the standard applies to everyone", scores: { trust: 3, momentum: 0, clarity: 8 }, feedback: "Hardest conversation to have because they'll feel singled out. But the rest of the team is watching, and they already noticed you haven't said anything." },
-      { text: "Let it slide — results matter more than the clock", scores: { trust: -2, momentum: 3, clarity: -5 }, feedback: "You just set the precedent that rules are flexible for people you like. Your weaker performers just noticed." },
-      { text: "Check in casually — 'Hey, noticed you've been running late, everything ok?'", scores: { trust: 4, momentum: 2, clarity: 2 }, feedback: "Checking in before correcting. That's human. Just don't let 'checking in' become a pattern of never actually addressing it." }
-    ],
-    tags: ["accountability", "standards"]
-  },
-  {
-    id: "acc-3", category: "Accountability", type: "work",
-    context: "You discover a process has been done incorrectly for weeks. Multiple people were involved but nobody flagged it.",
-    question: "It's systemic, not individual. But someone needs to own the fix. What do you do?",
-    choices: [
-      { text: "Own it yourself — you should have caught it sooner", scores: { trust: 5, momentum: -2, clarity: 3 }, feedback: "Honorable. And probably partially true. But be careful not to train your team that quality control is your job, not theirs. Absorbing every failure eventually teaches people not to look." },
-      { text: "Gather the group, explain the issue, and build the fix together", scores: { trust: 4, momentum: 3, clarity: 6 }, feedback: "No blame, no hero. Just a problem and a team solving it. This is what 'we' actually looks like when it's not a performance." },
-      { text: "Find the root cause and address it with whoever started the chain", scores: { trust: -2, momentum: 4, clarity: 4 }, feedback: "Efficient. Targeted. But the person at the root might not even know they started it. And everyone who continued the pattern without questioning it — they just got a pass they didn't earn." }
-    ],
-    tags: ["accountability", "systems"]
-  },
-
-  // ===== COMMUNICATION =====
-  {
-    id: "com-1", category: "Communication", type: "work",
-    context: "Leadership made a decision you disagree with. Your team is going to ask you about it.",
-    question: "You didn't make this call. You might not agree with it. But you have to deliver it.",
-    choices: [
-      { text: "Own it as if it were yours", scores: { trust: -2, momentum: 5, clarity: 3 }, feedback: "Clean delivery. But if they find out you disagreed and said nothing, they'll wonder what else you're not telling them." },
-      { text: "Deliver it, acknowledge their concerns, and commit to being their voice upward", scores: { trust: 8, momentum: 2, clarity: 5 }, feedback: "You didn't throw anyone under the bus. You gave them the truth and a reason to trust that their perspective matters." },
-      { text: "Be honest that you disagree but the decision is made", scores: { trust: 4, momentum: -3, clarity: 0 }, feedback: "Honest. But you just gave your team permission to not respect the decision because their boss doesn't either. That ripples." }
-    ],
-    tags: ["communication", "leadership"]
-  },
-  {
-    id: "com-2", category: "Communication", type: "work",
-    context: "You overheard a staff member venting about you to a coworker. It wasn't flattering.",
-    question: "It stings. What do you do with it?",
-    choices: [
-      { text: "Address it directly — 'I heard what you said, can we talk?'", scores: { trust: 3, momentum: -2, clarity: 5 }, feedback: "Brave. But the line between 'approachable leader' and 'you can't say anything around here' is thinner than you think." },
-      { text: "Let it go — people vent, it's not personal", scores: { trust: 2, momentum: 3, clarity: -2 }, feedback: "Mature. But if what they said had a kernel of truth, you just chose comfort over growth." },
-      { text: "Don't address it, but reflect on whether there's truth in it", scores: { trust: 5, momentum: 2, clarity: 6 }, feedback: "The hardest option because it requires you to sit with discomfort without reacting. This is how good leaders get better — they listen even when people aren't talking to them." }
-    ],
-    tags: ["communication", "self-awareness"]
-  },
-
-  // ===== PRESSURE =====
-  {
-    id: "pre-1", category: "Under Pressure", type: "work",
-    context: "End of day. You're behind. Your team is tired. Pushing means the job gets done but morale takes a hit.",
-    question: "The work matters. So do the people. What wins tonight?",
-    choices: [
-      { text: "Push through — sometimes the job comes first", scores: { trust: -4, momentum: 7, clarity: 0 }, feedback: "Got it done. But tomorrow your team walks in tired and resentful. You made a withdrawal from an account that takes a long time to refill." },
-      { text: "Call it — hit it fresh tomorrow", scores: { trust: 5, momentum: -4, clarity: 2 }, feedback: "Your team went home feeling like a human being decided their schedule, not a spreadsheet. They'll attack it harder tomorrow because you didn't burn them out tonight." },
-      { text: "Give them the choice", scores: { trust: 6, momentum: 3, clarity: 3 }, feedback: "They chose. Either way, it was theirs. The difference between being told and being asked is the whole difference between compliance and commitment." }
-    ],
-    tags: ["pressure", "morale"]
-  },
-  {
-    id: "pre-2", category: "Under Pressure", type: "work",
-    context: "Someone above you is pressuring you for a status update on something you don't have full visibility on.",
-    question: "You could give a partial answer, stall, or admit the gap.",
-    choices: [
-      { text: "Give the best answer you have and fill in gaps later", scores: { trust: -3, momentum: 4, clarity: -3 }, feedback: "Fast response. But if the gaps turn out to be wrong, you've got credibility damage on top of the original problem." },
-      { text: "Say 'I don't have the full picture — give me an hour and I'll get you a solid answer'", scores: { trust: 5, momentum: 0, clarity: 7 }, feedback: "One of the most powerful sentences a manager can say. It tells them accuracy matters more to you than looking good." },
-      { text: "Go get the information immediately and respond once you have it", scores: { trust: 3, momentum: 2, clarity: 4 }, feedback: "Good instinct. Just make sure urgency doesn't make you cut corners on the answer." }
-    ],
-    tags: ["pressure", "integrity"]
-  },
-
-  // ===== BOUNDARIES =====
-  {
-    id: "bnd-1", category: "Boundaries", type: "work",
-    context: "A peer in a different role starts giving direction to your team without talking to you first.",
-    question: "Your people are getting instructions from someone outside your chain. How do you respond?",
-    choices: [
-      { text: "Talk to the peer directly — 'Can you run things through me so we're not sending mixed signals?'", scores: { trust: 4, momentum: 2, clarity: 7 }, feedback: "Direct, professional, kept between the two of you. It only fails if they don't respect the boundary — and then that's information you need." },
-      { text: "Tell your team to check with you before acting on outside direction", scores: { trust: 3, momentum: 0, clarity: 3 }, feedback: "Protects the workflow. But you put the burden on your team instead of handling it at the source." },
-      { text: "Escalate it — leadership needs to define the lanes", scores: { trust: 0, momentum: -2, clarity: 5 }, feedback: "Sometimes necessary. But going up before going sideways can look like you can't handle peer relationships. Try direct first." }
-    ],
-    tags: ["boundaries", "authority"]
-  },
-  {
-    id: "bnd-2", category: "Boundaries", type: "work",
-    context: "A team member wants to be friends outside of work. They're pushing for a social dynamic that blurs the line.",
-    question: "You like them. But you're their supervisor. Where's the line?",
-    choices: [
-      { text: "Keep it professional — friendly at work, but that's it", scores: { trust: 2, momentum: 2, clarity: 6 }, feedback: "Clean. Safe. And a little lonely. But the first time you have to give them critical feedback, you'll be grateful for the boundary." },
-      { text: "Be human about it — grab a beer sometimes, keep the work relationship clear", scores: { trust: 5, momentum: 3, clarity: -2 }, feedback: "It can work. But the moment there's a performance issue, that beer becomes a complication. Know that going in." },
-      { text: "Match their energy without initiating more", scores: { trust: 4, momentum: 2, clarity: 3 }, feedback: "Responsive without leading. Emotionally intelligent. Just make sure it doesn't look like favoritism to the rest of the team." }
-    ],
-    tags: ["boundaries", "relationships"]
-  },
-
-  // ===== SELF-MANAGEMENT =====
-  {
-    id: "self-1", category: "Self-Management", type: "work",
-    context: "You had a terrible morning. Personal stuff. You can feel it affecting your tone.",
-    question: "You're not at your best and you know it. Now what?",
-    choices: [
-      { text: "Push through — everyone has bad days", scores: { trust: -2, momentum: 3, clarity: -2 }, feedback: "You pushed through. Your team noticed anyway. They always do." },
-      { text: "Give yourself five minutes, reset, and be intentional about your interactions", scores: { trust: 4, momentum: 2, clarity: 5 }, feedback: "Five minutes now saves an hour of cleanup later. Being aware you're off is already better than most managers ever get." },
-      { text: "Tell your team — 'Having a rough day, bear with me'", scores: { trust: 6, momentum: 0, clarity: 3 }, feedback: "Vulnerable. Human. Do this rarely enough that it carries weight and doesn't become an excuse." }
-    ],
-    tags: ["self-awareness", "regulation"]
-  },
-  {
-    id: "self-2", category: "Self-Management", type: "work",
-    context: "You made a call yesterday that turned out to be wrong. There's rework now.",
-    question: "Everyone knows it was your decision. How do you handle it?",
-    choices: [
-      { text: "Own it openly — 'My call, I was wrong. Here's how we fix it.'", scores: { trust: 8, momentum: 3, clarity: 5 }, feedback: "The hardest sentence in management. Your team just learned that accountability flows up, not just down." },
-      { text: "Fix it quietly and move on", scores: { trust: -4, momentum: 4, clarity: -3 }, feedback: "They know. Even if you don't say it. Now they also know you won't admit it." },
-      { text: "Frame it as a team decision — 'We made a call, it didn't work'", scores: { trust: -1, momentum: 2, clarity: 0 }, feedback: "Everyone was in the room. They know whose call it was. Softening 'I' into 'we' when things go wrong but keeping 'I' when they go right — people notice that fast." }
-    ],
-    tags: ["accountability", "leadership"]
-  },
-
-  // ===== GROWTH =====
-  {
-    id: "gro-1", category: "Growth", type: "work",
-    context: "A junior team member wants to take on a task above their skill level. There's real risk they'll mess it up.",
-    question: "They want to grow. The timing isn't ideal. What do you do?",
-    choices: [
-      { text: "Let them try with guardrails — check in at key milestones", scores: { trust: 7, momentum: 2, clarity: 4 }, feedback: "Growth requires risk. The guardrails protect the work, the opportunity protects their development. Sweet spot." },
-      { text: "Not this time — stakes are too high, but you'll find them a chance soon", scores: { trust: 0, momentum: 4, clarity: 3 }, feedback: "'Soon' is dangerous. If you mean it, put a date on it. If you don't, you just told someone their ambition is inconvenient." },
-      { text: "Give them a meaningful piece of it, not the whole task", scores: { trust: 5, momentum: 4, clarity: 5 }, feedback: "Smart. Exposure without full risk. Just make sure it's real work, not busywork. People can tell." }
-    ],
-    tags: ["growth", "delegation"]
-  },
-  {
-    id: "gro-2", category: "Growth", type: "work",
-    context: "You're developing a skill you've never used before. It's uncomfortable.",
-    question: "You're used to being competent. Right now you're not. How do you handle it?",
-    choices: [
-      { text: "Grind through it — competence comes from reps", scores: { trust: 2, momentum: 5, clarity: 2 }, feedback: "True. But grinding without reflection is just repetition, not learning." },
-      { text: "Find someone good at it and ask for help", scores: { trust: 5, momentum: 3, clarity: 4 }, feedback: "The willingness to be a student when you're used to being the expert is one of the rarest qualities in leadership." },
-      { text: "Accept it takes time and stop judging yourself against an impossible standard", scores: { trust: 3, momentum: 0, clarity: 6 }, feedback: "The standard you're holding yourself to — where did it come from? If it's someone else's timeline, let it go. Your pace isn't slow. It's yours." }
-    ],
-    tags: ["growth", "self-awareness"]
-  },
-
-  // ===== HARD CALLS =====
-  {
-    id: "hard-1", category: "Hard Calls", type: "work",
-    context: "You need to give critical feedback to someone who doesn't take it well. Last time they got defensive.",
-    question: "The feedback is necessary. The reaction is predictable. How do you deliver it?",
-    choices: [
-      { text: "Be direct and clear — they need to hear it regardless", scores: { trust: 2, momentum: 4, clarity: 5 }, feedback: "The feedback landed. But did it land inside them or just bounce off their armor? Delivery isn't about being honest. It's about making sure the other person can actually hear you." },
-      { text: "Lead with what they're doing well, then transition to the growth area", scores: { trust: 4, momentum: 2, clarity: 2 }, feedback: "The compliment sandwich. Everyone knows what it is. Some people still need it. Just make sure the positives are genuine." },
-      { text: "Ask them to self-assess first — 'How do you think that went?'", scores: { trust: 6, momentum: 0, clarity: 6 }, feedback: "If they already know, you're coaching, not criticizing. If they don't know, you've learned something about their self-awareness. Either way, conversation instead of verdict." }
-    ],
-    tags: ["feedback", "hard calls"]
-  },
-  {
-    id: "hard-2", category: "Hard Calls", type: "work",
-    context: "Short-staffed and an employee asks for a day off. Coverage will be brutal.",
-    question: "You can say yes or no. Both have consequences.",
-    choices: [
-      { text: "Approve it — they asked, it's available, burning people out protects nothing", scores: { trust: 7, momentum: -3, clarity: 2 }, feedback: "Hard day for the team. But the person who got their day will remember you treated them like a human when it was hard to." },
-      { text: "Deny it — explain honestly and help them find another day", scores: { trust: -1, momentum: 4, clarity: 4 }, feedback: "Honest. Practical. But 'find another day' better happen or you made a promise the system won't let you keep." },
-      { text: "Approve it but tell them what it costs the team", scores: { trust: 3, momentum: 0, clarity: 3 }, feedback: "You said yes and made them feel guilty about it. That's not transparency — that's a tax on asking. Either say yes and mean it, or say no and own it." }
-    ],
-    tags: ["hard calls", "people"]
-  },
-
-  // ===== VEILED DAVE SCENARIOS =====
-  {
-    id: "vd-1", category: "Dynamics", type: "work",
-    context: "Someone in a parallel role has started attending meetings you lead and offering 'suggestions' that feel more like directives. Leadership seems to encourage it.",
-    question: "They're not technically overstepping their title. But they're reshaping your space. What do you do?",
-    choices: [
-      { text: "Let the work speak — if your results are solid, the territory holds itself", scores: { trust: 3, momentum: 5, clarity: 2 }, feedback: "Sometimes true. But territory that isn't actively defined gets passively absorbed. Results protect your reputation, not your role. Those are different things." },
-      { text: "Have a direct conversation with them about lanes before it becomes a pattern", scores: { trust: 5, momentum: 2, clarity: 7 }, feedback: "Early and direct. Most people won't do this because it feels confrontational. But a five-minute conversation now prevents a six-month turf war later." },
-      { text: "Go to leadership and ask them to clarify the structure", scores: { trust: 2, momentum: -2, clarity: 6 }, feedback: "If leadership is encouraging the overlap, they might not see a problem to fix. You could end up drawing attention to a dynamic that gets resolved in the other person's favor. Know the room before you escalate." }
-    ],
-    tags: ["boundaries", "authority", "politics"]
-  },
-  {
-    id: "vd-2", category: "Dynamics", type: "work",
-    context: "A colleague who doesn't work on the floor day-to-day keeps proposing process changes based on data and theory. Some ideas are good. Some miss how things actually work.",
-    question: "They have leadership's ear. You have the floor knowledge. How do you handle the disconnect?",
-    choices: [
-      { text: "Push back on the bad ideas with evidence from the floor", scores: { trust: 3, momentum: 4, clarity: 4 }, feedback: "Good if your evidence is specific and delivered calmly. Bad if it comes across as 'I know better because I'm in the trenches.' Data vs. experience arguments rarely have clean winners." },
-      { text: "Propose a pilot — test their idea on a small scale before full rollout", scores: { trust: 5, momentum: 3, clarity: 6 }, feedback: "Smart. You're not saying no, you're saying 'prove it.' And if it works, you adopted a good idea. If it doesn't, the pilot did the arguing for you." },
-      { text: "Stop fighting it — implement what leadership wants and document the results", scores: { trust: -2, momentum: 6, clarity: 0 }, feedback: "Path of least resistance. But if you know something won't work and you let it fail silently, you chose peace over the people who have to live with the failure. That's not compliance — that's avoidance wearing a professional mask." }
-    ],
-    tags: ["politics", "authority", "systems"]
-  },
-  {
-    id: "vd-3", category: "Dynamics", type: "work",
-    context: "You find out a colleague has been characterizing your performance to leadership in a way that doesn't match reality. It's not overtly negative — it's subtle repositioning.",
-    question: "They're not lying exactly. They're narrating. And the narrative doesn't include your best work. What do you do?",
-    choices: [
-      { text: "Start making sure your own results are visible to leadership directly", scores: { trust: 3, momentum: 5, clarity: 4 }, feedback: "Solid long game. If your work is visible, someone else's narrative has less power. Just don't let 'making results visible' turn into self-promotion that feels forced." },
-      { text: "Confront them — 'I've heard you've been framing my work a certain way, and I want to clear the air'", scores: { trust: 4, momentum: -2, clarity: 5 }, feedback: "Direct. Risky. If they're the type to deny it, you've just shown your hand and they'll be more careful — not more honest. But if they respect directness, this could actually fix it." },
-      { text: "Build your relationship with leadership so their perspective comes from direct experience, not secondhand", scores: { trust: 6, momentum: 2, clarity: 6 }, feedback: "The best defense against a bad narrator is being known directly. It takes time. But once leadership has their own read on you, no one else's version sticks." }
-    ],
-    tags: ["politics", "trust", "authority"]
-  },
-  {
-    id: "vd-4", category: "Dynamics", type: "work",
-    context: "A colleague takes credit for a group effort in front of leadership. Not your effort specifically — but the team's. They framed it as something they drove.",
-    question: "The team did the work. The credit went somewhere else. Do you correct the record?",
-    choices: [
-      { text: "Yes — in the moment, calmly redirect: 'The team really drove that, especially [names]'", scores: { trust: 7, momentum: -1, clarity: 5 }, feedback: "Your team just watched you stand up for them in a room that matters. That deposits trust you can't buy any other way. The colleague might not appreciate it, but your people will never forget it." },
-      { text: "Let it go in the moment, but mention it to leadership privately later", scores: { trust: 3, momentum: 3, clarity: 3 }, feedback: "Safer. Less confrontational. But your team was in that room too, and they saw who got credit and who stayed quiet. The private correction helps your reputation with leadership. The silence hurts your reputation with your team." },
-      { text: "Let it go entirely — fighting for credit looks petty", scores: { trust: -3, momentum: 4, clarity: -2 }, feedback: "It's not about credit for you — it's about credit for the people who did the work and are watching to see if it matters. When leaders let credit slide, teams learn that effort is invisible." }
-    ],
-    tags: ["politics", "trust", "team"]
-  },
-  {
-    id: "vd-5", category: "Dynamics", type: "work",
-    context: "Someone in the organization keeps volunteering to 'help' with areas outside their responsibility. It comes across as helpfulness to leadership but feels like encroachment to you.",
-    question: "Their intent might be good. The impact isn't. How do you handle it?",
-    choices: [
-      { text: "Accept the help publicly and redirect it privately into something actually useful", scores: { trust: 4, momentum: 4, clarity: 3 }, feedback: "Diplomatic. You look collaborative to leadership while channeling the energy somewhere it doesn't do damage. The risk is that 'accepting help' becomes 'accepting authority' over time if you don't draw a line." },
-      { text: "Thank them but be clear: 'I've got this area covered — here's where I could actually use your help'", scores: { trust: 3, momentum: 3, clarity: 7 }, feedback: "Boundary with an olive branch. You said 'no' to the encroachment and 'yes' to collaboration — on your terms. That's a hard sentence to deliver without sounding territorial. If you can pull it off, it's the best move." },
-      { text: "Let leadership see the overlap and trust them to sort it out", scores: { trust: -2, momentum: 2, clarity: -3 }, feedback: "Leadership might not see it as an overlap. They might see it as initiative. Waiting for someone else to draw your boundaries means you've already ceded the authority to draw them yourself." }
-    ],
-    tags: ["boundaries", "politics", "authority"]
-  },
-  {
-    id: "vd-6", category: "Dynamics", type: "work",
-    context: "A colleague with more access to leadership than you has been making decisions about how your area should function — without ever asking you.",
-    question: "The decisions aren't terrible. But they weren't theirs to make. What matters more — the process or the outcome?",
-    choices: [
-      { text: "The outcome — if the decision is fine, fighting about who made it looks small", scores: { trust: -3, momentum: 5, clarity: -4 }, feedback: "Practical. And wrong in the long run. Every decision you let someone else make about your area is a brick in the wall of their authority. The outcome might be fine. The precedent is not." },
-      { text: "The process — they need to loop you in, full stop, even if the answer would have been the same", scores: { trust: 4, momentum: -1, clarity: 8 }, feedback: "It's not about ego. It's about information flow. If they're making decisions without floor-level input, eventually they'll make a bad one — and your team will pay for it while they take the credit for the good ones." },
-      { text: "Both — address the process gap while acknowledging the outcome was acceptable this time", scores: { trust: 5, momentum: 3, clarity: 5 }, feedback: "The mature answer. You're not saying the decision was wrong. You're saying the method was. That's a much harder position for anyone to argue against." }
-    ],
-    tags: ["authority", "boundaries", "politics"]
-  },
-
-  // ===== OFF-WORK / PERSONAL =====
-  {
-    id: "off-1", category: "Off the Clock", type: "offwork",
-    context: "You get home after a brutal day. Your partner asks how work was. You're still wound up.",
-    question: "Do you unload, deflect, or process it yourself?",
-    choices: [
-      { text: "Unload — they asked, and you need to get it out", scores: { trust: 2, momentum: -2, clarity: -1 }, feedback: "Getting it out helps you. But be honest — are you venting to process, or venting to avoid processing? One leads somewhere. The other just moves the weight from your shoulders to theirs." },
-      { text: "Deflect — 'It was fine' — and deal with it later", scores: { trust: -3, momentum: 3, clarity: -2 }, feedback: "They know 'fine' isn't fine. And 'later' almost never comes. You protected them from the mess, but you also shut a door they were trying to open." },
-      { text: "Be honest but contained — 'Rough day. I need ten minutes and then I'm here'", scores: { trust: 5, momentum: 2, clarity: 5 }, feedback: "You told the truth without making it their problem. The ten minutes is for you. Coming back present is for them. That's not deflection — that's self-management in real time." }
-    ],
-    tags: ["regulation", "relationships"]
-  },
-  {
-    id: "off-2", category: "Off the Clock", type: "offwork",
-    context: "A friend asks for a big favor that'll take your whole Saturday. You've had no downtime in weeks.",
-    question: "You want to help. You also know you're running on empty. What wins?",
-    choices: [
-      { text: "Help them — that's what friends do", scores: { trust: 3, momentum: -4, clarity: -2 }, feedback: "Good friend. Depleted human. There's a version of generosity that costs you more than it gives them. If you show up exhausted and resentful, you've helped no one." },
-      { text: "Say no honestly — 'I'm tapped out, I need this weekend'", scores: { trust: 4, momentum: 4, clarity: 6 }, feedback: "Hard to say. Easy to live with. Real friends respect the boundary. If they don't, that's information too." },
-      { text: "Offer a smaller version — 'I can't do the whole day but I can give you a couple hours'", scores: { trust: 5, momentum: 2, clarity: 3 }, feedback: "Compromise that keeps the relationship intact without emptying your tank. Just make sure 'a couple hours' doesn't turn into the whole day because you couldn't hold the line." }
-    ],
-    tags: ["boundaries", "regulation"]
-  },
-  {
-    id: "off-3", category: "Off the Clock", type: "offwork",
-    context: "You're scrolling your phone at 11 PM, replaying a work conversation in your head. You know you should sleep.",
-    question: "Your brain won't let it go. What do you actually do?",
-    choices: [
-      { text: "Write it down — get it out of your head and onto paper, then put the phone away", scores: { trust: 3, momentum: 3, clarity: 5 }, feedback: "Your brain is holding onto it because it's afraid you'll forget. Writing it down is permission to let go. Simple. Effective. Underused." },
-      { text: "Keep turning it over — you'll work it out if you think about it enough", scores: { trust: -2, momentum: -3, clarity: -1 }, feedback: "You won't. You'll just rehearse the same loop until exhaustion shuts your brain off. Thinking and processing aren't the same thing at 11 PM." },
-      { text: "Force the shutdown — put the phone in another room, lights out", scores: { trust: 2, momentum: 4, clarity: 2 }, feedback: "Discipline. It works. But if the thing you're avoiding thinking about is actually important, you'll wake up at 3 AM with it anyway. Sometimes a five-minute brain dump beats a forced shutdown." }
-    ],
-    tags: ["regulation", "self-awareness"]
-  },
-  {
-    id: "off-4", category: "Off the Clock", type: "offwork",
-    context: "Someone you care about is going through something hard. They haven't asked for help.",
-    question: "You can see they're struggling. But they haven't opened the door. Do you knock?",
-    choices: [
-      { text: "Yes — reach out directly and let them know you see it", scores: { trust: 5, momentum: 0, clarity: 3 }, feedback: "Some people are waiting to be asked. The knock itself is the help. Just be ready for them to say 'I'm fine' — and decide whether to accept that or gently push." },
-      { text: "No — respect their space and be available when they're ready", scores: { trust: 3, momentum: 2, clarity: 4 }, feedback: "Respectful. But 'being available' only works if they know you are. Sometimes silence looks like distance, not patience." },
-      { text: "Don't ask about the problem — just show up. Bring food. Be present.", scores: { trust: 6, momentum: 2, clarity: 2 }, feedback: "Presence without pressure. You didn't make them perform their pain. You just showed up. Sometimes that's the whole thing." }
-    ],
-    tags: ["relationships", "trust"]
-  },
-  {
-    id: "off-5", category: "Off the Clock", type: "offwork",
-    context: "You realize you've been short-tempered with everyone at home for days. It's not about them.",
-    question: "You're leaking work stress into your personal life. What do you do about it?",
-    choices: [
-      { text: "Name it out loud — 'I've been short lately and it's not about you. I'm working on it.'", scores: { trust: 6, momentum: 2, clarity: 5 }, feedback: "Three sentences that prevent a week of silent tension. Naming it doesn't fix it, but it stops the people around you from making up their own explanations — which are usually worse than the truth." },
-      { text: "Just try harder to keep it together", scores: { trust: -2, momentum: 3, clarity: -3 }, feedback: "White-knuckling it. It works for a day, maybe two. Then it breaks. And when it breaks, it breaks bigger than if you'd dealt with it at the start." },
-      { text: "Take a day — genuinely disconnect and reset", scores: { trust: 3, momentum: -2, clarity: 4 }, feedback: "If you can actually disconnect. Most people take the day off and spend it thinking about work from the couch. A day off is only a reset if you let it be one." }
-    ],
-    tags: ["regulation", "relationships", "self-awareness"]
-  },
-
-  // ===== SELF CHECK-IN =====
-  {
-    id: "chk-1", category: "Check-In", type: "checkin",
-    context: "No scenario. Just you.",
-    question: "When you think about walking into work tomorrow morning — what's the first feeling?",
-    choices: [
-      { text: "Ready — I know what I'm doing and I'm good at it", scores: { trust: 2, momentum: 2, clarity: 2 }, feedback: "Hold onto that. On the days when everything is sideways, remember that this version of you exists. Confidence isn't arrogance when it's earned." },
-      { text: "Tired — I'll show up but I'm running on fumes", scores: { trust: 1, momentum: -1, clarity: 1 }, feedback: "Fumes run out. You already know that. The question isn't whether you can push through — you obviously can. The question is how many days in a row you should have to." },
-      { text: "Anxious — there's something waiting for me that I'm not sure I can handle", scores: { trust: 1, momentum: 1, clarity: 1 }, feedback: "Name it. Right now, in your head — what's the specific thing? Anxiety shrinks when it has a name. It grows when it stays 'something.' You don't have to fix it tonight. Just know what it is." }
-    ],
-    tags: ["self-awareness", "regulation"]
-  },
-  {
-    id: "chk-2", category: "Check-In", type: "checkin",
-    context: "No scenario. Just a question.",
-    question: "Who on your team do you trust the most right now? Why?",
-    choices: [
-      { text: "The one who just does their job without drama", scores: { trust: 2, momentum: 3, clarity: 1 }, feedback: "Reliable. Invisible. And probably underappreciated. The people who don't cause problems rarely get told they're valued. When's the last time you told them?" },
-      { text: "The one who pushes back on me when I'm wrong", scores: { trust: 3, momentum: 1, clarity: 3 }, feedback: "That takes courage on their part and maturity on yours. Protect that relationship. People who tell you the truth are rare. Don't accidentally punish them for it." },
-      { text: "Honestly? I'm not sure I fully trust anyone right now", scores: { trust: -1, momentum: 0, clarity: 2 }, feedback: "That's worth sitting with. Is it them, or is it the environment? Trust erodes when the structure around it is unstable. Sometimes rebuilding the system rebuilds the trust." }
-    ],
-    tags: ["trust", "self-awareness"]
-  },
-  {
-    id: "chk-3", category: "Check-In", type: "checkin",
-    context: "No scenario. Just honesty.",
-    question: "Are you managing the way you want to, or the way the situation is forcing you to?",
-    choices: [
-      { text: "The way I want to — I've found my style and it works", scores: { trust: 3, momentum: 2, clarity: 3 }, feedback: "Good. Protect that. External pressure will try to reshape you into someone more convenient for the system. Knowing your style — and choosing it consciously — is the anchor." },
-      { text: "Somewhere in between — I have a style but I compromise it more than I'd like", scores: { trust: 2, momentum: 1, clarity: 2 }, feedback: "Most honest answer. Every manager lives here. The goal isn't perfection — it's awareness. Knowing when you're compromising means you're choosing, not drifting." },
-      { text: "The situation is driving — I'm mostly reacting", scores: { trust: 0, momentum: -1, clarity: 1 }, feedback: "That's what chaos feels like from inside it. But here's the thing — you recognized it. Reactive managers who know they're reactive are already halfway back to intentional. What's one thing you could take back control of tomorrow?" }
-    ],
-    tags: ["self-awareness", "leadership"]
-  },
-  {
-    id: "chk-4", category: "Check-In", type: "checkin",
-    context: "No scenario. Just you and the question.",
-    question: "What's the thing you're avoiding dealing with right now?",
-    choices: [
-      { text: "A conversation I know I need to have", scores: { trust: 1, momentum: 0, clarity: 2 }, feedback: "The conversation gets harder every day you don't have it. Not because the topic changes — but because the story you're telling yourself about it gets more dramatic. The real conversation is almost never as bad as the one in your head." },
-      { text: "A decision I keep putting off", scores: { trust: 0, momentum: -1, clarity: 2 }, feedback: "Delaying a decision is making a decision — you're choosing the status quo and the cost of waiting. Sometimes that's right. But if you've been putting it off for more than a week, the cost is probably higher than the discomfort of choosing." },
-      { text: "Nothing — I'm pretty caught up", scores: { trust: 2, momentum: 3, clarity: 2 }, feedback: "Maybe. Or maybe you're so deep in the weeds that the thing you're avoiding has become invisible. When everything feels urgent, the important stuff hides in plain sight." }
-    ],
-    tags: ["self-awareness", "regulation"]
-  },
-  {
-    id: "chk-5", category: "Check-In", type: "checkin",
-    context: "No scenario. Real talk.",
-    question: "When you leave work at the end of the day, do you feel like what you did mattered?",
-    choices: [
-      { text: "Most days, yeah — I can see the impact", scores: { trust: 3, momentum: 3, clarity: 2 }, feedback: "Don't take that for granted. A lot of people in management roles lose that feeling. The fact that you can still see the line between your effort and the outcome means you're still connected to the work. That connection is fuel." },
-      { text: "Sometimes — depends on the day", scores: { trust: 2, momentum: 1, clarity: 1 }, feedback: "The days it doesn't feel like it matters — what's different about those days? Is it the type of work? The people? The amount of firefighting vs. building? That gap is telling you something about where your energy belongs." },
-      { text: "Honestly, not lately", scores: { trust: 0, momentum: -2, clarity: 1 }, feedback: "That's heavy. And it's worth paying attention to. Burnout doesn't always feel like exhaustion — sometimes it feels like apathy. Like the work stopped meaning something. If that's where you are, the answer isn't 'try harder.' It's 'figure out what would make it matter again.'" }
-    ],
-    tags: ["self-awareness", "regulation"]
-  },
-
-  // ===== TAKING AUTHORITY =====
-  {
-    id: "auth-1", category: "Taking Authority", type: "work",
-    context: "You've been handed responsibility you don't fully feel ready for. Old habit: you'd check with someone before making a call. Now there's no one to check with — the call is yours.",
-    question: "You can sense the team waiting for a decision. What do you do?",
-    choices: [
-      { text: "Make the call — even if it's not perfect, the team needs a direction more than they need certainty", scores: { trust: 5, momentum: 6, clarity: 4 }, feedback: "Right answer. A team without direction stalls. A team with imperfect direction adjusts. The fastest way to grow into authority is to use it — even when it feels uncomfortable. Confidence comes from reps, not from waiting until you feel ready." },
-      { text: "Buy yourself time — 'Let me think about this and get back to you in an hour'", scores: { trust: 2, momentum: 0, clarity: 3 }, feedback: "Sometimes legitimate. But there's a version of 'let me think about it' that's actually 'let me see if someone above me will weigh in.' Track which one this is. If you genuinely need information, an hour is fine. If you're avoiding ownership, an hour is just delay." },
-      { text: "Check with someone above you first — better to be aligned than to make the wrong call", scores: { trust: -3, momentum: -2, clarity: -1 }, feedback: "Familiar move. And it served you well in your old role. But in the new one, checking up the chain on calls you should be making teaches three things: the team that you're not really the decision-maker, leadership that you can't be trusted with the authority, and you that you don't have it. Time to break the habit." }
-    ],
-    tags: ["authority", "trust", "leadership"]
-  },
-  {
-    id: "auth-2", category: "Taking Authority", type: "work",
-    context: "A staff member challenges your call directly. 'That's not how we usually do it' or 'the old way worked fine.'",
-    question: "You're new in the role. They're pushing on the change. How do you respond?",
-    choices: [
-      { text: "Hold the line — 'I hear you, and we're going to try it this way. If it doesn't work, we'll adjust.'", scores: { trust: 4, momentum: 5, clarity: 6 }, feedback: "You acknowledged them without folding. The 'we'll adjust if it doesn't work' is real — it shows you're not married to the decision, just committed to seeing it through. That's confidence without arrogance. The team can work with that." },
-      { text: "Reverse course — they've been here longer than you've been a supervisor, maybe they're right", scores: { trust: -2, momentum: -4, clarity: -3 }, feedback: "Sometimes the experienced voice is right and you should listen. But reversing the moment someone pushes back teaches the team that pressure works. Next time, every call you make becomes a negotiation. Decisions need a higher bar to overturn than 'someone disagreed.'" },
-      { text: "Open it up — 'What's your concern specifically? Let's talk through it.'", scores: { trust: 6, momentum: 1, clarity: 4 }, feedback: "Smart. You haven't backed down — you've invited them in. If their concern is legitimate, you'll hear something useful. If it's just resistance to change, opening the conversation usually reveals that and they back down on their own. Either way, you stayed in charge while making them feel heard." }
-    ],
-    tags: ["authority", "leadership", "communication"]
-  },
-  {
-    id: "auth-3", category: "Taking Authority", type: "work",
-    context: "You catch yourself about to defer a decision to someone else — a peer, a supervisor, anyone. It's a call you're qualified to make.",
-    question: "Why are you about to hand it off?",
-    choices: [
-      { text: "Habit — I've always escalated and I haven't shaken it yet", scores: { trust: 4, momentum: 3, clarity: 5 }, feedback: "Naming it is half the fight. Every time you catch yourself about to escalate, that's a chance to make a different choice. Don't beat yourself up about the habit — just notice it, then make the call yourself. The reps build the new pattern." },
-      { text: "Risk aversion — if I make the call and it's wrong, it's on me", scores: { trust: 2, momentum: 1, clarity: 3 }, feedback: "Honest. And worth examining. If the call goes wrong, yes, you own it. But if you escalate every uncertain call, you're not building the judgment you need to grow into the role. The cost of a wrong call you own is learning. The cost of always deferring is staying small." },
-      { text: "Maybe I'm not as ready as I thought — this would be safer with someone else's input", scores: { trust: 0, momentum: -2, clarity: 1 }, feedback: "That's the imposter syndrome talking. Probably wrong. The voice that says you're not ready is the same voice that will say you're not ready in six months, and a year. Readiness comes from doing the thing, not from feeling ready before you do it. You're more capable than that voice tells you." }
-    ],
-    tags: ["authority", "self-awareness", "leadership"]
-  },
-
-  // ===== DATA & FLOOR KNOWLEDGE =====
-  {
-    id: "df-1", category: "Data vs Floor", type: "work",
-    context: "Someone presents you with a graph or analysis about your area. The numbers don't match what you know is actually happening on the floor.",
-    question: "The data says one thing. Your direct experience says another. What do you do?",
-    choices: [
-      { text: "Trust the data — they probably know things you don't, and numbers don't lie", scores: { trust: -3, momentum: 2, clarity: -3 }, feedback: "Numbers definitely lie — when the inputs are wrong, the date range is off, or the analysis is missing context. Floor knowledge isn't a feeling. It's pattern recognition built over months of being there. Don't dismiss it because someone made a pretty graph from a spreadsheet." },
-      { text: "Push back with specifics — 'That doesn't match what I'm seeing, can we look at the source data together?'", scores: { trust: 6, momentum: 3, clarity: 7 }, feedback: "The right move. You're not saying their analysis is wrong — you're saying something doesn't reconcile, and you want to understand why. Nine times out of ten, the issue is in the inputs or the context. You'll either help them improve their analysis or learn something you didn't know. Both are wins." },
-      { text: "Let it slide — picking a fight over data isn't worth the political cost", scores: { trust: -4, momentum: 1, clarity: -2 }, feedback: "Bad numbers presented to leadership lead to bad decisions. If you stay quiet because pushing back is awkward, you're letting the wrong story shape decisions about your area. Your silence isn't neutral — it's an endorsement. Speak up early, calmly, with specifics. That's not picking a fight. That's doing your job." }
-    ],
-    tags: ["data", "authority", "integrity"]
-  },
-  {
-    id: "df-2", category: "Data vs Floor", type: "work",
-    context: "Someone asks you to provide numbers or data about your area for a report or analysis. You could give them the snapshot they're asking for or the fuller picture with context.",
-    question: "They want a number. Do you give them the number, or the story behind it?",
-    choices: [
-      { text: "Give them the number with the context they need to interpret it correctly", scores: { trust: 5, momentum: 3, clarity: 7 }, feedback: "Numbers without context are how bad decisions get made. A '12' that needs to be a '7' because of an outage that week is going to drive a wrong conclusion. Giving them the number and the context is more work for you and saves everyone downstream from a flawed analysis. Always include the context." },
-      { text: "Give them what they asked for — they're the one doing the analysis, that's their job", scores: { trust: -2, momentum: 3, clarity: -3 }, feedback: "Technically true. Operationally short-sighted. If they don't know the context of the number, they can't interpret it correctly. And when the resulting analysis turns out to be wrong, you'll be the one explaining why your team's numbers 'looked bad.' Five minutes of context now saves an hour of cleanup later." },
-      { text: "Ask them what they're trying to figure out — then give them the data that actually answers it", scores: { trust: 4, momentum: 4, clarity: 6 }, feedback: "Even better. The number they're asking for might not be the right one to answer their actual question. By understanding the goal, you can guide them to the data that actually helps. That's not gatekeeping — that's being the expert on your own area." }
-    ],
-    tags: ["data", "integrity", "communication"]
-  },
-
-  // ===== MENTORING OTHERS =====
-  {
-    id: "ment-1", category: "Mentoring Others", type: "work",
-    context: "Someone newer than you on the team asks how to do something. You could show them, or you could let them try and figure it out.",
-    question: "Showing them is faster. Letting them try is slower. Which is the right call?",
-    choices: [
-      { text: "Let them try — set them up with the goal and let them work the problem", scores: { trust: 6, momentum: 1, clarity: 5 }, feedback: "Growth requires struggle. If you do it for them every time, you become the bottleneck and they become dependent. Watching someone fumble through something you could do in two minutes is uncomfortable, but it's the only way they actually learn. Your job isn't to be the answer key — it's to develop the next answer key." },
-      { text: "Show them once, then have them do it next time", scores: { trust: 4, momentum: 4, clarity: 4 }, feedback: "Solid middle ground. They get a model, then they get the rep. Just make sure 'next time' actually arrives. The trap is showing them every time because it's faster, and the 'next time' becomes 'someday.'" },
-      { text: "Show them — they need to see it done right before they try", scores: { trust: -1, momentum: 5, clarity: 0 }, feedback: "Sometimes true — for safety-critical work or when the stakes of a mistake are real. Most of the time, though, this is the answer of someone who hasn't yet realized that doing it for people is the slow path, not the fast one. Every time you do it for them, you reset the clock on their learning to zero." }
-    ],
-    tags: ["mentorship", "delegation", "trust"]
-  },
-  {
-    id: "ment-2", category: "Mentoring Others", type: "work",
-    context: "Someone you're developing makes a mistake. It's not catastrophic, but it's the kind of thing you would have caught.",
-    question: "Do you correct them, let them discover it themselves, or use it as a teaching moment?",
-    choices: [
-      { text: "Point it out specifically — what went wrong, why it matters, what to do next time", scores: { trust: 5, momentum: 4, clarity: 7 }, feedback: "Clear feedback delivered without judgment is how people grow. The structure matters: name the mistake, explain the impact, give them a path forward. Vague 'be more careful' feedback teaches nothing. Specific feedback teaches a skill." },
-      { text: "Let them discover it — they'll learn more from finding it themselves", scores: { trust: 2, momentum: -2, clarity: 1 }, feedback: "Sometimes works. More often, they don't discover it and the mistake propagates. Discovery learning is romantic in theory and inefficient in practice. Tell them. That's what mentorship is." },
-      { text: "Fix it quietly — they're new, no need to make them feel bad", scores: { trust: -3, momentum: 3, clarity: -4 }, feedback: "You protected their feelings and stunted their growth. They'll make the same mistake again because nobody told them it was a mistake. Kindness without honesty isn't kindness — it's avoidance dressed up as nice." }
-    ],
-    tags: ["mentorship", "feedback", "growth"]
-  }
+const AXES = [
+  {key:"trust",       label:"Trust",       color:"#38bdf8", desc:"Building confidence in your team"},
+  {key:"momentum",    label:"Momentum",    color:"#fb923c", desc:"Keeping production moving"},
+  {key:"clarity",     label:"Clarity",     color:"#a78bfa", desc:"Cutting through ambiguity"},
+  {key:"adaptability",label:"Adapt",       color:"#e8a838", desc:"Recovering when the plan breaks"}
 ];
 
-// ========== GAME ENGINE ==========
-class DecisionDeck {
-  constructor() {
-    this.state = 'start';
-    this.scores = { trust: 50, momentum: 50, clarity: 50 };
-    this.usedIds = new Set();
-    this.round = 0;
-    this.totalRounds = 14;
-    this.history = [];
-    this.currentScenario = null;
-    this.selectedChoice = null;
-    this.usedIds = new Set();
-    this.deck = [];
-    this.render();
+const CARD_COUNT = 10;
+
+const SCENARIOS = [
+
+  // ── STANDARD ──────────────────────────────────────
+
+  {id:"s-del-1", type:"standard", category:"Delegation",
+   context:"A technician asks how to handle a device modification they've done before.",
+   question:"They know the process. They're really asking for permission. What do you do?",
+   choices:[
+     {text:"Walk them through it step by step to be safe",
+      scores:{trust:-5,momentum:3,clarity:0},
+      feedback:"They already knew. You just told them their experience doesn't count. Sometimes helping is the thing that slows everyone down."},
+     {text:"Tell them you trust their judgment and to flag you if something unexpected comes up",
+      scores:{trust:8,momentum:5,clarity:3},
+      feedback:"They walked away standing taller. That cost you nothing and bought you something you can't fake."},
+     {text:"Ask them what they think the right approach is, then confirm it",
+      scores:{trust:4,momentum:0,clarity:5},
+      feedback:"Solid middle ground. Just know — do this every time and it starts to feel like a test, not trust."}
+   ]},
+
+  {id:"s-del-3", type:"standard", category:"Delegation",
+   context:"You delegated a task last week. It got done, but not the way you would have done it. The result is fine.",
+   question:"Do you say something?",
+   choices:[
+     {text:"No — the result met the standard, their method is their business",
+      scores:{trust:7,momentum:4,clarity:2},
+      feedback:"Your way isn't the only way. Letting go of method when the outcome is solid is how you build a team that can function without you."},
+     {text:"Mention your preferred approach for next time",
+      scores:{trust:-3,momentum:2,clarity:3},
+      feedback:"Next time they'll do it your way — not because it's better, but because it's safer. That's compliance, not growth."},
+     {text:"Ask them to walk you through their process — you might learn something",
+      scores:{trust:6,momentum:2,clarity:5},
+      feedback:"Most supervisors never ask this question because it means admitting someone else might have a better method. The ones who do get smarter every week."}
+   ]},
+
+  {id:"s-acc-1", type:"standard", category:"Accountability",
+   context:"Someone made a mistake on a device. Not their first time. But they caught it themselves and brought it to you.",
+   question:"They self-reported. How do you handle it?",
+   choices:[
+     {text:"Thank them for catching it, fix it together, and document it",
+      scores:{trust:7,momentum:2,clarity:4},
+      feedback:"They just learned that honesty is safe here. That's worth more than any write-up."},
+     {text:"Address the pattern — this keeps happening and it needs to stop",
+      scores:{trust:-3,momentum:0,clarity:5},
+      feedback:"You just punished the one time they came to you voluntarily. Next time they'll hide it."},
+     {text:"Let it go this time since they caught it",
+      scores:{trust:2,momentum:4,clarity:-4},
+      feedback:"Kindness without structure is just avoidance. No documentation means no trail."}
+   ]},
+
+  {id:"s-hard-1", type:"standard", category:"Hard Calls",
+   context:"You need to give critical feedback to someone who doesn't take it well. Last time they got defensive.",
+   question:"The feedback is necessary. The reaction is predictable. How do you deliver it?",
+   choices:[
+     {text:"Be direct and clear — they need to hear it regardless",
+      scores:{trust:2,momentum:4,clarity:5},
+      feedback:"Delivery isn't about being honest. It's about making sure the other person can actually hear you."},
+     {text:"Lead with what they're doing well, then transition to the growth area",
+      scores:{trust:4,momentum:2,clarity:2},
+      feedback:"The compliment sandwich. Everyone knows what it is. Some people still need it. Just make sure the positives are genuine."},
+     {text:"Ask them to self-assess first — 'How do you think that went?'",
+      scores:{trust:6,momentum:0,clarity:6},
+      feedback:"If they already know, you're coaching, not criticizing. If they don't know, you've learned something about their self-awareness."}
+   ]},
+
+  {id:"s-gro-1", type:"standard", category:"Growth",
+   context:"A junior tech wants to take on a task above their skill level. There's real risk they'll mess it up.",
+   question:"They want to grow. The timing isn't ideal. What do you do?",
+   choices:[
+     {text:"Let them try with guardrails — check in at key milestones",
+      scores:{trust:7,momentum:2,clarity:4},
+      feedback:"Growth requires risk. The guardrails protect the work, the opportunity protects their development."},
+     {text:"Not this time — stakes are too high, but you'll find them a chance soon",
+      scores:{trust:0,momentum:4,clarity:3},
+      feedback:"'Soon' is dangerous. If you mean it, put a date on it."},
+     {text:"Give them a meaningful piece of it, not the whole task",
+      scores:{trust:5,momentum:4,clarity:5},
+      feedback:"Smart. Exposure without full risk. Just make sure it's real work, not busywork. People can tell."}
+   ]},
+
+  {id:"s-dyn-1", type:"standard", category:"Dynamics",
+   context:"Someone outside your direct scope keeps offering input on how the floor should run. Leadership seems to welcome it. Some of the ideas are solid. Some miss how things actually work.",
+   question:"They have leadership's ear. You have the floor knowledge. How do you handle the disconnect?",
+   choices:[
+     {text:"Push back on the bad ideas with specific evidence from the floor",
+      scores:{trust:3,momentum:4,clarity:4},
+      feedback:"Good if your evidence is specific and delivered calmly. Data versus experience arguments rarely have clean winners — bring both."},
+     {text:"Propose a pilot — test their idea on a small scale before full rollout",
+      scores:{trust:5,momentum:3,clarity:6},
+      feedback:"Smart. You're not saying no, you're saying 'prove it.' And if it works, you adopted a good idea. If it doesn't, the pilot did the arguing for you."},
+     {text:"Stop fighting it — implement what leadership wants and document the results",
+      scores:{trust:-2,momentum:6,clarity:0},
+      feedback:"If you know something won't work and you let it fail silently, you chose peace over the people who live with the consequences. That's avoidance wearing a professional mask."}
+   ]},
+
+  {id:"s-dyn-2", type:"standard", category:"Dynamics",
+   context:"You find out your work is being characterized to leadership in a way that doesn't match what actually happened — not an outright lie, just a framing that doesn't include your best contributions.",
+   question:"They're not lying exactly. They're narrating. And the narrative doesn't include your best work. What do you do?",
+   choices:[
+     {text:"Start making sure your results are visible to leadership directly",
+      scores:{trust:3,momentum:5,clarity:4},
+      feedback:"Solid long game. If your work is visible, someone else's framing has less power. Just don't let 'making results visible' tip into self-promotion that feels forced."},
+     {text:"Have a direct conversation — 'I've heard how my work is being framed and I want to address it'",
+      scores:{trust:4,momentum:-2,clarity:5},
+      feedback:"Direct and risky. If they're the type to deny it, you've shown your hand. But if they respect directness, this could actually fix it."},
+     {text:"Build your relationship with leadership directly so their read on you comes from firsthand experience",
+      scores:{trust:6,momentum:2,clarity:6},
+      feedback:"The best defense against a bad narrator is being known directly. Takes time. But once leadership has their own read on you, no one else's version sticks."}
+   ]},
+
+  // ── CASCADE ───────────────────────────────────────
+
+  {id:"c-del-1", type:"cascade", category:"Delegation",
+   context:"A job is running behind. You could jump in and finish it yourself faster.",
+   question:"You know you can get it done quicker. But should you?",
+   choices:[
+     {text:"Jump in and get it done — production comes first",
+      scores:{trust:-3,momentum:8,clarity:-2},
+      feedback:"The job got done. But your team just learned that when things get tight, you don't trust them to deliver. They'll wait for you next time too.",
+      beat2:{
+        complication:"You finished the job — but the tech is visibly deflated and a second job missed its window because you weren't available to make a call on it.",
+        question:"You solved one problem and created two. What do you address first?",
+        choices:[
+          {text:"Check in with the tech — the production hit can wait",
+           scores:{trust:6,momentum:-2,adaptability:6},
+           feedback:"The job can be rescheduled. Trust that's been chipped away by repeated takeovers is harder to rebuild. You picked the right thing."},
+          {text:"Get the missed job sorted first — production can't slip further",
+           scores:{trust:-2,momentum:6,adaptability:3},
+           feedback:"Practical. But the tech just watched you fix the production problem and skip them. That's a pattern they'll remember."},
+          {text:"Handle both at once — quick check-in while you sort the job",
+           scores:{trust:4,momentum:4,adaptability:5},
+           feedback:"Attempted both, partial on each. Sometimes the realistic move. The check-in needs to be real though — a 10-second 'you good?' isn't the conversation they needed."}
+        ]
+      }},
+     {text:"Check in on the bottleneck and help them problem-solve it",
+      scores:{trust:5,momentum:3,clarity:4},
+      feedback:"Slower today. Faster every day after. They solved it with your support, not your hands — that's the difference.",
+      beat2:{
+        complication:"While you were coaching through the bottleneck, an urgent job came in and nobody's free to start it.",
+        question:"You're already committed. Now what?",
+        choices:[
+          {text:"Pull yourself out — the urgent job needs a decision, not the coaching",
+           scores:{trust:-2,momentum:6,adaptability:5},
+           feedback:"The urgent job got handled. The tech you were coaching lost momentum mid-problem. Give them a clear handoff point before you leave, not just a disappearing act."},
+          {text:"Finish what you started — get the first job moving, then deal with the urgent job",
+           scores:{trust:6,momentum:2,adaptability:4},
+           feedback:"You honored the commitment. The urgent job waited a few minutes. As long as someone knows it's incoming, that's a reasonable sequence."},
+          {text:"Ask someone else to handle the urgent intake while you finish",
+           scores:{trust:3,momentum:5,adaptability:6},
+           feedback:"Distributed the load. The risk is they weren't set up well — make sure they know exactly what to capture and where to flag uncertainty."}
+        ]
+      }},
+     {text:"Let it run late — they need to feel the consequences",
+      scores:{trust:-2,momentum:-5,clarity:2},
+      feedback:"Letting production slip to teach a lesson is a cost the whole team pays for one person's education.",
+      beat2:{
+        complication:"The job ran late — and now there's a real downstream impact. Someone is asking for a status.",
+        question:"The lesson cost something real. How do you handle it?",
+        choices:[
+          {text:"Be straight — there was a production delay and here is the new timeline",
+           scores:{trust:3,momentum:3,adaptability:6},
+           feedback:"Clients and colleagues handle honesty better than vagueness. Make sure the new timeline is real before you give it."},
+          {text:"Absorb it — move forward and don't explain the delay",
+           scores:{trust:1,momentum:4,adaptability:2},
+           feedback:"Works if the new timeline holds. If it slips again, you have no goodwill left and no explanation on record."},
+          {text:"Apologize and offer something to make it right",
+           scores:{trust:4,momentum:2,adaptability:4},
+           feedback:"Gesture of accountability. Just make sure what you offer is actually yours to give."}
+        ]
+      }}
+   ]},
+
+  {id:"c-cas-2", type:"cascade", category:"Conflict",
+   context:"Two techs are arguing about the right way to do a setup. Both approaches work.",
+   question:"How do you handle it?",
+   choices:[
+     {text:"Pick the better method and settle it",
+      scores:{trust:-4,momentum:5,clarity:3},
+      feedback:"Fast. Clean. And one of them just became the person who was wrong in front of their peer.",
+      beat2:{
+        complication:"The one who 'lost' is now visibly disengaged. A job that was their responsibility just got missed.",
+        question:"The argument is settled. Now you have a morale problem and a missed job.",
+        choices:[
+          {text:"Address the missed job first, then circle back to the morale issue later",
+           scores:{trust:2,momentum:5,adaptability:4},
+           feedback:"Reasonable sequence. Just make sure the 'later' conversation actually happens. Missed jobs that don't get talked through tend to repeat."},
+          {text:"Have a direct conversation — 'I noticed you went quiet after this morning'",
+           scores:{trust:6,momentum:0,adaptability:6},
+           feedback:"You saw what happened and you named it. That takes more courage than either of the other options. It's also the thing that actually repairs the dynamic."},
+          {text:"Let it play out — they'll reset by tomorrow",
+           scores:{trust:-3,momentum:2,adaptability:-2},
+           feedback:"Disengagement that goes unacknowledged compounds, it doesn't dissolve. And the missed job is already real."}
+        ]
+      }},
+     {text:"Ask them to test both and go with whatever gets better results",
+      scores:{trust:6,momentum:2,clarity:5},
+      feedback:"Nobody lost. The work decided. And you just built a decision-making framework they'll use without you next time.",
+      beat2:{
+        complication:"You catch one tech stacking the test in their favor by using inferior materials for the other method.",
+        question:"The process you set up is being gamed. What do you do?",
+        choices:[
+          {text:"Reset the test with neutral materials and address what happened privately",
+           scores:{trust:5,momentum:-2,adaptability:7},
+           feedback:"The right call. You protected the process and kept it private — calling it out in front of both would have re-ignited the argument."},
+          {text:"Scrap the test and just make the call yourself",
+           scores:{trust:2,momentum:5,adaptability:3},
+           feedback:"It works short term. But you signaled that the data-driven process can be gamed out of existence."},
+          {text:"Address it in front of both — the other tech should know what happened",
+           scores:{trust:0,momentum:-1,adaptability:3},
+           feedback:"Honest. But now you've put the tech who cheated in the worst possible position in front of their peer. That conversation needs to happen privately first."}
+        ]
+      }},
+     {text:"Separate them and hear both sides before deciding",
+      scores:{trust:3,momentum:-3,clarity:2},
+      feedback:"Sometimes the best move is to not make it bigger than it is.",
+      beat2:{
+        complication:"While you were doing private conversations, both techs told others what was happening. The whole floor is now waiting to see how you handle it.",
+        question:"What was a two-person issue is now a floor issue. Pressure is on.",
+        choices:[
+          {text:"Don't change your approach — make the decision and communicate it plainly",
+           scores:{trust:4,momentum:4,adaptability:5},
+           feedback:"Steady. You didn't let the audience change the quality of your decision. The floor respects calm more than performance."},
+          {text:"Acknowledge it — 'I know this got out, I'm working through it'",
+           scores:{trust:5,momentum:2,adaptability:5},
+           feedback:"Transparent. Just make sure 'working through it' has a timeline — vague process makes people more anxious, not less."},
+          {text:"Speed up and make a faster decision to cut off the speculation",
+           scores:{trust:1,momentum:5,adaptability:3},
+           feedback:"A rushed decision made under audience pressure is how you end up second-guessing yourself for months."}
+        ]
+      }}
+   ]},
+
+  {id:"c-cas-3", type:"cascade", category:"Hard Calls",
+   context:"Short-staffed and a tech asks for a day off. Coverage will be brutal.",
+   question:"You can say yes or no. Both have consequences.",
+   choices:[
+     {text:"Approve it — they asked, it's available, burning people out protects nothing",
+      scores:{trust:7,momentum:-3,clarity:2},
+      feedback:"Hard day for the floor. But the person who got their day will remember you treated them like a human when it was hard to.",
+      beat2:{
+        complication:"The day arrived and it's worse than expected. A critical job came in and one remaining tech is showing clear signs of burnout.",
+        question:"You made a promise. The floor is struggling. What do you do?",
+        choices:[
+          {text:"Hold the approval — you made a commitment and the team will get through it",
+           scores:{trust:5,momentum:-2,adaptability:4},
+           feedback:"You kept your word. Check in with everyone when the day is over — the floor needs to know the hit was seen, not just absorbed."},
+          {text:"Call the person on their day off and ask if they can come in for part of the shift",
+           scores:{trust:-2,momentum:5,adaptability:4},
+           feedback:"If you ask, make it a genuine ask — not a pressure call. And if they say no, the answer is no."},
+          {text:"Redistribute evenly — no one person absorbs it all",
+           scores:{trust:3,momentum:4,adaptability:6},
+           feedback:"Fair distribution of hard. Make sure everyone knows it's recognized, not just expected."}
+        ]
+      }},
+     {text:"Deny it — explain honestly and help them find another day",
+      scores:{trust:-1,momentum:4,clarity:4},
+      feedback:"Honest. Practical. But 'find another day' better happen or you made a promise the system won't let you keep.",
+      beat2:{
+        complication:"You found them another day — two weeks out. They're working visibly less engaged since the denial.",
+        question:"You made the right logistical call. The human part landed hard.",
+        choices:[
+          {text:"Check in directly — 'I know the timing on that wasn't what you needed'",
+           scores:{trust:6,momentum:1,adaptability:5},
+           feedback:"You named the cost of the decision without reversing it. That's leadership. The engagement dip will likely resolve after this conversation."},
+          {text:"Let it pass — they'll get over it once they have the day",
+           scores:{trust:-2,momentum:3,adaptability:1},
+           feedback:"Two weeks of disengagement is a real cost. Checking in costs you nothing. Silence reads as indifference."},
+          {text:"See if anything changed and try to get them an earlier day",
+           scores:{trust:4,momentum:2,adaptability:4},
+           feedback:"Demonstrates you're still working for them even after saying no. That's the detail that shifts someone from 'my supervisor denied me' to 'my supervisor is trying.'"}
+        ]
+      }},
+     {text:"Approve it but tell them what it costs the team",
+      scores:{trust:3,momentum:0,clarity:3},
+      feedback:"You said yes and made them feel guilty about it. Either say yes and mean it, or say no and own it.",
+      beat2:{
+        complication:"The guilt landed. They're at work but spending the whole shift apologizing to coworkers, which is making everyone more uncomfortable, not less.",
+        question:"You created the dynamic. You have to resolve it.",
+        choices:[
+          {text:"Take them aside and tell them to let it go — the day is theirs, no debt owed",
+           scores:{trust:5,momentum:4,adaptability:6},
+           feedback:"You corrected your own mistake. That's harder than the original call and more valuable. They'll remember both."},
+          {text:"Let it run its course — the day will end",
+           scores:{trust:-1,momentum:-2,adaptability:1},
+           feedback:"The discomfort spreads. Now the whole floor is processing their colleague's guilt on top of the short-staffed day."},
+          {text:"Redirect everyone to the work — pull focus back to the floor",
+           scores:{trust:2,momentum:5,adaptability:3},
+           feedback:"You shifted the energy to production. The underlying dynamic didn't get resolved but the shift is survivable. Have the real conversation at end of day."}
+        ]
+      }}
+   ]},
+
+  // ── CONSTRAINED ───────────────────────────────────
+
+  {id:"k-con-1", type:"constrained", category:"Production",
+   context:"A quality check catches a defect on a nearly finished device. The patient's fitting is tomorrow morning.",
+   question:"Rework is possible but it'll take the rest of the afternoon. What do you do?",
+   choices:[
+     {text:"Pull whoever is available and rework it now — the fitting holds",
+      scores:{trust:3,momentum:4,clarity:5},
+      feedback:"You prioritized the patient. Good call — assuming you have the bodies to do it without breaking something else."},
+     {text:"Call the clinician and give them the real picture — let them decide if the fitting moves",
+      scores:{trust:5,momentum:3,clarity:6},
+      feedback:"You didn't make a clinical decision unilaterally. The clinician has information you don't about whether tomorrow is movable. That's theirs to weigh, not yours."},
+     {text:"Flag it to supervision and document it — don't start rework without authorization",
+      scores:{trust:4,momentum:2,clarity:5},
+      feedback:"Correct instinct on authorization. Just make sure flagging it doesn't become a delay — this needs to move in the next 30 minutes, not sit in an inbox."}
+   ],
+   constraint:{
+     reveal:"You have one available tech — and it's the one who caused the defect. Everyone else is committed to jobs that can't stop.",
+     question:"The only body you have is the person who made the mistake. Now what?",
+     choices:[
+       {text:"Put them on the rework — they know the job and they need to fix what they broke",
+        scores:{trust:3,momentum:5,adaptability:5},
+        feedback:"Pragmatic and actually good for them — they need to resolve it, not just carry the guilt. Set a checkpoint halfway through."},
+       {text:"Do it yourself — this is too high-stakes to risk a second mistake",
+        scores:{trust:-2,momentum:4,adaptability:3},
+        feedback:"The job gets done. They just learned that when pressure is high, they can't be trusted. That's a real cost to weigh against the risk."},
+       {text:"Pair yourself with them — you supervise the rework together",
+        scores:{trust:5,momentum:3,adaptability:6},
+        feedback:"Best of both. They do the repair work, you're the safety net. They finish the shift having fixed it rather than watched you fix it for them."}
+     ]
+   }},
+
+  {id:"k-con-2", type:"constrained", category:"Delegation",
+   context:"You've been developing a junior tech's skills. You finally have a job that's right at their level — a real stretch opportunity.",
+   question:"How do you hand it off?",
+   choices:[
+     {text:"Brief them thoroughly and step back — trust the prep",
+      scores:{trust:6,momentum:4,clarity:4},
+      feedback:"The preparation earns the autonomy. As long as they know how to flag you if something unexpected comes up, this is good delegation."},
+     {text:"Work the first part together, then hand the rest to them",
+      scores:{trust:5,momentum:3,clarity:5},
+      feedback:"Good scaffolding. Just make sure 'the rest' is a real handoff, not a shadow — they need to own the outcome."},
+     {text:"Have them do it with check-ins at key milestones",
+      scores:{trust:5,momentum:3,clarity:4},
+      feedback:"Structured autonomy. Know in advance what the milestones are so the check-ins don't feel arbitrary."}
+   ],
+   constraint:{
+     reveal:"Midway through, you get pulled into a facility issue that needs your full attention for the next two hours. The tech is mid-job with no supervisor available.",
+     question:"Your scaffolding just disappeared. They're on their own whether you planned for it or not.",
+     choices:[
+       {text:"Send them a quick message: 'You've got this — flag me if anything looks off'",
+        scores:{trust:7,momentum:4,adaptability:5},
+        feedback:"Simple. Clear. You gave them permission to continue and permission to ask for help without making them feel abandoned. This is the right move."},
+       {text:"Ask another tech to check in on them once while you're gone",
+        scores:{trust:4,momentum:4,adaptability:5},
+        feedback:"Reasonable backup. Make sure the other tech knows what the job is — not to take over, just to be available."},
+       {text:"Pause the job until you're back",
+        scores:{trust:2,momentum:-3,adaptability:3},
+        feedback:"Safe for the job. But you just told them that your confidence in them had a very specific radius. That's hard to unlearn."}
+     ]
+   }},
+
+  {id:"k-con-3", type:"constrained", category:"Accountability",
+   context:"A pattern of small errors has been building on one tech's work — nothing catastrophic, but enough that you need to address it.",
+   question:"How do you open the conversation?",
+   choices:[
+     {text:"Lead with the data — specific dates, specific errors, no editorializing",
+      scores:{trust:3,momentum:3,clarity:6},
+      feedback:"The facts anchor the conversation. Just make sure you listen after you present them — data delivery without space for their response is a verdict, not a conversation."},
+     {text:"Ask them how they think their work has been going lately",
+      scores:{trust:6,momentum:2,clarity:5},
+      feedback:"If they already see the pattern, you're coaching. If they don't, you've learned something about their self-awareness that will shape the rest of the conversation."},
+     {text:"Be direct — there's a pattern and it needs to change",
+      scores:{trust:2,momentum:5,clarity:4},
+      feedback:"Clear. They know where they stand. The missing piece is understanding why — without that, you're addressing the symptom, not the cause."}
+   ],
+   constraint:{
+     reveal:"Midway through the conversation you realize the errors all trace to a process change two months ago that was poorly documented. They may have been doing it wrong because no one showed them the updated version.",
+     question:"The accountability conversation just became a training gap conversation. Part of this is a systems failure, not a performance failure.",
+     choices:[
+       {text:"Acknowledge it directly — 'I think part of this is on us, the process change wasn't communicated well'",
+        scores:{trust:7,momentum:2,adaptability:7},
+        feedback:"Owning the system failure in the middle of a feedback conversation is the hardest move in supervision and the most important one. That builds more trust than almost anything else."},
+       {text:"Finish the feedback conversation and address the training gap separately",
+        scores:{trust:2,momentum:4,adaptability:3},
+        feedback:"The sequence protects the accountability message but the tech is sitting with feedback that may feel unfair. If they figure out the training gap on their own, that conversation will feel like a setup."},
+       {text:"Shift entirely to the training gap — the accountability piece can wait",
+        scores:{trust:4,momentum:2,adaptability:4},
+        feedback:"You protected them from unfair accountability. The pattern still needs addressing — just with the new context built in. Schedule the follow-up before you leave the conversation."}
+     ]
+   }}
+];
+
+// ═══════════════════════════════
+// ENGINE
+// ═══════════════════════════════
+const Deck = (() => {
+  let shuffle = [];
+  let round = 0;
+  let scores = {};
+  let beat = 1;
+  let beat1Choice = null;
+  let selected = null;
+  let constraintRevealed = false;
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    window.scrollTo(0, 0);
   }
 
-  buildDeck() {
-    if (this.usedIds.size >= SCENARIOS.length) this.usedIds = new Set();
-    let pool = SCENARIOS.filter(s => !this.usedIds.has(s.id));
-    // Shuffle
-    for (let i = pool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
+  function buildAxesIntro() {
+    document.getElementById('axes-intro').innerHTML = AXES.map(a =>
+      `<div class="axis-pill">
+        <div class="ap-name" style="color:${a.color}">${a.label}</div>
+        <div class="ap-desc">${a.desc}</div>
+      </div>`
+    ).join('');
+  }
 
-    const selected = [];
-    const catCount = {};
-    const typeCount = { work: 0, offwork: 0, checkin: 0 };
+  function start() {
+    // Balanced shuffle: ~30% special types
+    const standards  = SCENARIOS.filter(s => s.type === 'standard').sort(() => Math.random() - 0.5);
+    const cascades   = SCENARIOS.filter(s => s.type === 'cascade').sort(() => Math.random() - 0.5);
+    const constrained = SCENARIOS.filter(s => s.type === 'constrained').sort(() => Math.random() - 0.5);
+    const total = CARD_COUNT;
+    const specialTarget = Math.max(
+      Math.min(Math.round(total * 0.3), cascades.length + constrained.length), 2
+    );
+    const cascadeSlots = Math.min(Math.ceil(specialTarget / 2), cascades.length);
+    const constrainedSlots = Math.min(Math.floor(specialTarget / 2), constrained.length);
+    const standardSlots = total - cascadeSlots - constrainedSlots;
+    shuffle = [
+      ...standards.slice(0, standardSlots),
+      ...cascades.slice(0, cascadeSlots),
+      ...constrained.slice(0, constrainedSlots)
+    ].sort(() => Math.random() - 0.5);
 
-    // Guarantees: at least 2 offwork, at least 2 checkins, at least 1 dynamics
-    const guarantees = [
-      pool.find(s => s.type === 'checkin'),
-      pool.find(s => s.type === 'checkin' && s !== (selected[0])),
-      pool.find(s => s.type === 'offwork'),
-      pool.find(s => s.type === 'offwork' && !selected.includes(s)),
-      pool.find(s => s.category === 'Dynamics'),
-    ].filter(Boolean);
+    round = 0; beat = 1; beat1Choice = null; selected = null; constraintRevealed = false;
+    scores = {};
+    AXES.forEach(a => { scores[a.key] = 50; });
+    showScreen('play');
+    render();
+  }
 
-    for (const s of guarantees) {
-      if (!selected.includes(s)) {
-        selected.push(s);
-        catCount[s.category] = (catCount[s.category] || 0) + 1;
-        typeCount[s.type] = (typeCount[s.type] || 0) + 1;
+  function choose(idx) {
+    if (selected !== null) return;
+    const s = shuffle[round];
+
+    if (s.type === 'standard') {
+      selected = idx;
+      applyScores(s.choices[idx].scores);
+      render();
+
+    } else if (s.type === 'cascade') {
+      if (beat === 1) {
+        beat1Choice = idx; selected = idx;
+        applyScores(s.choices[idx].scores);
+        render();
+      } else {
+        selected = idx;
+        applyScores(s.choices[beat1Choice].beat2.choices[idx].scores);
+        render();
+      }
+
+    } else if (s.type === 'constrained') {
+      if (!constraintRevealed) {
+        beat1Choice = idx; selected = idx;
+        applyScores(s.choices[idx].scores);
+        render();
+      } else {
+        selected = idx;
+        applyScores(s.constraint.choices[idx].scores);
+        render();
       }
     }
-
-    // Fill rest with variety
-    for (const s of pool) {
-      if (selected.length >= this.totalRounds) break;
-      if (selected.includes(s)) continue;
-      const cc = catCount[s.category] || 0;
-      if (cc >= 2) continue;
-      // Cap types
-      if (s.type === 'checkin' && typeCount.checkin >= 3) continue;
-      if (s.type === 'offwork' && typeCount.offwork >= 3) continue;
-
-      selected.push(s);
-      catCount[s.category] = cc + 1;
-      typeCount[s.type] = (typeCount[s.type] || 0) + 1;
-    }
-
-    // Fill any remaining slots
-    for (const s of pool) {
-      if (selected.length >= this.totalRounds) break;
-      if (!selected.includes(s)) selected.push(s);
-    }
-
-    // Shuffle the final deck but ensure checkins aren't first or back-to-back
-    for (let i = selected.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [selected[i], selected[j]] = [selected[j], selected[i]];
-    }
-
-    // Move checkins away from position 0
-    if (selected[0] && selected[0].type === 'checkin') {
-      const swapIdx = selected.findIndex((s, i) => i > 2 && s.type === 'work');
-      if (swapIdx > 0) [selected[0], selected[swapIdx]] = [selected[swapIdx], selected[0]];
-    }
-
-    this.deck = selected;
   }
 
-  findCallback(history) {
-    if (history.length < 3) return null;
-    const current = this.currentScenario;
-    if (!current) return null;
-    const tagOverlap = history.filter(h => {
-      const past = SCENARIOS.find(s => s.id === h.id);
-      if (!past) return false;
-      return past.tags.some(t => current.tags.includes(t));
+  function advanceBeat() { beat = 2; selected = null; render(); }
+  function revealConstraint() { constraintRevealed = true; selected = null; render(); }
+
+  function nextRound() {
+    round++;
+    beat = 1; beat1Choice = null; selected = null; constraintRevealed = false;
+    if (round >= shuffle.length) finish();
+    else render();
+  }
+
+  function applyScores(s) {
+    AXES.forEach(a => {
+      if (s[a.key] !== undefined)
+        scores[a.key] = Math.max(0, Math.min(100, scores[a.key] + s[a.key]));
     });
-    if (tagOverlap.length > 0) {
-      const ref = tagOverlap[tagOverlap.length - 1];
-      const past = SCENARIOS.find(s => s.id === ref.id);
-      return {
-        text: `Earlier, when faced with a ${past.category.toLowerCase()} situation, you chose: "${ref.choiceText}" — how does that shape your thinking here?`,
-      };
-    }
-    return null;
   }
 
-  applyScoreVariance(scores) {
-    const modified = { ...scores };
-    const roll = Math.random();
-    if (roll < 0.18 && modified.trust > 3) {
-      modified.trust = Math.round(modified.trust * 0.3);
-    } else if (roll < 0.30 && modified.trust < -2) {
-      modified.momentum = Math.abs(modified.momentum) + 3;
-    } else if (roll < 0.42) {
-      const stats = Object.keys(modified);
-      const pick = stats[Math.floor(Math.random() * stats.length)];
-      if (Math.abs(modified[pick]) > 2) {
-        modified[pick] = -Math.round(modified[pick] * 0.5);
-      }
-    } else if (roll < 0.50) {
-      // Bonus: unexpected stat spike
-      const stats = Object.keys(modified);
-      const pick = stats[Math.floor(Math.random() * stats.length)];
-      modified[pick] = modified[pick] + (Math.random() > 0.5 ? 4 : -4);
-    }
-    return modified;
-  }
+  // ── RENDER PLAY ──
+  function render() {
+    const app = document.getElementById('play-app');
+    const s = shuffle[round];
+    const total = shuffle.length;
+    const pct = (round / total) * 100;
 
-  nextRound() {
-    if (this.round >= this.totalRounds) {
-      this.state = 'end';
-      this.render();
-      return;
-    }
-    this.currentScenario = this.deck[this.round];
-    this.usedIds.add(this.currentScenario.id);
-    this.selectedChoice = null;
-    this.state = 'play';
-    this.render();
-  }
+    const axisBar = AXES.map(a =>
+      `<div class="axis-item">
+        <div class="ax-label">${a.label}</div>
+        <div class="ax-val" style="color:${a.color}">${scores[a.key]}</div>
+      </div>`).join('');
 
-  selectChoice(index) {
-    if (this.selectedChoice !== null) return;
-    this.selectedChoice = index;
-    const choice = this.currentScenario.choices[index];
-    const modifiedScores = this.applyScoreVariance(choice.scores);
-    this.scores.trust = Math.max(0, Math.min(100, this.scores.trust + modifiedScores.trust));
-    this.scores.momentum = Math.max(0, Math.min(100, this.scores.momentum + modifiedScores.momentum));
-    this.scores.clarity = Math.max(0, Math.min(100, this.scores.clarity + modifiedScores.clarity));
-    this.history.push({
-      id: this.currentScenario.id,
-      choiceIndex: index,
-      choiceText: choice.text,
-      scores: modifiedScores
-    });
-    this.round++;
-    this.render();
-  }
+    let typeBadge = '';
+    if (s.type === 'cascade')
+      typeBadge = `<div class="type-badge cascade"><span class="badge-dot"></span>Cascade</div>`;
+    else if (s.type === 'constrained')
+      typeBadge = `<div class="type-badge constrained"><span class="badge-dot"></span>Curveball</div>`;
 
-  getEndInsight() {
-    const { trust, momentum, clarity } = this.scores;
-    const sorted = [
-      { name: 'trust', val: trust },
-      { name: 'momentum', val: momentum },
-      { name: 'clarity', val: clarity }
-    ].sort((a, b) => b.val - a.val);
-    const highest = sorted[0].name;
-    const middle = sorted[1].name;
-    const lowest = sorted[2].name;
-    const highVal = sorted[0].val;
-    const lowVal = sorted[2].val;
-    const spread = highVal - lowVal;
+    let cardClass = '';
+    if (s.type === 'cascade') cardClass = 'cascade-card';
+    else if (s.type === 'constrained') cardClass = 'constrained-card';
 
-    // Analyze actual choice patterns from history
-    const totalChoices = this.history.length;
-    const trustPositive = this.history.filter(h => {
-      const s = SCENARIOS.find(sc => sc.id === h.id);
-      return s && s.choices[h.choiceIndex].scores.trust > 3;
-    }).length;
-    const momentumDominant = this.history.filter(h => {
-      const s = SCENARIOS.find(sc => sc.id === h.id);
-      if (!s) return false;
-      const sc = s.choices[h.choiceIndex].scores;
-      return sc.momentum > 4 && sc.trust < 0;
-    }).length;
-    const clarityFocused = this.history.filter(h => {
-      const s = SCENARIOS.find(sc => sc.id === h.id);
-      return s && s.choices[h.choiceIndex].scores.clarity > 3;
-    }).length;
-    const controlPattern = this.history.filter(h => {
-      const s = SCENARIOS.find(sc => sc.id === h.id);
-      if (!s) return false;
-      const sc = s.choices[h.choiceIndex].scores;
-      return sc.momentum > 3 && sc.trust <= 0;
-    }).length;
+    let body = '';
 
-    // Build the reading from actual patterns
-    let reading = '';
-
-    // --- HIGHEST AXIS PARAGRAPH ---
-    if (highest === 'momentum') {
-      if (momentumDominant >= 4) {
-        reading += "Production is your north star, and that came through clearly in these choices. You move things forward. Deadlines don't slip when you're running point. What the scores also show is that you made that choice deliberately — more than once, you picked speed over connection and owned the tradeoff. That's not a flaw. It's a style. Just know that teams can feel when they're being driven versus led, and over time the difference shows up in who stays and who burns out.";
-      } else if (highVal >= 65) {
-        reading += "You keep things moving. Production doesn't stall under you, and people who need a clear direction get one. The momentum score says you've got a bias toward action — which is exactly what a floor supervisor needs. The question worth sitting with is whether that bias ever moves faster than the people you're moving with. A pace that works for you doesn't always work for everyone behind it.";
+    if (s.type === 'standard') {
+      if (selected === null) {
+        body = choicesHTML(s.choices, '');
       } else {
-        reading += "Momentum ran through your choices more than the other two axes, which says you value getting things done. Not glamorously — just done. That's underrated. The gap between your highest and lowest score is narrow enough that no single instinct dominated this run. That kind of balance is usually what good judgment looks like under pressure.";
+        body = choicesHTML(s.choices, '', selected)
+          + feedbackHTML(s.choices[selected], false)
+          + nextBtnHTML(round, total);
       }
-    } else if (highest === 'trust') {
-      if (trustPositive >= 5) {
-        reading += "The relationship axis ran strong through almost everything you chose. People are the lens you lead through — their state, their buy-in, whether they feel seen. That's the harder path in a production environment, and you took it consistently. It accumulates into something: teams that follow you not because the schedule says to, but because they've decided you're worth following. That kind of loyalty doesn't show up in any metric until it's suddenly the only thing holding things together on a bad day.";
-      } else if (highVal >= 65) {
-        reading += "Your instinct is to lead through relationships. People follow you because they believe in you, not because they have to. Guard that — it's rare, it's real, and it's the kind of thing that gets taken for granted until it's gone. The only watch-out: some situations genuinely require you to push past the relational instinct and make a call people won't like. The trust you've built is the account you draw from in those moments.";
+
+    } else if (s.type === 'cascade') {
+      const b2 = beat1Choice !== null ? s.choices[beat1Choice].beat2 : null;
+      if (beat === 1 && selected === null) {
+        body = choicesHTML(s.choices, '');
+      } else if (beat === 1 && selected !== null) {
+        body = choicesHTML(s.choices, '', selected)
+          + feedbackHTML(s.choices[selected], false)
+          + `<button class="next-btn amber" onclick="Deck.advanceBeat()">What happens next →</button>`;
+      } else if (beat === 2 && selected === null) {
+        cardClass = 'interrupt-card';
+        body = `<div class="interrupt-banner">
+            <div class="interrupt-label">⚡ Situation Update</div>
+            <div class="interrupt-text">${b2.complication}</div>
+            <div class="interrupt-sub">Your earlier call is already in motion.</div>
+          </div>
+          <div class="card-question">${b2.question}</div>`
+          + choicesHTML(b2.choices, 'cascade-style');
       } else {
-        reading += "Trust edged out the other two axes, which means when the choices got hard, you leaned toward keeping people intact over keeping the process clean. That's a values call, not a mistake. A narrow margin here just means you're not a one-note leader — the other instincts are present too. That's usually a strength in complex environments.";
+        cardClass = 'interrupt-card';
+        body = `<div class="interrupt-banner">
+            <div class="interrupt-label">⚡ Situation Update</div>
+            <div class="interrupt-text">${b2.complication}</div>
+          </div>
+          <div class="card-question">${b2.question}</div>`
+          + choicesHTML(b2.choices, 'cascade-style', selected)
+          + feedbackHTML(b2.choices[selected], true)
+          + nextBtnHTML(round, total);
       }
-    } else {
-      if (clarityFocused >= 5) {
-        reading += "You reached for structure consistently — clear roles, defined expectations, explicit agreements. That's the instinct of someone who's been burned by ambiguity before, or who's watched ambiguity burn other people. It's a real and valuable kind of intelligence. The thing to hold alongside it: not every situation benefits from being crystallized. Some things need room to be worked out. The ability to know which is which is what separates good structure from rigidity.";
-      } else if (highVal >= 65) {
-        reading += "You think in systems. Roles, structure, expectations — you want everyone to know where they stand. That's a foundation other people can build on. The risk is that structure built without enough relational trust underneath it can feel like control rather than clarity. Keep the two connected and you've got something durable.";
+
+    } else if (s.type === 'constrained') {
+      if (!constraintRevealed && selected === null) {
+        body = choicesHTML(s.choices, '');
+      } else if (!constraintRevealed && selected !== null) {
+        body = choicesHTML(s.choices, '', selected)
+          + feedbackHTML(s.choices[selected], false)
+          + `<button class="next-btn red" onclick="Deck.revealConstraint()">But wait — ⛔</button>`;
+      } else if (constraintRevealed && selected === null) {
+        body = `<div class="constraint-banner">
+            <div class="constraint-label">⛔ Curveball</div>
+            <div class="constraint-text">${s.constraint.reveal}</div>
+          </div>
+          <div class="card-question">${s.constraint.question}</div>`
+          + choicesHTML(s.constraint.choices, '');
       } else {
-        reading += "Clarity came through as your leading instinct — just ahead of the others. When situations were murky, you moved toward definition. That's a useful reflex in a supervisory role. The narrow margin says you're not ignoring the human elements or the pace requirements, which is the right balance.";
+        body = `<div class="constraint-banner">
+            <div class="constraint-label">⛔ Curveball</div>
+            <div class="constraint-text">${s.constraint.reveal}</div>
+          </div>
+          <div class="card-question">${s.constraint.question}</div>`
+          + choicesHTML(s.constraint.choices, '', selected)
+          + feedbackHTML(s.constraint.choices[selected], true)
+          + nextBtnHTML(round, total);
       }
-    }
-
-    // --- PATTERN NOTE (middle paragraph) ---
-    if (spread >= 25) {
-      // Large spread — strong dominant style
-      if (lowest === 'trust' && momentumDominant >= 3) {
-        reading += "\n\nThe spread between your highest and lowest scores was significant. Production-first choices came up repeatedly in a way that traded relationship cost for output — and the deck scored it accordingly. That's not a verdict. It's a mirror. The question worth asking is whether that tradeoff was intentional each time, or whether it's become the default setting. Defaults are fine until they become the only gear you have.";
-      } else if (lowest === 'momentum' && trustPositive >= 4) {
-        reading += "\n\nThe gap between your scores says something clear: you consistently chose connection over pace, and the momentum axis reflects that cost. That's not a problem — it's a philosophy. But supervisors who only have the relational gear sometimes avoid the harder pushes because they've confused kindness with leadership. The best version of what you're doing uses trust as leverage to actually move people, not just to keep them comfortable.";
-      } else if (lowest === 'clarity') {
-        reading += "\n\nThe spread in your scores points to a consistent pattern of keeping things human at the cost of keeping them structured. That plays well in relationships and rough patches. It tends to create confusion over time in day-to-day operations — people who don't know exactly what's expected don't always ask. They guess. And the guesses compound. A little more definition around expectations won't undermine the relational work. It'll give it something to stand on.";
-      } else {
-        reading += "\n\nThe spread between your scores tells a story about a consistent style — not a random set of choices. Whatever your highest axis says about you, you picked it repeatedly under pressure, which is different from picking it once in an easy scenario. That consistency is worth knowing about yourself. It's the instinct you'll default to when things get hard. Make sure it's the right tool for the moment, not just the familiar one.";
-      }
-    } else if (spread <= 10) {
-      // Tight spread — balanced
-      reading += "\n\nYour three scores landed close together, which is unusual. It means no single instinct dominated — you were genuinely weighing the relational, the operational, and the structural across different situations. That's a sign of situational judgment rather than a fixed style. The risk with balanced scores is that balance can sometimes mean underpowered in all three directions. But in a leadership role, it more often means adaptable. That's a real asset.";
-    } else {
-      // Medium spread
-      reading += `\n\n${middle === 'trust' ? "The relational instinct ran through the middle of your choices — present, but not dominant. You used it when it was clearly the right tool and set it aside when something else was needed. That's not indifference to people — it's judgment about when the relationship capital gets spent and when it gets built." : middle === 'momentum' ? "Your drive to move things forward sat in the middle of your choices — available when needed, but not overriding everything else. That's the right relationship to have with production pressure. It means you can push when it matters without making push mode your permanent state." : "Structure and clarity showed up in the middle of your decision-making — neither your first instinct nor your last resort. You reached for it when the situation called for it and left space for other approaches when it didn't. That's how good supervisors use systems: as tools, not as the whole job."}`;
-    }
-
-    // --- CHECK-IN ANALYSIS ---
-    const checkinHistory = this.history.filter(h => {
-      const s = SCENARIOS.find(sc => sc.id === h.id);
-      return s && s.type === 'checkin';
-    });
-
-    if (checkinHistory.length >= 2) {
-      const negCount = checkinHistory.filter(h => {
-        const s = SCENARIOS.find(sc => sc.id === h.id);
-        const choice = s.choices[h.choiceIndex];
-        return choice.scores.momentum < 0 || choice.scores.trust < 0;
-      }).length;
-      const selfAwareCount = checkinHistory.filter(h => {
-        const s = SCENARIOS.find(sc => sc.id === h.id);
-        const choice = s.choices[h.choiceIndex];
-        return choice.scores.clarity > 2;
-      }).length;
-
-      if (negCount >= 2 && selfAwareCount >= 1) {
-        reading += "\n\nThe check-ins told a separate story. You're carrying something — not necessarily visible to anyone else, but present in how you answered those quieter questions. That weight doesn't go away by itself. It's worth naming, even if just to yourself.";
-      } else if (selfAwareCount >= 2) {
-        reading += "\n\nThe check-ins suggest a clear-eyed read on where you actually are — not where you'd like to be or where you think you should be. That kind of self-awareness is the foundation that everything else builds on. Use it.";
-      } else if (negCount >= 2) {
-        reading += "\n\nThe check-ins flagged something worth sitting with. When the scenarios had no external pressure — just an honest question — the answers pointed toward some depletion. Not failure. Just a tank that could use some filling.";
-      } else {
-        reading += "\n\nThe check-ins showed a grounded read on your current state. Nothing alarming, nothing suppressed. That's a decent place to be running from.";
-      }
-    }
-
-    return reading;
-  }
-
-  start() {
-    this.scores = { trust: 50, momentum: 50, clarity: 50 };
-    this.usedIds = new Set();
-    this.round = 0;
-    this.history = [];
-    this.selectedChoice = null;
-    this.buildDeck();
-    this.nextRound();
-  }
-
-  getCardClass() {
-    if (!this.currentScenario) return '';
-    if (this.currentScenario.type === 'checkin') return 'checkin';
-    if (this.currentScenario.type === 'offwork') return 'offwork';
-    return '';
-  }
-
-  render() {
-    const app = document.getElementById('app');
-
-    if (this.state === 'start') {
-      app.innerHTML = `
-        <div class="header">
-          <div class="header-lockup">
-            <h1>Decision Deck</h1>
-            <span class="v2-badge">v2</span>
-          </div>
-          <div class="subtitle">A leadership reflection tool</div>
-        </div>
-        <div class="start-screen">
-          <div class="start-logo">◆</div>
-          <div class="start-title">Decision Deck</div>
-          <div class="start-version">Version 2.0 — Updated</div>
-          <div class="start-axes">
-            <span class="axis-pill t">Trust</span>
-            <span class="axis-pill m">Momentum</span>
-            <span class="axis-pill c">Clarity</span>
-          </div>
-          <div class="start-divider"></div>
-          <p>14 scenarios drawn from a larger pool. No perfect answers — the scoring won't always reward what seems right. That's the point.<br><br>Some cards are about work. Some aren't. All of them count.<br><br>Your earlier decisions will follow you into later ones.</p>
-          <button class="start-btn" onclick="game.start()">Deal Me In</button>
-          <div class="start-note">Scores vary across runs — this is by design</div>
-        </div>`;
-      return;
-    }
-
-    if (this.state === 'end') {
-      const insight = this.getEndInsight();
-      const paras = insight.split('\n\n');
-      app.innerHTML = `
-        <div class="header">
-          <div class="header-lockup">
-            <h1>Decision Deck</h1>
-            <span class="v2-badge">v2</span>
-          </div>
-        </div>
-        <div class="end-screen">
-          <div class="end-title">Your Reading</div>
-          <div class="final-scores">
-            <div class="final-stat t">
-              <div class="val" style="color:var(--trust)">${this.scores.trust}</div>
-              <div class="lbl">Trust</div>
-            </div>
-            <div class="final-stat m">
-              <div class="val" style="color:var(--momentum)">${this.scores.momentum}</div>
-              <div class="lbl">Momentum</div>
-            </div>
-            <div class="final-stat c">
-              <div class="val" style="color:var(--clarity)">${this.scores.clarity}</div>
-              <div class="lbl">Clarity</div>
-            </div>
-          </div>
-          <div class="end-divider"></div>
-          ${paras.map(p => `<p class="insight">${p}</p>`).join('')}
-          <div class="end-divider"></div>
-          <button class="play-again" onclick="game.start()">Play Again</button>
-        </div>`;
-      return;
-    }
-
-    const s = this.currentScenario;
-    const cardClass = this.getCardClass();
-    const callback = this.findCallback(this.history);
-    const selected = this.selectedChoice;
-    const choice = selected !== null ? s.choices[selected] : null;
-    const modScores = selected !== null ? this.history[this.history.length - 1].scores : null;
-
-    let choicesHTML = '';
-    if (selected === null) {
-      choicesHTML = `<div class="choices">
-        ${s.choices.map((c, i) => `
-          <button class="choice-btn" onclick="game.selectChoice(${i})">${c.text}</button>
-        `).join('')}
-      </div>`;
-    } else {
-      const dominant = Object.entries(modScores).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
-      const deltaVal = dominant[1];
-      const deltaClass = deltaVal > 0 ? 'pos' : deltaVal < 0 ? 'neg' : 'zero';
-      const deltaSign = deltaVal > 0 ? '+' : '';
-      const statLabels = { trust: 'Trust', momentum: 'Momentum', clarity: 'Clarity' };
-      const statSubs = {
-        trust: `Now: ${this.scores.trust}`,
-        momentum: `Now: ${this.scores.momentum}`,
-        clarity: `Now: ${this.scores.clarity}`
-      };
-      choicesHTML = `
-        <div class="choices">
-          ${s.choices.map((c, i) => `
-            <button class="choice-btn${i === selected ? ' selected' : ''}" disabled>${c.text}</button>
-          `).join('')}
-        </div>
-        <div class="result">
-          <div class="result-score">
-            <div class="delta ${deltaClass}">${deltaSign}${deltaVal}</div>
-            <div class="stat-info">
-              <div class="stat-name">${statLabels[dominant[0]]}</div>
-              <div class="stat-sub">${statSubs[dominant[0]]}</div>
-            </div>
-          </div>
-          <div class="result-text">${choice.feedback}</div>
-          <button class="next-btn" onclick="game.nextRound()">${this.round >= this.totalRounds ? 'See Results →' : 'Next Scenario →'}</button>
-        </div>`;
     }
 
     app.innerHTML = `
-      <div class="header">
-        <div class="header-lockup">
-          <h1>Decision Deck</h1>
-          <span class="v2-badge">v2</span>
-        </div>
+      <div class="deck-header">
+        <div class="brand"><span>Yanke</span> Bionics<span class="v3-pill">v3</span></div>
+        <div class="header-right">Lab &amp; Fabrication</div>
       </div>
       <div class="progress-wrap">
-        <div class="progress-track">
-          <div class="progress-fill" style="width:${(this.round / this.totalRounds) * 100}%"></div>
-        </div>
-        <div class="progress-label">${this.round} / ${this.totalRounds}</div>
+        <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">${round + 1} / ${total}</div>
       </div>
-      <div class="score-bar">
-        <div class="score-item trust-item">
-          <div class="label">Trust</div>
-          <div class="value trust">${this.scores.trust}</div>
-        </div>
-        <div class="score-item momentum-item">
-          <div class="label">Momentum</div>
-          <div class="value momentum">${this.scores.momentum}</div>
-        </div>
-        <div class="score-item clarity-item">
-          <div class="label">Clarity</div>
-          <div class="value clarity">${this.scores.clarity}</div>
-        </div>
-      </div>
-      <div class="card-container">
+      <div class="axis-bar">${axisBar}</div>
+      <div style="flex:1;display:flex;flex-direction:column;">
         <div class="card ${cardClass}">
+          ${typeBadge}
           <div class="card-category">${s.category}</div>
           <div class="card-context">${s.context}</div>
-          ${callback && selected === null ? `<div class="card-ref"><span class="reflection-tag">Callback</span><br>${callback.text}</div>` : ''}
           <div class="card-question">${s.question}</div>
-          ${choicesHTML}
+          ${body}
         </div>
       </div>`;
   }
-}
 
-const game = new DecisionDeck();
+  function choicesHTML(list, extraClass, chosen = null) {
+    return `<div class="choices">${list.map((c, i) => {
+      let cls = 'choice-btn';
+      if (extraClass) cls += ' ' + extraClass;
+      if (chosen !== null) cls += i === chosen ? ' chosen' : ' unchosen';
+      return `<button class="${cls}" ${chosen !== null ? 'disabled' : ''} onclick="Deck.choose(${i})">${c.text}</button>`;
+    }).join('')}</div>`;
+  }
+
+  function feedbackHTML(choice, isB2) {
+    const s = choice.scores;
+    const deltas = AXES.map(a => ({key: a.key, label: a.label, val: s[a.key] || 0}))
+      .filter(d => d.val !== 0).sort((a, b) => Math.abs(b.val) - Math.abs(a.val));
+    const dom = deltas[0] || {label: '', val: 0, key: ''};
+    const dCls = dom.val > 0 ? 'pos' : dom.val < 0 ? 'neg' : 'zero';
+    const dSign = dom.val > 0 ? '+' : '';
+    const adaptDelta = s.adaptability;
+    const adaptBadge = adaptDelta && isB2
+      ? `<span class="delta-badge adapt">${adaptDelta > 0 ? '+' : ''}${adaptDelta} Adapt</span>` : '';
+    return `<div class="feedback-block">
+      <div class="feedback-deltas">
+        ${dom.val !== 0 ? `<span class="delta-badge ${dCls}">${dSign}${dom.val}</span><span class="delta-axis">${dom.label} · now ${scores[dom.key]}</span>` : ''}
+        ${adaptBadge}
+      </div>
+      <div class="feedback-text">${choice.feedback}</div>
+    </div>`;
+  }
+
+  function nextBtnHTML(r, total) {
+    return `<button class="next-btn" onclick="Deck.nextRound()">${r >= total - 1 ? 'See Your Results' : 'Next Scenario →'}</button>`;
+  }
+
+  // ── RESULTS ──
+  function finish() {
+    const body = document.getElementById('results-body');
+    const mainAxes = AXES.filter(a => a.key !== 'adaptability');
+    const adaptAxis = AXES.find(a => a.key === 'adaptability');
+    const sorted = [...mainAxes].sort((a, b) => scores[b.key] - scores[a.key]);
+    const high = sorted[0]; const low = sorted[sorted.length - 1];
+    const spread = scores[high.key] - scores[low.key];
+    const tendencies = mainAxes.filter(a => scores[a.key] >= 62).map(a => a.label);
+
+    const ins1 = spread <= 8
+      ? `Your scores across Trust, Momentum, and Clarity landed within ${spread} points of each other. No single tendency dominated. That's unusual balance.`
+      : `Your highest score was ${high.label} and your lowest was ${low.label} — a ${spread}-point spread. That's not a verdict. It's a signal about where your instincts are strongest and where there's room to stretch.`;
+
+    const ins2 = scores[high.key] >= 68
+      ? `Strong ${high.label} tends to reflect ${
+          high.key === 'trust' ? "a leadership style that builds teams people want to stay on" :
+          high.key === 'momentum' ? "a results-first instinct — things get done around you, but watch what gets left behind in the speed" :
+          "a natural ability to cut through ambiguity and name what's actually happening"
+        }. Cast this deck again in a few months and see what changes.`
+      : `None of your scores ran away in either direction. Real situations are complicated and the instinct to weigh multiple things tends to produce moderate scores. The change over time tells you more than any single run.`;
+
+    const adaptNote = scores.adaptability !== 50
+      ? `<div class="adapt-block">
+          <div class="adapt-val">${scores.adaptability}</div>
+          <div>
+            <div class="adapt-label">Adaptability</div>
+            <div class="adapt-desc">Only scored on cascades and curveballs — measures how you perform after the plan breaks, not before it.</div>
+          </div>
+        </div>` : '';
+
+    body.innerHTML = `
+      <div class="results-eyebrow">Deck Complete</div>
+      <div class="results-title">Lab &amp;<br>Fabrication</div>
+      <div class="results-scores">
+        ${mainAxes.map(a => `
+          <div class="rs-item">
+            <div class="rs-val" style="color:${a.color}">${scores[a.key]}</div>
+            <div class="rs-lbl">${a.label}</div>
+          </div>`).join('')}
+      </div>
+      ${adaptNote}
+      ${tendencies.length > 0 ? `<div class="tendency-row">${tendencies.map(t => `<span class="tendency-pill">${t}</span>`).join('')}</div>` : ''}
+      <div class="results-divider"></div>
+      <div class="results-insight">${ins1}</div>
+      <div class="results-insight">${ins2}</div>
+      <div class="results-insight" style="font-size:0.75rem;color:rgba(255,255,255,0.27);font-style:italic;margin-top:4px;">Your results are saved on this device only. Not visible to Yanke Bionics, your supervisor, or anyone else.</div>
+      <div class="results-btn-row">
+        <button class="btn-ghost" onclick="Deck.reset()">Start Screen</button>
+        <button class="btn-green" onclick="Deck.start()">Play Again</button>
+      </div>
+      <div class="tagline-footer">Accept No Limitations.</div>`;
+    showScreen('results');
+  }
+
+  function reset() { showScreen('start'); }
+
+  function init() { buildAxesIntro(); }
+
+  return { init, start, choose, advanceBeat, revealConstraint, nextRound, reset };
+})();
+
+Deck.init();
 </script>
 </body>
 </html>
