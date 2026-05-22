@@ -641,6 +641,246 @@ const SCENARIOS = [
       { text: "Honestly? I've been so focused on the transition itself that I haven't pictured the destination clearly", scores: { focus: 0, leverage: 1, boundaries: 2 }, feedback: "That's worth fixing. If you can't see the destination, you can't tell if you're heading toward it. You can spend your whole transition managing the exit and arrive somewhere you didn't choose. Take the time to picture it — not as escape from the current situation, but as the actual life you want to be living. Then steer toward that, not just away from this." }
     ],
     tags: ["self-awareness", "focus", "transition"]
+  },
+
+  // ===== LETTING GO (expanded) =====
+  {
+    id: "lg-4", category: "Letting Go", type: "work",
+    context: "You've been the go-to person for a specific kind of problem in your old role for years. Someone asks you about it now, six weeks into your transition.",
+    question: "Do you answer, or redirect them to whoever owns it now?",
+    choices: [
+      { text: "Answer — it costs me nothing and helps them right now", scores: { focus: -3, leverage: 1, boundaries: -4 }, feedback: "It costs something. It costs you the signal that you've moved. Every time you answer this question, you're telling everyone — including yourself — that you're still available in the old role. The short-term help is real. The long-term cost is that the transition never fully lands." },
+      { text: "Redirect — 'That's [person]'s domain now, they're the right call'", scores: { focus: 5, leverage: 3, boundaries: 6 }, feedback: "Harder than it sounds when someone's standing in front of you with a real problem. But this is how transitions actually happen — not in the announcement, but in a hundred small moments of redirection. Every redirect builds the new structure. Every exception delays it." },
+      { text: "Answer this once but flag it — 'Let me get you to the right person going forward'", scores: { focus: 2, leverage: 2, boundaries: 2 }, feedback: "A reasonable compromise that works once. The risk is that 'once' becomes the pattern. If the follow-through on 'going forward' doesn't happen, you've helped them and kept yourself in the loop. That's the version to watch for." }
+    ],
+    tags: ["transition", "boundaries", "control"]
+  },
+  {
+    id: "lg-5", category: "Letting Go", type: "work",
+    context: "You notice the media department work is starting to generate positive attention internally. Someone compliments the lab work you did six months ago in the same breath.",
+    question: "How do you hold both — the old reputation and the new direction?",
+    choices: [
+      { text: "Acknowledge the old work briefly and redirect to what's coming", scores: { focus: 5, leverage: 5, boundaries: 3 }, feedback: "Right move. You're not disowning the past — you're framing it as a foundation, not a destination. 'I'm glad that landed, and here's what we're building on top of it' is the sentence that does both jobs at once." },
+      { text: "Let the old compliment land fully — it's still mine and still matters", scores: { focus: -1, leverage: 2, boundaries: 0 }, feedback: "It does still matter. But if you're still getting most of your internal recognition from the old role, that's information about where the new work needs to be more visible. The old compliment is fine to receive. Don't let it become the main currency." },
+      { text: "Quietly uncomfortable — I want to be known for what I'm building now, not what I was doing then", scores: { focus: 4, leverage: 3, boundaries: 4 }, feedback: "That discomfort is pointing the right direction. The fact that it bothers you means you're genuinely invested in the new identity, not just performing the transition. Channel it into making the new work undeniable." }
+    ],
+    tags: ["transition", "leverage", "identity"]
+  },
+
+  // ===== BUILDING THE NEW (expanded) =====
+  {
+    id: "bn-5", category: "Building the New", type: "work",
+    context: "A project you've been working on in the media department is ready to show. You can present it quietly or make it an event.",
+    question: "How do you introduce the first real deliverable of the new department?",
+    choices: [
+      { text: "Make it an event — this is the proof of concept moment and it should land that way", scores: { focus: 4, leverage: 6, boundaries: 3 }, feedback: "First impressions of a new function matter disproportionately. 'Look what we built' at the right moment with the right audience does more than six months of quiet competence. Just make sure the work is genuinely ready — a big introduction to something mediocre sets the wrong ceiling." },
+      { text: "Present it normally — the work should speak for itself without the theatrical framing", scores: { focus: 3, leverage: 1, boundaries: 4 }, feedback: "The work matters. So does the framing. 'It speaks for itself' is what people say when they're uncomfortable advocating for their own work. The department you're building needs internal champions — and the first one has to be you." },
+      { text: "Show it to one or two key people first, read the room, then decide how to present it widely", scores: { focus: 4, leverage: 4, boundaries: 3 }, feedback: "Strategic. A trusted preview lets you adjust before the official reveal and builds early advocates who can amplify it. Just make sure the preview doesn't become a substitute for the actual launch. Get in, get feedback, get it in front of the people who matter." }
+    ],
+    tags: ["leverage", "new-role", "strategy"]
+  },
+  {
+    id: "bn-6", category: "Building the New", type: "work",
+    context: "You're being asked to take on a project that would be high visibility but would pull significant time from the foundational work the department actually needs.",
+    question: "High profile now, or solid foundation first?",
+    choices: [
+      { text: "Take the high-visibility project — credibility comes from being seen doing things that matter", scores: { focus: -2, leverage: 6, boundaries: -3 }, feedback: "The credibility is real and so is the cost. A new department that's everywhere but nowhere in particular is a department that's performed rather than built. High visibility on borrowed time is a loan that comes due when the foundation cracks." },
+      { text: "Decline and stay focused on the foundation — the building comes before the showcase", scores: { focus: 6, leverage: -1, boundaries: 5 }, feedback: "Right principle. Harder sell. Make sure 'staying focused on the foundation' doesn't look like avoidance from the outside. If you decline, be explicit about what you're building instead — the tradeoff needs to be visible, not just internally justified." },
+      { text: "Negotiate scope — take a piece of it that's high visibility without derailing the core work", scores: { focus: 3, leverage: 4, boundaries: 4 }, feedback: "The creative solution. You stay visible without abandoning the thing that makes the visibility sustainable. The risk is that 'a piece of it' expands. Scope the commitment explicitly before you accept any version of this." }
+    ],
+    tags: ["focus", "leverage", "strategy"]
+  },
+
+  // ===== NAVIGATING UP (expanded) =====
+  {
+    id: "nu-4", category: "Navigating Up", type: "work",
+    context: "Neil asks your opinion on something outside your direct lane — an operational decision that affects the lab. You have a view.",
+    question: "How much of that view do you share?",
+    choices: [
+      { text: "Share it fully — he asked, and holding back doesn't serve either of us", scores: { focus: 3, leverage: 5, boundaries: 2 }, feedback: "If he asked, share it. Withholding a genuine perspective from someone who explicitly wants it isn't diplomacy — it's a missed opportunity to be useful. The only caveat: frame it as your read, not a verdict. 'Here's what I'm observing from where I sit' lands differently than 'here's what you should do.'" },
+      { text: "Share a lighter version — enough to be helpful without overstepping", scores: { focus: 2, leverage: 3, boundaries: 3 }, feedback: "Self-editing for a leader who asked your opinion directly is a form of hedging that usually reads as lack of conviction. If he wanted a lighter version, he would have asked a more limited question. Give him the real answer." },
+      { text: "Flag what I see and defer — 'Here's what I'm noticing, but Caleb would have better visibility on this than I do'", scores: { focus: 4, leverage: 4, boundaries: 5 }, feedback: "Smart and honest. You've shared useful information, positioned the right expert, and demonstrated that your transition is real — you're not holding onto lab authority as a side income. This is the version that builds trust in the new role without undermining the old structure." }
+    ],
+    tags: ["leverage", "strategy", "transition"]
+  },
+  {
+    id: "nu-5", category: "Navigating Up", type: "work",
+    context: "You've submitted work to Neil and heard nothing back. A week has passed. You don't know if it landed, if there's feedback, or if it's even been seen.",
+    question: "What do you do with the silence?",
+    choices: [
+      { text: "Follow up — silence isn't an answer and I need to know if it's working", scores: { focus: 4, leverage: 4, boundaries: 3 }, feedback: "One follow-up after a week is professional, not pushy. Make it easy to respond to: 'Wanted to check if you'd had a chance to look at X — happy to talk through it if useful.' Silence often means busy, not bad. Don't fill it with anxiety before you've checked." },
+      { text: "Wait — if there were problems, I'd have heard. Silence is probably fine.", scores: { focus: 2, leverage: 1, boundaries: 3 }, feedback: "Maybe. But 'no news is good news' in a new department is a dangerous heuristic. You need feedback loops, not just absence of criticism. The silence might be fine or it might mean the work isn't being seen at all. Either answer is useful information worth having." },
+      { text: "Use it as a signal — either the work wasn't compelling enough to prompt a response, or I'm not visible enough to prompt one", scores: { focus: 3, leverage: 3, boundaries: 4 }, feedback: "This is the analysis that makes the silence useful rather than just uncomfortable. Both possibilities have different remedies. If the work wasn't compelling, that's craft feedback. If the visibility is the problem, that's a positioning issue. Figure out which one and act on it." }
+    ],
+    tags: ["leverage", "communication", "strategy"]
+  },
+
+  // ===== MANAGING YOURSELF (expanded) =====
+  {
+    id: "ms-5", category: "Managing Yourself", type: "work",
+    context: "You're doing work you're genuinely excited about for the first time in a while. It's pulling you in at odd hours.",
+    question: "Is the excitement sustainable — or is this a new kind of burnout wearing a better costume?",
+    choices: [
+      { text: "Sustainable — this is the difference between work that costs and work that feeds", scores: { focus: 4, leverage: 3, boundaries: 4 }, feedback: "If it genuinely feeds you, protect it from being crowded out by things that cost. The irony of finding work you love is that it tends to attract more obligations from people who see your energy and want some of it. Hold the line on what gets that version of you." },
+      { text: "Not sure yet — I'll know more when the novelty wears off", scores: { focus: 3, leverage: 2, boundaries: 3 }, feedback: "Healthy skepticism. The novelty phase is real and it masks a lot. The test isn't how you feel in month one — it's how you feel when the work gets hard and the feedback is mixed and the deadline is inconvenient. That version is coming. Notice how you respond to it." },
+      { text: "Probably not — I'm running hot and I know it, but I don't want to stop", scores: { focus: 2, leverage: 3, boundaries: -2 }, feedback: "That self-awareness is the thing that will eventually save you. You're naming the pattern before it becomes a crisis. 'I don't want to stop' is valid and worth honoring — as long as you're not outsourcing the cost to your family or your health while you're at it." }
+    ],
+    tags: ["regulation", "focus", "identity"]
+  },
+  {
+    id: "ms-6", category: "Managing Yourself", type: "work",
+    context: "You're getting close to the end of your formal transition period. The lab is in someone else's hands. The media department is real but still fragile.",
+    question: "What's the emotional texture of this moment?",
+    choices: [
+      { text: "Relief — I've been waiting for this and it feels like being released", scores: { focus: 4, leverage: 2, boundaries: 5 }, feedback: "That relief is earned and it's real. The thing to watch: relief has a short half-life. Once the pressure of the old role lifts, you'll feel the weight of the new one more clearly. Use the relief as fuel for the next phase, not as an excuse to coast." },
+      { text: "Exposed — without the old role as a safety net, the new one has to actually work", scores: { focus: 3, leverage: 4, boundaries: 3 }, feedback: "That exposure is appropriate. The old role was identity as much as function — it gave you a clear answer to 'what do you do here.' The new role requires you to build that clarity from scratch. The exposure means you're taking it seriously. Good." },
+      { text: "Both — and the mixture is stranger than I expected", scores: { focus: 4, leverage: 3, boundaries: 4 }, feedback: "The mixture is the honest experience. Most transition stories are told with a cleaner narrative than the actual feeling — either triumph or loss. Both at once is usually closer to true. That complexity is worth naming, especially to yourself." }
+    ],
+    tags: ["transition", "identity", "self-awareness"]
+  },
+
+  // ===== POLITICAL NAVIGATION (expanded) =====
+  {
+    id: "pn-4", category: "Political Navigation", type: "work",
+    context: "You've built something in the media department that you're proud of. A colleague is describing similar work they're doing in their department — but less polished.",
+    question: "Do you compete, collaborate, or stay quiet?",
+    choices: [
+      { text: "Collaborate — offer to combine efforts and make both stronger", scores: { focus: 2, leverage: 5, boundaries: 3 }, feedback: "The instinct to collaborate is right. The execution matters. Make sure 'combining efforts' doesn't mean absorbing their work into yours or subordinating yours into theirs. Genuine collaboration produces something neither could build alone. If this feels more like merger talk than partnership, slow down." },
+      { text: "Stay quiet — let the work differentiate itself without me having to point at the gap", scores: { focus: 3, leverage: 2, boundaries: 4 }, feedback: "Confident and clean. You don't need to talk about your work relative to theirs — you need to make sure the right people are seeing both. The differentiation will be apparent without commentary. Just make sure 'staying quiet' isn't a way of avoiding the visibility work you need to be doing anyway." },
+      { text: "Position clearly — make sure the people who matter understand what's distinctive about what we're building", scores: { focus: 3, leverage: 5, boundaries: 2 }, feedback: "Legitimate. A new department needs a clear identity and sometimes that requires distinguishing it from adjacent work. Just make sure the positioning is built on your strengths, not their weaknesses. 'Here's what makes this different' lands better than anything that implies comparison." }
+    ],
+    tags: ["strategy", "leverage", "boundaries"]
+  },
+  {
+    id: "pn-5", category: "Political Navigation", type: "work",
+    context: "You're in a meeting where something important is being decided and you have the most relevant expertise in the room. Nobody's asked you.",
+    question: "Do you wait to be called on, or do you put it in the room?",
+    choices: [
+      { text: "Put it in the room — waiting to be asked when you have something essential is a form of withholding", scores: { focus: 3, leverage: 5, boundaries: 4 }, feedback: "Right. The seat at the table is built by using it. People who wait to be called on consistently get called on less and less, because rooms fill themselves with the people who speak. The key is delivery — not 'let me tell you what I know' but 'here's something that might be relevant to this decision.'" },
+      { text: "Find a moment to offer it rather than interrupt the flow", scores: { focus: 2, leverage: 3, boundaries: 3 }, feedback: "Context-sensitive and usually correct. The risk is that the moment never comes, or the decision gets made before you find it. If the information is truly relevant, the cost of waiting is higher than the cost of creating a small interruption." },
+      { text: "Stay quiet — if they wanted my input they would have asked", scores: { focus: -2, leverage: -3, boundaries: 2 }, feedback: "This is the thinking that keeps experts from becoming leaders. The people who get asked built a track record of contributing before they were asked. Waiting for the invitation is reasonable when you're new. It's a liability when you've been around long enough to have something to offer." }
+    ],
+    tags: ["leverage", "strategy", "voice"]
+  },
+
+  // ===== PROTECTING YOUR PEOPLE (expanded) =====
+  {
+    id: "pp-3", category: "Protecting Your People", type: "work",
+    context: "The person you've been developing is getting an opportunity that will take them out of your sphere of influence. It's good for them.",
+    question: "How do you actually feel about it?",
+    choices: [
+      { text: "Genuinely happy — that's what developing someone is supposed to produce", scores: { focus: 4, leverage: 3, boundaries: 5 }, feedback: "That's the real answer and it's worth naming clearly. Not everyone gets here. A lot of mentors feel ownership they don't cop to. The fact that you can be genuinely happy about someone outgrowing your reach says something important about why you developed them in the first place." },
+      { text: "Happy for them, a little complicated for me — I don't want to lose the relationship", scores: { focus: 3, leverage: 2, boundaries: 3 }, feedback: "Both true and honest. Good mentorship relationships don't end when someone moves — they evolve. The complication is worth sitting with, but it shouldn't drive any decisions about how enthusiastically you support them leaving." },
+      { text: "Mostly fine but also aware I'm losing a capable ally in a period where I need them", scores: { focus: 2, leverage: 1, boundaries: 2 }, feedback: "Honest and human. The need is real. But how you respond to it matters more than having it. If you support them fully while privately naming the loss, that's integrity. If the need shapes how you talk about their opportunity, that's a problem." }
+    ],
+    tags: ["trust", "boundaries", "identity"]
+  },
+  {
+    id: "pp-4", category: "Protecting Your People", type: "work",
+    context: "You notice someone you care about professionally is making a choice you think is wrong. They didn't ask for your input.",
+    question: "How much runway do you give them before you say something?",
+    choices: [
+      { text: "Say something now — I'd rather be wrong about my read than silent about something I can see clearly", scores: { focus: 2, leverage: 2, boundaries: -1 }, feedback: "The instinct to protect is real. Before you speak, be honest about whether you're certain enough to justify the intrusion. 'I see clearly' sometimes means 'I see from my angle' — which isn't the same thing. If you do say something, make it an offer, not a verdict." },
+      { text: "Let them play it out — they may see something I don't, and they didn't ask", scores: { focus: 3, leverage: 2, boundaries: 5 }, feedback: "Disciplined. The hardest version of respecting someone's autonomy is watching them make a choice you disagree with. If they're not in danger and didn't ask, your restraint is a form of respect. Make sure you're available if they do want to talk through it." },
+      { text: "Plant a question without giving them my answer — let them find it themselves", scores: { focus: 3, leverage: 3, boundaries: 3 }, feedback: "The coaching move. It's elegant when it works. Be careful that the question isn't so leading that it's just your opinion wearing a question mark. Good questions open space. Loaded questions close it." }
+    ],
+    tags: ["trust", "boundaries", "communication"]
+  },
+
+  // ===== CREATIVE LEADERSHIP (expanded) =====
+  {
+    id: "cl-4", category: "Creative Leadership", type: "work",
+    context: "You're producing something and you've hit a genuine creative block. The deadline is real.",
+    question: "How do you work with the block rather than against it?",
+    choices: [
+      { text: "Push through — motion creates momentum and momentum cracks blocks", scores: { focus: 4, leverage: 3, boundaries: 2 }, feedback: "Often true. Waiting for inspiration in a deadline context is a luxury. Sometimes the act of producing bad work creates the path to good work. Just make sure 'pushing through' means making something — not staring at the blank page with more intensity." },
+      { text: "Step away — a short break almost always produces more than grinding does", scores: { focus: 3, leverage: 2, boundaries: 4 }, feedback: "Neuroscience is on your side. Diffuse thinking — walks, showers, unrelated tasks — solves creative problems that focused staring can't. The risk is that 'step away' becomes avoidance. Set a timer. Step away intentionally, not indefinitely." },
+      { text: "Change the input — consume something adjacent to the problem and let the ideas recombine", scores: { focus: 4, leverage: 4, boundaries: 3 }, feedback: "The strategy creative people don't talk about enough: filling the tank rather than draining it further. Reference work, adjacent conversations, completely unrelated sources that share a feeling. The block is often an empty input problem, not a broken output process." }
+    ],
+    tags: ["creative", "self-awareness", "focus"]
+  },
+  {
+    id: "cl-5", category: "Creative Leadership", type: "work",
+    context: "Someone gives you feedback on your creative work that's technically accurate but misses what you were trying to do.",
+    question: "How do you receive it?",
+    choices: [
+      { text: "Acknowledge what they're seeing and explain the intent — then decide if the intent is landing", scores: { focus: 4, leverage: 4, boundaries: 4 }, feedback: "The most useful response. The feedback is accurate — that's real information. The intent gap is also real information. Together they tell you whether the work needs adjusting or whether the framing around it does. You can't know which without the conversation." },
+      { text: "Take it as-is — if a smart person is missing the intent, the work isn't doing its job", scores: { focus: 3, leverage: 3, boundaries: 3 }, feedback: "Humble and practical. Work that requires explanation is often work that needs revision. The exception is work that's genuinely ahead of what the audience expects — but that exception is rarer than people hope. Lean toward 'the work needs to communicate better.'" },
+      { text: "Hold the intent and note the feedback — one data point doesn't rewrite the direction", scores: { focus: 3, leverage: 2, boundaries: 5 }, feedback: "Right when the feedback is outlier noise. Wrong when you're using 'one data point' to dismiss a pattern. The honest question is whether this is the first time you've heard something like this, or the fourth. One data point is fine to set aside. A trend isn't." }
+    ],
+    tags: ["creative", "communication", "self-awareness"]
+  },
+
+  // ===== FAMILY & SELF (expanded) =====
+  {
+    id: "fam-3", category: "Family & Self", type: "offwork",
+    context: "Garrett asks what you do for work. You start to explain and realize the answer has changed significantly.",
+    question: "How do you explain it to him — and how does his reaction land?",
+    choices: [
+      { text: "Tell him about the stories and the making — he gets the creative side before anything else", scores: { focus: 4, leverage: 3, boundaries: 5 }, feedback: "Lead with the thing that has energy. Kids don't need org charts — they need to feel what a parent does. 'I help tell the story of a company' is something a kid can picture. That picture matters more than the title." },
+      { text: "Tell him the title and give him a simple version — he'll understand more when he's older", scores: { focus: 1, leverage: 1, boundaries: 2 }, feedback: "Efficient and honestly a little flat. The 'when you're older' deferral is fine for complex things. For this, there's a version he can understand now. The effort to find that version is worth it — for him and for how you're thinking about your own work." },
+      { text: "Ask him what he thinks you do and start from there", scores: { focus: 3, leverage: 2, boundaries: 4 }, feedback: "Good instinct. What he already believes reveals what he's absorbed watching you work. That picture might surprise you — in ways that are useful and in ways that are worth adjusting." }
+    ],
+    tags: ["identity", "relationships", "self-awareness"]
+  },
+  {
+    id: "fam-4", category: "Family & Self", type: "offwork",
+    context: "Kathy has her own thing going on that needs your attention. You're also in the middle of something important at work.",
+    question: "How do you decide which gets you right now?",
+    choices: [
+      { text: "She gets me — the work can hold, she can't always", scores: { focus: 1, leverage: 1, boundaries: 5 }, feedback: "Right orientation. The work waits better than relationships do. That said, 'she can't always wait' shouldn't become 'the work never comes first' — that's not sustainable either. You need both things to work. The question is which one is genuinely in need right now versus which one just has more friction." },
+      { text: "It depends on what 'needs my attention' means — some things are urgent, some can wait an hour", scores: { focus: 3, leverage: 2, boundaries: 4 }, feedback: "Calibrated and reasonable. The difference between 'I need you now' and 'when you get a chance' is real and worth reading accurately. If you're constantly re-categorizing her needs as 'can wait' to protect work, that's a pattern. If you're genuinely assessing, that's judgment." },
+      { text: "I split myself — try to do both at once and end up doing neither well", scores: { focus: -2, leverage: -1, boundaries: -3 }, feedback: "The honest answer when it's the real one. Splitting yourself is the worst outcome — she gets a distracted version of you and the work gets interrupted attention. The decision you're avoiding by splitting is usually clearer than the anxiety about making it." }
+    ],
+    tags: ["relationships", "regulation", "boundaries"]
+  },
+
+  // ===== OFF THE CLOCK (expanded) =====
+  {
+    id: "off-4", category: "Off the Clock", type: "offwork",
+    context: "You have an unscheduled evening. No obligations, no deadlines. You realize you don't immediately know what you'd do with it.",
+    question: "What does that blankness tell you?",
+    choices: [
+      { text: "That I've been so scheduled that I've lost touch with what I actually want to do", scores: { focus: 3, leverage: 1, boundaries: 5 }, feedback: "That loss of contact with your own wants is one of the quieter costs of sustained overwork. The blank evening is actually a gift — the discomfort of not knowing what to do with it is information about how little space you've been giving yourself. Use the evening to find out what's still in there." },
+      { text: "Not much — I'm tired and 'nothing' sounds genuinely good", scores: { focus: 2, leverage: 1, boundaries: 4 }, feedback: "Tired is a legitimate state. 'Nothing' is a legitimate choice. Just make sure nothing-as-rest is different from nothing-as-avoidance. Rest that restores you is productive. Nothing that numbs you is a different thing." },
+      { text: "That I should probably make a list of things I want to do outside of work — and actually do them", scores: { focus: 3, leverage: 2, boundaries: 3 }, feedback: "The practical response. The list is a good idea. The 'actually do them' part is where most people's good intentions live and die. Pick one thing on the list before the evening ends. Not a plan — the thing itself." }
+    ],
+    tags: ["regulation", "self-awareness", "boundaries"]
+  },
+  {
+    id: "off-5", category: "Off the Clock", type: "offwork",
+    context: "You did something today — made something, fixed something, helped someone — that had nothing to do with work or career or positioning. It just felt good.",
+    question: "How often does that happen?",
+    choices: [
+      { text: "More than I'd have said six months ago — something has shifted", scores: { focus: 4, leverage: 3, boundaries: 4 }, feedback: "That shift is worth noticing. It usually means the transition is doing something beyond career change — it's realigning what you're measuring your days by. That's the deeper version of what you're building. Protect it." },
+      { text: "Not enough — most of what feels good still has a work angle attached", scores: { focus: 2, leverage: 2, boundaries: 2 }, feedback: "Honest. Work-adjacent satisfaction is real but it's not the whole picture. The things that feel good for no strategic reason are the ones that tell you who you actually are outside the role. Find more of them — not as self-care homework, but because you deserve them." },
+      { text: "Honestly rarely — I'm not sure I've made space for that kind of moment in a while", scores: { focus: 1, leverage: 1, boundaries: 1 }, feedback: "That rarity is a gap worth filling, not just noting. A life where the only satisfying things are productive things is a life that becomes exhausting quickly. You're building something meaningful at work. Build something just for yourself outside it." }
+    ],
+    tags: ["regulation", "identity", "self-awareness"]
+  },
+
+  // ===== CHECK-IN (expanded) =====
+  {
+    id: "chk-7", category: "Check-In", type: "checkin",
+    context: "No scenario. Just you.",
+    question: "When you think about who you are professionally right now — does that match who you thought you'd become?",
+    choices: [
+      { text: "Better in some ways, different than expected in others", scores: { focus: 3, leverage: 3, boundaries: 3 }, feedback: "That's the honest answer most people arrive at if they look carefully. The gap between who you expected to become and who you're actually becoming is usually more interesting than either version. What's different that you didn't expect? That difference is often the truest thing." },
+      { text: "I'm not sure I had a clear picture of who I'd become — I've mostly been responding to what showed up", scores: { focus: 2, leverage: 2, boundaries: 2 }, feedback: "More common than people admit. Responding to what shows up isn't a failure of vision — it's usually how lives actually work. The question now is whether you want to stay responsive or start shaping the next chapter more deliberately. Both are valid choices. Make the one you mean." },
+      { text: "Not really — there's a version of myself I wanted to build that I haven't fully gotten to yet", scores: { focus: 2, leverage: 2, boundaries: 3 }, feedback: "The distance between who you are and who you wanted to become is only a problem if you've stopped moving toward it. What's one thing about that version of yourself that you could start building toward right now — not eventually, but this week?" }
+    ],
+    tags: ["identity", "self-awareness", "direction"]
+  },
+  {
+    id: "chk-8", category: "Check-In", type: "checkin",
+    context: "No scenario. Just honesty.",
+    question: "Right now, in this season — what are you most afraid of?",
+    choices: [
+      { text: "That the media department doesn't become what I think it can be", scores: { focus: 3, leverage: 2, boundaries: 3 }, feedback: "That fear is doing useful work. It means you care enough to be afraid of failing at it — which is different from being afraid of looking like you failed. The first kind of fear protects the work. The second kind protects the ego. Know which one you're carrying." },
+      { text: "That I trade one form of overextension for another and never actually get free", scores: { focus: 2, leverage: 2, boundaries: 4 }, feedback: "That's a sophisticated fear that takes real self-knowledge to articulate. The pattern you're describing — filling new capacity with new obligations — is real and common. The fact that you see it means you're more likely to interrupt it. Don't let the naming become a substitute for the interrupting." },
+      { text: "That I'm further behind than I think, and the window is smaller than I'm assuming", scores: { focus: 2, leverage: 3, boundaries: 2 }, feedback: "The urgency fear. It can be useful or it can be anxiety performing as strategy. The test: is this fear making you move more deliberately, or just faster? Speed without direction isn't catching up. It's just running." }
+    ],
+    tags: ["self-awareness", "focus", "transition"]
   }
 ];
 
