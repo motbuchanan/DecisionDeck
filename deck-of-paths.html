@@ -26,6 +26,9 @@
   --crimson:        #d05858;
   --teal:           #60c8b8;
   --teal-glow:      rgba(96,200,184,0.2);
+  --ember:          #e87040;
+  --ember-glow:     rgba(232,112,64,0.25);
+  --ember-dim:      #7a3818;
   --text:           #f0e4c8;
   --text-mid:       #c8b898;
   --text-dim:       #7a6a58;
@@ -34,6 +37,10 @@
   --negative:       #d08868;
   --neutral:        #d4a84c;
   --radius:         6px;
+  --parchment-ink:  #2c1f0e;
+  --parchment-page: #e8d8b0;
+  --parchment-aged: #d4c090;
+  --parchment-dark: #b8a070;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -52,7 +59,6 @@ body::before{
     radial-gradient(ellipse 50% 60% at 92% 50%,rgba(176,136,232,0.07) 0%,transparent 50%);
   pointer-events:none;z-index:0;
 }
-/* Star field */
 body::after{
   content:'';position:fixed;inset:0;
   background-image:
@@ -87,12 +93,12 @@ body::after{
   letter-spacing:3px;color:var(--gold);
   text-shadow:0 0 24px var(--gold-glow),0 0 48px rgba(240,208,112,0.08);
 }
-.v3-badge{
+.v4-badge{
   font-family:'Cinzel',serif;font-size:0.55rem;font-weight:700;
   letter-spacing:2px;padding:3px 7px;border-radius:3px;
-  background:linear-gradient(135deg,var(--accent),var(--amethyst));
+  background:linear-gradient(135deg,var(--accent),var(--ember));
   color:var(--bg);text-transform:uppercase;
-  box-shadow:0 0 12px var(--gold-glow);
+  box-shadow:0 0 12px var(--ember-glow);
 }
 .header .subtitle{font-size:0.78rem;color:var(--text-dim);margin-top:4px;font-style:italic;letter-spacing:1px;}
 .header .divider{margin:8px auto 0;width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-mid),transparent);}
@@ -103,7 +109,7 @@ body::after{
 .candle-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));transition:width 0.6s ease;border-radius:1px;box-shadow:0 0 10px var(--gold-glow);}
 .candle-label{font-family:'Cinzel',serif;font-size:0.62rem;color:var(--text-dim);min-width:40px;text-align:right;letter-spacing:1px;}
 
-/* ── RUNE BAR (4 axes) ── */
+/* ── RUNE BAR ── */
 .rune-bar{
   display:flex;justify-content:space-between;align-items:stretch;
   margin-bottom:12px;background:var(--parchment);
@@ -112,7 +118,7 @@ body::after{
 }
 .rune-bar::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold-dim),var(--amethyst-dim),var(--teal),var(--gold-dim),transparent);
+  background:linear-gradient(90deg,transparent,var(--gold-dim),var(--amethyst-dim),var(--teal),var(--ember-dim),var(--gold-dim),transparent);
   opacity:0.7;
 }
 .rune-item{flex:1;text-align:center;padding:8px 4px;}
@@ -121,14 +127,27 @@ body::after{
 .rune-item.r2{background:linear-gradient(180deg,rgba(176,136,232,0.08) 0%,transparent 100%);}
 .rune-item.r3{background:linear-gradient(180deg,rgba(212,168,76,0.07) 0%,transparent 100%);}
 .rune-item.r4{background:linear-gradient(180deg,rgba(96,200,184,0.08) 0%,transparent 100%);}
+.rune-item.r5{background:linear-gradient(180deg,rgba(232,112,64,0.09) 0%,transparent 100%);}
 .rune-label{font-family:'Cinzel',serif;font-size:0.5rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-dim);margin-bottom:2px;}
 .rune-val{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;line-height:1;}
-.rune-val.renown {color:var(--accent);  text-shadow:0 0 10px var(--gold-glow);}
-.rune-val.resolve{color:var(--amethyst);text-shadow:0 0 10px var(--amethyst-glow);}
-.rune-val.calling{color:var(--gold);    text-shadow:0 0 10px var(--gold-glow);}
-.rune-val.voice  {color:var(--teal);    text-shadow:0 0 10px var(--teal-glow);}
+.rune-val.renown  {color:var(--accent);  text-shadow:0 0 10px var(--gold-glow);}
+.rune-val.resolve {color:var(--amethyst);text-shadow:0 0 10px var(--amethyst-glow);}
+.rune-val.calling {color:var(--gold);    text-shadow:0 0 10px var(--gold-glow);}
+.rune-val.voice   {color:var(--teal);    text-shadow:0 0 10px var(--teal-glow);}
+.rune-val.threshold{color:var(--ember);  text-shadow:0 0 10px var(--ember-glow);}
 
-/* ── TAROT CARD DRAW ANIMATION ── */
+/* Threshold unlock animation */
+.rune-item.threshold-unlock{
+  animation:thresholdReveal 2.2s ease forwards;
+}
+@keyframes thresholdReveal{
+  0%{opacity:0;transform:scaleY(0.4);}
+  40%{opacity:0.5;transform:scaleY(1.05);}
+  60%{opacity:1;transform:scaleY(0.97);}
+  100%{opacity:1;transform:scaleY(1);}
+}
+
+/* ── CARD DRAW ── */
 .card-draw-stage{
   flex:1;display:flex;flex-direction:column;
   perspective:1000px;
@@ -152,19 +171,16 @@ body::after{
   box-shadow:0 8px 40px rgba(0,0,0,0.5),0 0 0 0 var(--gold-glow2);
   transform-origin:center top;
 }
-/* Shimmer border top */
 .card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent 0%,var(--gold-dim) 20%,var(--gold) 50%,var(--gold-dim) 80%,transparent 100%);
   opacity:0.9;
 }
-/* Ambient glow top */
 .card::after{
   content:'';position:absolute;top:0;left:0;right:0;height:100px;
   background:linear-gradient(180deg,rgba(212,168,76,0.06) 0%,transparent 100%);
   pointer-events:none;
 }
-/* Card back pattern */
 .card .card-back-pattern{
   position:absolute;inset:0;
   background-image:
@@ -172,19 +188,16 @@ body::after{
     repeating-linear-gradient(-45deg,transparent,transparent 18px,rgba(74,56,112,0.08) 18px,rgba(74,56,112,0.08) 19px);
   pointer-events:none;opacity:0.6;border-radius:var(--radius);
 }
-
 .card-corner{position:absolute;width:22px;height:22px;opacity:0.45;}
 .card-corner.tl{top:8px;left:8px;border-top:1px solid var(--gold-mid);border-left:1px solid var(--gold-mid);}
 .card-corner.tr{top:8px;right:8px;border-top:1px solid var(--gold-mid);border-right:1px solid var(--gold-mid);}
 .card-corner.bl{bottom:8px;left:8px;border-bottom:1px solid var(--gold-mid);border-left:1px solid var(--gold-mid);}
 .card-corner.br{bottom:8px;right:8px;border-bottom:1px solid var(--gold-mid);border-right:1px solid var(--gold-mid);}
-/* Inner corners */
 .card-corner-inner{position:absolute;width:10px;height:10px;opacity:0.2;}
 .card-corner-inner.tl{top:14px;left:14px;border-top:1px solid var(--gold);border-left:1px solid var(--gold);}
 .card-corner-inner.tr{top:14px;right:14px;border-top:1px solid var(--gold);border-right:1px solid var(--gold);}
 .card-corner-inner.bl{bottom:14px;left:14px;border-bottom:1px solid var(--gold);border-left:1px solid var(--gold);}
 .card-corner-inner.br{bottom:14px;right:14px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);}
-
 .card-side-left{
   position:absolute;left:10px;top:50%;transform:translateY(-50%);
   font-size:0.45rem;color:var(--gold-dim);opacity:0.4;
@@ -195,8 +208,6 @@ body::after{
   font-size:0.45rem;color:var(--gold-dim);opacity:0.4;
   writing-mode:vertical-rl;letter-spacing:4px;font-family:'Cinzel',serif;
 }
-
-/* Card variants */
 .card.mirror{
   background:linear-gradient(160deg,rgba(176,136,232,0.1) 0%,var(--parchment) 40%);
   border-color:rgba(176,136,232,0.55);
@@ -215,6 +226,13 @@ body::after{
 }
 .card.voice-card::before{background:linear-gradient(90deg,transparent,var(--teal),transparent);opacity:0.6;}
 .card.voice-card::after{background:linear-gradient(180deg,rgba(96,200,184,0.1) 0%,transparent 100%);}
+.card.threshold-card{
+  background:linear-gradient(160deg,rgba(232,112,64,0.07) 0%,var(--parchment) 40%);
+  border-color:rgba(232,112,64,0.38);
+  box-shadow:0 8px 40px rgba(0,0,0,0.5),0 0 30px rgba(232,112,64,0.06);
+}
+.card.threshold-card::before{background:linear-gradient(90deg,transparent,var(--ember),transparent);opacity:0.55;}
+.card.threshold-card::after{background:linear-gradient(180deg,rgba(232,112,64,0.09) 0%,transparent 100%);}
 
 .card-arcana{
   font-family:'Cinzel',serif;font-size:0.6rem;font-weight:600;
@@ -226,14 +244,12 @@ body::after{
 .card.mirror .card-arcana{color:var(--amethyst);}
 .card.offpath .card-arcana{color:var(--gold);}
 .card.voice-card .card-arcana{color:var(--teal);}
-
-/* Card number */
+.card.threshold-card .card-arcana{color:var(--ember);}
 .card-number{
   position:absolute;top:20px;right:26px;
   font-family:'Cinzel',serif;font-size:0.5rem;font-weight:600;
   letter-spacing:2px;color:var(--text-faint);z-index:1;
 }
-
 .card-vision{
   font-size:0.9rem;color:var(--text-mid);margin-bottom:14px;
   line-height:1.6;font-style:italic;
@@ -256,6 +272,21 @@ body::after{
   letter-spacing:2px;padding:2px 7px;border-radius:3px;margin-bottom:5px;
   background:rgba(176,136,232,0.15);color:var(--amethyst);
   border:1px solid rgba(176,136,232,0.3);
+}
+
+/* Cross-run memory omen — visually distinct from normal omen */
+.card-memory-omen{
+  font-size:0.8rem;color:var(--ember);margin-bottom:12px;
+  padding:9px 13px;background:rgba(232,112,64,0.06);
+  border-radius:var(--radius);border-left:2px solid var(--ember-dim);
+  font-style:italic;position:relative;z-index:1;line-height:1.55;
+}
+.memory-tag{
+  display:inline-block;font-family:'Cinzel',serif;
+  font-size:0.55rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:2px;padding:2px 7px;border-radius:3px;margin-bottom:5px;
+  background:rgba(232,112,64,0.12);color:var(--ember);
+  border:1px solid rgba(232,112,64,0.28);
 }
 
 /* ── PATHS ── */
@@ -288,11 +319,12 @@ body::after{
 .path-btn.chosen::before{opacity:1;}
 .path-btn:disabled{cursor:default;}
 .path-btn:disabled:not(.chosen){opacity:0.3;}
-
-/* Voice card path styling */
 .card.voice-card .path-btn:hover{border-color:var(--teal);background:linear-gradient(90deg,rgba(96,200,184,0.09),transparent);}
 .card.voice-card .path-btn::before{background:linear-gradient(180deg,rgba(96,200,184,0.5),var(--teal));}
 .card.voice-card .path-btn.chosen{border-color:var(--teal);background:linear-gradient(90deg,rgba(96,200,184,0.09),transparent);}
+.card.threshold-card .path-btn:hover{border-color:var(--ember);background:linear-gradient(90deg,rgba(232,112,64,0.09),transparent);}
+.card.threshold-card .path-btn::before{background:linear-gradient(180deg,rgba(232,112,64,0.5),var(--ember));}
+.card.threshold-card .path-btn.chosen{border-color:var(--ember);background:linear-gradient(90deg,rgba(232,112,64,0.09),transparent);}
 
 /* ── READING ── */
 .reading{animation:cardReveal 0.38s ease;padding-top:12px;position:relative;z-index:1;}
@@ -341,7 +373,7 @@ body::after{
 .start-edition{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:4px;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;}
 .start-version{
   font-family:'Cinzel',serif;font-size:0.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  background:linear-gradient(90deg,var(--accent),var(--teal));
+  background:linear-gradient(90deg,var(--accent),var(--ember));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:18px;
 }
 .start-rule{width:200px;height:1px;margin:14px auto;background:linear-gradient(90deg,transparent,var(--gold-mid),var(--amethyst-dim),var(--gold-mid),transparent);opacity:0.8;}
@@ -362,6 +394,9 @@ body::after{
   box-shadow:0 0 0 0 rgba(212,168,76,0.2);
 }
 .begin-btn:hover{background:rgba(212,168,76,0.09);box-shadow:0 0 28px rgba(212,168,76,0.22);}
+.returning-note{
+  font-size:0.78rem;color:var(--text-dim);font-style:italic;margin-top:12px;max-width:280px;text-align:center;line-height:1.6;
+}
 
 /* ── FATE SCREEN ── */
 .fate-screen{
@@ -372,19 +407,19 @@ body::after{
 .fate-title{font-family:'Cinzel',serif;font-size:0.62rem;text-transform:uppercase;letter-spacing:4px;color:var(--text-dim);}
 .fate-runes{
   display:flex;background:var(--parchment);border:1px solid var(--border);
-  border-radius:var(--radius);overflow:hidden;width:100%;max-width:340px;
+  border-radius:var(--radius);overflow:hidden;width:100%;max-width:360px;
 }
-.fate-rune{flex:1;text-align:center;padding:12px 4px;}
+.fate-rune{flex:1;text-align:center;padding:10px 3px;}
 .fate-rune+.fate-rune{border-left:1px solid var(--border);}
 .fate-rune.fr1{background:linear-gradient(180deg,rgba(212,168,76,0.1),transparent);}
 .fate-rune.fr2{background:linear-gradient(180deg,rgba(176,136,232,0.09),transparent);}
 .fate-rune.fr3{background:linear-gradient(180deg,rgba(240,208,112,0.08),transparent);}
 .fate-rune.fr4{background:linear-gradient(180deg,rgba(96,200,184,0.09),transparent);}
-.f-val{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:4px;}
-.f-lbl{font-family:'Cinzel',serif;font-size:0.52rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);}
+.fate-rune.fr5{background:linear-gradient(180deg,rgba(232,112,64,0.1),transparent);}
+.f-val{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:700;line-height:1;margin-bottom:4px;}
+.f-lbl{font-family:'Cinzel',serif;font-size:0.48rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-dim);}
 .fate-rule{width:160px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-mid),var(--amethyst-dim),var(--teal),var(--gold-mid),transparent);opacity:0.65;}
 .fate-reading{font-size:1rem;color:var(--text-mid);line-height:1.72;max-width:360px;font-style:italic;text-align:left;}
-/* Voice reading block on fate screen */
 .voice-reading-block{
   background:rgba(96,200,184,0.07);border:1px solid rgba(96,200,184,0.25);
   border-radius:var(--radius);padding:12px 16px;max-width:360px;width:100%;
@@ -396,6 +431,31 @@ body::after{
   margin-bottom:6px;
 }
 .voice-reading-text{font-size:0.92rem;color:var(--text-mid);line-height:1.65;font-style:italic;}
+.threshold-reading-block{
+  background:rgba(232,112,64,0.06);border:1px solid rgba(232,112,64,0.22);
+  border-radius:var(--radius);padding:12px 16px;max-width:360px;width:100%;
+  text-align:left;
+}
+.threshold-reading-label{
+  font-family:'Cinzel',serif;font-size:0.55rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:2.5px;color:var(--ember);
+  margin-bottom:6px;
+}
+.threshold-reading-text{font-size:0.92rem;color:var(--text-mid);line-height:1.65;font-style:italic;}
+
+/* Cross-run reflection block on fate screen */
+.crossrun-block{
+  background:rgba(232,112,64,0.05);border:1px solid rgba(232,112,64,0.18);
+  border-radius:var(--radius);padding:12px 16px;max-width:360px;width:100%;
+  text-align:left;
+}
+.crossrun-label{
+  font-family:'Cinzel',serif;font-size:0.55rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:2.5px;color:var(--ember);
+  margin-bottom:6px;opacity:0.8;
+}
+.crossrun-text{font-size:0.92rem;color:var(--text-mid);line-height:1.65;font-style:italic;}
+
 .cast-again{
   padding:11px 36px;background:transparent;border:1px solid var(--accent);
   border-radius:var(--radius);color:var(--gold);font-family:'Cinzel',serif;
@@ -403,12 +463,231 @@ body::after{
   letter-spacing:2px;text-transform:uppercase;
 }
 .cast-again:hover{background:rgba(212,168,76,0.09);box-shadow:0 0 20px rgba(212,168,76,0.18);}
+
+/* ── PARCHMENT INTAKE RITUAL ── */
+.intake-stage{
+  flex:1;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  gap:0;padding:10px 0;
+}
+.intake-preamble{
+  text-align:center;margin-bottom:28px;animation:cardDraw 0.6s ease;
+}
+.intake-preamble-sigil{
+  font-size:2.2rem;margin-bottom:8px;
+  filter:drop-shadow(0 0 12px rgba(232,112,64,0.5));
+  animation:emberPulse 3s ease-in-out infinite;
+}
+@keyframes emberPulse{
+  0%,100%{filter:drop-shadow(0 0 12px rgba(232,112,64,0.5));}
+  50%{filter:drop-shadow(0 0 24px rgba(232,112,64,0.85));}
+}
+.intake-preamble h2{
+  font-family:'Cinzel',serif;font-size:0.9rem;font-weight:700;
+  letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;
+}
+.intake-preamble p{
+  font-size:0.88rem;color:var(--text-dim);line-height:1.65;max-width:300px;font-style:italic;
+}
+
+/* The parchment scroll card */
+.parchment-scroll{
+  width:100%;max-width:360px;
+  background:var(--parchment-page);
+  border-radius:4px;
+  position:relative;
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 0 30px rgba(184,160,112,0.3),
+    0 0 0 1px var(--parchment-dark);
+  padding:28px 22px 24px;
+  animation:scrollDrop 0.55s cubic-bezier(0.23,1,0.32,1);
+}
+@keyframes scrollDrop{
+  0%{opacity:0;transform:translateY(-24px) rotate(-1.5deg) scale(0.95);}
+  60%{opacity:1;transform:translateY(3px) rotate(0.3deg) scale(1.005);}
+  100%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);}
+}
+/* Aged parchment texture */
+.parchment-scroll::before{
+  content:'';position:absolute;inset:0;border-radius:4px;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 30% 20%,rgba(255,240,200,0.4) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 70% at 80% 80%,rgba(160,120,60,0.15) 0%,transparent 55%),
+    radial-gradient(ellipse 30% 30% at 10% 90%,rgba(140,100,50,0.12) 0%,transparent 50%);
+}
+/* Top torn edge illusion */
+.parchment-scroll::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:6px;
+  background:linear-gradient(180deg,rgba(0,0,0,0.08),transparent);
+  border-radius:4px 4px 0 0;
+}
+.parchment-counter{
+  font-family:'Cinzel',serif;font-size:0.5rem;text-transform:uppercase;
+  letter-spacing:3px;color:var(--parchment-dark);margin-bottom:14px;text-align:center;
+  opacity:0.7;
+}
+.parchment-question{
+  font-family:'Crimson Text',serif;font-size:1.08rem;font-weight:600;
+  color:var(--parchment-ink);line-height:1.6;margin-bottom:20px;
+  text-align:center;
+}
+/* Ink lines under the question */
+.parchment-lines{
+  position:absolute;left:22px;right:22px;
+  display:flex;flex-direction:column;gap:22px;
+  pointer-events:none;opacity:0.18;
+}
+.parchment-line{height:1px;background:var(--parchment-ink);}
+
+.parchment-options{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
+.parchment-option{
+  background:transparent;border:none;border-bottom:1px solid rgba(44,31,14,0.2);
+  padding:9px 4px;font-family:'Crimson Text',serif;font-size:0.97rem;
+  color:var(--parchment-ink);text-align:left;cursor:pointer;
+  transition:all 0.18s ease;line-height:1.5;
+  display:flex;align-items:flex-start;gap:8px;
+  position:relative;
+}
+.parchment-option::before{
+  content:'—';font-family:'Crimson Text',serif;
+  color:var(--parchment-dark);flex-shrink:0;margin-top:1px;
+  transition:all 0.18s ease;opacity:0.6;
+}
+.parchment-option:hover{
+  color:#1a0f00;
+  border-bottom-color:rgba(44,31,14,0.5);
+}
+.parchment-option:hover::before{
+  content:'✒';color:var(--parchment-ink);opacity:0.9;
+}
+.parchment-option:active{transform:scale(0.99);}
+
+/* Burn state — JS drives the animation via inline styles */
+.parchment-scroll.burning{
+  pointer-events:none;
+  will-change:clip-path,opacity;
+}
+/* Warm fire overlay — fades in as parchment burns */
+.parchment-fire-overlay{
+  position:absolute;inset:0;border-radius:4px;pointer-events:none;
+  background:linear-gradient(180deg,transparent 0%,rgba(232,112,64,0.0) 40%,rgba(255,80,20,0.0) 100%);
+  z-index:10;transition:none;
+}
+
+/* Smoke / ember particles after burn */
+.smoke-container{
+  position:fixed;left:50%;transform:translateX(-50%);
+  width:200px;height:200px;pointer-events:none;z-index:100;
+  display:none;
+}
+.smoke-container.active{display:block;}
+.smoke-particle{
+  position:absolute;bottom:0;left:50%;
+  border-radius:50%;
+  animation:smokeRise var(--dur,2s) ease-out forwards;
+  opacity:0;
+}
+@keyframes smokeRise{
+  0%{opacity:0.8;transform:translate(-50%,0) scale(0.4);}
+  30%{opacity:0.6;transform:translate(var(--dx,0px),-40px) scale(0.8);}
+  70%{opacity:0.25;transform:translate(var(--dx2,10px),-100px) scale(1.3);}
+  100%{opacity:0;transform:translate(var(--dx3,-5px),-160px) scale(1.8);}
+}
+.ember-particle{
+  position:absolute;bottom:0;left:50%;
+  width:3px;height:3px;border-radius:50%;
+  background:var(--ember);
+  animation:emberFloat var(--dur,1.2s) ease-out forwards;
+  opacity:0;
+}
+@keyframes emberFloat{
+  0%{opacity:1;transform:translate(-50%,0) scale(1);}
+  50%{opacity:0.8;transform:translate(var(--ex,10px),-60px) scale(0.7);}
+  100%{opacity:0;transform:translate(var(--ex2,20px),-130px) scale(0.2);}
+}
+
+/* Intake progress dots */
+.intake-dots{
+  display:flex;gap:8px;justify-content:center;margin-top:18px;
+}
+.intake-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--border);transition:all 0.3s ease;
+}
+.intake-dot.done{background:var(--ember);box-shadow:0 0 8px var(--ember-glow);}
+.intake-dot.current{background:var(--gold-mid);box-shadow:0 0 6px var(--gold-glow);}
 </style>
 </head>
 <body>
 <div class="app" id="app"></div>
-<script>
+<div class="smoke-container" id="smokeContainer"></div>
 
+<script>
+// ═══════════════════════════════
+// PERSISTENCE
+// ═══════════════════════════════
+const STORAGE_KEY = 'paths_profile_v4';
+
+function loadProfile() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
+function saveProfile(p) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch(e) {}
+}
+
+function freshProfile() {
+  return {
+    runs: 0,
+    intake: [],
+    axesHistory: [],
+    choiceHistory: [],
+    thresholdUnlocked: false,
+    discovered: []
+  };
+}
+
+// ═══════════════════════════════
+// INTAKE QUESTIONS
+// ═══════════════════════════════
+const INTAKE_QUESTIONS = [
+  {
+    question: "When you imagine the life five years from now — what part of it is still unclear?",
+    options: [
+      { text: "The work — what I'll be doing and whether it will matter", tags: ["work","calling","trajectory"] },
+      { text: "The direction — whether the road I'm on leads where I think it does", tags: ["trajectory","long-road","identity"] },
+      { text: "The inner life — whether I'll know myself better than I do now", tags: ["self-awareness","identity","voice"] },
+      { text: "The foundation — the house, the ground, the stability still being built", tags: ["resolve","long-road","calling"] }
+    ]
+  },
+  {
+    question: "When you know something true that hasn't been said — what usually keeps it inside?",
+    options: [
+      { text: "Fear of how it will land — what it costs to say it plainly", tags: ["voice","renown","fear"], voiceStart: -4 },
+      { text: "Timing — I wait for the moment that feels right", tags: ["voice","work"], voiceStart: -2 },
+      { text: "Protection — of the person, or the peace, or the room", tags: ["voice","identity"], voiceStart: -2 },
+      { text: "Habit — the silence came first and the words never caught up", tags: ["voice","self-awareness"], voiceStart: -3 }
+    ]
+  },
+  {
+    question: "What is the shape of the distance between where you are and where you are going?",
+    options: [
+      { text: "Long — the road is real and I know I am in the middle of it", tags: ["long-road","resolve","trajectory"], resolveStart: 3 },
+      { text: "Close but blocked — I can see it but something is in the way", tags: ["calling","trajectory","work"], callingStart: 3 },
+      { text: "Unclear — the destination keeps shifting as I move toward it", tags: ["identity","calling","self-awareness"] },
+      { text: "Unknown — I am building the road as I walk it", tags: ["long-road","identity","resolve"], resolveStart: 2 }
+    ]
+  }
+];
+
+// ═══════════════════════════════
+// VISION POOL
+// ═══════════════════════════════
 const VISIONS = [
 
   // ── PATH OF WORKS ──
@@ -416,45 +695,45 @@ const VISIONS = [
    vision:"A task presents itself — one beyond the edges of what was asked of you. The skill is yours. The asking was not.",
    question:"Is stepping forward without being summoned how you choose to move through the world?",
    choices:[
-     {text:"I step forward — the task needs doing and I am able",scores:{renown:5,resolve:3,calling:4,voice:2},reading:"There is a certain kind of person who moves toward need rather than waiting for permission. Whether others name it or not, such movement shapes a reputation — not in a single act, but across a hundred of them. The question worth carrying: does the world you're building see what you give, or only what you were told to give?"},
-     {text:"I wait to see if it will be asked of me — then decide",scores:{renown:1,resolve:2,calling:2,voice:-1},reading:"Patience has its wisdom. But there is a difference between patience and hesitation wearing patience's robes. The seat you seek is given to those who are already acting like they belong in it — not those who wait to be invited. Watch which one this was."},
-     {text:"I hold my ground — what is not asked for and not paid for is not mine to carry",scores:{renown:-2,resolve:4,calling:1,voice:-2},reading:"A boundary held is not always a door closed. Sometimes knowing what you will and will not carry is the beginning of real agency — not the end of it. The question is whether this is a value you hold with intention, or a shield you raise when the weight feels like it belongs to someone else's kingdom."}
+     {text:"I step forward — the task needs doing and I am able",scores:{renown:5,resolve:3,calling:4,voice:2,threshold:4},reading:"There is a certain kind of person who moves toward need rather than waiting for permission. Whether others name it or not, such movement shapes a reputation — not in a single act, but across a hundred of them. The question worth carrying: does the world you're building see what you give, or only what you were told to give?"},
+     {text:"I wait to see if it will be asked of me — then decide",scores:{renown:1,resolve:2,calling:2,voice:-1,threshold:-2},reading:"Patience has its wisdom. But there is a difference between patience and hesitation wearing patience's robes. The seat you seek is given to those who are already acting like they belong in it — not those who wait to be invited. Watch which one this was."},
+     {text:"I hold my ground — what is not asked for and not paid for is not mine to carry",scores:{renown:-2,resolve:4,calling:1,voice:-2,threshold:-3},reading:"A boundary held is not always a door closed. Sometimes knowing what you will and will not carry is the beginning of real agency — not the end of it. The question is whether this is a value you hold with intention, or a shield you raise when the weight feels like it belongs to someone else's kingdom."}
    ],tags:["work","identity","renown"]},
 
   {id:"pw-2",arcana:"The Path of Works",type:"work",
    vision:"A decision is being made that affects your ground. You were not consulted. You hold knowledge the decision-makers do not.",
    question:"The door was not opened for you. Do you knock?",
    choices:[
-     {text:"I make my voice known — to stay silent when I see clearly would be a different kind of failure",scores:{renown:5,resolve:3,calling:5,voice:7},reading:"To speak when not called upon is a risk — and sometimes it is the most important thing a person can do. The difference between the advisor who is sought and the one who is not often comes down to this: did they speak when it mattered, before they were given leave to speak? How you carry that voice will determine whether it becomes a door."},
-     {text:"I find a trusted ear and pass the knowledge through them",scores:{renown:2,resolve:2,calling:3,voice:2},reading:"The hidden path has its uses. But consider: every time you route your wisdom through another's mouth, you build their authority and defer your own. It may serve the outcome today. It will not build the table you seek to sit at."},
-     {text:"I hold the knowledge and watch — if the decision fails, the lesson will be heard more clearly",scores:{renown:-3,resolve:3,calling:-1,voice:-4},reading:"There is a coldness to letting things break so that you may be proven right. Even if the lesson lands — it lands on others who were not consulted either. The seat at the council is rarely given to the one who watched and waited for failure. It is given to the one who tried to prevent it."}
+     {text:"I make my voice known — to stay silent when I see clearly would be a different kind of failure",scores:{renown:5,resolve:3,calling:5,voice:7,threshold:6},reading:"To speak when not called upon is a risk — and sometimes it is the most important thing a person can do. The difference between the advisor who is sought and the one who is not often comes down to this: did they speak when it mattered, before they were given leave to speak? How you carry that voice will determine whether it becomes a door."},
+     {text:"I find a trusted ear and pass the knowledge through them",scores:{renown:2,resolve:2,calling:3,voice:2,threshold:1},reading:"The hidden path has its uses. But consider: every time you route your wisdom through another's mouth, you build their authority and defer your own. It may serve the outcome today. It will not build the table you seek to sit at."},
+     {text:"I hold the knowledge and watch — if the decision fails, the lesson will be heard more clearly",scores:{renown:-3,resolve:3,calling:-1,voice:-4,threshold:-5},reading:"There is a coldness to letting things break so that you may be proven right. Even if the lesson lands — it lands on others who were not consulted either. The seat at the council is rarely given to the one who watched and waited for failure. It is given to the one who tried to prevent it."}
    ],tags:["work","voice","calling"]},
 
   {id:"pw-3",arcana:"The Path of Works",type:"work",
    vision:"You are asked to pass your knowledge to someone newer. Days of your time. No additional coin. No ceremony.",
    question:"What does your answer to this ask say about where you are going?",
    choices:[
-     {text:"I give it freely — teaching is how knowledge becomes legacy",scores:{renown:6,resolve:4,calling:5,voice:3},reading:"The ones who hoard their craft tend to become its ceiling. The ones who teach it tend to become its foundation — and foundations are what towers are built upon. Every person who walks away knowing more because of you is a small stone in the wall of the reputation you are trying to build."},
-     {text:"I give it — but I note the cost, and carry some resentment with me",scores:{renown:1,resolve:-1,calling:1,voice:0},reading:"The task done with resentment is still done. But resentment has a way of making itself known — in tone, in availability, in the corners people feel but cannot name. If the giving costs you something real, that is worth examining. Is it the teaching that costs you, or the silence of those who should be naming what you give?"},
-     {text:"I give what I am formally obligated to give and no more",scores:{renown:-2,resolve:3,calling:-2,voice:-1},reading:"A defensible choice. And one that will be remembered — not as cruelty, but as a signal about what you are willing to invest in. The people who see the future in you are watching for exactly this kind of moment. That does not mean you owe everything. It means the path you want requires a different kind of arithmetic."}
+     {text:"I give it freely — teaching is how knowledge becomes legacy",scores:{renown:6,resolve:4,calling:5,voice:3,threshold:5},reading:"The ones who hoard their craft tend to become its ceiling. The ones who teach it tend to become its foundation — and foundations are what towers are built upon. Every person who walks away knowing more because of you is a small stone in the wall of the reputation you are trying to build."},
+     {text:"I give it — but I note the cost, and carry some resentment with me",scores:{renown:1,resolve:-1,calling:1,voice:0,threshold:-1},reading:"The task done with resentment is still done. But resentment has a way of making itself known — in tone, in availability, in the corners people feel but cannot name. If the giving costs you something real, that is worth examining. Is it the teaching that costs you, or the silence of those who should be naming what you give?"},
+     {text:"I give what I am formally obligated to give and no more",scores:{renown:-2,resolve:3,calling:-2,voice:-1,threshold:-3},reading:"A defensible choice. And one that will be remembered — not as cruelty, but as a signal about what you are willing to invest in. The people who see the future in you are watching for exactly this kind of moment. That does not mean you owe everything. It means the path you want requires a different kind of arithmetic."}
    ],tags:["work","renown","resolve"]},
 
   {id:"pw-4",arcana:"The Path of Works",type:"work",
    vision:"A stretch of days where the work holds no fire. You come. You perform. You leave. The routine is a river with no current.",
    question:"What does the flatness tell you — and will you listen?",
    choices:[
-     {text:"It tells me something is missing — I sit with that rather than push through it",scores:{renown:2,resolve:2,calling:6,voice:2},reading:"The willingness to listen to the silence between the tasks is uncommon. Most take the flatness as weather and wait for it to pass. You are treating it as a message. That is wiser — provided you let the message reach all the way to a question: missing from what? Missing from whom?"},
-     {text:"I use the quiet season to build something that does not depend on the fire being present",scores:{renown:4,resolve:5,calling:3,voice:1},reading:"There is a craft to working without the flame. The people who can build during the flatness — methodically, without needing the energy of inspiration — are the ones whose work accumulates. The fire returns eventually. What you build in its absence is often what outlasts it."},
-     {text:"I begin to look around — if the fire is not here, it may live elsewhere",scores:{renown:2,resolve:1,calling:5,voice:3},reading:"The looking is important — and the willingness to say, even quietly, that something needs to change. Just be careful to distinguish between the flatness of a season and the flatness of a direction. One passes. The other requires a different kind of move."}
+     {text:"It tells me something is missing — I sit with that rather than push through it",scores:{renown:2,resolve:2,calling:6,voice:2,threshold:3},reading:"The willingness to listen to the silence between the tasks is uncommon. Most take the flatness as weather and wait for it to pass. You are treating it as a message. That is wiser — provided you let the message reach all the way to a question: missing from what? Missing from whom?"},
+     {text:"I use the quiet season to build something that does not depend on the fire being present",scores:{renown:4,resolve:5,calling:3,voice:1,threshold:4},reading:"There is a craft to working without the flame. The people who can build during the flatness — methodically, without needing the energy of inspiration — are the ones whose work accumulates. The fire returns eventually. What you build in its absence is often what outlasts it."},
+     {text:"I begin to look around — if the fire is not here, it may live elsewhere",scores:{renown:2,resolve:1,calling:5,voice:3,threshold:2},reading:"The looking is important — and the willingness to say, even quietly, that something needs to change. Just be careful to distinguish between the flatness of a season and the flatness of a direction. One passes. The other requires a different kind of move."}
    ],tags:["work","calling","resolve"]},
 
   {id:"pw-5",arcana:"The Path of Works",type:"work",
    vision:"You have been moving in a direction that others have begun to notice. Someone with standing observes you. You know they are watching.",
    question:"When the eyes of consequence are upon you, who do you become?",
    choices:[
-     {text:"I become more careful — the stakes are higher and I move with that weight",scores:{renown:3,resolve:4,calling:2,voice:1},reading:"Careful under observation is a reasonable adaptation. The question it asks eventually: are you most careful when someone is watching, or have you built the care into the work itself? The ones who are consistent in both rooms tend to be trusted with the larger ones."},
-     {text:"I become more myself — being seen is an invitation, not a test",scores:{renown:6,resolve:3,calling:5,voice:5},reading:"This is the answer that scales. The person who is the same in every room is the person who never has to remember which version of themselves showed up. What they see is what they get — and what they get tends to be worth seeing."},
-     {text:"I become more strategic — this is the moment to show what I want them to see",scores:{renown:4,resolve:2,calling:2,voice:0},reading:"There is a tactical wisdom to this. And a long-term cost: the self that is curated for the right eyes has to be maintained. The curating becomes its own labor. The ones who build durable reputations tend to build them on something they do not have to perform."}
+     {text:"I become more careful — the stakes are higher and I move with that weight",scores:{renown:3,resolve:4,calling:2,voice:1,threshold:1},reading:"Careful under observation is a reasonable adaptation. The question it asks eventually: are you most careful when someone is watching, or have you built the care into the work itself? The ones who are consistent in both rooms tend to be trusted with the larger ones."},
+     {text:"I become more myself — being seen is an invitation, not a test",scores:{renown:6,resolve:3,calling:5,voice:5,threshold:6},reading:"This is the answer that scales. The person who is the same in every room is the person who never has to remember which version of themselves showed up. What they see is what they get — and what they get tends to be worth seeing."},
+     {text:"I become more strategic — this is the moment to show what I want them to see",scores:{renown:4,resolve:2,calling:2,voice:0,threshold:-1},reading:"There is a tactical wisdom to this. And a long-term cost: the self that is curated for the right eyes has to be maintained. The curating becomes its own labor. The ones who build durable reputations tend to build them on something they do not have to perform."}
    ],tags:["work","renown","identity"]},
 
   // ── THE SEAT AT THE COUNCIL ──
@@ -462,18 +741,18 @@ const VISIONS = [
    vision:"A room where decisions are made. Your chair is not yet at the table. You can see it from where you stand.",
    question:"How do you cross the distance between where you are and where the chair waits?",
    choices:[
-     {text:"I demonstrate the work so consistently that the chair comes to find me",scores:{renown:5,resolve:5,calling:4,voice:2},reading:"The quiet accumulation of evidence is one of the most reliable roads to the table. It is also one of the slowest. Make sure the people who control the chair can actually see the evidence — work that is done in a room no one enters does not always travel."},
-     {text:"I tell the right people that I intend to sit there — and I begin acting like I already do",scores:{renown:4,resolve:3,calling:5,voice:6},reading:"There is a kind of declaration that precedes the arrival. Naming what you intend — to yourself and to the people who can help it happen — is not presumption. It is one of the ways the chair gets filled. The ones who wait to speak about their intentions often find someone else speaking for them."},
-     {text:"I find out who fills the chair and what they believe fills it — then I build those things",scores:{renown:3,resolve:4,calling:3,voice:2},reading:"Strategic intelligence. Understanding the criteria before you meet them is wise. Just ensure that what you build to meet those criteria is genuinely yours — not a costume. The chair will hold whoever built themselves, not whoever dressed for it."}
+     {text:"I demonstrate the work so consistently that the chair comes to find me",scores:{renown:5,resolve:5,calling:4,voice:2,threshold:3},reading:"The quiet accumulation of evidence is one of the most reliable roads to the table. It is also one of the slowest. Make sure the people who control the chair can actually see the evidence — work that is done in a room no one enters does not always travel."},
+     {text:"I tell the right people that I intend to sit there — and I begin acting like I already do",scores:{renown:4,resolve:3,calling:5,voice:6,threshold:7},reading:"There is a kind of declaration that precedes the arrival. Naming what you intend — to yourself and to the people who can help it happen — is not presumption. It is one of the ways the chair gets filled. The ones who wait to speak about their intentions often find someone else speaking for them."},
+     {text:"I find out who fills the chair and what they believe fills it — then I build those things",scores:{renown:3,resolve:4,calling:3,voice:2,threshold:2},reading:"Strategic intelligence. Understanding the criteria before you meet them is wise. Just ensure that what you build to meet those criteria is genuinely yours — not a costume. The chair will hold whoever built themselves, not whoever dressed for it."}
    ],tags:["work","renown","calling"]},
 
   {id:"sc-2",arcana:"The Seat at the Council",type:"work",
    vision:"The seat is offered — earlier than you expected, for terms that are not quite what you imagined.",
    question:"Partial arrival. Imperfect terms. Do you take the seat?",
    choices:[
-     {text:"I take it — the seat is the thing, not the terms, and terms can be renegotiated from inside",scores:{renown:5,resolve:3,calling:4,voice:3},reading:"Taking the seat under imperfect terms is a common story among the people who eventually shaped the table itself. Conditions change more easily from the inside. What matters is that you enter with your eyes open — knowing what is imperfect and watching to see if it moves."},
-     {text:"I negotiate — I accept in spirit but push back on the terms before I sit",scores:{renown:3,resolve:4,calling:4,voice:6},reading:"The willingness to negotiate before you accept is not ingratitude. It is self-knowledge. The people who later resent their seat are often those who took the terms as given because they feared the seat would disappear. A seat worth having is worth being specific about."},
-     {text:"I decline — the terms matter and I will wait for the version that fits",scores:{renown:1,resolve:6,calling:3,voice:3},reading:"There is a version of this that is wisdom — knowing what you will not compromise on. And a version that is pride protecting itself by dressing up as discernment. The question to sit with: is what you are waiting for real, or is the waiting itself the comfort?"}
+     {text:"I take it — the seat is the thing, not the terms, and terms can be renegotiated from inside",scores:{renown:5,resolve:3,calling:4,voice:3,threshold:6},reading:"Taking the seat under imperfect terms is a common story among the people who eventually shaped the table itself. Conditions change more easily from the inside. What matters is that you enter with your eyes open — knowing what is imperfect and watching to see if it moves."},
+     {text:"I negotiate — I accept in spirit but push back on the terms before I sit",scores:{renown:3,resolve:4,calling:4,voice:6,threshold:5},reading:"The willingness to negotiate before you accept is not ingratitude. It is self-knowledge. The people who later resent their seat are often those who took the terms as given because they feared the seat would disappear. A seat worth having is worth being specific about."},
+     {text:"I decline — the terms matter and I will wait for the version that fits",scores:{renown:1,resolve:6,calling:3,voice:3,threshold:-2},reading:"There is a version of this that is wisdom — knowing what you will not compromise on. And a version that is pride protecting itself by dressing up as discernment. The question to sit with: is what you are waiting for real, or is the waiting itself the comfort?"}
    ],tags:["work","calling","renown"]},
 
   // ── THE LONG ROAD ──
@@ -481,93 +760,112 @@ const VISIONS = [
    vision:"The road ahead requires more of you than the road behind did. You can see what more looks like. You do not yet know if you have it.",
    question:"When the road asks more than you have given before — how do you respond to that ask?",
    choices:[
-     {text:"I answer it — not knowing is not the same as not having",scores:{renown:4,resolve:5,calling:4,voice:3},reading:"The willingness to step into what you do not yet know you can do is the essential gesture of every life that grew into something larger than it started. The not-knowing is not a warning sign. It is the marker that you have arrived at the edge of what you built so far. The road goes past it."},
-     {text:"I prepare before I answer — I want to meet the ask with something solid",scores:{renown:2,resolve:4,calling:3,voice:1},reading:"Preparation is sound. Just be careful that preparation does not become the reason the answer never arrives. There is a point at which the only way to know if you have it is to be on the road and find out. That point tends to come before we feel ready."},
-     {text:"I name the ask out loud — to myself and to someone I trust — before I decide",scores:{renown:3,resolve:3,calling:4,voice:5},reading:"There is power in speaking the thing you are being asked. It is harder to avoid a named ask than an unnamed one. And the act of saying it to someone you trust tends to clarify whether the hesitation is wisdom or fear. The voice is a tool here — use it."}
+     {text:"I answer it — not knowing is not the same as not having",scores:{renown:4,resolve:5,calling:4,voice:3,threshold:7},reading:"The willingness to step into what you do not yet know you can do is the essential gesture of every life that grew into something larger than it started. The not-knowing is not a warning sign. It is the marker that you have arrived at the edge of what you built so far. The road goes past it."},
+     {text:"I prepare before I answer — I want to meet the ask with something solid",scores:{renown:2,resolve:4,calling:3,voice:1,threshold:-1},reading:"Preparation is sound. Just be careful that preparation does not become the reason the answer never arrives. There is a point at which the only way to know if you have it is to be on the road and find out. That point tends to come before we feel ready."},
+     {text:"I name the ask out loud — to myself and to someone I trust — before I decide",scores:{renown:3,resolve:3,calling:4,voice:5,threshold:4},reading:"There is power in speaking the thing you are being asked. It is harder to avoid a named ask than an unnamed one. And the act of saying it to someone you trust tends to clarify whether the hesitation is wisdom or fear. The voice is a tool here — use it."}
    ],tags:["identity","resolve","long-road"]},
 
   {id:"lr-2",arcana:"The Long Road",type:"offpath",
    vision:"A companion on your road sees something in you that you have not yet claimed. They have named it. You have heard it more than once.",
    question:"When those who know you well see further into you than you currently see yourself — what do you do with that?",
    choices:[
-     {text:"I take it seriously — those who are close to us often see us more clearly than we see ourselves",scores:{renown:3,resolve:3,calling:5,voice:4},reading:"The willingness to take in what is seen by those close to you — rather than explain it away — is one of the rarer acts of self-knowledge. It does not require you to become their version of you. It requires you to hold the possibility seriously enough to examine it."},
-     {text:"I hold it as possible but want to arrive at it on my own terms",scores:{renown:2,resolve:3,calling:4,voice:2},reading:"The instinct to own the arrival is legitimate. Just make sure the 'own terms' do not become a long delay that turns the companion's gift into something that fades. Some things are worth being pushed toward, even when you would have preferred to walk there yourself."},
-     {text:"I wonder if they are seeing something real or seeing what they hope for me",scores:{renown:1,resolve:2,calling:3,voice:1},reading:"The skepticism is its own form of honesty. They may be reflecting their hope more than your nature. And they may be seeing something you have not named yet because you have not been ready to name it. The only way to tell the difference is to sit with it long enough that you can hear which one feels true."}
+     {text:"I take it seriously — those who are close to us often see us more clearly than we see ourselves",scores:{renown:3,resolve:3,calling:5,voice:4,threshold:4},reading:"The willingness to take in what is seen by those close to you — rather than explain it away — is one of the rarer acts of self-knowledge. It does not require you to become their version of you. It requires you to hold the possibility seriously enough to examine it."},
+     {text:"I hold it as possible but want to arrive at it on my own terms",scores:{renown:2,resolve:3,calling:4,voice:2,threshold:1},reading:"The instinct to own the arrival is legitimate. Just make sure the 'own terms' do not become a long delay that turns the companion's gift into something that fades. Some things are worth being pushed toward, even when you would have preferred to walk there yourself."},
+     {text:"I wonder if they are seeing something real or seeing what they hope for me",scores:{renown:1,resolve:2,calling:3,voice:1,threshold:-2},reading:"The skepticism is its own form of honesty. They may be reflecting their hope more than your nature. And they may be seeing something you have not named yet because you have not been ready to name it. The only way to tell the difference is to sit with it long enough that you can hear which one feels true."}
    ],tags:["identity","calling","long-road"]},
 
   {id:"lr-3",arcana:"The Long Road",type:"offpath",
    vision:"The house is ahead — closer than it was. The life you are building is taking visible shape. The work is not yet what it will be. You are carrying all of it.",
    question:"When you are between the life you are building and the life you already have — what do you do with the weight of that in-between?",
    choices:[
-     {text:"I name it as a season, not a state — in-between is not lost, it is in motion",scores:{renown:3,resolve:5,calling:4,voice:3},reading:"The reframe is everything. People who treat in-between as temporary move through it differently than those who treat it as evidence that something is wrong. You are not behind. You are in the middle of building, which is exactly where you are supposed to be."},
-     {text:"I share the weight with the person walking it with me — the road is not meant to be carried alone",scores:{renown:2,resolve:4,calling:5,voice:5},reading:"The companion on the long road is the resource most often underused. Not because people do not value them, but because they try to present the finished version of themselves rather than the in-progress one. What you share with the person beside you shapes the life you are building together far more than what you achieve alone."},
-     {text:"I let the weight remind me why the destination matters — the carrying is evidence of the caring",scores:{renown:2,resolve:4,calling:4,voice:2},reading:"There is a wisdom in letting the weight be meaningful rather than just heavy. The life worth building tends to weigh something in the building of it. The question worth holding: is the weight proportional to what it is carrying, or is there weight you are holding that belongs to a different road?"}
+     {text:"I name it as a season, not a state — in-between is not lost, it is in motion",scores:{renown:3,resolve:5,calling:4,voice:3,threshold:4},reading:"The reframe is everything. People who treat in-between as temporary move through it differently than those who treat it as evidence that something is wrong. You are not behind. You are in the middle of building, which is exactly where you are supposed to be."},
+     {text:"I share the weight with the person walking it with me — the road is not meant to be carried alone",scores:{renown:2,resolve:4,calling:5,voice:5,threshold:5},reading:"The companion on the long road is the resource most often underused. Not because people do not value them, but because they try to present the finished version of themselves rather than the in-progress one. What you share with the person beside you shapes the life you are building together far more than what you achieve alone."},
+     {text:"I let the weight remind me why the destination matters — the carrying is evidence of the caring",scores:{renown:2,resolve:4,calling:4,voice:2,threshold:2},reading:"There is a wisdom in letting the weight be meaningful rather than just heavy. The life worth building tends to weigh something in the building of it. The question worth holding: is the weight proportional to what it is carrying, or is there weight you are holding that belongs to a different road?"}
    ],tags:["calling","resolve","long-road"]},
 
-  // ── THE MIRROR SPEAKS ── (voice-card type)
+  // ── THE MIRROR SPEAKS ──
   {id:"ms-1",arcana:"The Mirror Speaks",type:"mirror",
    vision:"The mirror does not flatter and does not diminish. It only shows.",
    question:"When you look at your own life plainly — what is moving in the right direction, and what is waiting for you to move it?",
    choices:[
-     {text:"I can see both clearly — what is moving and what is not",scores:{renown:3,resolve:4,calling:5,voice:4},reading:"The clarity to see both sides of the ledger — what is working and what is not — is the precondition for everything that follows. Most people can see one clearly. The ability to hold both at once without the positive erasing the problem or the problem erasing the progress is a kind of wisdom that only comes from looking plainly."},
-     {text:"What is moving is clearer to me than what is waiting — I feel the forward motion more than the stuck places",scores:{renown:4,resolve:3,calling:4,voice:3},reading:"The forward motion is real and worth naming. Just let the Mirror speak the quiet part too: the things waiting tend to wait in silence, and the longer the silence, the louder they eventually become. One honest look at what is not moving yet is worth more than many looks at what is."},
-     {text:"What is waiting is clearer to me than what is moving — I feel the stuck places more than the ground already gained",scores:{renown:2,resolve:3,calling:3,voice:3},reading:"The weight of what is not yet done is familiar territory. What it tends to obscure is the ground already under your feet — the real ground, not the imagined starting point. Spend a moment with what has already moved. The distance from where you started to here is probably larger than you are giving it."}
+     {text:"I can see both clearly — what is moving and what is not",scores:{renown:3,resolve:4,calling:5,voice:4,threshold:5},reading:"The clarity to see both sides of the ledger — what is working and what is not — is the precondition for everything that follows. Most people can see one clearly. The ability to hold both at once without the positive erasing the problem or the problem erasing the progress is a kind of wisdom that only comes from looking plainly."},
+     {text:"What is moving is clearer to me than what is waiting — I feel the forward motion more than the stuck places",scores:{renown:4,resolve:3,calling:4,voice:3,threshold:2},reading:"The forward motion is real and worth naming. Just let the Mirror speak the quiet part too: the things waiting tend to wait in silence, and the longer the silence, the louder they eventually become. One honest look at what is not moving yet is worth more than many looks at what is."},
+     {text:"What is waiting is clearer to me than what is moving — I feel the stuck places more than the ground already gained",scores:{renown:2,resolve:3,calling:3,voice:3,threshold:1},reading:"The weight of what is not yet done is familiar territory. What it tends to obscure is the ground already under your feet — the real ground, not the imagined starting point. Spend a moment with what has already moved. The distance from where you started to here is probably larger than you are giving it."}
    ],tags:["identity","calling","trajectory"]},
 
   {id:"ms-2",arcana:"The Mirror Speaks",type:"mirror",
    vision:"No vision. Only this.",
    question:"Five years forward. The house is found. The family you are building is underway. The work has moved. What does a good version of that life look like — specifically?",
    choices:[
-     {text:"I can see it clearly — I have walked through it in my mind more than once",scores:{renown:3,resolve:4,calling:5,voice:3},reading:"The ones who arrive at the lives they imagined are rarely those who had the most talent or the most luck. They are usually the ones who could see the destination clearly enough to make small decisions in its direction. You have that picture. Let it guide the small choices — they are the ones that actually build the path."},
-     {text:"The family and house are clear — the work part is still forming",scores:{renown:2,resolve:3,calling:3,voice:2},reading:"The asymmetry tells you something true: you know what you value most. The work clarity will come as you move toward it. For now, let the clearer picture pull the less clear one in its direction. People who know what they are building a life for tend to find the work that fits it."},
-     {text:"I hold the pieces but have not assembled the full picture yet",scores:{renown:2,resolve:2,calling:2,voice:2},reading:"The assembling is worth doing — not to plan every step, but to understand the shape of the life you are building. Spend an hour with your companion drawing the picture together. Not the obstacles. Not the plan. Just the picture of a good day, five years from now. What the morning looks like. What the evening holds. The rest follows from there."}
+     {text:"I can see it clearly — I have walked through it in my mind more than once",scores:{renown:3,resolve:4,calling:5,voice:3,threshold:4},reading:"The ones who arrive at the lives they imagined are rarely those who had the most talent or the most luck. They are usually the ones who could see the destination clearly enough to make small decisions in its direction. You have that picture. Let it guide the small choices — they are the ones that actually build the path."},
+     {text:"The family and house are clear — the work part is still forming",scores:{renown:2,resolve:3,calling:3,voice:2,threshold:1},reading:"The asymmetry tells you something true: you know what you value most. The work clarity will come as you move toward it. For now, let the clearer picture pull the less clear one in its direction. People who know what they are building a life for tend to find the work that fits it."},
+     {text:"I hold the pieces but have not assembled the full picture yet",scores:{renown:2,resolve:2,calling:2,voice:2,threshold:0},reading:"The assembling is worth doing — not to plan every step, but to understand the shape of the life you are building. Spend an hour with your companion drawing the picture together. Not the obstacles. Not the plan. Just the picture of a good day, five years from now. What the morning looks like. What the evening holds. The rest follows from there."}
    ],tags:["calling","identity","long-road"]},
 
   {id:"ms-3",arcana:"The Mirror Speaks",type:"mirror",
    vision:"No vision. Only the question you may have been avoiding.",
    question:"What is the thing you already know but have not yet done anything about?",
    choices:[
-     {text:"A move at work I have been deferring — a conversation or an action I keep circling",scores:{renown:3,resolve:1,calling:4,voice:5},reading:"Name it. Right now, in the private room of your own thinking. Not the whole arc — just the next step. The first move is almost always smaller than the whole weight of having not made it. The deferring costs more than the doing — and the longer it waits, the more weight it accumulates. The next natural opening to speak it: take it."},
-     {text:"Something about how I am showing up for the people who matter most to me",scores:{renown:2,resolve:2,calling:3,voice:3},reading:"This kind of knowing — about yourself in relation to those you love — is the most important and the most postponed. It does not require a grand gesture. It usually requires one honest conversation, or one different choice tomorrow. The knowing you already carry is the beginning. Act from it."},
-     {text:"I will need more time with this question before I can answer it truly",scores:{renown:1,resolve:2,calling:2,voice:1},reading:"Leave it open. Do not chase it down or resolve it tonight. The thing you already know is patient — it has been waiting and it will wait a little longer. It will surface when you stop trying to surface it. Pay attention when it does. And when it surfaces, try speaking it to someone before you have finished thinking it through."}
+     {text:"A move at work I have been deferring — a conversation or an action I keep circling",scores:{renown:3,resolve:1,calling:4,voice:5,threshold:6},reading:"Name it. Right now, in the private room of your own thinking. Not the whole arc — just the next step. The first move is almost always smaller than the whole weight of having not made it. The deferring costs more than the doing — and the longer it waits, the more weight it accumulates. The next natural opening to speak it: take it."},
+     {text:"Something about how I am showing up for the people who matter most to me",scores:{renown:2,resolve:2,calling:3,voice:3,threshold:3},reading:"This kind of knowing — about yourself in relation to those you love — is the most important and the most postponed. It does not require a grand gesture. It usually requires one honest conversation, or one different choice tomorrow. The knowing you already carry is the beginning. Act from it."},
+     {text:"I will need more time with this question before I can answer it truly",scores:{renown:1,resolve:2,calling:2,voice:1,threshold:-3},reading:"Leave it open. Do not chase it down or resolve it tonight. The thing you already know is patient — it has been waiting and it will wait a little longer. It will surface when you stop trying to surface it. Pay attention when it does. And when it surfaces, try speaking it to someone before you have finished thinking it through."}
    ],tags:["self-awareness","identity","calling"]},
 
   {id:"ms-4",arcana:"The Mirror Speaks",type:"mirror",
    vision:"No vision. Just you, and the question the deck has been carrying since the first card was drawn.",
    question:"Are you the person your path requires you to be — or are you still becoming them?",
    choices:[
-     {text:"Still becoming — and I am at peace with that",scores:{renown:3,resolve:4,calling:4,voice:3},reading:"The peace is the important part. There is a version of 'still becoming' that is comfortable avoidance — and a version that is honest forward motion. The peace that comes from the second is earned. The peace that comes from the first is borrowed. Which kind feels true to you?"},
-     {text:"Both — I am the person in some rooms and still becoming them in others",scores:{renown:4,resolve:4,calling:4,voice:4},reading:"That is probably the most accurate answer available to any person of real ambition. Fully arrived people tend to stop moving. The ones who carry the right tension — already enough and not yet finished — tend to be the ones who build things that outlast the building of them."},
-     {text:"I am not yet sure what that person fully looks like — the path is still revealing itself",scores:{renown:2,resolve:3,calling:3,voice:2},reading:"The path reveals the person more than any preparation does. You may not see the full shape of who you are becoming until you have walked further. That is not a delay — it is the nature of the kind of becoming you seem to be inside of. Stay on the road. Look back occasionally. The shape will become clearer."}
+     {text:"Still becoming — and I am at peace with that",scores:{renown:3,resolve:4,calling:4,voice:3,threshold:2},reading:"The peace is the important part. There is a version of 'still becoming' that is comfortable avoidance — and a version that is honest forward motion. The peace that comes from the second is earned. The peace that comes from the first is borrowed. Which kind feels true to you?"},
+     {text:"Both — I am the person in some rooms and still becoming them in others",scores:{renown:4,resolve:4,calling:4,voice:4,threshold:4},reading:"That is probably the most accurate answer available to any person of real ambition. Fully arrived people tend to stop moving. The ones who carry the right tension — already enough and not yet finished — tend to be the ones who build things that outlast the building of them."},
+     {text:"I am not yet sure what that person fully looks like — the path is still revealing itself",scores:{renown:2,resolve:3,calling:3,voice:2,threshold:1},reading:"The path reveals the person more than any preparation does. You may not see the full shape of who you are becoming until you have walked further. That is not a delay — it is the nature of the kind of becoming you seem to be inside of. Stay on the road. Look back occasionally. The shape will become clearer."}
    ],tags:["identity","calling","trajectory"]},
 
-  // ── THE VOICE AT THE THRESHOLD (new arcana) ──
+  // ── THE VOICE AT THE THRESHOLD ──
   {id:"vt-1",arcana:"The Voice at the Threshold",type:"voice",
    vision:"The room is full of the right people. The conversation has arrived at the exact place where your knowledge is most relevant. You have not been invited to speak.",
    question:"The threshold between what you know and what you have said — do you cross it?",
    choices:[
-     {text:"I speak — waiting for a formal invitation to offer something real is a kind of self-erasure",scores:{renown:5,resolve:3,calling:5,voice:8},reading:"The risk of speaking unsolicited is real. So is the cost of the knowledge that stayed in the room, unspoken, while the conversation went in a direction it did not have to go. The version of you that speaks when it is true rather than only when it is permitted — that version tends to become the one people learn to include."},
-     {text:"I find the seam — a question, a pause, a natural opening — and I move through it",scores:{renown:4,resolve:3,calling:4,voice:6},reading:"Reading the room for the opening is skill, not timidity. The voice that waits for the honest moment is often heard more clearly than the voice that insists on its turn. Just make sure the seam you are waiting for is real — and that you move through it when it appears."},
-     {text:"I hold it — I make a note, and I find a private moment after to share what I saw",scores:{renown:2,resolve:4,calling:3,voice:2},reading:"The private channel has its place. And it is worth examining whether the private channel has become your default — not because it is always wiser, but because it feels safer. What does the room lose when your knowledge stays for the follow-up? That is the question the threshold is asking."}
+     {text:"I speak — waiting for a formal invitation to offer something real is a kind of self-erasure",scores:{renown:5,resolve:3,calling:5,voice:8,threshold:8},reading:"The risk of speaking unsolicited is real. So is the cost of the knowledge that stayed in the room, unspoken, while the conversation went in a direction it did not have to go. The version of you that speaks when it is true rather than only when it is permitted — that version tends to become the one people learn to include."},
+     {text:"I find the seam — a question, a pause, a natural opening — and I move through it",scores:{renown:4,resolve:3,calling:4,voice:6,threshold:5},reading:"Reading the room for the opening is skill, not timidity. The voice that waits for the honest moment is often heard more clearly than the voice that insists on its turn. Just make sure the seam you are waiting for is real — and that you move through it when it appears."},
+     {text:"I hold it — I make a note, and I find a private moment after to share what I saw",scores:{renown:2,resolve:4,calling:3,voice:2,threshold:-2},reading:"The private channel has its place. And it is worth examining whether the private channel has become your default — not because it is always wiser, but because it feels safer. What does the room lose when your knowledge stays for the follow-up? That is the question the threshold is asking."}
    ],tags:["voice","work","calling"]},
 
   {id:"vt-2",arcana:"The Voice at the Threshold",type:"voice",
    vision:"You have been asked your opinion directly. The asker is someone whose response matters to you. The honest answer is not the comfortable one.",
    question:"When the truth in you is inconvenient to the person asking for it — what do you do?",
    choices:[
-     {text:"I give the honest answer, shaped with care — the truth without the armor of bluntness",scores:{renown:4,resolve:4,calling:5,voice:7},reading:"The honest answer delivered with care is the rarest form of the voice. It requires believing that the relationship can hold the truth — and usually, with the right care, it can. The people who trust you most are often the ones you have been honest with in exactly these moments. They know what your yes means because they have heard your no."},
-     {text:"I soften it — the relationship matters more than being right in this moment",scores:{renown:2,resolve:2,calling:2,voice:2},reading:"Sometimes softening is the right call. The question is whether softening is a choice made in service of the relationship, or a pattern made in service of avoiding discomfort. The former is wisdom. The latter, over time, turns your voice into something that can no longer be fully trusted — even by the people who like hearing it."},
-     {text:"I ask a question rather than give an answer — I want to understand what they are really asking",scores:{renown:3,resolve:3,calling:4,voice:4},reading:"The question before the answer is often the more generous move. It shows you are listening before you are speaking. And sometimes the question reveals that what was being asked for was not the truth at all — it was confirmation, or company, or just to be heard. Knowing the difference before you answer is a skill."}
+     {text:"I give the honest answer, shaped with care — the truth without the armor of bluntness",scores:{renown:4,resolve:4,calling:5,voice:7,threshold:6},reading:"The honest answer delivered with care is the rarest form of the voice. It requires believing that the relationship can hold the truth — and usually, with the right care, it can. The people who trust you most are often the ones you have been honest with in exactly these moments. They know what your yes means because they have heard your no."},
+     {text:"I soften it — the relationship matters more than being right in this moment",scores:{renown:2,resolve:2,calling:2,voice:2,threshold:0},reading:"Sometimes softening is the right call. The question is whether softening is a choice made in service of the relationship, or a pattern made in service of avoiding discomfort. The former is wisdom. The latter, over time, turns your voice into something that can no longer be fully trusted — even by the people who like hearing it."},
+     {text:"I ask a question rather than give an answer — I want to understand what they are really asking",scores:{renown:3,resolve:3,calling:4,voice:4,threshold:3},reading:"The question before the answer is often the more generous move. It shows you are listening before you are speaking. And sometimes the question reveals that what was being asked for was not the truth at all — it was confirmation, or company, or just to be heard. Knowing the difference before you answer is a skill."}
    ],tags:["voice","identity","renown"]},
 
   {id:"vt-3",arcana:"The Voice at the Threshold",type:"voice",
    vision:"A pattern you have seen clearly is finally ready to be named — to the person it involves, in the room where something can actually be done about it.",
    question:"The naming has a cost. The silence has a different cost. Which one do you pay?",
    choices:[
-     {text:"I name it — things seen clearly and unnamed have a way of growing in the silence",scores:{renown:4,resolve:4,calling:5,voice:8},reading:"The naming is usually less costly than the years of not naming. What felt like a risk tends to be received — when done with care and without accusation — as the gift it actually is. The people who named the thing clearly, in time, with the right words, tend to be the ones the room learns to call on when things need to be said."},
-     {text:"I name a smaller version of it first — a way to test the ground before the full step",scores:{renown:3,resolve:3,calling:4,voice:5},reading:"Testing the ground is not cowardice. It is how trust gets built before the harder conversation. Just be honest with yourself about whether the smaller version is a bridge or a substitute. If the smaller naming resolves what needs to be resolved, it was the right move. If it is a way of feeling like you spoke without fully doing so — the pattern will wait."},
-     {text:"I hold it longer — the timing is not right and the cost of naming it wrong is high",scores:{renown:1,resolve:3,calling:2,voice:0},reading:"The timing question is real. There are moments when the naming would do more harm than the silence. The question is whether this is one of those moments — or whether 'the timing is not right' has become a sentence that is always available, that can always be true if you let it."}
-   ],tags:["voice","work","calling"]}
+     {text:"I name it — things seen clearly and unnamed have a way of growing in the silence",scores:{renown:4,resolve:4,calling:5,voice:8,threshold:7},reading:"The naming is usually less costly than the years of not naming. What felt like a risk tends to be received — when done with care and without accusation — as the gift it actually is. The people who named the thing clearly, in time, with the right words, tend to be the ones the room learns to call on when things need to be said."},
+     {text:"I name a smaller version of it first — a way to test the ground before the full step",scores:{renown:3,resolve:3,calling:4,voice:5,threshold:4},reading:"Testing the ground is not cowardice. It is how trust gets built before the harder conversation. Just be honest with yourself about whether the smaller version is a bridge or a substitute. If the smaller naming resolves what needs to be resolved, it was the right move. If it is a way of feeling like you spoke without fully doing so — the pattern will wait."},
+     {text:"I hold it longer — the timing is not right and the cost of naming it wrong is high",scores:{renown:1,resolve:3,calling:2,voice:0,threshold:-3},reading:"The timing question is real. There are moments when the naming would do more harm than the silence. The question is whether this is one of those moments — or whether 'the timing is not right' has become a sentence that is always available, that can always be true if you let it."}
+   ],tags:["voice","work","calling"]},
+
+  // ── THE CROSSING (Threshold arcana — unlocks on Run 2+) ──
+  {id:"tc-1",arcana:"The Crossing",type:"threshold",
+   vision:"The knowing has been there long enough. You have walked around the edge of the action for a season or more. The moment where knowing becomes doing has arrived.",
+   question:"What is the distance between what you know and what you do — and who lives in that gap?",
+   choices:[
+     {text:"I step across — the gap has already cost more than the crossing will",scores:{renown:5,resolve:5,calling:5,voice:4,threshold:9},reading:"The crossing is rarely as large as the distance looks from the edge. What is left behind in the gap — the version of you that knew and did not move — becomes lighter the further you walk. The cost of crossing was real. The cost of not crossing was compounding quietly. You chose the one that ends."},
+     {text:"I acknowledge the gap plainly — naming it is the first step across it",scores:{renown:3,resolve:3,calling:4,voice:5,threshold:5},reading:"The naming of the gap is not the same as crossing it — but it is the step that makes the crossing possible. You have stopped pretending the gap is not there. That is more than most. The next move follows from the naming. Do not let the relief of having named it become a reason to wait longer."},
+     {text:"I look at what is in the gap — what is keeping me on this side of it",scores:{renown:2,resolve:3,calling:3,voice:2,threshold:2},reading:"The inventory of the gap is useful. Fear is usually in there. So is something that looks like wisdom but feels more like weight. What you find when you look honestly shapes the kind of crossing you make. Just be sure the looking is in service of the crossing, not a way of standing at the edge a little longer with something to show for it."}
+   ],tags:["identity","threshold","calling","self-awareness"]},
+
+  {id:"tc-2",arcana:"The Crossing",type:"threshold",
+   vision:"You have changed. The evidence is in you — in what you reach for now, in what you no longer need. The person beside you has not seen it yet.",
+   question:"When the change is real but unseen — do you name it, or let it be witnessed over time?",
+   choices:[
+     {text:"I name it — I have earned the right to say what is true about myself",scores:{renown:4,resolve:4,calling:5,voice:7,threshold:8},reading:"The naming of your own change is not self-promotion. It is the act of making yourself legible to the people who are navigating alongside you. The person you are becoming is not the person they met. Giving them that information is a gift — to the relationship, and to the version of you that has done the work."},
+     {text:"I let it be witnessed — the change that is real will show itself",scores:{renown:3,resolve:4,calling:4,voice:2,threshold:2},reading:"There is grace in this. And there is a risk: the change that is not named can be unnamed by others. The people beside you will tell their own story about who you are. Showing them the evidence gives them better material to work with. Silence leaves the story open to older versions of you."},
+     {text:"I am not entirely sure the change is what I think it is — I want to be certain before I speak it",scores:{renown:2,resolve:3,calling:3,voice:2,threshold:1},reading:"The uncertainty is worth honoring — once. After the first season of watching yourself, you will have enough to speak from. The caution that keeps the mouth closed until certainty arrives has a name: it is the same voice that has kept other things from being said. Notice whether certainty is the actual standard, or whether it is the door that is always just a little out of reach."}
+   ],tags:["identity","threshold","voice","trajectory"]}
 
 ];
 
@@ -576,8 +874,12 @@ const VISIONS = [
 // ═══════════════════════════════
 class DeckOfPaths {
   constructor() {
+    this.profile = loadProfile();
+    this.isNewUser = !this.profile;
+    if (!this.profile) this.profile = freshProfile();
+
     this.state = 'start';
-    this.scores = { renown:50, resolve:50, calling:50, voice:50 };
+    this.scores = { renown:50, resolve:50, calling:50, voice:50, threshold:50 };
     this.usedIds = new Set();
     this.round = 0;
     this.totalRounds = 14;
@@ -585,61 +887,278 @@ class DeckOfPaths {
     this.currentVision = null;
     this.selectedPath = null;
     this.drawn = [];
+
+    // Intake state
+    this.intakeStep = 0;
+    this.intakeAnswers = [];
+
+    // Threshold axis — show only if unlocked (run 2+)
+    this.showThreshold = this.profile.thresholdUnlocked || this.profile.runs >= 1;
+
+    // Apply intake-derived axis offsets if returning user
+    this._applyIntakeOffsets();
+
     this.render();
   }
 
+  _applyIntakeOffsets() {
+    if (this.profile.intake && this.profile.intake.length > 0) {
+      // intake tags can nudge starting values — already stored from first run
+      // voiceStart, resolveStart, callingStart offsets get stored on profile
+      if (this.profile.axisOffsets) {
+        const o = this.profile.axisOffsets;
+        if (o.voice)   this.scores.voice   = Math.max(0,Math.min(100, 50 + o.voice));
+        if (o.resolve) this.scores.resolve = Math.max(0,Math.min(100, 50 + o.resolve));
+        if (o.calling) this.scores.calling = Math.max(0,Math.min(100, 50 + o.calling));
+      }
+    }
+  }
+
+  // ── INTAKE ──
+  startIntake() {
+    this.state = 'intake';
+    this.intakeStep = 0;
+    this.intakeAnswers = [];
+    this.render();
+  }
+
+  selectIntakeAnswer(optionIndex) {
+    const q = INTAKE_QUESTIONS[this.intakeStep];
+    const opt = q.options[optionIndex];
+    this.intakeAnswers.push({ step: this.intakeStep, optionIndex, tags: opt.tags, opt });
+
+    const scroll = document.getElementById('parchmentScroll');
+    if (!scroll) return;
+
+    // Inject fire overlay element
+    const overlay = document.createElement('div');
+    overlay.className = 'parchment-fire-overlay';
+    scroll.appendChild(overlay);
+
+    scroll.classList.add('burning');
+    this._triggerSmoke();
+
+    // JS-driven burn: clip-path shrinks from bottom upward, overlay heats up
+    const duration = 1400;
+    const start = performance.now();
+
+    const burnFrame = (now) => {
+      const elapsed = now - start;
+      const t = Math.min(elapsed / duration, 1);
+
+      // Ease-in curve — slow start, accelerates
+      const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+      // Clip from bottom upward: top boundary stays at 0%, bottom stays at 100%
+      // The *visible* region is from topEdge→100%. topEdge rises from 0→105 as fire consumes upward.
+      const topEdge = eased * 105; // 0→105 (overshoot ensures full consumption)
+      const wave1 = Math.sin(eased * Math.PI * 4) * (1 - eased) * 5;
+      const wave2 = Math.cos(eased * Math.PI * 3) * (1 - eased) * 4;
+
+      const top = Math.min(topEdge, 100);
+      scroll.style.clipPath = `polygon(
+        0% 100%,
+        100% 100%,
+        100% ${Math.max(0, top + wave1)}%,
+        75%  ${Math.max(0, top - wave2)}%,
+        50%  ${Math.max(0, top + wave1 * 0.6)}%,
+        25%  ${Math.max(0, top - wave1)}%,
+        0%   ${Math.max(0, top + wave2)}%
+      )`;
+
+      // Opacity: stays full until 60% then fades
+      const opacityT = Math.max(0, (t - 0.55) / 0.45);
+      scroll.style.opacity = String(1 - opacityT);
+
+      // Fire overlay intensifies
+      const fireIntensity = Math.min(eased * 1.4, 1);
+      overlay.style.background = `linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(255,140,20,${fireIntensity * 0.15}) 50%,
+        rgba(255,60,10,${fireIntensity * 0.35}) 100%
+      )`;
+
+      if (t < 1) {
+        requestAnimationFrame(burnFrame);
+      } else {
+        scroll.style.opacity = '0';
+        scroll.style.clipPath = 'polygon(0% 100%,100% 100%,100% 100%,0% 100%)';
+        setTimeout(() => {
+          this.intakeStep++;
+          if (this.intakeStep >= INTAKE_QUESTIONS.length) {
+            this._finalizeIntake();
+          } else {
+            this.render();
+          }
+        }, 120);
+      }
+    };
+
+    requestAnimationFrame(burnFrame);
+  }
+
+  _triggerSmoke() {
+    const container = document.getElementById('smokeContainer');
+    if (!container) return;
+
+    const scroll = document.getElementById('parchmentScroll');
+    if (scroll) {
+      const rect = scroll.getBoundingClientRect();
+      // Anchor smoke container to center-top of the parchment
+      container.style.position = 'fixed';
+      container.style.left = (rect.left + rect.width / 2 - 100) + 'px';
+      container.style.top = (rect.top - 60) + 'px';
+      container.style.transform = 'none';
+    }
+
+    container.innerHTML = '';
+    container.classList.add('active');
+
+    // Stagger smoke puffs across the burn duration
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'smoke-particle';
+        const size = 18 + Math.random() * 28;
+        const dx  = (Math.random() - 0.5) * 70;
+        const dx2 = dx + (Math.random() - 0.5) * 40;
+        const dx3 = dx2 + (Math.random() - 0.5) * 30;
+        el.style.cssText = `
+          width:${size}px;height:${size}px;
+          background:radial-gradient(circle,rgba(190,150,80,0.28),transparent 70%);
+          --dur:${1.6 + Math.random() * 0.9}s;
+          --dx:${dx}px;--dx2:${dx2}px;--dx3:${dx3}px;
+          left:${35 + Math.random() * 30}%;
+          bottom:0;
+        `;
+        container.appendChild(el);
+      }, i * 130);
+    }
+
+    // Ember sparks — fire upward quickly
+    for (let i = 0; i < 10; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'ember-particle';
+        const ex  = (Math.random() - 0.5) * 90;
+        const ex2 = ex + (Math.random() - 0.5) * 50;
+        el.style.cssText = `
+          --dur:${0.8 + Math.random() * 0.6}s;
+          --ex:${ex}px;--ex2:${ex2}px;
+          left:${25 + Math.random() * 50}%;
+          bottom:0;
+        `;
+        container.appendChild(el);
+      }, i * 80 + 100);
+    }
+
+    setTimeout(() => {
+      container.classList.remove('active');
+      container.innerHTML = '';
+    }, 3000);
+  }
+
+  _finalizeIntake() {
+    // Collect all tags and axis offsets from answers
+    const allTags = [];
+    const offsets = { voice: 0, resolve: 0, calling: 0 };
+
+    for (const ans of this.intakeAnswers) {
+      for (const t of ans.tags) allTags.push(t);
+      const opt = ans.opt;
+      if (opt.voiceStart)   offsets.voice   += opt.voiceStart;
+      if (opt.resolveStart) offsets.resolve += opt.resolveStart;
+      if (opt.callingStart) offsets.calling += opt.callingStart;
+    }
+
+    this.profile.intake = allTags;
+    this.profile.axisOffsets = offsets;
+    saveProfile(this.profile);
+
+    // Apply offsets to current scores
+    this.scores.voice   = Math.max(0,Math.min(100, 50 + offsets.voice));
+    this.scores.resolve = Math.max(0,Math.min(100, 50 + offsets.resolve));
+    this.scores.calling = Math.max(0,Math.min(100, 50 + offsets.calling));
+
+    // Brief pause then go to start
+    this.state = 'start';
+    this.render();
+  }
+
+  // ── DECK BUILD ──
   buildDeck() {
-    if (this.usedIds.size >= VISIONS.length) this.usedIds = new Set();
-    let pool = VISIONS.filter(v => !this.usedIds.has(v.id));
+    // Threshold cards only available if threshold is shown
+    let pool = VISIONS.filter(v => {
+      if (!this.usedIds.has(v.id)) {
+        if (v.type === 'threshold' && !this.showThreshold) return false;
+        return true;
+      }
+      return false;
+    });
+    if (pool.length < this.totalRounds) {
+      this.usedIds = new Set();
+      pool = VISIONS.filter(v => {
+        if (v.type === 'threshold' && !this.showThreshold) return false;
+        return true;
+      });
+    }
     pool.sort(() => Math.random() - 0.5);
 
     const selected = [];
     const arcanaCount = {};
-    const typeCount = { work:0, offpath:0, mirror:0, voice:0 };
+    const typeCount = { work:0, offpath:0, mirror:0, voice:0, threshold:0 };
 
-    // Guarantees: 2 mirror, 1 offpath, 1 voice, 1 Seat at the Council, 1 Long Road
     const guarantees = [
       pool.find(v => v.type === 'mirror'),
-      pool.find(v => v.type === 'mirror' && !selected.some(s => s.id === v.id)),
+      pool.find(v => v.type === 'mirror' && !selected.some(s => s && s.id === v.id)),
       pool.find(v => v.type === 'offpath'),
       pool.find(v => v.type === 'voice'),
       pool.find(v => v.arcana === 'The Seat at the Council'),
       pool.find(v => v.arcana === 'The Long Road'),
-    ].filter(Boolean);
+    ];
 
-    for (const v of guarantees) {
-      if (v && !selected.some(s => s.id === v.id)) {
+    // Add threshold guarantee on run 2+
+    if (this.showThreshold) {
+      guarantees.push(pool.find(v => v.type === 'threshold'));
+    }
+
+    for (const v of guarantees.filter(Boolean)) {
+      if (v && !selected.some(s => s && s.id === v.id)) {
         selected.push(v);
         arcanaCount[v.arcana] = (arcanaCount[v.arcana] || 0) + 1;
         typeCount[v.type] = (typeCount[v.type] || 0) + 1;
       }
     }
+
     for (const v of pool) {
       if (selected.length >= this.totalRounds) break;
-      if (selected.some(s => s.id === v.id)) continue;
+      if (selected.some(s => s && s.id === v.id)) continue;
       const ac = arcanaCount[v.arcana] || 0;
       if (ac >= 2) continue;
-      if (v.type === 'mirror' && typeCount.mirror >= 3) continue;
-      if (v.type === 'offpath' && typeCount.offpath >= 3) continue;
-      if (v.type === 'voice' && typeCount.voice >= 3) continue;
+      if (v.type === 'mirror'    && typeCount.mirror    >= 3) continue;
+      if (v.type === 'offpath'   && typeCount.offpath   >= 3) continue;
+      if (v.type === 'voice'     && typeCount.voice     >= 3) continue;
+      if (v.type === 'threshold' && typeCount.threshold >= 2) continue;
       selected.push(v);
-      arcanaCount[v.arcana] = ac + 1;
+      arcanaCount[v.arcana] = (arcanaCount[v.arcana] || 0) + 1;
       typeCount[v.type] = (typeCount[v.type] || 0) + 1;
     }
-    // Fill remaining
+
     for (const v of pool) {
       if (selected.length >= this.totalRounds) break;
-      if (!selected.some(s => s.id === v.id)) selected.push(v);
+      if (!selected.some(s => s && s.id === v.id)) selected.push(v);
     }
-    // Shuffle and avoid mirror as first card
+
     selected.sort(() => Math.random() - 0.5);
-    if (selected[0] && (selected[0].type === 'mirror' || selected[0].type === 'voice')) {
+    if (selected[0] && (selected[0].type === 'mirror' || selected[0].type === 'voice' || selected[0].type === 'threshold')) {
       const swap = selected.findIndex((v,i) => i > 2 && v.type === 'work');
       if (swap > 0) [selected[0], selected[swap]] = [selected[swap], selected[0]];
     }
-    this.drawn = selected;
+    this.drawn = selected.filter(Boolean);
   }
 
+  // ── OMEN / MEMORY ──
   findOmen(history) {
     if (history.length < 3) return null;
     const current = this.currentVision;
@@ -656,6 +1175,33 @@ class DeckOfPaths {
     return null;
   }
 
+  // Cross-run memory omen — only on run 2+, only appears once per session, after round 4
+  findMemoryOmen() {
+    if (this.profile.runs < 1) return null;
+    if (this.round < 4) return null;
+    if (this._memoryOmenShown) return null;
+    const current = this.currentVision;
+    if (!current) return null;
+
+    // Find a choice from a past run that shares a tag with this card
+    const pastChoices = this.profile.choiceHistory || [];
+    const match = pastChoices.find(c => {
+      const past = VISIONS.find(v => v.id === c.id);
+      return past && past.tags.some(t => current.tags.includes(t)) && c.runNumber < this.profile.runs + 1;
+    });
+
+    if (match) {
+      const past = VISIONS.find(v => v.id === match.id);
+      const choice = past && past.choices[match.pathIndex];
+      if (past && choice) {
+        this._memoryOmenShown = true;
+        return { text: `The road remembers. In a past casting, facing ${past.arcana}, you chose: "${choice.text}" — the pattern runs deeper than one casting.` };
+      }
+    }
+    return null;
+  }
+
+  // ── VARIANCE ──
   applyVariance(scores) {
     const m = { ...scores };
     const roll = Math.random();
@@ -674,8 +1220,26 @@ class DeckOfPaths {
     return m;
   }
 
+  // ── GAME LOOP ──
+  start() {
+    this.scores = { renown:50, resolve:50, calling:50, voice:50, threshold:50 };
+    this._applyIntakeOffsets();
+    this.usedIds = new Set();
+    this.round = 0;
+    this.history = [];
+    this.selectedPath = null;
+    this._memoryOmenShown = false;
+    this.buildDeck();
+    this.nextRound();
+  }
+
   nextRound() {
-    if (this.round >= this.totalRounds) { this.state = 'fate'; this.render(); return; }
+    if (this.round >= this.totalRounds) {
+      this._completeRun();
+      this.state = 'fate';
+      this.render();
+      return;
+    }
     this.currentVision = this.drawn[this.round];
     this.usedIds.add(this.currentVision.id);
     this.selectedPath = null;
@@ -683,30 +1247,69 @@ class DeckOfPaths {
     this.render();
   }
 
+  _completeRun() {
+    // Save run data to profile
+    this.profile.runs += 1;
+
+    // Save axes snapshot
+    this.profile.axesHistory.push({
+      renown: this.scores.renown,
+      resolve: this.scores.resolve,
+      calling: this.scores.calling,
+      voice: this.scores.voice,
+      threshold: this.scores.threshold
+    });
+
+    // Save choice history (for cross-run callbacks)
+    for (const h of this.history) {
+      this.profile.choiceHistory.push({
+        id: h.id,
+        pathIndex: h.pathIndex,
+        runNumber: this.profile.runs
+      });
+    }
+    // Keep choice history bounded
+    if (this.profile.choiceHistory.length > 200) {
+      this.profile.choiceHistory = this.profile.choiceHistory.slice(-200);
+    }
+
+    // Unlock threshold on second run
+    if (this.profile.runs >= 2 && !this.profile.thresholdUnlocked) {
+      this.profile.thresholdUnlocked = true;
+      this.showThreshold = true;
+    }
+
+    saveProfile(this.profile);
+  }
+
   choosePath(index) {
     if (this.selectedPath !== null) return;
     this.selectedPath = index;
     const path = this.currentVision.choices[index];
     const mod = this.applyVariance(path.scores);
-    this.scores.renown   = Math.max(0, Math.min(100, this.scores.renown   + (mod.renown   || 0)));
-    this.scores.resolve  = Math.max(0, Math.min(100, this.scores.resolve  + (mod.resolve  || 0)));
-    this.scores.calling  = Math.max(0, Math.min(100, this.scores.calling  + (mod.calling  || 0)));
-    this.scores.voice    = Math.max(0, Math.min(100, this.scores.voice    + (mod.voice    || 0)));
+    this.scores.renown    = Math.max(0,Math.min(100, this.scores.renown    + (mod.renown    || 0)));
+    this.scores.resolve   = Math.max(0,Math.min(100, this.scores.resolve   + (mod.resolve   || 0)));
+    this.scores.calling   = Math.max(0,Math.min(100, this.scores.calling   + (mod.calling   || 0)));
+    this.scores.voice     = Math.max(0,Math.min(100, this.scores.voice     + (mod.voice     || 0)));
+    this.scores.threshold = Math.max(0,Math.min(100, this.scores.threshold + (mod.threshold || 0)));
     this.history.push({ id:this.currentVision.id, pathIndex:index, pathText:path.text, scores:mod });
     this.round++;
     this.render();
   }
 
+  // ── CARD HELPERS ──
+  getCardClass() {
+    if (!this.currentVision) return '';
+    if (this.currentVision.type === 'mirror')    return 'mirror';
+    if (this.currentVision.type === 'offpath')   return 'offpath';
+    if (this.currentVision.type === 'voice')     return 'voice-card';
+    if (this.currentVision.type === 'threshold') return 'threshold-card';
+    return '';
+  }
+
+  // ── FATE READINGS ──
   getVoiceReading() {
     const v = this.scores.voice;
-    const voiceChoices = this.history.filter(h => {
-      const vis = VISIONS.find(vi => vi.id === h.id);
-      return vis && vis.tags.includes('voice');
-    });
-    const spokeBoldly = this.history.filter(h => {
-      const vis = VISIONS.find(vi => vi.id === h.id);
-      return vis && vis.choices[h.pathIndex].scores.voice >= 6;
-    }).length;
     const heldBack = this.history.filter(h => {
       const vis = VISIONS.find(vi => vi.id === h.id);
       return vis && (vis.choices[h.pathIndex].scores.voice || 0) <= 1;
@@ -724,12 +1327,69 @@ class DeckOfPaths {
     }
   }
 
+  getThresholdReading() {
+    if (!this.showThreshold) return null;
+    const t = this.scores.threshold;
+    const crossedBoldly = this.history.filter(h => {
+      const vis = VISIONS.find(vi => vi.id === h.id);
+      return vis && (vis.choices[h.pathIndex].scores.threshold || 0) >= 6;
+    }).length;
+    const heldAtEdge = this.history.filter(h => {
+      const vis = VISIONS.find(vi => vi.id === h.id);
+      return vis && (vis.choices[h.pathIndex].scores.threshold || 0) <= 0;
+    }).length;
+
+    if (t >= 68) {
+      if (crossedBoldly >= 4) {
+        return "The Threshold axis speaks plainly: you are someone who crosses. Across these visions, when the gap between knowing and doing appeared, you moved. Not always without hesitation — but you moved. The life you are building is shaped by exactly this willingness. The crossings you have made are already behind you. The ones ahead will ask the same thing. You have answered this question before.";
+      }
+      return "The Threshold ran high through this casting — a picture of someone moving toward the things they know. The gap between knowing and doing is not always easy to cross, and across these visions you crossed it more often than not. That is not nothing. It is, in fact, the whole thing.";
+    } else if (t <= 44) {
+      if (heldAtEdge >= 4) {
+        return "The Threshold axis is the quietest voice in this reading — and the one worth listening to most closely. Across these visions, there were moments to cross from knowing into doing, and those moments were often deferred. The deck is not asking why. It is asking: what has been waiting long enough that the cost of waiting has exceeded the cost of crossing? That question has an answer. You already know it.";
+      }
+      return "The Threshold sits low in this reading. Not absent — but the distance between what is known and what is done has not closed as much as it could. The gap tends to be smaller than it appears from the edge. The first step into it reveals that.";
+    } else {
+      return "The Threshold held in the middle of this casting — sometimes crossed, sometimes not. The pattern is not yet clear. What the deck is watching for, across future castings, is whether the crossing becomes more natural or whether the edge remains the comfortable place. The answer is already in motion.";
+    }
+  }
+
+  getCrossRunReading() {
+    if (this.profile.runs < 2) return null;
+    const history = this.profile.axesHistory;
+    if (history.length < 2) return null;
+
+    const prev = history[history.length - 2];
+    const curr = history[history.length - 1];
+
+    const changes = [];
+    const axes = ['renown','resolve','calling','voice'];
+    const labels = { renown:'Renown', resolve:'Resolve', calling:'Calling', voice:'Voice' };
+
+    for (const ax of axes) {
+      const delta = (curr[ax] || 50) - (prev[ax] || 50);
+      if (Math.abs(delta) >= 6) {
+        changes.push({ ax, delta, label: labels[ax] });
+      }
+    }
+
+    if (changes.length === 0) {
+      return "The two castings hold close to one another — the same hands making similar choices across different draws. That kind of consistency is its own data. The deck is not moving you. You are moving consistently through the deck. Watch for the choice you keep making.";
+    }
+
+    const biggest = changes.sort((a,b) => Math.abs(b.delta) - Math.abs(a.delta))[0];
+    const dir = biggest.delta > 0 ? 'grown' : 'pulled back';
+    const desc = biggest.delta > 0
+      ? `The ${biggest.label} in this casting ran higher than the last. Something is being built or named that was not in the previous casting. That movement is worth noticing — not as a verdict, but as evidence of a direction.`
+      : `The ${biggest.label} in this casting ran lower than the last. Something that was present before did not find the same ground in these visions. That is not loss — it is information. The deck is showing you where the road varies.`;
+
+    return desc;
+  }
+
   getFateReading() {
-    const sorted = [
-      { name:'renown', val:this.scores.renown },
-      { name:'resolve', val:this.scores.resolve },
-      { name:'calling', val:this.scores.calling }
-    ].sort((a,b) => b.val - a.val);
+    const axesToRead = ['renown','resolve','calling'];
+    const sorted = axesToRead.map(name => ({ name, val: this.scores[name] }))
+      .sort((a,b) => b.val - a.val);
     const high = sorted[0].name;
     const middle = sorted[1].name;
     const low = sorted[2].name;
@@ -799,7 +1459,6 @@ class DeckOfPaths {
       reading += `\n\n${middle === 'renown' ? "The renown aspect held steady in the middle of these visions — present without driving, visible without leading. Being seen matters. It is not, and should not be, the whole thing." : middle === 'resolve' ? "Resolve occupied the middle ground of these visions — the steady backbone that kept the other aspects from flying too far in either direction. The ones who finish the road are often held together not by the clarity of the calling or the brightness of the renown, but by the quiet refusal to stop." : "The calling stayed in the middle — present, pulling, but not overriding the other aspects. The destination is real. So is the road."}`;
     }
 
-    // Mirror analysis
     const mirrorHistory = this.history.filter(h => {
       const v = VISIONS.find(vi => vi.id === h.id);
       return v && v.type === 'mirror';
@@ -825,29 +1484,67 @@ class DeckOfPaths {
     return reading;
   }
 
-  start() {
-    this.scores = { renown:50, resolve:50, calling:50, voice:50 };
-    this.usedIds = new Set();
-    this.round = 0; this.history = []; this.selectedPath = null;
-    this.buildDeck(); this.nextRound();
-  }
-
-  getCardClass() {
-    if (!this.currentVision) return '';
-    if (this.currentVision.type === 'mirror') return 'mirror';
-    if (this.currentVision.type === 'offpath') return 'offpath';
-    if (this.currentVision.type === 'voice') return 'voice-card';
-    return '';
-  }
-
+  // ── RENDER ──
   render() {
     const app = document.getElementById('app');
 
-    // ── START ──
-    if (this.state === 'start') {
+    // ── INTAKE ──
+    if (this.state === 'intake') {
+      const q = INTAKE_QUESTIONS[this.intakeStep];
+      const dots = INTAKE_QUESTIONS.map((_,i) => {
+        const cls = i < this.intakeStep ? 'done' : i === this.intakeStep ? 'current' : '';
+        return `<div class="intake-dot ${cls}"></div>`;
+      }).join('');
+
       app.innerHTML = `
         <div class="header">
-          <div class="header-lockup"><h1>The Deck of Paths</h1><span class="v3-badge">v3</span></div>
+          <div class="header-lockup"><h1>The Deck of Paths</h1><span class="v4-badge">v4</span></div>
+          <div class="divider"></div>
+        </div>
+        <div class="intake-stage">
+          <div class="intake-preamble">
+            <div class="intake-preamble-sigil">🜂</div>
+            <h2>Before the Cards</h2>
+            <p>Three questions. Write your answer on the parchment. The fates receive what you send them.</p>
+          </div>
+
+          <div class="parchment-scroll" id="parchmentScroll">
+            <div class="parchment-counter">Question ${this.intakeStep + 1} of ${INTAKE_QUESTIONS.length}</div>
+            <div class="parchment-question">${q.question}</div>
+            <div class="parchment-options">
+              ${q.options.map((opt,i) => `
+                <button class="parchment-option" onclick="deck.selectIntakeAnswer(${i})">${opt.text}</button>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="intake-dots">${dots}</div>
+        </div>`;
+      return;
+    }
+
+    // ── START ──
+    if (this.state === 'start') {
+      const isReturning = this.profile.runs > 0;
+      const runCount = this.profile.runs;
+
+      let returningNote = '';
+      if (isReturning) {
+        if (runCount === 1) {
+          returningNote = `<div class="returning-note">The deck remembers the first road. This casting may speak differently.</div>`;
+        } else if (runCount >= 2) {
+          returningNote = `<div class="returning-note">The road has been walked ${runCount} times. The deck reads deeper with each passing.</div>`;
+        }
+      }
+
+      // Show threshold pill only if unlocked
+      const thresholdPill = this.showThreshold
+        ? `<span class="rune-pill" style="background:rgba(232,112,64,0.12);border-color:rgba(232,112,64,0.35);color:var(--ember);">Threshold</span>`
+        : '';
+
+      app.innerHTML = `
+        <div class="header">
+          <div class="header-lockup"><h1>The Deck of Paths</h1><span class="v4-badge">v4</span></div>
           <div class="subtitle">A scrying of the road ahead</div>
           <div class="divider"></div>
         </div>
@@ -855,16 +1552,18 @@ class DeckOfPaths {
           <div class="start-sigil">⧖</div>
           <div class="start-title">Deck of Paths</div>
           <div class="start-edition">A Fortune-Telling Instrument</div>
-          <div class="start-version">Version 3.0 — Voice Edition</div>
+          <div class="start-version">Version 4.0 — Threshold Edition</div>
           <div class="start-rune-row">
             <span class="rune-pill rn">Renown</span>
             <span class="rune-pill rs">Resolve</span>
             <span class="rune-pill rc">Calling</span>
             <span class="rune-pill rv">Voice</span>
+            ${thresholdPill}
           </div>
           <div class="start-rule"></div>
-          <p>Fourteen visions shall be drawn. Each presents a crossroads. Choose the path that is true — not the path that seems correct.<br><br>The cards do not always reward what seems wise. A fourth rune has been added to this casting: <em>Voice</em> — the measure of how openly you speak when it matters. The road is uncertain. So is the reading.<br><br>Some visions concern the work. Some the road beyond it. Some the threshold between what you know and what you have said. All concern the one who walks.</p>
+          <p>Fourteen visions shall be drawn. Each presents a crossroads. Choose the path that is true — not the path that seems correct.<br><br>The cards do not always reward what seems wise. The road is uncertain. So is the reading. Some visions concern the work. Some the road beyond it. All concern the one who walks.</p>
           <button class="begin-btn" onclick="deck.start()">Draw the First Card</button>
+          ${returningNote}
         </div>`;
       return;
     }
@@ -873,10 +1572,31 @@ class DeckOfPaths {
     if (this.state === 'fate') {
       const reading = this.getFateReading();
       const voiceReading = this.getVoiceReading();
+      const thresholdReading = this.getThresholdReading();
+      const crossRunReading = this.getCrossRunReading();
       const paras = reading.split('\n\n');
+
+      const thresholdRune = this.showThreshold
+        ? `<div class="fate-rune fr5"><div class="f-val" style="color:var(--ember)">${this.scores.threshold}</div><div class="f-lbl">Threshold</div></div>`
+        : '';
+
+      const thresholdBlock = thresholdReading ? `
+        <div class="fate-rule"></div>
+        <div class="threshold-reading-block">
+          <div class="threshold-reading-label">✦ The Threshold Speaks</div>
+          <div class="threshold-reading-text">${thresholdReading}</div>
+        </div>` : '';
+
+      const crossRunBlock = crossRunReading ? `
+        <div class="fate-rule"></div>
+        <div class="crossrun-block">
+          <div class="crossrun-label">✦ Across the Castings</div>
+          <div class="crossrun-text">${crossRunReading}</div>
+        </div>` : '';
+
       app.innerHTML = `
         <div class="header">
-          <div class="header-lockup"><h1>The Deck of Paths</h1><span class="v3-badge">v3</span></div>
+          <div class="header-lockup"><h1>The Deck of Paths</h1><span class="v4-badge">v4</span></div>
           <div class="subtitle">The Fate Reading</div>
           <div class="divider"></div>
         </div>
@@ -887,6 +1607,7 @@ class DeckOfPaths {
             <div class="fate-rune fr2"><div class="f-val" style="color:var(--amethyst)">${this.scores.resolve}</div><div class="f-lbl">Resolve</div></div>
             <div class="fate-rune fr3"><div class="f-val" style="color:var(--gold)">${this.scores.calling}</div><div class="f-lbl">Calling</div></div>
             <div class="fate-rune fr4"><div class="f-val" style="color:var(--teal)">${this.scores.voice}</div><div class="f-lbl">Voice</div></div>
+            ${thresholdRune}
           </div>
           <div class="fate-rule"></div>
           ${paras.map(p => `<p class="fate-reading">${p}</p>`).join('')}
@@ -895,6 +1616,8 @@ class DeckOfPaths {
             <div class="voice-reading-label">✦ The Voice Speaks</div>
             <div class="voice-reading-text">${voiceReading}</div>
           </div>
+          ${thresholdBlock}
+          ${crossRunBlock}
           <div class="fate-rule"></div>
           <button class="cast-again" onclick="deck.start()">✦ Cast Again</button>
         </div>`;
@@ -905,13 +1628,14 @@ class DeckOfPaths {
     const v = this.currentVision;
     const cardClass = this.getCardClass();
     const omen = this.findOmen(this.history);
+    const memoryOmen = this.findMemoryOmen();
     const selected = this.selectedPath;
     const path = selected !== null ? v.choices[selected] : null;
     const modScores = selected !== null ? this.history[this.history.length - 1].scores : null;
 
-    const axisNames  = { renown:'Renown', resolve:'Resolve', calling:'Calling', voice:'Voice' };
-    const axisColors = { renown:'var(--accent)', resolve:'var(--amethyst)', calling:'var(--gold)', voice:'var(--teal)' };
-    const axisNow    = { renown:this.scores.renown, resolve:this.scores.resolve, calling:this.scores.calling, voice:this.scores.voice };
+    const axisNames  = { renown:'Renown', resolve:'Resolve', calling:'Calling', voice:'Voice', threshold:'Threshold' };
+    const axisColors = { renown:'var(--accent)', resolve:'var(--amethyst)', calling:'var(--gold)', voice:'var(--teal)', threshold:'var(--ember)' };
+    const axisNow    = { ...this.scores };
 
     let pathsHTML = '';
     if (selected === null) {
@@ -919,7 +1643,9 @@ class DeckOfPaths {
         `<button class="path-btn" onclick="deck.choosePath(${i})">${c.text}</button>`
       ).join('')}</div>`;
     } else {
-      const dominant = Object.entries(modScores)
+      const allScores = { ...modScores };
+      const dominant = Object.entries(allScores)
+        .filter(([,val]) => val !== undefined)
         .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
       const dVal = dominant[1];
       const dClass = dVal > 0 ? 'pos' : dVal < 0 ? 'neg' : 'zero';
@@ -941,9 +1667,19 @@ class DeckOfPaths {
         </div>`;
     }
 
+    // Build rune bar — show threshold only if unlocked
+    const thresholdRune = this.showThreshold
+      ? `<div class="rune-item r5"><div class="rune-label">Threshold</div><div class="rune-val threshold">${this.scores.threshold}</div></div>`
+      : '';
+
+    // Memory omen takes priority over regular omen (only one shown at a time)
+    const omenHTML = memoryOmen
+      ? `<div class="card-memory-omen"><span class="memory-tag">The Road Remembers</span><br>${memoryOmen.text}</div>`
+      : (omen && selected === null ? `<div class="card-omen"><span class="omen-tag">Omen</span><br>${omen.text}</div>` : '');
+
     app.innerHTML = `
       <div class="header">
-        <div class="header-lockup"><h1>The Deck of Paths</h1><span class="v3-badge">v3</span></div>
+        <div class="header-lockup"><h1>The Deck of Paths</h1><span class="v4-badge">v4</span></div>
       </div>
       <div class="progress-wrap">
         <div class="candle-track"><div class="candle-fill" style="width:${(this.round/this.totalRounds)*100}%"></div></div>
@@ -954,6 +1690,7 @@ class DeckOfPaths {
         <div class="rune-item r2"><div class="rune-label">Resolve</div><div class="rune-val resolve">${this.scores.resolve}</div></div>
         <div class="rune-item r3"><div class="rune-label">Calling</div><div class="rune-val calling">${this.scores.calling}</div></div>
         <div class="rune-item r4"><div class="rune-label">Voice</div><div class="rune-val voice">${this.scores.voice}</div></div>
+        ${thresholdRune}
       </div>
       <div class="card-draw-stage">
         <div class="card ${cardClass}">
@@ -967,7 +1704,7 @@ class DeckOfPaths {
           <div class="card-number">${this.round} · XIV</div>
           <div class="card-arcana">${v.arcana}</div>
           <div class="card-vision">${v.vision}</div>
-          ${omen && selected === null ? `<div class="card-omen"><span class="omen-tag">Omen</span><br>${omen.text}</div>` : ''}
+          ${omenHTML}
           <div class="card-question">${v.question}</div>
           ${pathsHTML}
         </div>
@@ -976,6 +1713,12 @@ class DeckOfPaths {
 }
 
 const deck = new DeckOfPaths();
+
+// Route new users to intake
+if (deck.isNewUser) {
+  deck.state = 'intake';
+  deck.render();
+}
 </script>
 </body>
 </html>
