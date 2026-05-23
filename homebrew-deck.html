@@ -82,6 +82,140 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .mode-card-arrow{position:absolute;right:20px;top:50%;transform:translateY(-50%);color:var(--copper);font-size:1.2rem;opacity:0.5;transition:opacity 0.2s,transform 0.2s;}
 .mode-card:hover .mode-card-arrow{opacity:1;transform:translateY(-50%) translateX(3px);}
 
+/* ── VERSION BADGE ── */
+.version-badge{
+  display:flex;align-items:center;gap:7px;
+  font-family:'DM Mono',monospace;font-size:0.62rem;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--copper);
+  background:rgba(200,114,42,0.08);
+  border:1px solid rgba(200,114,42,0.22);
+  border-radius:20px;padding:5px 14px;
+  margin-bottom:28px;
+  animation:versionPulse 3s ease-in-out infinite;
+}
+@keyframes versionPulse{
+  0%,100%{border-color:rgba(200,114,42,0.22);box-shadow:none;}
+  50%{border-color:rgba(200,114,42,0.5);box-shadow:0 0 14px rgba(200,114,42,0.15);}
+}
+.version-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--copper);flex-shrink:0;
+  animation:dotBlink 2s ease-in-out infinite;
+}
+@keyframes dotBlink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* ── ENHANCED ANIMATIONS ── */
+
+/* Bubble rise on the hero glass — staggered and varied */
+@keyframes bubbleRise{
+  0%{transform:translateY(0) scale(1);opacity:0.25;}
+  80%{opacity:0.15;}
+  100%{transform:translateY(-70px) scale(0.7);opacity:0;}
+}
+
+/* Mode card hover shimmer */
+.mode-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.04) 50%,transparent 60%);
+  background-size:200% 100%;
+  background-position:200% 0;
+  transition:background-position 0.6s ease;
+  pointer-events:none;border-radius:var(--rad2);
+}
+.mode-card:hover::after{background-position:-200% 0;}
+
+/* XP badge pulse when XP > 0 */
+.xp-badge.has-xp{animation:xpGlow 2.5s ease-in-out infinite;}
+@keyframes xpGlow{
+  0%,100%{box-shadow:none;}
+  50%{box-shadow:0 0 12px rgba(200,114,42,0.3);}
+}
+
+/* Flip card — add subtle shadow lift on flip */
+.flip-card-outer.flipped .flip-card-inner{
+  filter:drop-shadow(0 8px 24px rgba(200,114,42,0.12));
+}
+
+/* Ingredient row hover */
+.ingredient-row{transition:background 0.18s,transform 0.18s;}
+.ingredient-row:hover{background:rgba(255,255,255,0.04);transform:translateX(3px);}
+
+/* Step item reveal animation */
+.step-item{animation:stepReveal 0.3s ease both;}
+.step-item:nth-child(1){animation-delay:0s;}
+.step-item:nth-child(2){animation-delay:0.05s;}
+.step-item:nth-child(3){animation-delay:0.10s;}
+.step-item:nth-child(4){animation-delay:0.15s;}
+.step-item:nth-child(5){animation-delay:0.20s;}
+.step-item:nth-child(6){animation-delay:0.25s;}
+.step-item:nth-child(7){animation-delay:0.30s;}
+.step-item:nth-child(8){animation-delay:0.35s;}
+@keyframes stepReveal{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+
+/* Score bar animated fill on result */
+.score-row-bar{
+  animation:barFill 0.9s cubic-bezier(0.34,1.2,0.64,1) both;
+  animation-delay:0.2s;
+  transform-origin:left;
+}
+@keyframes barFill{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+
+/* Result grade entrance */
+.result-grade{
+  animation:gradeIn 0.6s cubic-bezier(0.34,1.4,0.64,1) both;
+  animation-delay:0.15s;
+}
+@keyframes gradeIn{from{opacity:0;transform:scale(0.5);}to{opacity:1;transform:scale(1);}}
+
+/* Curveball card shake on entry */
+.sim-card.curveball{
+  animation:simCardIn 0.35s cubic-bezier(0.34,1.1,0.64,1) both,
+            curveballShake 0.45s ease 0.35s both;
+}
+@keyframes curveballShake{
+  0%{transform:translateX(0);}
+  20%{transform:translateX(-6px);}
+  40%{transform:translateX(5px);}
+  60%{transform:translateX(-4px);}
+  80%{transform:translateX(3px);}
+  100%{transform:translateX(0);}
+}
+
+/* Quality meter value pop on change */
+@keyframes meterPop{
+  0%{transform:scale(1);}50%{transform:scale(1.25);}100%{transform:scale(1);}
+}
+.meter-pop{animation:meterPop 0.3s ease both;}
+
+/* Nav active underline slide in */
+.nav-btn.active::before{
+  animation:navUnderline 0.25s ease both;
+}
+@keyframes navUnderline{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+
+/* Hop divider icon — speed up slightly */
+.hop-icon{animation:hopSpin 6s linear infinite;}
+
+/* Modal slide up */
+@keyframes modalSlideUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+.modal-overlay.open .modal{animation:modalSlideUp 0.38s cubic-bezier(0.34,1.2,0.64,1) both;}
+
+/* Brew Sim choice — press feedback */
+.sim-choice{transition:all 0.15s cubic-bezier(0.34,1.2,0.64,1);}
+.sim-choice:active{transform:scale(0.97) translateY(1px);}
+
+/* Family tab transition */
+.family-tab{transition:all 0.22s cubic-bezier(0.34,1.2,0.64,1);}
+.family-tab.active{transform:scale(1.03);}
+
+/* Tasting notes line stagger */
+.tasting-line{animation:fadeUp 0.4s ease both;}
+.tasting-line:nth-child(1){animation-delay:0.05s;}
+.tasting-line:nth-child(2){animation-delay:0.12s;}
+.tasting-line:nth-child(3){animation-delay:0.19s;}
+.tasting-line:nth-child(4){animation-delay:0.26s;}
+
 /* ── BREW BOOK ── */
 .screen-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--foam);margin-bottom:4px;}
 .screen-title em{font-style:italic;color:var(--copper2);}
@@ -341,6 +475,10 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
       </div>
       <h1 class="splash-title fade-in fade-in-d1">The<em>Brew Deck</em></h1>
       <p class="splash-sub fade-in fade-in-d2">Homebrew Training System</p>
+      <div class="version-badge fade-in fade-in-d2">
+        <span class="version-dot"></span>
+        Homebrewer Review Edition · v1E
+      </div>
       <div class="hop-divider fade-in fade-in-d2"><div class="hop-line"></div><div class="hop-icon">✿</div><div class="hop-line"></div></div>
       <div class="mode-cards fade-in fade-in-d3">
         <button class="mode-card" onclick="goTo('screen-book')"><span class="mode-card-icon">📖</span><div class="mode-card-title">Brew Book</div><div class="mode-card-desc">Browse styles, explore recipes, read the full brew guide for any beer.</div><div class="mode-card-arrow">→</div></button>
@@ -401,9 +539,9 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
       <div class="unlock-cards">
         <div class="unlock-card"><div class="unlock-dot"></div><div class="unlock-text"><div class="unlock-name">American Pale Ale</div><div class="unlock-desc">Starter · Always unlocked</div></div></div>
         <div class="unlock-card"><div class="unlock-dot"></div><div class="unlock-text"><div class="unlock-name">Dry Irish Stout</div><div class="unlock-desc">Starter · Always unlocked</div></div></div>
-        <div class="unlock-card" id="unlock-ipa" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">West Coast IPA</div><div class="unlock-desc">Complete 2 Sim runs</div></div><div style="color:var(--muted)">🔒</div></div>
-        <div class="unlock-card" id="unlock-hefe" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">Hefeweizen</div><div class="unlock-desc">Earn 150 XP</div></div><div style="color:var(--muted)">🔒</div></div>
-        <div class="unlock-card" id="unlock-oat" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">Oatmeal Stout</div><div class="unlock-desc">Score 80+ on any Sim run</div></div><div style="color:var(--muted)">🔒</div></div>
+        <div class="unlock-card" id="unlock-ipa" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">West Coast IPA</div><div class="unlock-desc">Complete 2 Sim runs</div></div><div class="lock-icon" style="color:var(--muted)">🔒</div></div>
+        <div class="unlock-card" id="unlock-hefe" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">Hefeweizen</div><div class="unlock-desc">Earn 150 XP</div></div><div class="lock-icon" style="color:var(--muted)">🔒</div></div>
+        <div class="unlock-card" id="unlock-oat" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">Oatmeal Stout</div><div class="unlock-desc">Score 80+ on any Sim run</div></div><div class="lock-icon" style="color:var(--muted)">🔒</div></div>
       </div>
     </div>
   </div>
@@ -465,7 +603,7 @@ const RECIPES = [
       {title:'Cool the Wort',time:'30–45 min',body:'Cool to below 75°F before adding yeast. Use an ice bath or wort chiller. Do not add yeast to hot wort — it kills the yeast.'},
       {title:'Transfer & Pitch Yeast',time:'15 min',body:'Pour cooled wort into sanitized fermenter. Top up with cool water to 5 gallons. Check temp: target 65–72°F. Sprinkle US-05 on top and seal with an airlock.'},
       {title:'Fermentation',time:'10–14 days',body:'Store in dark, temperature-stable space at 65–72°F. Expect airlock activity within 12–48 hours. Let ferment until day 14 for a cleaner beer.'},
-      {title:'Bottle',time:'2 hrs',body:'Boil ¾ cup corn sugar in 1 cup water, cool, add to sanitized bottling bucket. Siphon beer gently on top. Fill 48 bottles, cap, condition at room temp 2 weeks.'},
+      {title:'Bottle',time:'2 hrs',body:'Boil ¾ cup corn sugar in 1 cup water, cool, add to sanitized bottling bucket. Siphon beer gently on top. Fill 40–48 twelve-oz bottles depending on losses to trub and siphoning, cap, condition at room temp 2 weeks.'},
       {title:'Chill & Pour',time:'2 weeks conditioning',body:'Refrigerate at least 24 hours before opening. Your first batch is ready.'},
     ],
     tips:['Don\'t open the fermenter to check during active fermentation — every opening risks contamination.','US-05 is the most forgiving ale yeast. Temperature swings of a few degrees won\'t ruin it.','The beer will look murky for the first week. It will clear significantly by bottling day.','Write down your brew date and tasting notes for every batch — even simple ones.'],
@@ -477,7 +615,7 @@ const RECIPES = [
     ingredients:[
       {type:'malt',icon:'🌾',name:'Pale Malt Extract (DME)',amount:'5.5 lbs',role:'Fermentable base · main body'},
       {type:'malt',icon:'🌾',name:'Roasted Barley (unmalted)',amount:'0.75 lbs',role:'Deep black color · dry roast / coffee character'},
-      {type:'malt',icon:'🌾',name:'Flaked Barley',amount:'0.5 lbs',role:'Creamy mouthfeel · dense head retention'},
+      {type:'malt',icon:'🌾',name:'Flaked Barley',amount:'0.5 lbs',role:'Body and head retention · note: steeping (not mashing) gives partial extraction in extract brewing'},
       {type:'hops',icon:'🌿',name:'East Kent Goldings',amount:'1.25 oz',role:'60 min addition · earthy bitterness'},
       {type:'yeast',icon:'🔬',name:'Wyeast 1084 Irish Ale Yeast',amount:'1 smack pack',role:'Slight fruitiness · clean dry finish'},
       {type:'other',icon:'💧',name:'Water',amount:'5 gallons',role:'Soft water preferred — Dublin-style'},
@@ -485,7 +623,7 @@ const RECIPES = [
     ],
     steps:[
       {title:'Prep & Sanitize',time:'30 min',body:'Sanitize all equipment. For Irish stout, pay special attention to the fermenter airlock — this beer ferments vigorously and can push yeast into the airlock.'},
-      {title:'Steep Roasted Barley & Flaked Barley',time:'30 min',body:'Heat 2.5 gallons to 155°F. Steep both grains in a bag for 30 minutes — longer than most specialty steeps. The water turns almost black. That is correct.',warning:'Don\'t exceed 170°F — it extracts harsh tannins from the grain husks.'},
+      {title:'Steep Roasted Barley & Flaked Barley',time:'30 min',body:'Heat 2.5 gallons to 155°F. Steep both grains in a bag for 30 minutes. The water turns almost black — that is correct. Note: flaked barley technically requires mashing for full conversion, but steeping in an extract recipe still extracts its proteins and beta-glucans, which contribute to body and head retention.',warning:'Don\'t exceed 168°F — sustained heat above this threshold extracts harsh tannins from the grain husks.'},
       {title:'Add DME & Boil',time:'15 min',body:'Remove grain bag. Off heat, stir in 5.5 lbs DME until dissolved. Return to heat and bring to a full rolling boil.'},
       {title:'60-Minute Hop Addition',time:'60 min',body:'Add 1.25 oz East Kent Goldings at boil start. No late additions for this style — the aroma is all about malt, not hops.'},
       {title:'Cool & Pitch',time:'30–45 min',body:'Cool to below 68°F. Irish Ale yeast performs best at 62–72°F. Warmer produces more fruity esters than the style calls for.'},
@@ -516,7 +654,7 @@ const RECIPES = [
       {title:'Bottle with Higher Carbonation',time:'2 hrs',body:'Use the full ¾ cup of priming sugar. Hefeweizen is meant to be highly carbonated — it lifts the yeast into the pour and builds that iconic tall white head.'},
       {title:'Pour the German Way',time:'1 min',body:'Rinse glass with cold water. Pour ⅔ at 45°, then tilt upright for the rest. Roll the last inch to rouse yeast sediment, pour it on top. The haze is the style.'},
     ],
-    tips:['WY3068 ferments violently. Use a blow-off tube instead of an airlock for the first 48 hours.','Banana = warm fermentation. Clove = cool. The ratio of these two makes a great hefeweizen.','Don\'t filter this beer. The cloudiness is authentic — it\'s yeast in suspension and it\'s part of the flavor.','Best consumed within 6 weeks of bottling. The banana character fades with age.'],
+    tips:['WY3068 ferments violently. Use a blow-off tube (1/2-inch tubing into the airlock grommet, other end in Star San) instead of an airlock for the first 48 hours.','Banana = warm fermentation. Clove = cool. The ratio of these two makes a great hefeweizen.','Don\'t filter this beer. The cloudiness is authentic — it\'s yeast in suspension and it\'s part of the flavor.','Best consumed within 6 weeks of bottling. The banana character fades with age.'],
     simId:null,
   },
 ];
@@ -533,13 +671,13 @@ const SIM_RECIPES = {
         {text:'Quick sanitize — just the fermenter and airlock. The siphon barely touches the beer anyway.',scores:{quality:-8,technique:-5,knowledge:-3},outcome:'bad',feedback:'The auto-siphon and hoses contact the beer for minutes. Any wild yeast in a crevice will have a full warm ferment to colonize. This batch might be fine. It might also taste like a barnyard.',tip:'Star San takes 30 seconds. The cost of skipping it is a 4-week batch.'},
         {text:'Sanitize everything, then text back and negotiate dinner timing. This is non-negotiable.',scores:{quality:+12,technique:+8,knowledge:+6},outcome:'good',feedback:'Correct on both counts. Homebrewing rewards patience and penalizes shortcuts.',tip:'Block the whole brew day. You can finish early. You can never compress a 4-hour process into 2.'},
       ]},
-      {id:'s2',step:'Steeping the Grain',type:'normal',context:'You\'re steeping Crystal 40L at what looks like the right temperature. Your thermometer reads 165°F, but it\'s an old dial type you\'re not fully confident in.',question:'Do you trust the thermometer reading?',choices:[
-        {text:'Trust it. 165°F is close enough — steeping is more forgiving than mashing.',scores:{quality:-6,technique:-4,knowledge:-2},outcome:'bad',feedback:'165°F is the tannin extraction threshold. Even a few degrees over starts pulling harsh compounds from the grain husks.',tip:'Target steep temperature is 150–158°F. Above 170°F and you\'re actively extracting tannins.'},
+      {id:'s2',step:'Steeping the Grain',type:'normal',context:'You\'re steeping Crystal 40L at what looks like the right temperature. Your thermometer reads 165°F, but it\'s an old dial type — dial thermometers often read 3–5°F high as they age.',question:'Do you trust the thermometer reading?',choices:[
+        {text:'Trust it. 165°F is close enough — steeping is more forgiving than mashing.',scores:{quality:-5,technique:-4,knowledge:-2},outcome:'bad',feedback:'Probably fine for a short steep, but not ideal. Tannin extraction really kicks in above 168–170°F and with extended time. A reading of 165°F on an old dial thermometer likely means actual temp is closer to 160°F — which is the high end of acceptable. Worth pulling off heat briefly.',tip:'Target steep temperature is 150–158°F. Tannin extraction is about time at temperature — a brief spike to 165°F matters less than sustained heat above 168°F.'},
         {text:'Pull the kettle off heat, let it drop for 5 minutes, then continue steeping.',scores:{quality:+8,technique:+6,knowledge:+4},outcome:'good',feedback:'Smart adjustment. Letting the temperature fall protects the grain character. Dial thermometers typically read 3–5°F high as they age.',tip:'Invest in a digital probe thermometer ($15–20). The precision pays off on your first batch where you nail the temperature.'},
         {text:'End the steep immediately — 15 minutes is close enough.',scores:{quality:+2,technique:+2,knowledge:+2},outcome:'mid',feedback:'Conservative but reasonable. Slightly thinner extraction, but you avoided tannin risk.',tip:'Crystal malts need the full 20 minutes. Cutting short trades tannin risk for thin-beer risk.'},
       ]},
       {id:'cb1',step:'The Boil',type:'curveball',context:'You\'ve just added your DME and turned the heat back up. You walk to the fridge to grab a water. You hear it before you see it — a hissing, frothing sound. The wort is boiling over the side of the kettle.',question:'You have about 10 seconds. What do you do?',choices:[
-        {text:'Kill the heat immediately, then blow across the surface to reduce foam.',scores:{quality:+6,technique:+8,knowledge:+6},outcome:'good',feedback:'Textbook. Removing heat drops the foam almost instantly. Blowing breaks the protein bubbles. You lose maybe a cup of wort.',tip:'The "hot break" happens in the first 5 minutes after hitting a boil. Stay close.'},
+        {text:'Kill the heat immediately, then blow across the surface to reduce foam.',scores:{quality:+6,technique:+8,knowledge:+6},outcome:'good',feedback:'Textbook. Removing heat drops the foam almost instantly. Blowing breaks the protein bubbles. You lose maybe a cup of wort.',tip:'The "hot break" happens in the first 5 minutes after hitting a boil. Stay close. A cold water spritz or gentle stir after reducing heat settle foam fast.'},
         {text:'Grab the kettle lid and cover it to smother the foam.',scores:{quality:-10,technique:-8,knowledge:-4},outcome:'bad',feedback:'Covering a boiling kettle turns a boilover into a pressure event. The foam has nowhere to go and forces back as hot liquid. Steam burn risk. Never cover boiling wort.',tip:'Boilover foam answer: remove heat, stir gently, or blow across the surface.'},
         {text:'Stir vigorously and reduce heat to medium.',scores:{quality:+4,technique:+5,knowledge:+4},outcome:'mid',feedback:'Stirring a near-boilover can spray hot liquid in the first second. Reducing heat is right. Vigorous stirring less so.',tip:'Safe sequence: (1) kill heat, (2) wait 10 seconds, (3) gentle stir. In that order.'},
       ]},
@@ -551,7 +689,7 @@ const SIM_RECIPES = {
       {id:'s4',step:'Cooling the Wort',type:'normal',context:'60-minute boil is done. You\'re using an ice bath in the sink. After 25 minutes you\'re at 82°F. Your ice is running out. Yeast packet says 65–72°F.',question:'What do you do?',choices:[
         {text:'Get more ice from a neighbor or corner store. Wait until you hit target range.',scores:{quality:+10,technique:+8,knowledge:+6},outcome:'good',feedback:'Right answer. Pitching at 82°F stresses yeast and causes fusel alcohols — hot, harsh, headache-inducing flavor.',tip:'A wort chiller can drop 5 gallons from boiling to pitch temp in 15 minutes. Best single equipment upgrade.'},
         {text:'Top up with cold tap water to reach 5 gallons — the cold water will drop your temp.',scores:{quality:+6,technique:+5,knowledge:+5},outcome:'mid',feedback:'Clever and practical. Cold tap water can drop 5–10°F. This works. Risk is chlorine and potential bacteria from tap water.',tip:'This technique is called "top-up cooling." Use the coldest water available.'},
-        {text:'Pitch the yeast at 82°F — yeast can handle a little warmth.',scores:{quality:-12,technique:-8,knowledge:-4},outcome:'bad',feedback:'One of the most common beginner mistakes. Hot-pitched yeast produces fusel alcohols and sulfur. The beer may finish but will taste hot and rough.',tip:'Rule of thumb: if the fermenter feels warm to the touch before pitching, keep cooling.'},
+        {text:'Pitch the yeast at 82°F — yeast can handle a little warmth.',scores:{quality:-12,technique:-8,knowledge:-4},outcome:'bad',feedback:'One of the most common beginner mistakes. Hot-pitched yeast goes into survival mode and produces fusel alcohols and acetaldehyde — a hot, solvent-like, green-apple flavor that can linger. The beer may finish fermenting but will taste rough.',tip:'Rule of thumb: if the fermenter feels warm to the touch before pitching, keep cooling.'},
       ]},
       {id:'s5',step:'Fermentation',type:'normal',context:'Day 3 of fermentation. Your airlock has barely moved. You tap the fermenter and see a thin layer of foam on top of the beer.',question:'You\'re worried fermentation isn\'t happening. What do you do?',choices:[
         {text:'Do nothing. The foam layer means fermentation happened. Airlock activity isn\'t the only sign.',scores:{quality:+10,technique:+6,knowledge:+10},outcome:'good',feedback:'Correct. Airlock bubbling is unreliable — if the lid isn\'t perfectly sealed, CO2 escapes without moving the airlock. The foam (krausen) is proof the yeast is alive and working.',tip:'The only reliable way to confirm fermentation is complete: two hydrometer readings 48 hours apart. Same number = done.'},
@@ -574,14 +712,14 @@ const SIM_RECIPES = {
         {text:'Pull it at 25 minutes as a compromise.',scores:{quality:+2,technique:+2,knowledge:+2},outcome:'mid',feedback:'Reasonable compromise. You\'ll get most of the character and avoid over-extraction. Not optimal but defensible.',tip:'When in doubt on a first batch, follow the recipe exactly. Save adjustments for batch two.'},
       ]},
       {id:'st2',step:'Carbonation Level',type:'normal',context:'You\'re bottling. The recipe calls for ½ cup of priming sugar — significantly less than the ¾ cup you\'d use for most ales. You wonder if that\'s a typo.',question:'Do you use ½ cup as written, or bump it to ¾ cup for better carbonation?',choices:[
-        {text:'Use ¾ cup — a properly carbonated beer is always better.',scores:{quality:-10,technique:-8,knowledge:-6},outcome:'bad',feedback:'Low carbonation IS the proper carbonation for Irish dry stout. It\'s designed to be drunk at lower CO2 so the creamy malt body and dry finish come forward. Extra sugar makes it fizzy and sharp.',tip:'A stout should feel like velvet on the palate. Excessive carbonation destroys that.'},
+        {text:'Use ¾ cup — a properly carbonated beer is always better.',scores:{quality:-10,technique:-8,knowledge:-6},outcome:'bad',feedback:'Low carbonation IS the proper carbonation for Irish dry stout. It\'s designed to be drunk at lower CO2 so the creamy malt body and dry finish come forward. Extra sugar makes it fizzy and sharp.',tip:'Over-carbonation on a stout creates harsh carbonic bite that fights the roast character and blows apart the dense creamy head. Low CO2 is what makes a stout feel like velvet.'},
         {text:'Use ½ cup as written — trust the recipe.',scores:{quality:+10,technique:+8,knowledge:+8},outcome:'good',feedback:'Right call. The lower carbonation is a feature, not a bug. It\'s what separates a proper Irish stout from an overcarbonated homebrew that happens to be dark.',tip:'Carbonation levels vary by style: lagers high, stouts low, Belgians very high.'},
         {text:'Use ⅔ cup — a middle ground.',scores:{quality:-2,technique:-1,knowledge:0},outcome:'mid',feedback:'Slightly more carbonation than the style calls for, but you won\'t ruin it. The beer will be a bit crisper than traditional.',tip:'The most important thing before a first batch of any style: drink the commercial example. Guinness Draught is the benchmark.'},
       ]},
       {id:'cb-stout',step:'Fermentation',type:'curveball',context:'Day 2 of fermentation. Your fermenter lid has blown off the bucket — the fermentation was so vigorous it pushed the airlock out and there\'s foam everywhere on the outside.',question:'Active fermentation has exposed the beer. What do you do?',choices:[
         {text:'Clean the outside, re-seat the lid with a new sanitized airlock. Move on.',scores:{quality:+8,technique:+8,knowledge:+8},outcome:'good',feedback:'Exactly right. Active fermentation produces CO2 at such a rate it\'s protecting the beer — the outgassing pushes contaminants away. Re-seal, sanitize the exterior, let it run.',tip:'Irish Ale yeast (WY1084) is famous for violent fermentation. Always use a blow-off tube for the first 48 hours with this strain.'},
         {text:'The beer is contaminated. Pour it out and start over.',scores:{quality:-5,technique:0,knowledge:-8},outcome:'bad',feedback:'Over-reaction. Active fermentation protects itself. The CO2 creates a blanket keeping oxygen and contaminants out. This is solvable.',tip:'The most expensive mistakes in homebrewing come from dumping beer prematurely. Give the beer a chance.'},
-        {text:'Add a blow-off tube to the fermenter and let it vent into a jar of sanitizer.',scores:{quality:+10,technique:+10,knowledge:+10},outcome:'good',feedback:'Perfect. This is exactly what a blow-off tube is for. You\'ve turned an emergency into a learning moment AND improved your setup mid-brew. That\'s how good brewers think.',tip:'A blow-off tube is just 1-inch tubing over the fermenter opening, dropping into Star San. Costs nothing. Saves batches.'},
+        {text:'Add a blow-off tube to the fermenter and let it vent into a jar of sanitizer.',scores:{quality:+10,technique:+10,knowledge:+10},outcome:'good',feedback:'Perfect. This is exactly what a blow-off tube is for. You\'ve turned an emergency into a learning moment AND improved your setup mid-brew. That\'s how good brewers think.',tip:'A blow-off tube is a piece of 1/2-inch (or 5/8-inch) tubing that fits into your airlock grommet hole, with the other end dropping into a jar of Star San. Costs nothing. Saves batches.'},
       ]},
     ],
   },
@@ -789,11 +927,11 @@ function renderSimPick() {
         <div class="sim-recipe-info"><div class="sim-recipe-name">Dry Irish Stout</div><div class="sim-recipe-meta">3 decisions · 1 curveball · Beginner</div></div>
         <div class="sim-recipe-arrow">→</div>
       </button>
-      <button class="sim-recipe-btn ${runsCount < 2 ? 'locked' : ''}" ${runsCount < 2 ? '' : 'onclick="alert(\'Coming soon\')"'}>
+      <button class="sim-recipe-btn ${runsCount < 2 ? 'locked' : ''}" ${runsCount < 2 ? '' : 'onclick="comingSoon()"'}>
         <div class="sim-recipe-icon">${runsCount < 2 ? '🔒' : '🌿'}</div>
         <div class="sim-recipe-info"><div class="sim-recipe-name">West Coast IPA</div><div class="sim-recipe-meta">${runsCount < 2 ? 'Complete 2 runs to unlock · ' + runsCount + '/2 done' : 'Coming in next build'}</div></div>
       </button>
-      <button class="sim-recipe-btn ${!hefeUnlocked ? 'locked' : ''}" ${!hefeUnlocked ? '' : 'onclick="alert(\'Coming soon\')"'}>
+      <button class="sim-recipe-btn ${!hefeUnlocked ? 'locked' : ''}" ${!hefeUnlocked ? '' : 'onclick="comingSoon()"'}>
         <div class="sim-recipe-icon">${!hefeUnlocked ? '🔒' : '🍺'}</div>
         <div class="sim-recipe-info"><div class="sim-recipe-name">Hefeweizen</div><div class="sim-recipe-meta">${!hefeUnlocked ? 'Earn 150 XP to unlock · ' + state.xp + '/150 XP' : 'Coming in next build'}</div></div>
       </button>
@@ -873,7 +1011,14 @@ function selectChoice(idx) {
   const qv = qClass(sim.scores);
   ['quality','technique','knowledge'].forEach(k => {
     const el = document.getElementById('qm-'+k);
-    if(el) { el.textContent = Math.round(sim.scores[k]); el.className = 'quality-meter-val ' + qv[k]; }
+    if(el) {
+      el.textContent = Math.round(sim.scores[k]);
+      el.className = 'quality-meter-val ' + qv[k];
+      // trigger pop animation
+      el.classList.remove('meter-pop');
+      void el.offsetWidth;
+      el.classList.add('meter-pop');
+    }
   });
   const feedbackArea = document.getElementById('feedback-area');
   if(feedbackArea) {
@@ -955,7 +1100,7 @@ function renderSimResult() {
       ${sim.curveballsHit.length ? `<div class="curveball-log"><div class="curveball-log-title">⚡ Curveballs That Hit</div>${sim.curveballsHit.map(cb => `<div class="curveball-item"><div>⚡</div><div>You took a hit during <strong>${cb}</strong>. Every brewer gets one.</div></div>`).join('')}</div>` : ''}
       <div class="result-actions">
         <button class="result-btn primary" onclick="startSim('${sim.recipeId}')">🔄 Brew Again</button>
-        <button class="result-btn secondary" onclick="renderSimPick(); document.getElementById('sim-app').scrollTop=0;">← Back to Recipe Select</button>
+        <button class="result-btn secondary" onclick="renderSimPick(); window.scrollTo(0,0);">← Back to Recipe Select</button>
         <button class="result-btn secondary" onclick="goTo('screen-progress')">🏆 View Cellar</button>
       </div>
     </div>`;
@@ -987,6 +1132,14 @@ function buildResultGlass(recipeId, score) {
   }
   return `<svg width="90" height="120" viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rg-a" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e89820" stop-opacity="${fill}"/><stop offset="100%" stop-color="#8b4a08" stop-opacity="${fill}"/></linearGradient><clipPath id="rg-ac"><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z"/></clipPath></defs><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.13)" stroke-width="1.2"/><rect x="6" y="${38-(score/100)*12}" width="68" height="74" fill="url(#rg-a)" clip-path="url(#rg-ac)"/><ellipse cx="40" cy="${38-(score/100)*12}" rx="${Math.min(26,8+score*0.18)}" ry="${foam/2}" fill="rgba(245,235,210,0.92)"/><circle cx="30" cy="80" r="1.5" fill="rgba(255,255,255,0.15)"><animate attributeName="cy" values="95;42" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.25;0" dur="2.8s" repeatCount="indefinite"/></circle><path d="M18 18 L12 96" stroke="rgba(255,255,255,0.18)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
 }
+function comingSoon() {
+  // Toast-style notification instead of a browser alert
+  const toast = document.createElement('div');
+  toast.textContent = 'Coming in the next build';
+  toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink3);border:1px solid rgba(200,114,42,0.3);color:var(--parchment);font-family:DM Sans,sans-serif;font-size:0.78rem;padding:10px 20px;border-radius:20px;z-index:999;pointer-events:none;animation:fadeUp 0.3s ease both;';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2200);
+}
 function abandonSim() {
   if(confirm('Abandon this brew run? Progress will be lost.')) { state.sim = {phase:'pick'}; renderSimPick(); }
 }
@@ -1005,9 +1158,9 @@ function renderCellar() {
   const ipaCard = document.getElementById('unlock-ipa');
   const hefeCard = document.getElementById('unlock-hefe');
   const oatCard = document.getElementById('unlock-oat');
-  if(ipaCard && state.runs.length >= 2) { ipaCard.style.opacity='1'; ipaCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = ipaCard.querySelector('div:last-child'); if(lock) lock.textContent='✓'; }
-  if(hefeCard && state.xp >= 150) { hefeCard.style.opacity='1'; hefeCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = hefeCard.querySelector('div:last-child'); if(lock) lock.textContent='✓'; }
-  if(oatCard && state.runs.some(r => r.finalScore >= 80)) { oatCard.style.opacity='1'; oatCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = oatCard.querySelector('div:last-child'); if(lock) lock.textContent='✓'; }
+  if(ipaCard && state.runs.length >= 2) { ipaCard.style.opacity='1'; ipaCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = ipaCard.querySelector('.lock-icon'); if(lock) lock.textContent='✓'; }
+  if(hefeCard && state.xp >= 150) { hefeCard.style.opacity='1'; hefeCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = hefeCard.querySelector('.lock-icon'); if(lock) lock.textContent='✓'; }
+  if(oatCard && state.runs.some(r => r.finalScore >= 80)) { oatCard.style.opacity='1'; oatCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = oatCard.querySelector('.lock-icon'); if(lock) lock.textContent='✓'; }
   if(runHistory) {
     if(!state.runs.length) { runHistory.innerHTML = '<em style="font-size:0.78rem;color:var(--muted2)">No runs yet. Head to Brew Sim to start your first batch.</em>'; return; }
     runHistory.innerHTML = state.runs.slice().reverse().map(r => `
@@ -1028,6 +1181,9 @@ function renderCellar() {
 // ═══════════════════════════════════════════════════════════
 function updateXP() {
   document.querySelectorAll('.xp-val').forEach(el => el.textContent = state.xp + ' XP');
+  document.querySelectorAll('.xp-badge').forEach(badge => {
+    badge.classList.toggle('has-xp', state.xp > 0);
+  });
 }
 
 // ═══════════════════════════════════════════════════════════
