@@ -14,15 +14,122 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 .screen{display:none;width:100%;height:100%;flex-direction:column;overflow:hidden;position:absolute;top:0;left:0;}
 .screen.active{display:flex;}
 
-/* ── TITLE ── */
-#s-title{align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at 50% 60%,rgba(240,192,64,.1) 0%,transparent 60%);}
-.title-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px;text-align:center;}
-.title-art{font-size:64px;}
-.title-logo{font-family:'Fredoka One',cursive;font-size:52px;color:#f0c040;
-  text-shadow:0 0 40px rgba(240,192,64,.4),0 4px 0 rgba(0,0,0,.3);}
-.title-sub{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#6a7890;}
-.title-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px;}
+
+/* ── TITLE SCREEN REBUILD ── */
+#s-title{overflow:hidden;position:relative;}
+
+/* Layered gradient sky */
+.title-sky{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 40%,#0d2a4a 0%,#060e1a 55%,#020508 100%);}
+
+/* Star field layer */
+.title-stars{position:absolute;inset:0;overflow:hidden;}
+.tstar{position:absolute;border-radius:50%;background:white;}
+.tstar.pulse{animation:flicker var(--dur,3s) ease-in-out infinite var(--del,0s);}
+
+/* Parallax island layers - horizon glow */
+.title-horizon{position:absolute;bottom:0;left:0;right:0;height:55%;
+  background:radial-gradient(ellipse at 50% 90%,rgba(240,140,40,.14) 0%,rgba(90,30,120,.08) 40%,transparent 70%);}
+
+/* Aurora ribbons */
+.aurora{position:absolute;top:0;left:-20%;right:-20%;height:45%;pointer-events:none;}
+.aurora-band{position:absolute;border-radius:100%;opacity:0;
+  animation:aurora-drift var(--dur,12s) ease-in-out infinite var(--del,0s);}
+@keyframes aurora-drift{
+  0%,100%{opacity:0;transform:translateY(30px) skewX(-5deg);}
+  30%{opacity:.28;}50%{opacity:.12;}70%{opacity:.22;}
+}
+
+/* Animated island art */
+.title-island-wrap{position:absolute;bottom:0;left:0;right:0;height:55%;display:flex;align-items:flex-end;justify-content:center;}
+.title-island-svg{width:100%;height:100%;max-width:600px;}
+
+/* Center content */
+.title-content{position:relative;z-index:10;display:flex;flex-direction:column;
+  align-items:center;gap:10px;padding:24px;text-align:center;margin-top:14vh;}
+
+/* WAYSTONE logo treatment */
+.title-logo-wrap{position:relative;display:inline-flex;flex-direction:column;align-items:center;}
+.title-eyebrow{font-size:10px;font-weight:800;letter-spacing:5px;text-transform:uppercase;
+  color:rgba(240,192,64,.55);margin-bottom:4px;}
+.title-logo{font-family:'Fredoka One',cursive;font-size:clamp(48px,12vw,72px);color:white;
+  letter-spacing:-1px;line-height:1;
+  text-shadow:0 0 60px rgba(240,192,64,.35),0 0 20px rgba(240,192,64,.2),0 4px 0 rgba(0,0,0,.4);}
+.title-logo span{color:#f0c040;}
+/* Friendship edition badge */
+.title-edition{display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,rgba(240,192,64,.18),rgba(212,160,255,.12));
+  border:1px solid rgba(240,192,64,.3);border-radius:20px;
+  padding:4px 14px;font-size:11px;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;color:#f0c040;margin-top:6px;}
+.title-subtitle{font-size:12px;font-weight:700;letter-spacing:4px;
+  text-transform:uppercase;color:rgba(168,186,210,.55);margin-top:2px;}
+
+/* Creature peeks - creatures at bottom of screen */
+.title-peek{position:absolute;bottom:0;animation:title-peek-bob var(--dur,4s) ease-in-out infinite var(--del,0s);}
+@keyframes title-peek-bob{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+}
+
+/* Buttons */
+.title-btns-new{display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:10px;width:100%;max-width:320px;}
+.title-btn-row{display:flex;gap:8px;width:100%;}
+.btn-title-main{background:linear-gradient(135deg,#f0c040,#c89820);color:#1a1000;
+  border:none;border-radius:50px;font-family:'Nunito',sans-serif;
+  font-size:17px;font-weight:900;padding:15px 0;cursor:pointer;
+  box-shadow:0 6px 28px rgba(240,192,64,.35),0 2px 0 rgba(0,0,0,.2);
+  width:100%;letter-spacing:.3px;transition:transform .15s,box-shadow .15s;}
+.btn-title-main:active{transform:scale(.97);box-shadow:0 3px 14px rgba(240,192,64,.3);}
+.btn-title-sec{flex:1;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.14);
+  border-radius:50px;color:#e8e4d8;font-family:'Nunito',sans-serif;
+  font-size:13px;font-weight:800;padding:12px 0;cursor:pointer;transition:background .15s;}
+.btn-title-sec:active{background:rgba(255,255,255,.15);}
+.btn-residents{background:linear-gradient(135deg,rgba(94,196,176,.2),rgba(94,196,176,.08));
+  border:1.5px solid rgba(94,196,176,.3);border-radius:50px;color:#5ec4b0;
+  font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;
+  padding:12px 0;cursor:pointer;width:100%;transition:background .15s;}
+.btn-residents:active{background:rgba(94,196,176,.15);}
+
+/* RESIDENTS SCREENS */
+.res-card{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.09);
+  border-radius:16px;padding:14px;display:flex;gap:14px;align-items:flex-start;cursor:pointer;transition:background .15s;}
+.res-card:active{background:rgba(255,255,255,.1);}
+.res-portrait{width:80px;height:94px;flex-shrink:0;border-radius:12px;overflow:hidden;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+.res-portrait svg{width:100%;height:100%;}
+.res-info{flex:1;min-width:0;}
+.res-name{font-family:'Fredoka One',cursive;font-size:20px;color:white;line-height:1.2;}
+.res-role{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.res-preview{font-family:'Lora',serif;font-size:13px;font-style:italic;
+  color:rgba(232,228,216,.65);line-height:1.6;}
+.res-tier-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;
+  background:rgba(255,255,255,.07);color:rgba(232,228,216,.55);display:inline-flex;
+  align-items:center;gap:4px;margin-top:5px;}
+.res-tier-badge.maxed{background:rgba(240,192,64,.15);color:#f0c040;}
+/* Detail page */
+.rdet-portrait-big{width:140px;height:164px;flex-shrink:0;border-radius:16px;overflow:hidden;
+  background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);}
+.rdet-portrait-big svg{width:100%;height:100%;}
+.rdet-top{display:flex;gap:18px;align-items:flex-start;}
+.rdet-role{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.rdet-tier-label{font-size:12px;font-weight:700;color:#f0c040;margin-bottom:8px;}
+.fact-group{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:12px 14px;}
+.fact-group-title{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.35);margin-bottom:8px;}
+.fact-item{font-family:'Lora',serif;font-size:14px;line-height:1.75;
+  color:rgba(232,228,216,.82);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.fact-item:last-child{border-bottom:none;}
+.fact-locked{font-family:'Lora',serif;font-size:13px;font-style:italic;
+  color:rgba(255,255,255,.2);padding:8px 0;text-align:center;}
+.rdet-next-hint{font-size:11px;color:rgba(255,255,255,.3);text-align:center;
+  font-style:italic;font-family:'Lora',serif;padding-top:4px;}
+@media (orientation:portrait),(max-width:600px){
+  .rdet-top{flex-direction:column;align-items:center;text-align:center;}
+  .rdet-portrait-big{width:120px;height:140px;}
+}
+
 
 /* ── BUTTONS ── */
 .btn-gold{background:linear-gradient(135deg,#f0c040,#c89820);color:#1a1000;
@@ -283,17 +390,173 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 
 <!-- ══ TITLE ══ -->
 <div class="screen active" id="s-title">
-  <div class="title-wrap">
-    <div class="title-art">🗼</div>
-    <div class="title-logo">WAYSTONE</div>
-    <div class="title-sub">Creature Collector</div>
-    <div class="title-btns">
-      <button class="btn-gold" id="btn-explore">Explore the Island &#x1F5FA;</button>
-      <button class="btn-outline" id="btn-collection">My Collection &#x1F4D6;</button>
-      <button class="btn-outline" id="btn-inventory">My Inventory &#x1F392;</button>
+  <!-- Sky/atmosphere -->
+  <div class="title-sky"></div>
+  <!-- Star field -->
+  <div class="title-stars" id="title-stars"></div>
+  <!-- Aurora bands -->
+  <div class="aurora">
+    <div class="aurora-band" style="top:20%;left:5%;right:10%;height:120px;background:linear-gradient(180deg,transparent,rgba(94,196,176,.18),transparent);--dur:14s;--del:0s;"></div>
+    <div class="aurora-band" style="top:5%;left:20%;right:-5%;height:90px;background:linear-gradient(180deg,transparent,rgba(212,160,255,.14),transparent);--dur:18s;--del:3s;"></div>
+    <div class="aurora-band" style="top:30%;left:-10%;right:25%;height:80px;background:linear-gradient(180deg,transparent,rgba(240,192,64,.1),transparent);--dur:22s;--del:7s;"></div>
+  </div>
+  <!-- Horizon glow -->
+  <div class="title-horizon"></div>
+  <!-- Island scene SVG -->
+  <div class="title-island-wrap">
+    <svg class="title-island-svg" viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
+      <!-- Distant fog/mist layers -->
+      <ellipse cx="300" cy="260" rx="320" ry="40" fill="#0d1a2a" opacity="0.9"/>
+      <ellipse cx="300" cy="248" rx="280" ry="32" fill="#0a1620"/>
+      <!-- Far hills -->
+      <ellipse cx="100" cy="230" rx="140" ry="60" fill="#0d1e10"/>
+      <ellipse cx="500" cy="235" rx="120" ry="55" fill="#0d1e10"/>
+      <!-- Mid forest band -->
+      <path d="M0 200 Q60 170 120 185 Q180 200 240 180 Q300 165 360 180 Q420 195 480 172 Q540 152 600 165 L600 280 L0 280 Z" fill="#0e2210"/>
+      <!-- Tree silhouettes in forest band -->
+      <path d="M50 200 L50 175 L35 175 L50 155 L65 175 L50 175" fill="#091808" opacity="0.8"/>
+      <path d="M130 195 L130 172 L116 172 L130 150 L144 172 L130 172" fill="#091808" opacity="0.7"/>
+      <path d="M520 180 L520 158 L507 158 L520 138 L533 158 L520 158" fill="#091808" opacity="0.8"/>
+      <!-- Water/shore -->
+      <path d="M0 225 Q150 215 300 220 Q450 225 600 215 L600 280 L0 280 Z" fill="#0a1828"/>
+      <!-- Wave animations -->
+      <g style="animation:wave-drift 8s ease-in-out infinite;">
+        <path d="M20 232 Q80 227 140 232 Q200 237 260 232" stroke="#1a3a5a" stroke-width="2" fill="none" opacity="0.6"/>
+        <path d="M300 228 Q360 223 420 228 Q480 233 540 228" stroke="#1a3a5a" stroke-width="2" fill="none" opacity="0.5"/>
+      </g>
+      <g style="animation:wave-drift2 11s ease-in-out infinite;">
+        <path d="M60 238 Q130 233 200 238 Q270 243 340 238" stroke="#1a4a6a" stroke-width="1.5" fill="none" opacity="0.4"/>
+        <path d="M380 234 Q440 229 500 234 Q560 239 600 234" stroke="#1a4a6a" stroke-width="1.5" fill="none" opacity="0.35"/>
+      </g>
+      <!-- LIGHTHOUSE - center, properly proportioned and connected -->
+      <!-- Base foundation -->
+      <ellipse cx="300" cy="215" rx="28" ry="8" fill="#1a2838"/>
+      <rect x="284" y="175" width="32" height="45" rx="4" fill="#1a2840"/>
+      <!-- Lighthouse body segments -->
+      <rect x="287" y="152" width="26" height="28" rx="3" fill="#243250"/>
+      <rect x="289" y="130" width="22" height="26" rx="3" fill="#2e3e5e"/>
+      <!-- Windows in body -->
+      <rect x="295" y="158" width="10" height="14" rx="5" fill="#304060" opacity="0.7"/>
+      <rect x="296" y="136" width="8" height="10" rx="4" fill="#f0c040" opacity="0.3" style="animation:flicker 3s ease-in-out infinite;"/>
+      <!-- Lamp room -->
+      <rect x="287" y="114" width="26" height="18" rx="3" fill="#364870"/>
+      <!-- Lamp room glass panels -->
+      <rect x="289" y="116" width="10" height="14" rx="1" fill="rgba(240,200,80,.12)"/>
+      <rect x="301" y="116" width="10" height="14" rx="1" fill="rgba(240,200,80,.12)"/>
+      <!-- THE LIGHT -->
+      <circle cx="300" cy="122" r="8" fill="#f0c040"/>
+      <circle cx="300" cy="122" r="5" fill="#fff8e0"/>
+      <!-- Light glow -->
+      <circle cx="300" cy="122" r="14" fill="#f0c040" opacity="0.2" style="animation:breathe 2s ease-in-out infinite;"/>
+      <!-- Rotating beam - FIXED: two wedges rotating around the lamp point (300,122) -->
+      <g style="animation:spin-slow 5s linear infinite;transform-origin:300px 122px;">
+        <path d="M300 122 L380 60 L360 100 Z" fill="rgba(240,192,64,.18)"/>
+        <path d="M300 122 L360 55 L345 90 Z" fill="rgba(240,192,64,.12)"/>
+      </g>
+      <!-- Lantern room cap -->
+      <polygon points="285,114 300,102 315,114" fill="#2a3a58"/>
+      <polygon points="287,114 300,104 313,114" fill="#36486a"/>
+      <!-- Bridge silhouette right -->
+      <rect x="370" y="218" width="180" height="10" rx="3" fill="#1a2838"/>
+      <rect x="390" y="194" width="6" height="30" rx="2" fill="#1a2838"/>
+      <rect x="440" y="188" width="6" height="36" rx="2" fill="#1a2838"/>
+      <rect x="490" y="188" width="6" height="36" rx="2" fill="#1a2838"/>
+      <line x1="393" y1="196" x2="443" y2="190" stroke="#243248" stroke-width="1.5"/>
+      <line x1="443" y1="190" x2="493" y2="190" stroke="#243248" stroke-width="1.5"/>
+      <!-- Market lanterns far left -->
+      <circle cx="80" cy="190" r="5" fill="#f08040" opacity="0.7" style="animation:flicker 2.2s ease-in-out infinite;"/>
+      <circle cx="80" cy="190" r="9" fill="#f08040" opacity="0.12" style="animation:flicker 2.2s ease-in-out infinite;"/>
+      <circle cx="140" cy="182" r="4" fill="#f0c040" opacity="0.6" style="animation:flicker 3s ease-in-out infinite .5s;"/>
+      <circle cx="140" cy="182" r="8" fill="#f0c040" opacity="0.1" style="animation:flicker 3s ease-in-out infinite .5s;"/>
+      <!-- Fireflies / floating particles -->
+      <circle cx="200" cy="165" r="2" fill="#a0e060" opacity="0.7" style="animation:flicker 2s ease-in-out infinite;"/>
+      <circle cx="380" cy="170" r="1.5" fill="#a0e060" opacity="0.6" style="animation:flicker 2.8s ease-in-out infinite .7s;"/>
+      <circle cx="160" cy="175" r="1.5" fill="#a0e060" opacity="0.5" style="animation:flicker 3.5s ease-in-out infinite 1.4s;"/>
+      <!-- Moon reflection on water -->
+      <ellipse cx="300" cy="240" rx="30" ry="8" fill="rgba(248,230,160,.06)"/>
+    </svg>
+  </div>
+  <!-- Creature peeks at bottom corners -->
+  <div class="title-peek" style="left:6%;--dur:4.2s;--del:0s;width:60px;height:60px;">
+    <svg viewBox="0 0 200 200" width="60" height="60" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 8px rgba(255,107,53,.4));">
+      <g style="animation:breathe 2.2s ease-in-out infinite;transform-origin:100px 128px;">
+      <ellipse cx="100" cy="130" rx="36" ry="38" fill="#b02800"/><ellipse cx="100" cy="124" rx="28" ry="30" fill="#ffaa60"/>
+      <circle cx="87" cy="116" r="10" fill="white"/><circle cx="113" cy="116" r="10" fill="white"/>
+      <circle cx="89" cy="118" r="5.5" fill="#1a0800"/><circle cx="115" cy="118" r="5.5" fill="#1a0800"/>
+      <circle cx="90" cy="117" r="2" fill="white"/><circle cx="116" cy="117" r="2" fill="white"/>
+      <path d="M88 136 Q100 144 114 135" stroke="#881400" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </g>
+      <g style="animation:flicker 0.75s ease-in-out infinite;transform-origin:100px 90px;">
+      <path d="M80 94 Q74 70 92 54 Q100 46 108 54 Q126 70 120 94" fill="#ff8820" opacity="0.95"/></g>
+    </svg>
+  </div>
+  <div class="title-peek" style="right:8%;--dur:5s;--del:1.5s;width:54px;height:54px;">
+    <svg viewBox="0 0 200 200" width="54" height="54" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 8px rgba(94,196,176,.4));">
+      <g style="animation:breathe 3s ease-in-out infinite;transform-origin:100px 130px;">
+      <circle cx="100" cy="138" r="44" fill="#502888"/><circle cx="100" cy="131" r="36" fill="#c898e8"/>
+      <circle cx="85" cy="110" r="13" fill="white"/><circle cx="115" cy="110" r="13" fill="white"/>
+      <circle cx="87" cy="112" r="8" fill="#3a1060"/><circle cx="117" cy="112" r="8" fill="#3a1060"/>
+      <circle cx="89" cy="110" r="3" fill="white"/><circle cx="119" cy="110" r="3" fill="white"/>
+      </g>
+    </svg>
+  </div>
+  <div class="title-peek" style="left:28%;--dur:3.8s;--del:2.8s;width:46px;height:46px;bottom:20px;">
+    <svg viewBox="0 0 200 200" width="46" height="46" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 6px rgba(104,184,40,.4));">
+      <g style="animation:breathe 6s ease-in-out infinite;transform-origin:100px 118px;">
+      <circle cx="100" cy="120" r="50" fill="#1e4808"/><circle cx="100" cy="114" r="38" fill="#5a9830"/>
+      <circle cx="88" cy="112" r="9" fill="white" opacity="0.92"/><circle cx="112" cy="112" r="9" fill="white" opacity="0.92"/>
+      <circle cx="89" cy="113" r="5.5" fill="#1e3008"/><circle cx="113" cy="113" r="5.5" fill="#1e3008"/>
+      <circle cx="90" cy="112" r="2" fill="white"/><circle cx="114" cy="112" r="2" fill="white"/>
+      </g>
+    </svg>
+  </div>
+  <div class="title-peek" style="right:25%;--dur:4.6s;--del:0.8s;width:46px;height:46px;bottom:12px;">
+    <svg viewBox="0 0 200 200" width="46" height="46" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 6px rgba(240,192,64,.4));">
+      <g style="animation:bob 3.8s ease-in-out infinite;transform-origin:100px 112px;">
+      <ellipse cx="100" cy="118" rx="40" ry="35" fill="#384858"/><ellipse cx="100" cy="107" rx="28" ry="23" fill="#8ea0b8"/>
+      <circle cx="89" cy="106" r="9.5" fill="#181e28"/><circle cx="111" cy="106" r="9.5" fill="#181e28"/>
+      <circle cx="89" cy="107" r="5.5" fill="#6090c0"/><circle cx="111" cy="107" r="5.5" fill="#6090c0"/>
+      <circle cx="90" cy="106" r="2.2" fill="rgba(180,222,255,0.92)"/><circle cx="112" cy="106" r="2.2" fill="rgba(180,222,255,0.92)"/>
+      </g>
+    </svg>
+  </div>
+  <!-- Main content -->
+  <div class="title-content">
+    <div class="title-logo-wrap">
+      <div class="title-eyebrow">Island Adventure</div>
+      <div class="title-logo">Way<span>stone</span></div>
+      <div class="title-edition">&#x1F49B; Friendship Edition</div>
+      <div class="title-subtitle">Creature Collector</div>
+    </div>
+    <div class="title-btns-new">
+      <button class="btn-title-main" id="btn-explore">Explore the Island &#x1F5FA;</button>
+      <div class="title-btn-row">
+        <button class="btn-title-sec" id="btn-collection">&#x1F4D6; Collection</button>
+        <button class="btn-title-sec" id="btn-inventory">&#x1F392; Inventory</button>
+      </div>
+      <button class="btn-residents" id="btn-residents">&#x1F3D8; Island Residents</button>
     </div>
   </div>
 </div>
+
+<!-- ══ RESIDENTS ══ -->
+<div class="screen" id="s-residents">
+  <div class="comp-hdr">
+    <div class="comp-title">&#x1F3D8; Island Residents</div>
+    <button class="btn-outline" style="padding:6px 14px;font-size:12px;" id="btn-res-back">&#x2190; Back</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px;" id="residents-list"></div>
+</div>
+
+<!-- ══ RESIDENT DETAIL ══ -->
+<div class="screen" id="s-resident-detail">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;">
+    <div style="font-family:'Fredoka One',cursive;font-size:22px;color:white;" id="rdet-name"></div>
+    <button class="btn-outline" style="padding:6px 14px;font-size:12px;" id="btn-rdet-back">&#x2190; Back</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:16px;" id="rdet-body"></div>
+</div>
+
 
 <!-- ══ EXPLORE ══ -->
 <div class="screen" id="s-explore">
@@ -339,8 +602,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
       <div class="disc-personality" id="disc-personality"></div>
       <div style="font-size:11px;color:#6a7890;margin-bottom:3px;">Give it a nickname? (optional)</div>
       <input class="disc-input" id="disc-input" type="text" maxlength="20" placeholder="Optional nickname..." autocomplete="off">
-      <div style="margin-top:6px;display:flex;gap:10px;">
+      <div style="margin-top:6px;display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn-gold" id="btn-save-disc">Add to Collection!</button>
+        <button class="btn-outline" id="btn-disc-skip" style="font-size:13px;padding:11px 18px;">Skip &#x2192;</button>
       </div>
     </div>
   </div>
@@ -2598,6 +2862,680 @@ choices:[
 ];
 
 
+
+var RESIDENTS = [
+  {
+    id:`pip`,
+    name:`Pip`,
+    role:`Fisher & Bridge-Keeper`,
+    color:`#5ec4b0`,
+    svg:`<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="pip-skin" cx="45%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0c888"/><stop offset="100%" stop-color="#c8924a"/></radialGradient></defs>
+<ellipse cx="60" cy="110" rx="28" ry="12" fill="#1a2838" opacity="0.35"/>
+<!-- Body -->
+<rect x="38" y="72" width="44" height="52" rx="10" fill="#1a4a6a"/>
+<rect x="40" y="74" width="40" height="48" rx="8" fill="#2a6a8a"/>
+<!-- Stripes on shirt -->
+<line x1="38" y1="88" x2="82" y2="88" stroke="#1a4a6a" stroke-width="3" opacity="0.5"/>
+<line x1="38" y1="96" x2="82" y2="96" stroke="#1a4a6a" stroke-width="3" opacity="0.5"/>
+<!-- Arms -->
+<ellipse cx="32" cy="88" rx="9" ry="6" fill="#c8924a" transform="rotate(-20,32,88)"/>
+<ellipse cx="88" cy="88" rx="9" ry="6" fill="#c8924a" transform="rotate(20,88,88)"/>
+<!-- Fishing rod arm extended -->
+<ellipse cx="92" cy="82" rx="8" ry="5" fill="#c8924a" transform="rotate(35,92,82)"/>
+<line x1="96" y1="76" x2="118" y2="40" stroke="#8a6a30" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="118" y1="40" x2="114" y2="58" stroke="#c8e8f0" stroke-width="1" stroke-dasharray="2,2" opacity="0.8"/>
+<circle cx="114" cy="59" r="3" fill="#c8e8f0" opacity="0.6" style="animation:bob 2s ease-in-out infinite;"/>
+<!-- Legs -->
+<rect x="45" y="115" width="13" height="20" rx="5" fill="#1a3050"/>
+<rect x="62" y="115" width="13" height="20" rx="5" fill="#1a3050"/>
+<!-- Boots -->
+<ellipse cx="51" cy="135" rx="10" ry="5" fill="#3a2010"/>
+<ellipse cx="68" cy="135" rx="10" ry="5" fill="#3a2010"/>
+<!-- Head -->
+<circle cx="60" cy="58" r="22" fill="#c8924a"/>
+<circle cx="60" cy="55" r="19" fill="url(#pip-skin)"/>
+<!-- Hat -->
+<ellipse cx="60" cy="38" rx="20" ry="5" fill="#3a2010"/>
+<rect x="46" y="22" width="28" height="18" rx="4" fill="#4a2a14"/>
+<ellipse cx="60" cy="22" rx="14" ry="4" fill="#3a1808"/>
+<!-- Eyes - crinkled happy -->
+<path d="M50 54 Q55 50 60 54" stroke="#3a1808" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M60 54 Q65 50 70 54" stroke="#3a1808" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Big smile -->
+<path d="M48 64 Q60 74 72 64" stroke="#3a1808" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Ear -->
+<circle cx="38" cy="58" r="5" fill="#c8924a"/>
+<circle cx="82" cy="58" r="5" fill="#c8924a"/>
+</svg>`,
+    lore:[
+      {
+        tier:1, title:`You just met`,
+        facts:[
+          `Pip is almost always at the bridge or the shore, fishing or watching the water.`,
+          `Always whistling. Nobody knows where the tunes come from.`,
+          `Pip has a laugh that carries half the island.`
+        ]
+      },
+      {
+        tier:2, title:`Getting to know each other`,
+        facts:[
+          `Pip has been fishing the same stretch of water since before the lighthouse had its current lamp.`,
+          `The hat has been repaired fourteen times. Pip counts.`,
+          `Pip knows every creature on the island by name and checks on them quietly without making it obvious.`
+        ]
+      },
+      {
+        tier:3, title:`Good friends`,
+        facts:[
+          `Pip grew up somewhere with colder water and came to this island because the fog reminded them of home.`,
+          `The whistling is always the same seven songs, cycling. Each one means something different about what Pip is thinking.`,
+          `Pip has never caught the same kind of fish twice but keeps trying.`
+        ]
+      },
+      {
+        tier:4, title:`Close friends`,
+        facts:[
+          `The fishing rod was made by Buzzwing as a gift. Pip didn't ask for it. It arrived one morning with a note that just said: for the water one.`,
+          `Pip can tell what the weather will be three days out just from how the bridge creaks. Has never been wrong.`,
+          `Pip doesn't sleep well when the island is unsettled. Has never explained how the island being unsettled feels different from regular unsettledness.`
+        ]
+      }
+    ]
+  },
+  {
+    id:`brin`,
+    name:`Brin`,
+    role:`Artist & Forest Wanderer`,
+    color:`#d4a0ff`,
+    svg:`<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="brin-skin" cx="45%" cy="35%" r="60%"><stop offset="0%" stop-color="#e8c8f0"/><stop offset="100%" stop-color="#b898c8"/></radialGradient></defs>
+<ellipse cx="60" cy="112" rx="26" ry="10" fill="#1a0a28" opacity="0.35"/>
+<!-- Skirt/dress flowing -->
+<path d="M42 78 Q36 110 34 125 L86 125 Q84 110 78 78 Z" fill="#6a2888"/>
+<path d="M44 80 Q38 112 36 124 L84 124 Q82 112 76 80 Z" fill="#8a3aaa"/>
+<!-- Paint smudges on dress -->
+<circle cx="48" cy="95" r="4" fill="#f0c040" opacity="0.7"/>
+<circle cx="72" cy="102" r="3" fill="#5ec4b0" opacity="0.7"/>
+<circle cx="56" cy="110" r="3.5" fill="#ff6b35" opacity="0.6"/>
+<!-- Body top -->
+<rect x="44" y="60" width="32" height="26" rx="8" fill="#7a2898"/>
+<!-- Arms -->
+<ellipse cx="36" cy="72" rx="9" ry="6" fill="#b898c8" transform="rotate(-15,36,72)"/>
+<!-- Arm holding paintbrush -->
+<ellipse cx="84" cy="68" rx="8" ry="5" fill="#b898c8" transform="rotate(25,84,68)"/>
+<line x1="90" y1="62" x2="108" y2="44" stroke="#6a4a28" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="108" cy="43" r="5" fill="#ff6b35"/>
+<!-- Paint drip from brush -->
+<line x1="108" y1="48" x2="110" y2="58" stroke="#ff6b35" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+<!-- Legs -->
+<rect x="46" y="118" width="11" height="16" rx="4" fill="#5a1a78"/>
+<rect x="63" y="118" width="11" height="16" rx="4" fill="#5a1a78"/>
+<ellipse cx="51" cy="134" rx="9" ry="4" fill="#2a1a3a"/>
+<ellipse cx="68" cy="134" rx="9" ry="4" fill="#2a1a3a"/>
+<!-- Head -->
+<circle cx="60" cy="45" r="21" fill="#b898c8"/>
+<circle cx="60" cy="43" r="18" fill="url(#brin-skin)"/>
+<!-- Big ears (slightly pointed) -->
+<path d="M38 42 L33 28 L44 36 Z" fill="#b898c8"/>
+<path d="M82 42 L87 28 L76 36 Z" fill="#b898c8"/>
+<!-- Messy hair -->
+<path d="M40 40 Q38 20 52 18 Q60 15 68 18 Q82 20 80 40" fill="#2a0a48"/>
+<path d="M40 40 Q35 32 38 25 Q44 16 54 15" fill="#3a1058" opacity="0.7"/>
+<path d="M80 40 Q85 32 82 25 Q76 16 66 15" fill="#3a1058" opacity="0.7"/>
+<!-- Hair wisps -->
+<path d="M52 16 Q48 8 52 4" stroke="#3a1058" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M60 15 Q60 6 62 2" stroke="#3a1058" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Wide curious eyes -->
+<circle cx="51" cy="44" r="7" fill="white"/>
+<circle cx="69" cy="44" r="7" fill="white"/>
+<circle cx="52" cy="45" r="4.5" fill="#2a0a48"/>
+<circle cx="70" cy="45" r="4.5" fill="#2a0a48"/>
+<circle cx="53" cy="44" r="1.8" fill="white"/>
+<circle cx="71" cy="44" r="1.8" fill="white"/>
+<!-- Paint on face - a smudge -->
+<ellipse cx="45" cy="52" rx="5" ry="3" fill="#f0c040" opacity="0.6" transform="rotate(-15,45,52)"/>
+<!-- Smile -->
+<path d="M50 56 Q60 63 70 56" stroke="#4a1a68" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>`,
+    lore:[
+      {
+        tier:1, title:`You just met`,
+        facts:[
+          `Brin makes things constantly — drawings, sculptures, arrangements of found objects.`,
+          `Has paint on at least one hand at all times. Sometimes both. Often the face.`,
+          `Very easy to find: just look for wherever something interesting is being made.`
+        ]
+      },
+      {
+        tier:2, title:`Getting to know each other`,
+        facts:[
+          `Brin has been filling sketchbooks since before she could write words. They're stacked in the forest workshop, going back years.`,
+          `She names every piece of art after how it made her feel to make it, not what it looks like.`,
+          `Brin can work in total silence for hours, then suddenly need to tell someone everything about what she made.`
+        ]
+      },
+      {
+        tier:3, title:`Good friends`,
+        facts:[
+          `Brin has tried every material on the island at least once. She says stone is honest, water is difficult, and bark remembers.`,
+          `She learned to draw by copying creatures she saw. Her earliest sketchbooks are full of Grumble.`,
+          `Brin is the reason there are colored marks on the bridge railing. She thought the bridge needed to feel more like it had been there on purpose.`
+        ]
+      },
+      {
+        tier:4, title:`Close friends`,
+        facts:[
+          `Brin is afraid of making something that can't be fixed. This is why she doesn't do sculpture much anymore — she did one that she loved and then accidentally dropped it.`,
+          `She gave Scribb the first good paper it ever had, which is why Scribb draws the same small symbol in the corner of everything: a single curved line that Brin would recognize.`,
+          `Brin has drawn Garrett without him knowing. The drawing is somewhere in the forest workshop.`
+        ]
+      }
+    ]
+  },
+  {
+    id:`wellow`,
+    name:`Wellow`,
+    role:`Lighthouse Keeper & Cook`,
+    color:`#f0c040`,
+    svg:`<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="wel-skin" cx="45%" cy="35%" r="60%"><stop offset="0%" stop-color="#f5ddb0"/><stop offset="100%" stop-color="#d4a860"/></radialGradient></defs>
+<ellipse cx="60" cy="114" rx="30" ry="11" fill="#1a1000" opacity="0.35"/>
+<!-- Wide apron/robe -->
+<path d="M30 80 Q28 115 30 128 L90 128 Q92 115 90 80 Z" fill="#e8e0c8"/>
+<path d="M34 82 Q32 115 34 126 L86 126 Q88 115 86 82 Z" fill="#f5f0e0"/>
+<!-- Apron strings -->
+<line x1="46" y1="78" x2="42" y2="96" stroke="#c8b870" stroke-width="2"/>
+<line x1="74" y1="78" x2="78" y2="96" stroke="#c8b870" stroke-width="2"/>
+<!-- Top/sweater under apron -->
+<rect x="38" y="65" width="44" height="24" rx="9" fill="#8a6020"/>
+<rect x="40" y="67" width="40" height="20" rx="7" fill="#a87828"/>
+<!-- Arms - one holding bowl, one gesturing -->
+<ellipse cx="28" cy="80" rx="10" ry="7" fill="#d4a860" transform="rotate(-10,28,80)"/>
+<!-- Bowl in hand -->
+<ellipse cx="24" cy="88" rx="12" ry="8" fill="#c8a840"/>
+<ellipse cx="24" cy="85" rx="10" ry="5" fill="#e0bc58" opacity="0.7"/>
+<!-- Steam from bowl -->
+<path d="M20 82 Q18 75 22 70" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5" style="animation:bob 2.5s ease-in-out infinite;"/>
+<path d="M26 80 Q28 73 24 68" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" style="animation:bob 2.5s ease-in-out infinite 0.5s;"/>
+<!-- Right arm gesturing warmly -->
+<ellipse cx="93" cy="78" rx="10" ry="7" fill="#d4a860" transform="rotate(15,93,78)"/>
+<!-- Legs -->
+<rect x="44" y="118" width="13" height="17" rx="5" fill="#6a4818"/>
+<rect x="63" y="118" width="13" height="17" rx="5" fill="#6a4818"/>
+<ellipse cx="50" cy="135" rx="11" ry="5" fill="#3a2808"/>
+<ellipse cx="69" cy="135" rx="11" ry="5" fill="#3a2808"/>
+<!-- Body/head (round and warm) -->
+<circle cx="60" cy="48" r="24" fill="#d4a860"/>
+<circle cx="60" cy="46" r="21" fill="url(#wel-skin)"/>
+<!-- Braided hair -->
+<path d="M38 44 Q36 28 48 22 Q60 18 72 22 Q84 28 82 44" fill="#5a3010"/>
+<path d="M36 46 Q28 36 32 24 Q36 12 48 10" stroke="#4a2008" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M84 46 Q92 36 88 24 Q84 12 72 10" stroke="#4a2008" stroke-width="3" fill="none" stroke-linecap="round"/>
+<!-- Bun on top -->
+<circle cx="60" cy="20" r="10" fill="#5a3010"/>
+<circle cx="60" cy="18" r="8" fill="#6a3818"/>
+<!-- Bun detail -->
+<path d="M54 20 Q60 15 66 20" stroke="#4a2008" stroke-width="1.5" fill="none"/>
+<!-- Warm crinkle eyes -->
+<path d="M48 46 Q54 41 60 46" stroke="#4a2008" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M60 46 Q66 41 72 46" stroke="#4a2008" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Big warm smile -->
+<path d="M46 57 Q60 68 74 57" stroke="#4a2008" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Rosy cheeks -->
+<ellipse cx="45" cy="54" rx="7" ry="5" fill="#e88080" opacity="0.35"/>
+<ellipse cx="75" cy="54" rx="7" ry="5" fill="#e88080" opacity="0.35"/>
+<!-- Ears -->
+<circle cx="36" cy="48" r="6" fill="#d4a860"/>
+<circle cx="84" cy="48" r="6" fill="#d4a860"/>
+</svg>`,
+    lore:[
+      {
+        tier:1, title:`You just met`,
+        facts:[
+          `Wellow keeps the lighthouse and cooks for anyone who comes by, whether they were expected or not.`,
+          `The kitchen always smells good. This is not an accident.`,
+          `Wellow says very little that isn't useful. When Wellow speaks, it's worth hearing.`
+        ]
+      },
+      {
+        tier:2, title:`Getting to know each other`,
+        facts:[
+          `Wellow has been the lighthouse keeper since the previous keeper left — which was a very long time ago. Wellow doesn't talk about the previous keeper.`,
+          `Every recipe Wellow makes has a story. Wellow rarely tells the whole story unprompted.`,
+          `The lighthouse has never gone dark. Not once. Not for a moment.`
+        ]
+      },
+      {
+        tier:3, title:`Good friends`,
+        facts:[
+          `Wellow came to the island from somewhere with long winters. The warmth of the kitchen isn't accidental — it's deliberate, maintained like the light.`,
+          `Wellow taught Pip to fish, Brin to make bread, and Coss to drum by ear. Never in a formal way. Just by being nearby and showing.`,
+          `Wellow keeps a small book of names of everyone who has ever eaten at the lighthouse table. It goes back many years.`
+        ]
+      },
+      {
+        tier:4, title:`Close friends`,
+        facts:[
+          `Wellow knows something bad is coming before it arrives. Not in a magical way — in the way that someone who has lived through many things can feel the shape of what's next.`,
+          `The bowl Wellow always holds was made by a creature who has since left the island. Wellow has never replaced it.`,
+          `Wellow is proud of everyone on this island and finds it hard to say so directly.`
+        ]
+      }
+    ]
+  },
+  {
+    id:`coss`,
+    name:`Coss`,
+    role:`Drummer & Tide-Watcher`,
+    color:`#ff6b35`,
+    svg:`<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="cos-skin" cx="45%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0a860"/><stop offset="100%" stop-color="#c87830"/></radialGradient></defs>
+<ellipse cx="60" cy="114" rx="27" ry="10" fill="#1a0800" opacity="0.35"/>
+<!-- Body - wide stance -->
+<rect x="36" y="68" width="48" height="50" rx="10" fill="#882010"/>
+<rect x="38" y="70" width="44" height="46" rx="8" fill="#aa2818"/>
+<!-- Vest/jacket detail -->
+<line x1="60" y1="70" x2="60" y2="116" stroke="#881808" stroke-width="2" opacity="0.5"/>
+<!-- Arms - both raised drumming -->
+<ellipse cx="28" cy="70" rx="9" ry="6" fill="#c87830" transform="rotate(-40,28,70)"/>
+<ellipse cx="92" cy="70" rx="9" ry="6" fill="#c87830" transform="rotate(40,92,70)"/>
+<!-- Drumsticks -->
+<line x1="20" y1="58" x2="36" y2="76" stroke="#8a6020" stroke-width="3" stroke-linecap="round"/>
+<line x1="100" y1="58" x2="84" y2="76" stroke="#8a6020" stroke-width="3" stroke-linecap="round"/>
+<circle cx="19" cy="56" r="4" fill="#6a4010"/>
+<circle cx="101" cy="56" r="4" fill="#6a4010"/>
+<!-- Drum (between legs) -->
+<ellipse cx="60" cy="120" rx="22" ry="10" fill="#8a3010"/>
+<rect x="38" y="108" width="44" height="14" rx="4" fill="#aa3818"/>
+<ellipse cx="60" cy="108" rx="22" ry="8" fill="#c84010"/>
+<!-- Drum detail lines -->
+<line x1="44" y1="110" x2="76" y2="110" stroke="#8a2808" stroke-width="1.5" opacity="0.5"/>
+<!-- Legs -->
+<rect x="42" y="112" width="14" height="20" rx="5" fill="#5a1008"/>
+<rect x="64" y="112" width="14" height="20" rx="5" fill="#5a1008"/>
+<ellipse cx="49" cy="132" rx="10" ry="5" fill="#2a0800"/>
+<ellipse cx="71" cy="132" rx="10" ry="5" fill="#2a0800"/>
+<!-- Head - big and expressive -->
+<circle cx="60" cy="48" r="22" fill="#c87830"/>
+<circle cx="60" cy="46" r="19" fill="url(#cos-skin)"/>
+<!-- Big bushy eyebrows -->
+<path d="M44 40 Q50 36 56 40" stroke="#4a1808" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+<path d="M64 40 Q70 36 76 40" stroke="#4a1808" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+<!-- Wide open excited eyes -->
+<circle cx="52" cy="46" r="7.5" fill="white"/>
+<circle cx="68" cy="46" r="7.5" fill="white"/>
+<circle cx="53" cy="47" r="4.5" fill="#2a0800"/>
+<circle cx="69" cy="47" r="4.5" fill="#2a0800"/>
+<circle cx="54" cy="46" r="1.8" fill="white"/>
+<circle cx="70" cy="46" r="1.8" fill="white"/>
+<!-- Huge open grin -->
+<path d="M46 58 Q60 70 74 58" fill="#2a0800"/>
+<path d="M48 60 Q60 68 72 60" fill="#cc3010"/>
+<!-- Teeth showing -->
+<rect x="52" y="61" width="7" height="5" rx="2" fill="white"/>
+<rect x="61" y="61" width="7" height="5" rx="2" fill="white"/>
+<!-- Ears -->
+<circle cx="38" cy="48" r="7" fill="#c87830"/>
+<circle cx="82" cy="48" r="7" fill="#c87830"/>
+<!-- Hair - short spiky -->
+<path d="M42 38 Q44 26 52 22 Q60 18 68 22 Q76 26 78 38" fill="#2a0808"/>
+<path d="M44 38 Q42 30 46 24" stroke="#1a0404" stroke-width="2" fill="none"/>
+<path d="M60 22 Q58 14 62 10" stroke="#1a0404" stroke-width="2.5" fill="none"/>
+<path d="M76 38 Q78 30 74 24" stroke="#1a0404" stroke-width="2" fill="none"/>
+<!-- Sound vibration lines near head -->
+<path d="M18 42 Q14 48 18 54" stroke="#ff6b35" stroke-width="1.5" fill="none" opacity="0.5" style="animation:pulse-glow 1.2s ease-in-out infinite;"/>
+<path d="M102 42 Q106 48 102 54" stroke="#ff6b35" stroke-width="1.5" fill="none" opacity="0.5" style="animation:pulse-glow 1.2s ease-in-out infinite 0.4s;"/>
+</svg>`,
+    lore:[
+      {
+        tier:1, title:`You just met`,
+        facts:[
+          `Coss drums constantly — on drums, on rocks, on the bridge, on whatever is available.`,
+          `Has a laugh you can hear from most of the island.`,
+          `Enthusiastic about nearly everything. The exceptions are few and surprising.`
+        ]
+      },
+      {
+        tier:2, title:`Getting to know each other`,
+        facts:[
+          `Coss watches the tide to set the rhythm. Different tides produce different drumming. The island has learned to tell the time by it.`,
+          `Has made instruments out of everything. The best one — a set of tuned stones — is hidden somewhere on the bridge for safekeeping.`,
+          `Coss gets very quiet before big weather. The drumming stops and the quiet is its own kind of warning.`
+        ]
+      },
+      {
+        tier:3, title:`Good friends`,
+        facts:[
+          `Coss grew up in a loud family and uses noise to feel safe. The drumming is always present because silence used to mean something bad was happening.`,
+          `Has perfect pitch and has never told anyone, because it would change how people listen to the drumming.`,
+          `Coss taught Roarette the concept of dynamics — loud on purpose is different from just loud. Roarette is still working on it.`
+        ]
+      },
+      {
+        tier:4, title:`Close friends`,
+        facts:[
+          `Coss misses someone who used to drum with them. There's a second set of drum marks on the rock near the beach from when they played together. Coss keeps those marks clean.`,
+          `The quiet before a storm isn't just watching weather — it's a private ritual that has something to do with the person who left.`,
+          `Coss can hear when you're upset before you say anything. The drumming changes. It becomes something more like company.`
+        ]
+      }
+    ]
+  },
+  {
+    id:`lumen`,
+    name:`The Lumen`,
+    role:`Island Spirit & Witness`,
+    color:`#a0d8f0`,
+    svg:`<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="lum-core" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="rgba(220,240,255,0.9)"/><stop offset="50%" stop-color="rgba(160,210,240,0.6)"/><stop offset="100%" stop-color="rgba(80,160,220,0.2)"/></radialGradient>
+<radialGradient id="lum-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a0d8f0" stop-opacity="0.3"/><stop offset="100%" stop-color="#a0d8f0" stop-opacity="0"/></radialGradient>
+</defs>
+<circle cx="60" cy="70" r="50" fill="url(#lum-glow)" style="animation:breathe 4s ease-in-out infinite;"/>
+<!-- Outer drift trails -->
+<ellipse cx="60" cy="72" rx="42" ry="48" fill="rgba(160,216,240,0.06)" stroke="rgba(200,235,255,0.15)" stroke-width="1.5" style="animation:breathe 5s ease-in-out infinite;"/>
+<ellipse cx="60" cy="72" rx="35" ry="40" fill="rgba(180,225,248,0.08)" stroke="rgba(210,240,255,0.22)" stroke-width="1"/>
+<ellipse cx="60" cy="72" rx="26" ry="31" fill="rgba(200,235,255,0.14)" stroke="rgba(220,245,255,0.38)" stroke-width="1"/>
+<!-- Core body -->
+<ellipse cx="60" cy="72" rx="18" ry="22" fill="url(#lum-core)"/>
+<ellipse cx="60" cy="70" rx="12" ry="15" fill="rgba(240,250,255,0.35)"/>
+<!-- Star eyes -->
+<path d="M50 68 L51.5 63 L53 68 L58 69.5 L53 71 L51.5 76 L50 71 L45 69.5 Z" fill="white" opacity="0.95"/>
+<path d="M67 68 L68.5 63 L70 68 L75 69.5 L70 71 L68.5 76 L67 71 L62 69.5 Z" fill="white" opacity="0.95"/>
+<!-- Gentle mouth -->
+<path d="M53 82 Q60 87 67 82" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+<!-- Orbiting particles -->
+<circle r="4" fill="rgba(200,235,255,0.85)" style="animation:orbit 4s linear infinite;transform-origin:60px 70px;"/>
+<circle r="3" fill="rgba(180,220,248,0.75)" style="animation:orbit 6s linear infinite reverse 1.5s;transform-origin:60px 70px;"/>
+<circle r="2.5" fill="rgba(220,245,255,0.65)" style="animation:orbit 5s linear infinite 3s;transform-origin:60px 70px;"/>
+<circle r="2" fill="rgba(160,210,240,0.6)" style="animation:orbit 3.5s linear infinite 0.8s;transform-origin:60px 70px;"/>
+<!-- Trailing wisps below -->
+<path d="M52 92 Q48 108 50 120" stroke="rgba(180,220,248,0.3)" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M60 94 Q60 112 58 124" stroke="rgba(200,235,255,0.25)" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M68 92 Q72 108 70 120" stroke="rgba(180,220,248,0.3)" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>`,
+    lore:[
+      {
+        tier:1, title:`You just met`,
+        facts:[
+          `The Lumen floats. It has no fixed home on the island. It goes where it's needed.`,
+          `It doesn't speak in words exactly — more in feelings and light.`,
+          `Every creature on the island has met the Lumen at least once. It seems to find you.`
+        ]
+      },
+      {
+        tier:2, title:`Getting to know each other`,
+        facts:[
+          `The Lumen has been on the island longer than the lighthouse. Maybe longer than the island itself.`,
+          `Its light changes color depending on what it's thinking. Blue is calm. Gold is pleased. Something between them means it's been listening.`,
+          `The Lumen never asks questions. It just gets close and waits. Creatures find themselves answering questions they hadn't realized they were asking.`
+        ]
+      },
+      {
+        tier:3, title:`Good friends`,
+        facts:[
+          `The Lumen remembers everyone who has ever cried on this island. Not as something sad — as something it considers important to hold.`,
+          `When new creatures arrive on the island, the Lumen finds them first. Always. Nobody knows how it knows.`,
+          `The Lumen's light goes out entirely for a few seconds once a year, always at the same time. Nobody knows why. The Lumen doesn't explain.`
+        ]
+      },
+      {
+        tier:4, title:`Close friends`,
+        facts:[
+          `The Lumen chose the island. It was somewhere else first. It left to come here specifically. The reason is in the light if you know how to read it.`,
+          `When the Lumen is near you and its light pulses — slow and steady — it means it has decided you are safe. This doesn't happen quickly.`,
+          `The Lumen has been watching Garrett. The gold in its light is deliberate.`
+        ]
+      }
+    ]
+  },
+  {
+    id:`traveler`,
+    name:`The Traveler`,
+    role:`Visitor from Far Away`,
+    color:`#8ba7c0`,
+    svg:`<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="trav-skin" cx="45%" cy="35%" r="60%"><stop offset="0%" stop-color="#e0c8a8"/><stop offset="100%" stop-color="#b89870"/></radialGradient></defs>
+<ellipse cx="60" cy="113" rx="28" ry="10" fill="#0a1018" opacity="0.35"/>
+<!-- Long travel cloak -->
+<path d="M30 72 Q26 112 28 128 L92 128 Q94 112 90 72 Z" fill="#2a3848"/>
+<path d="M34 74 Q30 112 32 126 L88 126 Q90 112 86 74 Z" fill="#364454"/>
+<!-- Cloak weathering/patches -->
+<path d="M35 95 Q40 92 42 98 Q38 102 35 95 Z" fill="#2a3848" opacity="0.5"/>
+<path d="M78 88 Q82 86 83 92 Q79 94 78 88 Z" fill="#2a3848" opacity="0.5"/>
+<!-- Layers under cloak - worn traveling clothes -->
+<rect x="44" y="64" width="32" height="22" rx="7" fill="#4a5060"/>
+<!-- Worn scarf around neck -->
+<path d="M42 68 Q60 72 78 68 Q80 74 60 76 Q40 74 42 68 Z" fill="#8a4828"/>
+<!-- Large pack/bag on side -->
+<rect x="80" y="70" width="24" height="36" rx="6" fill="#5a4028"/>
+<rect x="82" y="72" width="20" height="32" rx="4" fill="#6a5030"/>
+<!-- Pack straps and buckles -->
+<line x1="82" y1="74" x2="82" y2="100" stroke="#4a3018" stroke-width="1.5"/>
+<rect x="80" y="83" width="6" height="4" rx="1" fill="#c8a030"/>
+<!-- Arm holding walking staff -->
+<ellipse cx="28" cy="78" rx="10" ry="6" fill="#b89870" transform="rotate(-20,28,78)"/>
+<line x1="22" y1="70" x2="18" y2="130" stroke="#6a4a20" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="18" cy="125" rx="6" ry="3" fill="#4a3010"/>
+<!-- Staff top carved detail -->
+<circle cx="22" cy="68" r="5" fill="#8a6028"/>
+<path d="M19 66 Q22 62 25 66" stroke="#6a4820" stroke-width="1.5" fill="none"/>
+<!-- Other arm -->
+<ellipse cx="92" cy="78" rx="9" ry="6" fill="#b89870" transform="rotate(15,92,78)"/>
+<!-- Legs/boots (travel worn) -->
+<rect x="42" y="118" width="14" height="17" rx="5" fill="#3a4050"/>
+<rect x="64" y="118" width="14" height="17" rx="5" fill="#3a4050"/>
+<ellipse cx="49" cy="135" rx="12" ry="5" fill="#2a1808"/>
+<ellipse cx="71" cy="135" rx="12" ry="5" fill="#2a1808"/>
+<!-- Dust/wear on boots -->
+<ellipse cx="42" cy="133" rx="6" ry="3" fill="#5a4020" opacity="0.4"/>
+<!-- Head -->
+<circle cx="60" cy="46" r="22" fill="#b89870"/>
+<circle cx="60" cy="44" r="19" fill="url(#trav-skin)"/>
+<!-- Wide brim travel hat -->
+<ellipse cx="60" cy="27" rx="26" ry="6" fill="#2a2010"/>
+<rect x="46" y="12" width="28" height="17" rx="4" fill="#363020"/>
+<ellipse cx="60" cy="12" rx="14" ry="4" fill="#2a2010"/>
+<!-- Hat worn/weathered band -->
+<rect x="46" y="26" width="28" height="4" fill="#8a6020" opacity="0.7"/>
+<!-- Map sticking out of hat band -->
+<path d="M74 24 L78 10 L82 24" fill="#e8d8a0" opacity="0.7"/>
+<!-- Eyes - observant, slightly tired -->
+<circle cx="51" cy="46" r="7" fill="white"/>
+<circle cx="69" cy="46" r="7" fill="white"/>
+<circle cx="52" cy="47" r="4.5" fill="#2a1808"/>
+<circle cx="70" cy="47" r="4.5" fill="#2a1808"/>
+<circle cx="53" cy="46" r="1.8" fill="white"/>
+<circle cx="71" cy="46" r="1.8" fill="white"/>
+<!-- Travel-weary expression - slight bags under eyes -->
+<path d="M46 50 Q51 53 56 50" stroke="#b89870" stroke-width="1" fill="none" opacity="0.5"/>
+<path d="M64 50 Q69 53 74 50" stroke="#b89870" stroke-width="1" fill="none" opacity="0.5"/>
+<!-- Gentle uncertain smile -->
+<path d="M50 57 Q60 63 70 57" stroke="#4a2808" stroke-width="2" fill="none" stroke-linecap="round"/>
+<!-- Stubble -->
+<circle cx="48" cy="56" r="1" fill="#9a7848" opacity="0.5"/>
+<circle cx="52" cy="58" r="1" fill="#9a7848" opacity="0.45"/>
+<circle cx="68" cy="56" r="1" fill="#9a7848" opacity="0.5"/>
+<circle cx="72" cy="58" r="1" fill="#9a7848" opacity="0.45"/>
+<!-- Ears -->
+<circle cx="38" cy="46" r="6" fill="#b89870"/>
+<circle cx="82" cy="46" r="6" fill="#b89870"/>
+</svg>`,
+    lore:[
+      {
+        tier:1, title:`You just arrived`,
+        facts:[
+          `The Traveler arrived by ship. They're not from this island, or any island nearby.`,
+          `Always carrying a pack and a walking staff. Seems to be going somewhere or just came from somewhere.`,
+          `The Traveler is kind. Uncertain. Looking at everything very carefully, like they're deciding whether to stay.`
+        ]
+      },
+      {
+        tier:2, title:`Getting to know each other`,
+        facts:[
+          `The Traveler has been to many islands. This one is different, they say, but won't say how yet.`,
+          `They keep a journal that is almost full. Started in a place much colder than here.`,
+          `The Traveler doesn't sleep inside if they can help it. Old habit from long travel.`
+        ]
+      },
+      {
+        tier:3, title:`Good friends`,
+        facts:[
+          `The Traveler left somewhere they loved because something ended there. They don't say what. The packed bag suggests they thought they'd leave again quickly.`,
+          `They've been here longer than expected. The bag is still packed but they stopped checking if the ships come.`,
+          `The Traveler has started drawing maps of the island. Small ones, obsessively detailed.`
+        ]
+      },
+      {
+        tier:4, title:`Close friends`,
+        facts:[
+          `The Traveler is staying. They made this decision quietly, without announcement. Wellow noticed first and put a permanent place at the table.`,
+          `The journal has a new entry: a list of things this island has that no other place did. It's longer than any other list in the journal.`,
+          `The Traveler's real name is not what they gave at first. The island knows now. It doesn't matter. They belong here.`
+        ]
+      }
+    ]
+  }
+];
+
+// Track resident encounter counts
+var residentEncounters = {};
+
+function initResidents() {
+  RESIDENTS.forEach(function(r) {
+    if (!residentEncounters[r.id]) residentEncounters[r.id] = 0;
+  });
+}
+
+function getResidentTier(id) {
+  var enc = residentEncounters[id] || 0;
+  // Tier 1: always. Tier 2: 3+ encounters. Tier 3: 8+ encounters. Tier 4: 15+ encounters
+  if (enc >= 15) return 4;
+  if (enc >= 8) return 3;
+  if (enc >= 3) return 2;
+  return 1;
+}
+
+function countResidentMentions(encText) {
+  // Count how many residents appear in encounter text
+  var map = {pip:'pip', brin:'brin', wellow:'wellow', coss:'coss', lumen:'lumen', traveler:'traveler'};
+  Object.keys(map).forEach(function(name) {
+    var re = new RegExp(name, 'gi');
+    if (re.test(encText)) {
+      if (!residentEncounters[map[name]]) residentEncounters[map[name]] = 0;
+      residentEncounters[map[name]]++;
+    }
+  });
+}
+
+function showResidents() {
+  var list = document.getElementById('residents-list');
+  list.innerHTML = '';
+  RESIDENTS.forEach(function(r) {
+    var tier = getResidentTier(r.id);
+    var enc = residentEncounters[r.id] || 0;
+    var tierData = r.lore[tier - 1];
+    var isMaxed = tier >= 4;
+    var card = document.createElement('div');
+    card.className = 'res-card';
+    card.style.setProperty('border-color', 'rgba(' + hexToRgb(r.color) + ',.2)');
+    card.innerHTML =
+      '<div class="res-portrait">' + r.svg + '</div>' +
+      '<div class="res-info">' +
+        '<div class="res-name">' + r.name + '</div>' +
+        '<div class="res-role" style="color:' + r.color + ';">' + r.role + '</div>' +
+        '<div class="res-preview">' + tierData.facts[0] + '</div>' +
+        '<div class="res-tier-badge' + (isMaxed ? ' maxed' : '') + '">' +
+          (isMaxed ? '&#x1F49B; ' : '&#x1F90D; ') +
+          tierData.title +
+        '</div>' +
+      '</div>';
+    (function(rid) { card.onclick = function() { showResidentDetail(rid); }; })(r.id);
+    list.appendChild(card);
+  });
+  show('s-residents');
+}
+
+function showResidentDetail(id) {
+  var r = null;
+  for (var i = 0; i < RESIDENTS.length; i++) if (RESIDENTS[i].id === id) { r = RESIDENTS[i]; break; }
+  if (!r) return;
+  var tier = getResidentTier(r.id);
+  var enc = residentEncounters[r.id] || 0;
+
+  document.getElementById('rdet-name').textContent = r.name;
+  var body = document.getElementById('rdet-body');
+  body.innerHTML = '';
+
+  // Portrait + role + current tier
+  var topDiv = document.createElement('div');
+  topDiv.className = 'rdet-top';
+  topDiv.innerHTML =
+    '<div class="rdet-portrait-big">' + r.svg + '</div>' +
+    '<div style="flex:1;">' +
+      '<div class="rdet-role" style="color:' + r.color + ';">' + r.role + '</div>' +
+      '<div class="rdet-tier-label">' + r.lore[tier-1].title + '</div>' +
+      '<div style="font-size:12px;color:rgba(255,255,255,.35);">Encountered ' + enc + ' time' + (enc === 1 ? '' : 's') + '</div>' +
+    '</div>';
+  body.appendChild(topDiv);
+
+  // Show unlocked tiers
+  for (var t = 0; t < tier; t++) {
+    var td = r.lore[t];
+    var group = document.createElement('div');
+    group.className = 'fact-group';
+    var factsHtml = '<div class="fact-group-title">' + td.title + '</div>';
+    td.facts.forEach(function(fact) {
+      factsHtml += '<div class="fact-item">' + fact + '</div>';
+    });
+    group.innerHTML = factsHtml;
+    body.appendChild(group);
+  }
+
+  // Show locked tiers as hints
+  var thresholds = [0,3,8,15];
+  for (var t2 = tier; t2 < 4; t2++) {
+    var needed = thresholds[t2];
+    var locked = document.createElement('div');
+    locked.className = 'fact-group';
+    locked.style.opacity = '0.5';
+    locked.innerHTML =
+      '<div class="fact-group-title">&#x1F512; ' + r.lore[t2].title + '</div>' +
+      '<div class="fact-locked">Spend more time with ' + r.name + ' to learn more.<br>' +
+      (enc < needed ? (needed - enc) + ' more encounter' + (needed - enc === 1 ? '' : 's') + ' needed.' : '') + '</div>';
+    body.appendChild(locked);
+  }
+
+  show('s-resident-detail');
+}
+
+function hexToRgb(hex) {
+  hex = hex.replace('#','');
+  var r = parseInt(hex.slice(0,2),16);
+  var g = parseInt(hex.slice(2,4),16);
+  var b = parseInt(hex.slice(4,6),16);
+  return r + ',' + g + ',' + b;
+}
+
+function spawnTitleStars() {
+  var container = document.getElementById('title-stars');
+  if (!container) return;
+  var count = 60;
+  for (var i = 0; i < count; i++) {
+    var s = document.createElement('div');
+    s.className = 'tstar' + (Math.random() > 0.5 ? ' pulse' : '');
+    var size = Math.random() < 0.7 ? 1.5 : (Math.random() < 0.85 ? 2.5 : 3.5);
+    s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;' +
+      'top:' + (Math.random() * 65) + '%;' +
+      'left:' + (Math.random() * 100) + '%;' +
+      'opacity:' + (0.35 + Math.random() * 0.6) + ';' +
+      '--dur:' + (2 + Math.random() * 4) + 's;' +
+      '--del:' + (Math.random() * 5) + 's;';
+    container.appendChild(s);
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════
 // ITEM DEFINITIONS
 // ═══════════════════════════════════════════════════════════════
@@ -2735,6 +3673,7 @@ var runIdx = 0;
 var RUN_LEN = 6;
 var seenIds = new Set();
 var pendingDisc = null;
+var residentEncounters = {};
 var pendingFriendship = [];
 var detailId = null;
 var currentFam = `all`;
@@ -2753,10 +3692,12 @@ function loadState() {
       lucky_sparks = s.lucky_sparks || 0;
       run_count = s.run_count || 0;
       seenIds = new Set(s.seenIds || []);
+      residentEncounters = s.residentEncounters || {};
     }
   } catch(e) {}
   CREATURES.forEach(function(c) {
-    if (!collection[c.id]) collection[c.id] = {found:false, nick:``};
+    if (!collection[c.id]) collection[c.id] = {found:false, nick:``, friendship:0};
+    if (collection[c.id].friendship === undefined) collection[c.id].friendship = 0;
   });
 }
 
@@ -2765,7 +3706,7 @@ function saveState() {
     localStorage.setItem(`waystone_v3`, JSON.stringify({
       collection:collection, inventory:inventory,
       lucky_sparks:lucky_sparks, run_count:run_count,
-      seenIds:[...seenIds]
+      seenIds:[...seenIds], residentEncounters:residentEncounters
     }));
   } catch(e) {}
 }
@@ -2774,6 +3715,9 @@ function saveState() {
 // SCREEN
 // ═══════════════════════════════════════════════════════════════
 function show(id) {
+  // Clean up any lingering ceremony overlays
+  var sil = document.getElementById('disc-sil-overlay');
+  if (sil && sil.parentNode) sil.parentNode.removeChild(sil);
   var screens = document.querySelectorAll(`.screen`);
   for (var i = 0; i < screens.length; i++) screens[i].classList.remove(`active`);
   document.getElementById(id).classList.add(`active`);
@@ -2897,6 +3841,8 @@ function renderEncounter() {
 function makeChoice(idx) {
   var enc = runEncounters[runIdx];
   var c = enc.choices[idx];
+  // Track resident encounters
+  countResidentMentions(enc.text + ' ' + c.s);
 
   // Update axes
   axes[c.ax] = Math.min(100, Math.max(10, axes[c.ax] + c.d));
@@ -3036,6 +3982,9 @@ function showDiscovery(creature) {
   document.getElementById(`disc-input`).value = ``;
   document.getElementById(`disc-input`).dataset.id = creature.id;
   document.getElementById(`disc-new-label`).textContent = creature.rare ? `✨ RARE CREATURE FOUND` : `✨ NEW CREATURE FOUND`;
+  // Also store id on the save button as a fallback
+  var saveBtn = document.getElementById(`btn-save-disc`);
+  if (saveBtn) saveBtn.dataset.creatureId = creature.id;
 
   show(`s-discovery`);
 
@@ -3102,22 +4051,46 @@ function spawnBurst(color, type) {
   }
 }
 
-function saveDiscovery() {
-  var input = document.getElementById(`disc-input`);
-  var id = input.dataset.id;
-  collection[id].found = true;
-  collection[id].nick = input.value.trim();
-  var creature = CREATURES.find(function(c) { return c.id === id; });
-  if (creature && creature.rare) {
-    lucky_sparks++;
-  }
-  saveState();
+
+function skipDiscovery() {
   if (pendingDisc && pendingDisc.length > 0) {
     showDiscovery(pendingDisc.shift());
   } else if (pendingFriendship && pendingFriendship.length > 0) {
     showFriendship(pendingFriendship.shift());
   } else {
-    showRunEnd(true, creature ? creature.name : ``);
+    showRunEnd(false);
+  }
+}
+function saveDiscovery() {
+  try {
+    var input = document.getElementById(`disc-input`);
+    var id = input ? input.dataset.id : ``;
+    // Fallback: try the save button's data attr
+    if (!id) {
+      var btn = document.getElementById(`btn-save-disc`);
+      if (btn) id = btn.dataset.creatureId || ``;
+    }
+    if (!id) { showRunEnd(false); return; }
+    // Ensure collection entry exists
+    if (!collection[id]) collection[id] = {found:false, nick:``, friendship:0};
+    collection[id].found = true;
+    collection[id].nick = input.value ? input.value.trim() : ``;
+    var creature = null;
+    for (var i = 0; i < CREATURES.length; i++) {
+      if (CREATURES[i].id === id) { creature = CREATURES[i]; break; }
+    }
+    if (creature && creature.rare) lucky_sparks++;
+    saveState();
+    if (pendingDisc && pendingDisc.length > 0) {
+      showDiscovery(pendingDisc.shift());
+    } else if (pendingFriendship && pendingFriendship.length > 0) {
+      showFriendship(pendingFriendship.shift());
+    } else {
+      showRunEnd(true, creature ? creature.name : ``);
+    }
+  } catch(e) {
+    console.error('saveDiscovery error:', e);
+    showRunEnd(false);
   }
 }
 
@@ -3323,14 +4296,20 @@ function renderInventory() {
 window.onload = function() {
   loadState();
 
+  spawnTitleStars();
+  initResidents();
   document.getElementById(`btn-explore`).onclick = startExplore;
   document.getElementById(`btn-collection`).onclick = showCompendium;
   document.getElementById(`btn-inventory`).onclick = showInventory;
+  document.getElementById('btn-residents').onclick = showResidents;
+  document.getElementById('btn-res-back').onclick = function(){ show('s-title'); };
+  document.getElementById('btn-rdet-back').onclick = showResidents;
   document.getElementById(`btn-nav-coll`).onclick = showCompendium;
   document.getElementById(`btn-nav-inv`).onclick = showInventory;
   document.getElementById(`btn-nav-home`).onclick = function() { show(`s-title`); };
   document.getElementById(`btn-next`).onclick = nextEncounter;
   document.getElementById(`btn-save-disc`).onclick = saveDiscovery;
+  document.getElementById('btn-disc-skip').onclick = skipDiscovery;
   document.getElementById(`btn-comp-back`).onclick = function() { show(`s-title`); };
   document.getElementById(`btn-nick-save`).onclick = saveNick;
   document.getElementById(`btn-detail-back`).onclick = showCompendium;
