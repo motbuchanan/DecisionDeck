@@ -8,25 +8,30 @@
 <style>
 :root {
   --black:  #231f20;
-  --dark:   #141112;
-  --dark2:  #1a1718;
-  --mid:    #252122;
-  --mid2:   #2e2a2b;
-  --muted:  #7a7475;
+  --dark:   #0d0b0c;
+  --dark2:  #141112;
+  --mid:    #1e1b1c;
+  --mid2:   #252122;
+  --mid3:   #2c2829;
+  --muted:  #6e696a;
   --muted2: #9e9a9b;
   --green:  #b0d235;
   --green2: #c8e84e;
-  --gd:     rgba(176,210,53,0.12);
-  --gg:     rgba(176,210,53,0.3);
+  --gd:     rgba(176,210,53,0.10);
+  --gg:     rgba(176,210,53,0.28);
   --white:  #ffffff;
   --neg:    #e05a4e;
   --neu:    #e8a838;
   --cascade-color: #f0a030;
-  --cascade-glow:  rgba(240,160,48,0.25);
+  --cascade-glow:  rgba(240,160,48,0.22);
   --constrained-color: #e05a4e;
-  --constrained-glow:  rgba(224,90,78,0.22);
+  --constrained-glow:  rgba(224,90,78,0.20);
+  --trust-color: #38bdf8;
+  --momentum-color: #fb923c;
+  --clarity-color: #a78bfa;
+  --adapt-color: #e8a838;
   --rad:  8px;
-  --rad2: 12px;
+  --rad2: 14px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{
@@ -37,148 +42,169 @@ body{
 body::before{
   content:'';position:fixed;inset:0;
   background:
-    radial-gradient(ellipse 70% 50% at 50% -5%,rgba(176,210,53,0.04) 0%,transparent 60%),
-    radial-gradient(ellipse 40% 60% at 90% 100%,rgba(176,210,53,0.025) 0%,transparent 50%);
+    radial-gradient(ellipse 80% 40% at 50% 0%,rgba(176,210,53,0.035) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 70% at 95% 100%,rgba(176,210,53,0.018) 0%,transparent 45%),
+    radial-gradient(ellipse 30% 40% at 5% 60%,rgba(56,189,248,0.012) 0%,transparent 40%);
   pointer-events:none;z-index:0;
 }
 .screen{display:none;min-height:100dvh;flex-direction:column;position:relative;z-index:1;}
 .screen.active{display:flex;}
-.app{max-width:440px;margin:0 auto;padding:18px 16px 36px;min-height:100dvh;display:flex;flex-direction:column;width:100%;}
+.app{max-width:440px;margin:0 auto;padding:16px 16px 36px;min-height:100dvh;display:flex;flex-direction:column;width:100%;}
 
 /* HEADER */
-.deck-header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 16px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:18px;}
-.brand{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:800;letter-spacing:3.5px;text-transform:uppercase;color:var(--muted);}
+.deck-header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 14px;border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:16px;}
+.brand{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:800;letter-spacing:3.5px;text-transform:uppercase;color:var(--muted);}
 .brand span{color:var(--green);}
-.v3-pill{display:inline-block;font-size:0.52rem;font-weight:900;letter-spacing:1.5px;padding:2px 6px;border-radius:3px;background:linear-gradient(135deg,var(--green),#8ab818);color:var(--black);margin-left:6px;vertical-align:middle;box-shadow:0 0 10px var(--gg);}
-.header-right{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:1px;color:var(--muted);}
+.v3-pill{display:inline-block;font-size:0.5rem;font-weight:900;letter-spacing:1.5px;padding:2px 6px;border-radius:3px;background:linear-gradient(135deg,var(--green),#8ab818);color:var(--black);margin-left:6px;vertical-align:middle;box-shadow:0 0 10px var(--gg);}
+.header-right{font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:1px;color:var(--muted);}
 
 /* START SCREEN */
 #screen-start .app{justify-content:flex-start;}
-.start-icon{font-size:2rem;margin-bottom:14px;width:58px;height:58px;background:rgba(255,255,255,0.03);border:1px solid rgba(176,210,53,0.18);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(176,210,53,0.06);}
-.start-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
-.start-title{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;line-height:1.1;color:var(--white);margin-bottom:8px;}
-.start-desc{font-size:0.83rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:18px;}
-.start-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
-.meta-tag{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 9px;border-radius:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:var(--muted);}
-.meta-cascade{background:rgba(240,160,48,0.1);border-color:rgba(240,160,48,0.22);color:var(--cascade-color);}
-.meta-constrained{background:rgba(224,90,78,0.1);border-color:rgba(224,90,78,0.2);color:var(--constrained-color);}
-.meta-highlight{background:var(--gd);border-color:rgba(176,210,53,0.2);color:var(--green);}
-.axes-row{display:flex;gap:7px;margin-bottom:18px;}
-.axis-pill{flex:1;text-align:center;background:var(--mid);border:1px solid rgba(255,255,255,0.06);border-radius:var(--rad);padding:9px 5px;}
-.ap-name{font-family:'Barlow Condensed',sans-serif;font-size:0.76rem;font-weight:700;margin-bottom:2px;}
-.ap-desc{font-size:0.6rem;color:var(--muted);line-height:1.4;}
+.start-icon{font-size:1.8rem;margin-bottom:12px;width:52px;height:52px;background:rgba(176,210,53,0.04);border:1px solid rgba(176,210,53,0.14);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(176,210,53,0.06);}
+.start-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:7px;opacity:0.8;}
+.start-title{font-family:'Barlow Condensed',sans-serif;font-size:2.1rem;font-weight:900;line-height:1.05;color:var(--white);margin-bottom:8px;letter-spacing:-0.5px;}
+.start-desc{font-size:0.82rem;color:rgba(255,255,255,0.45);line-height:1.7;margin-bottom:16px;}
+.start-meta{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;}
+.meta-tag{font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 9px;border-radius:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);color:var(--muted);}
+.meta-cascade{background:rgba(240,160,48,0.08);border-color:rgba(240,160,48,0.2);color:var(--cascade-color);}
+.meta-constrained{background:rgba(224,90,78,0.08);border-color:rgba(224,90,78,0.18);color:var(--constrained-color);}
+.meta-highlight{background:var(--gd);border-color:rgba(176,210,53,0.18);color:var(--green);}
+.axes-row{display:flex;gap:6px;margin-bottom:16px;}
+.axis-pill{flex:1;text-align:center;background:var(--mid);border:1px solid rgba(255,255,255,0.05);border-radius:var(--rad);padding:10px 5px;position:relative;overflow:hidden;}
+.axis-pill::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;}
+.axis-pill:nth-child(1)::after{background:linear-gradient(90deg,transparent,rgba(56,189,248,0.3),transparent);}
+.axis-pill:nth-child(2)::after{background:linear-gradient(90deg,transparent,rgba(251,146,60,0.3),transparent);}
+.axis-pill:nth-child(3)::after{background:linear-gradient(90deg,transparent,rgba(167,139,250,0.3),transparent);}
+.axis-pill:nth-child(4)::after{background:linear-gradient(90deg,transparent,rgba(232,168,56,0.3),transparent);}
+.ap-name{font-family:'Barlow Condensed',sans-serif;font-size:0.74rem;font-weight:800;margin-bottom:2px;}
+.ap-desc{font-size:0.57rem;color:var(--muted);line-height:1.4;}
 
-.privacy-block{background:rgba(176,210,53,0.05);border:1px solid rgba(176,210,53,0.14);border-radius:var(--rad);padding:11px 13px;margin-bottom:18px;display:flex;gap:9px;align-items:flex-start;}
-.privacy-icon{font-size:0.9rem;flex-shrink:0;margin-top:1px;}
-.privacy-text{font-size:0.72rem;color:rgba(255,255,255,0.42);line-height:1.55;}
-.privacy-text strong{color:rgba(255,255,255,0.7);font-weight:600;}
+.privacy-block{background:rgba(176,210,53,0.04);border:1px solid rgba(176,210,53,0.1);border-radius:var(--rad);padding:10px 12px;margin-bottom:16px;display:flex;gap:9px;align-items:flex-start;}
+.privacy-icon{font-size:0.85rem;flex-shrink:0;margin-top:1px;}
+.privacy-text{font-size:0.7rem;color:rgba(255,255,255,0.38);line-height:1.55;}
+.privacy-text strong{color:rgba(255,255,255,0.62);font-weight:600;}
 
-.start-btn{width:100%;padding:13px;background:var(--green);color:var(--black);border:none;border-radius:var(--rad);font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;box-shadow:0 0 20px rgba(176,210,53,0.2);}
-.start-btn:hover{background:var(--green2);box-shadow:0 0 30px rgba(176,210,53,0.32);}
+.start-btn{width:100%;padding:13px;background:var(--green);color:var(--black);border:none;border-radius:var(--rad);font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;box-shadow:0 0 24px rgba(176,210,53,0.18);}
+.start-btn:hover{background:var(--green2);box-shadow:0 0 36px rgba(176,210,53,0.3);}
 
 /* PROGRESS */
-.progress-wrap{margin-bottom:14px;display:flex;align-items:center;gap:10px;}
-.progress-track{flex:1;height:2px;background:rgba(255,255,255,0.07);border-radius:1px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,#8ab818,var(--green));border-radius:1px;transition:width 0.5s ease;box-shadow:0 0 8px var(--gg);}
-.progress-label{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1px;color:var(--muted);min-width:36px;text-align:right;}
+.progress-wrap{margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.progress-track{flex:1;height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#7ab014,var(--green));border-radius:1px;transition:width 0.6s ease;box-shadow:0 0 8px var(--gg);}
+.progress-label{font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:1px;color:var(--muted);min-width:36px;text-align:right;}
 
 /* AXIS BAR */
-.axis-bar{display:flex;background:var(--mid);border:1px solid rgba(255,255,255,0.06);border-radius:var(--rad);overflow:hidden;margin-bottom:14px;}
-.axis-item{flex:1;text-align:center;padding:9px 5px;}
-.axis-item+.axis-item{border-left:1px solid rgba(255,255,255,0.06);}
-.ax-label{font-family:'Barlow Condensed',sans-serif;font-size:0.55rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
-.ax-val{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:900;line-height:1;}
+.axis-bar{display:flex;background:var(--mid);border:1px solid rgba(255,255,255,0.05);border-radius:var(--rad);overflow:hidden;margin-bottom:12px;}
+.axis-item{flex:1;text-align:center;padding:9px 4px;position:relative;}
+.axis-item+.axis-item{border-left:1px solid rgba(255,255,255,0.04);}
+.ax-label{font-family:'Barlow Condensed',sans-serif;font-size:0.52rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.ax-val{font-family:'Barlow Condensed',sans-serif;font-size:1.18rem;font-weight:900;line-height:1;}
+@keyframes numPop{0%{transform:scale(1);}40%{transform:scale(1.25);}100%{transform:scale(1);}}
+.ax-val.popped{animation:numPop 0.28s ease;}
+
+/* CALLBACK BANNER */
+.callback-banner{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-left:2px solid rgba(176,210,53,0.4);border-radius:var(--rad);padding:9px 12px;margin-bottom:10px;font-size:0.75rem;color:rgba(255,255,255,0.38);line-height:1.5;font-style:italic;}
+.callback-banner strong{color:rgba(176,210,53,0.7);font-style:normal;font-weight:600;}
 
 /* CARDS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-@keyframes cardFlash{0%{box-shadow:0 0 0 0 rgba(176,210,53,0);}40%{box-shadow:0 0 0 3px rgba(176,210,53,0.3),0 0 40px rgba(176,210,53,0.1);}100%{box-shadow:0 0 0 0 rgba(176,210,53,0);}}
-@keyframes cascadeFlash{0%{box-shadow:0 0 0 0 rgba(240,160,48,0);}40%{box-shadow:0 0 0 3px rgba(240,160,48,0.5),0 0 50px rgba(240,160,48,0.14);}100%{box-shadow:0 0 0 1px rgba(240,160,48,0.18);}}
-@keyframes constrainedFlash{0%{box-shadow:0 0 0 0 rgba(224,90,78,0);}40%{box-shadow:0 0 0 3px rgba(224,90,78,0.5),0 0 50px rgba(224,90,78,0.16);}100%{box-shadow:0 0 0 1px rgba(224,90,78,0.18);}}
-@keyframes interruptIn{from{opacity:0;transform:scale(0.97);}to{opacity:1;transform:scale(1);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes cardFlash{0%{box-shadow:0 0 0 0 rgba(176,210,53,0);}35%{box-shadow:0 0 0 2px rgba(176,210,53,0.22),0 0 40px rgba(176,210,53,0.07);}100%{box-shadow:0 0 0 0 rgba(176,210,53,0);}}
+@keyframes cascadeFlash{0%{box-shadow:0 0 0 0 rgba(240,160,48,0);}35%{box-shadow:0 0 0 2px rgba(240,160,48,0.4),0 0 50px rgba(240,160,48,0.1);}100%{box-shadow:0 0 0 1px rgba(240,160,48,0.14);}}
+@keyframes constrainedFlash{0%{box-shadow:0 0 0 0 rgba(224,90,78,0);}35%{box-shadow:0 0 0 2px rgba(224,90,78,0.4),0 0 50px rgba(224,90,78,0.12);}100%{box-shadow:0 0 0 1px rgba(224,90,78,0.14);}}
+@keyframes interruptIn{from{opacity:0;transform:scale(0.975);}to{opacity:1;transform:scale(1);}}
 
-.card{background:var(--mid);border:1px solid rgba(255,255,255,0.07);border-radius:var(--rad2);padding:18px 16px;flex:1;display:flex;flex-direction:column;animation:fadeUp 0.32s ease,cardFlash 0.7s ease;position:relative;overflow:hidden;}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(176,210,53,0.22),transparent);}
-.card.cascade-card{border-color:rgba(240,160,48,0.22);background:linear-gradient(160deg,var(--mid2),rgba(240,160,48,0.04));animation:fadeUp 0.32s ease,cascadeFlash 0.7s ease;}
-.card.cascade-card::before{background:linear-gradient(90deg,transparent,rgba(240,160,48,0.38),transparent);}
-.card.constrained-card{border-color:rgba(224,90,78,0.22);background:linear-gradient(160deg,var(--mid2),rgba(224,90,78,0.04));animation:fadeUp 0.32s ease,constrainedFlash 0.7s ease;}
-.card.constrained-card::before{background:linear-gradient(90deg,transparent,rgba(224,90,78,0.38),transparent);}
-.card.interrupt-card{border-color:rgba(240,160,48,0.32);background:linear-gradient(160deg,rgba(240,160,48,0.07),var(--mid2));animation:interruptIn 0.4s ease,cascadeFlash 0.7s ease;}
-.card.interrupt-card::before{background:linear-gradient(90deg,transparent,rgba(240,160,48,0.45),transparent);}
+.card{background:var(--mid);border:1px solid rgba(255,255,255,0.06);border-radius:var(--rad2);padding:18px 16px;flex:1;display:flex;flex-direction:column;animation:fadeUp 0.3s ease,cardFlash 0.8s ease;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(176,210,53,0.18),transparent);}
+.card.cascade-card{border-color:rgba(240,160,48,0.18);background:linear-gradient(160deg,var(--mid2),rgba(240,160,48,0.03));animation:fadeUp 0.3s ease,cascadeFlash 0.8s ease;}
+.card.cascade-card::before{background:linear-gradient(90deg,transparent,rgba(240,160,48,0.32),transparent);}
+.card.constrained-card{border-color:rgba(224,90,78,0.18);background:linear-gradient(160deg,var(--mid2),rgba(224,90,78,0.03));animation:fadeUp 0.3s ease,constrainedFlash 0.8s ease;}
+.card.constrained-card::before{background:linear-gradient(90deg,transparent,rgba(224,90,78,0.32),transparent);}
+.card.interrupt-card{border-color:rgba(240,160,48,0.28);background:linear-gradient(160deg,rgba(240,160,48,0.06),var(--mid2));animation:interruptIn 0.35s ease,cascadeFlash 0.8s ease;}
+.card.interrupt-card::before{background:linear-gradient(90deg,transparent,rgba(240,160,48,0.4),transparent);}
 
-.type-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-size:0.57rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:4px 9px;border-radius:4px;margin-bottom:10px;width:fit-content;}
-.type-badge.cascade{background:rgba(240,160,48,0.14);color:var(--cascade-color);border:1px solid rgba(240,160,48,0.24);}
-.type-badge.constrained{background:rgba(224,90,78,0.12);color:var(--constrained-color);border:1px solid rgba(224,90,78,0.2);}
+.type-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-size:0.55rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:3px;margin-bottom:10px;width:fit-content;}
+.type-badge.cascade{background:rgba(240,160,48,0.1);color:var(--cascade-color);border:1px solid rgba(240,160,48,0.2);}
+.type-badge.constrained{background:rgba(224,90,78,0.1);color:var(--constrained-color);border:1px solid rgba(224,90,78,0.18);}
 .badge-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
-.type-badge.cascade .badge-dot{background:var(--cascade-color);box-shadow:0 0 6px var(--cascade-glow);}
-.type-badge.constrained .badge-dot{background:var(--constrained-color);box-shadow:0 0 6px var(--constrained-glow);}
+.type-badge.cascade .badge-dot{background:var(--cascade-color);box-shadow:0 0 5px var(--cascade-glow);}
+.type-badge.constrained .badge-dot{background:var(--constrained-color);box-shadow:0 0 5px var(--constrained-glow);}
 
-.card-category{font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-.card-category::before{content:'';display:inline-block;width:14px;height:1px;background:var(--green);opacity:0.5;}
-.card-context{font-size:0.83rem;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);}
-.card-question{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;font-weight:700;line-height:1.3;color:var(--white);margin-bottom:16px;}
+.card-category{font-family:'Barlow Condensed',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:6px;opacity:0.85;}
+.card-category::before{content:'';display:inline-block;width:12px;height:1px;background:var(--green);opacity:0.5;}
+.card-context{font-size:0.81rem;color:rgba(255,255,255,0.48);line-height:1.68;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.card-question{font-family:'Barlow Condensed',sans-serif;font-size:1.18rem;font-weight:700;line-height:1.28;color:var(--white);margin-bottom:16px;}
 
-.interrupt-banner{background:linear-gradient(135deg,rgba(240,160,48,0.14),rgba(240,160,48,0.05));border:1px solid rgba(240,160,48,0.28);border-radius:var(--rad);padding:12px 14px;margin-bottom:14px;animation:fadeUp 0.3s ease;}
-.interrupt-label{font-family:'Barlow Condensed',sans-serif;font-size:0.58rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--cascade-color);margin-bottom:5px;}
-.interrupt-text{font-size:0.82rem;color:rgba(255,255,255,0.68);line-height:1.6;}
-.interrupt-sub{font-size:0.74rem;color:rgba(240,160,48,0.65);margin-top:5px;font-style:italic;}
+.interrupt-banner{background:linear-gradient(135deg,rgba(240,160,48,0.1),rgba(240,160,48,0.03));border:1px solid rgba(240,160,48,0.24);border-radius:var(--rad);padding:11px 13px;margin-bottom:12px;animation:fadeUp 0.28s ease;}
+.interrupt-label{font-family:'Barlow Condensed',sans-serif;font-size:0.55rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--cascade-color);margin-bottom:4px;}
+.interrupt-text{font-size:0.8rem;color:rgba(255,255,255,0.65);line-height:1.6;}
+.interrupt-sub{font-size:0.72rem;color:rgba(240,160,48,0.55);margin-top:4px;font-style:italic;}
 
-.constraint-banner{background:linear-gradient(135deg,rgba(224,90,78,0.12),rgba(224,90,78,0.04));border:1px solid rgba(224,90,78,0.26);border-radius:var(--rad);padding:12px 14px;margin-bottom:14px;animation:fadeUp 0.3s ease;}
-.constraint-label{font-family:'Barlow Condensed',sans-serif;font-size:0.58rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--constrained-color);margin-bottom:5px;}
-.constraint-text{font-size:0.82rem;color:rgba(255,255,255,0.68);line-height:1.6;}
+.constraint-banner{background:linear-gradient(135deg,rgba(224,90,78,0.1),rgba(224,90,78,0.03));border:1px solid rgba(224,90,78,0.22);border-radius:var(--rad);padding:11px 13px;margin-bottom:12px;animation:fadeUp 0.28s ease;}
+.constraint-label{font-family:'Barlow Condensed',sans-serif;font-size:0.55rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--constrained-color);margin-bottom:4px;}
+.constraint-text{font-size:0.8rem;color:rgba(255,255,255,0.65);line-height:1.6;}
 
 /* CHOICES */
 .choices{display:flex;flex-direction:column;gap:7px;margin-top:auto;}
-.choice-btn{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:var(--rad);color:var(--white);font-family:'Barlow',sans-serif;font-size:0.83rem;font-weight:500;line-height:1.5;padding:12px 13px;text-align:left;cursor:pointer;transition:all 0.16s;width:100%;}
-.choice-btn:hover{background:rgba(176,210,53,0.07);border-color:rgba(176,210,53,0.28);}
+.choice-btn{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:var(--rad);color:rgba(255,255,255,0.88);font-family:'Barlow',sans-serif;font-size:0.82rem;font-weight:500;line-height:1.5;padding:12px 13px;text-align:left;cursor:pointer;transition:all 0.15s;width:100%;}
+.choice-btn:hover{background:rgba(176,210,53,0.06);border-color:rgba(176,210,53,0.24);}
 .choice-btn:active{transform:scale(0.99);}
-.choice-btn.chosen{background:rgba(176,210,53,0.1);border-color:rgba(176,210,53,0.35);cursor:default;}
-.choice-btn.unchosen{opacity:0.28;cursor:default;}
-.choice-btn.cascade-style:hover{background:rgba(240,160,48,0.08);border-color:rgba(240,160,48,0.28);}
-.choice-btn.cascade-style.chosen{background:rgba(240,160,48,0.1);border-color:rgba(240,160,48,0.32);}
+.choice-btn.chosen{background:rgba(176,210,53,0.08);border-color:rgba(176,210,53,0.3);cursor:default;color:var(--white);}
+.choice-btn.unchosen{opacity:0.22;cursor:default;}
+.choice-btn.cascade-style:hover{background:rgba(240,160,48,0.07);border-color:rgba(240,160,48,0.24);}
+.choice-btn.cascade-style.chosen{background:rgba(240,160,48,0.09);border-color:rgba(240,160,48,0.28);}
 
 /* FEEDBACK */
-.feedback-block{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);animation:fadeUp 0.28s ease;}
-.feedback-deltas{display:flex;align-items:center;gap:7px;margin-bottom:9px;flex-wrap:wrap;}
-.delta-badge{font-family:'Barlow Condensed',sans-serif;font-size:0.76rem;font-weight:800;letter-spacing:0.5px;padding:3px 9px;border-radius:4px;}
-.delta-badge.pos{background:rgba(176,210,53,0.14);color:var(--green);}
-.delta-badge.neg{background:rgba(224,90,78,0.14);color:var(--neg);}
-.delta-badge.zero{background:rgba(255,255,255,0.05);color:var(--muted);}
-.delta-badge.adapt{background:rgba(232,168,56,0.14);color:var(--neu);}
-.delta-axis{font-family:'Barlow Condensed',sans-serif;font-size:0.67rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
-.feedback-text{font-size:0.83rem;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:13px;}
+.feedback-block{margin-top:11px;padding-top:11px;border-top:1px solid rgba(255,255,255,0.05);animation:fadeUp 0.25s ease;}
+.feedback-deltas{display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap;}
+.delta-badge{font-family:'Barlow Condensed',sans-serif;font-size:0.74rem;font-weight:800;letter-spacing:0.5px;padding:2px 8px;border-radius:3px;}
+.delta-badge.pos{background:rgba(176,210,53,0.12);color:var(--green);}
+.delta-badge.neg{background:rgba(224,90,78,0.12);color:var(--neg);}
+.delta-badge.zero{background:rgba(255,255,255,0.04);color:var(--muted);}
+.delta-badge.adapt{background:rgba(232,168,56,0.12);color:var(--neu);}
+.delta-axis{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.feedback-text{font-size:0.82rem;color:rgba(255,255,255,0.58);line-height:1.72;margin-bottom:12px;}
 
-.next-btn{width:100%;padding:12px;background:var(--green);color:var(--black);border:none;border-radius:var(--rad);font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;box-shadow:0 0 20px rgba(176,210,53,0.18);}
-.next-btn:hover{background:var(--green2);box-shadow:0 0 28px rgba(176,210,53,0.3);}
+.next-btn{width:100%;padding:12px;background:var(--green);color:var(--black);border:none;border-radius:var(--rad);font-family:'Barlow Condensed',sans-serif;font-size:0.92rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;box-shadow:0 0 20px rgba(176,210,53,0.15);}
+.next-btn:hover{background:var(--green2);box-shadow:0 0 30px rgba(176,210,53,0.26);}
 .next-btn:active{transform:scale(0.99);}
-.next-btn.amber{background:var(--cascade-color);color:var(--black);box-shadow:0 0 20px var(--cascade-glow);}
-.next-btn.amber:hover{background:#f8b84a;box-shadow:0 0 28px rgba(240,160,48,0.38);}
-.next-btn.red{background:var(--constrained-color);color:var(--white);box-shadow:0 0 20px var(--constrained-glow);}
-.next-btn.red:hover{background:#e8706a;box-shadow:0 0 28px rgba(224,90,78,0.35);}
+.next-btn.amber{background:var(--cascade-color);color:var(--black);box-shadow:0 0 18px var(--cascade-glow);}
+.next-btn.amber:hover{background:#f8b84a;box-shadow:0 0 28px rgba(240,160,48,0.34);}
+.next-btn.red{background:var(--constrained-color);color:var(--white);box-shadow:0 0 18px var(--constrained-glow);}
+.next-btn.red:hover{background:#e8706a;box-shadow:0 0 28px rgba(224,90,78,0.3);}
 
 /* RESULTS */
 .scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.results-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:0.67rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:8px;margin-top:2px;}
-.results-title{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:900;line-height:1.1;color:var(--white);margin-bottom:16px;}
-.results-scores{display:flex;background:var(--mid);border:1px solid rgba(255,255,255,0.07);border-radius:var(--rad2);overflow:hidden;margin-bottom:14px;}
-.rs-item{flex:1;text-align:center;padding:13px 5px;}
-.rs-item+.rs-item{border-left:1px solid rgba(255,255,255,0.06);}
-.rs-val{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:900;line-height:1;margin-bottom:3px;}
-.rs-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.54rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-.adapt-block{background:linear-gradient(135deg,rgba(232,168,56,0.1),rgba(232,168,56,0.03));border:1px solid rgba(232,168,56,0.2);border-radius:var(--rad);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.results-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:7px;margin-top:2px;opacity:0.8;}
+.results-title{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:900;line-height:1.05;color:var(--white);margin-bottom:16px;letter-spacing:-0.5px;}
+.results-scores{display:grid;grid-template-columns:repeat(3,1fr);background:var(--mid);border:1px solid rgba(255,255,255,0.06);border-radius:var(--rad2);overflow:hidden;margin-bottom:12px;}
+.rs-item{text-align:center;padding:14px 5px;position:relative;}
+.rs-item+.rs-item{border-left:1px solid rgba(255,255,255,0.05);}
+.rs-item::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;border-radius:2px;}
+.rs-item:nth-child(1)::after{background:rgba(56,189,248,0.3);}
+.rs-item:nth-child(2)::after{background:rgba(251,146,60,0.3);}
+.rs-item:nth-child(3)::after{background:rgba(167,139,250,0.3);}
+.rs-val{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;line-height:1;margin-bottom:3px;}
+.rs-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.52rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.adapt-block{background:linear-gradient(135deg,rgba(232,168,56,0.08),rgba(232,168,56,0.02));border:1px solid rgba(232,168,56,0.18);border-radius:var(--rad);padding:11px 13px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
 .adapt-val{font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:900;color:var(--neu);line-height:1;flex-shrink:0;}
-.adapt-label{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--neu);margin-bottom:4px;}
-.adapt-desc{font-size:0.74rem;color:rgba(255,255,255,0.45);line-height:1.5;}
-.results-divider{height:1px;background:rgba(255,255,255,0.05);margin:14px 0;}
-.results-insight{font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.75;margin-bottom:8px;}
-.tendency-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;margin-top:2px;}
-.tendency-pill{font-family:'Barlow Condensed',sans-serif;font-size:0.64rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:var(--gd);border:1px solid rgba(176,210,53,0.18);color:var(--green);}
-.results-btn-row{display:flex;gap:9px;margin-top:18px;}
-.btn-ghost{flex:1;padding:12px;background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:var(--rad);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;}
-.btn-ghost:hover{border-color:rgba(255,255,255,0.28);color:var(--white);}
-.btn-green{flex:1;padding:12px;background:var(--green);border:none;border-radius:var(--rad);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;box-shadow:0 0 16px rgba(176,210,53,0.2);}
+.adapt-label{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--neu);margin-bottom:4px;}
+.adapt-desc{font-size:0.72rem;color:rgba(255,255,255,0.38);line-height:1.5;}
+.results-divider{height:1px;background:rgba(255,255,255,0.04);margin:14px 0;}
+.results-insight{font-size:0.83rem;color:rgba(255,255,255,0.55);line-height:1.78;margin-bottom:8px;}
+.tendency-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;margin-top:2px;}
+.tendency-pill{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:var(--gd);border:1px solid rgba(176,210,53,0.16);color:var(--green);}
+.results-btn-row{display:flex;gap:8px;margin-top:16px;}
+.btn-ghost{flex:1;padding:12px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:var(--rad);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:0.86rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.24);color:var(--white);}
+.btn-green{flex:1;padding:12px;background:var(--green);border:none;border-radius:var(--rad);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-size:0.86rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;box-shadow:0 0 16px rgba(176,210,53,0.16);}
 .btn-green:hover{background:var(--green2);}
 
-.tagline-footer{text-align:center;padding-top:20px;font-family:'Barlow Condensed',sans-serif;font-size:0.66rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(176,210,53,0.2);}
+.tagline-footer{text-align:center;padding-top:18px;font-family:'Barlow Condensed',sans-serif;font-size:0.63rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(176,210,53,0.18);}
+
+/* AXIS GLOW ON HIGH VALUES */
+.ax-val.trust-high{text-shadow:0 0 12px rgba(56,189,248,0.5);}
+.ax-val.momentum-high{text-shadow:0 0 12px rgba(251,146,60,0.5);}
+.ax-val.clarity-high{text-shadow:0 0 12px rgba(167,139,250,0.5);}
 </style>
 </head>
 <body>
@@ -187,16 +213,16 @@ body::before{
 <div id="screen-start" class="screen active">
   <div class="app">
     <div class="deck-header">
-      <div class="brand"><span>Yanke</span> Bionics<span class="v3-pill">v3</span></div>
+      <div class="brand"><span>Yanke</span> Bionics<span class="v3-pill">v4</span></div>
       <div class="header-right">Lab & Fabrication</div>
     </div>
     <div class="start-icon">⚙️</div>
     <div class="start-eyebrow">Tier 2 · Lab Staff · Supervision</div>
     <div class="start-title">Lab &amp;<br>Fabrication</div>
-    <div class="start-desc">Real situations from the fabrication floor — delegation, quality calls, conflict, accountability, and the decisions that define what kind of supervisor you're becoming. v3 introduces cascades and curveballs: your first call gets tested the moment you make it.</div>
+    <div class="start-desc">Real situations from the fabrication floor — delegation, quality calls, conflict, accountability, and the decisions that define what kind of supervisor you're becoming. Cascades test your first call the moment you make it. Curveballs pull the floor out from under you mid-decision.</div>
     <div class="start-meta">
       <span class="meta-tag">10 Scenarios per run</span>
-      <span class="meta-tag">14 in pool</span>
+      <span class="meta-tag">17 in pool</span>
       <span class="meta-tag meta-cascade">⚡ Cascades</span>
       <span class="meta-tag meta-constrained">⛔ Curveballs</span>
     </div>
@@ -206,7 +232,7 @@ body::before{
       <div class="privacy-text"><strong>Your responses stay on this device.</strong> Scores and choices are saved in your browser only — never transmitted to Yanke Bionics or anyone else. This is a personal reflection tool, not a performance evaluation.</div>
     </div>
     <button class="start-btn" onclick="Deck.start()">Begin Deck</button>
-    <div class="tagline-footer">Patient Focused · Technology Driven</div>
+    <div class="tagline-footer">Accept No Limitations.</div>
   </div>
 </div>
 
@@ -219,7 +245,7 @@ body::before{
 <div id="screen-results" class="screen">
   <div class="app">
     <div class="deck-header">
-      <div class="brand"><span>Yanke</span> Bionics<span class="v3-pill">v3</span></div>
+      <div class="brand"><span>Yanke</span> Bionics<span class="v3-pill">v4</span></div>
       <div class="header-right">Lab & Fabrication</div>
     </div>
     <div class="scroll-body" id="results-body"></div>
@@ -228,10 +254,10 @@ body::before{
 
 <script>
 // ═══════════════════════════════════════════════════
-// LAB & FABRICATION — v3
-// 4 axes: trust, momentum, clarity, adaptability
-// adaptability only scores on cascade/constrained beat 2
-// Scenario types: standard | cascade | constrained
+// LAB & FABRICATION — v4
+// Axes: trust (40), momentum (40), clarity (40), adaptability (40)
+// Base lowered to 40. Thresholds: strong ≥ 60, high ≥ 55, spread ≥ 20
+// Variance engine: ~50% clean pass, ~50% modified
 // ═══════════════════════════════════════════════════
 
 const AXES = [
@@ -243,6 +269,28 @@ const AXES = [
 
 const CARD_COUNT = 10;
 
+// ── VARIANCE ENGINE ──────────────────────────────────
+function applyVariance(scores) {
+  const m = { ...scores };
+  const roll = Math.random();
+  const keys = Object.keys(m).filter(k => m[k] !== 0);
+  if (!keys.length) return m;
+  const primary = keys[0];
+  const secondary = keys.length > 1 ? keys[1] : keys[0];
+  if (roll < 0.18 && m[primary] > 3) {
+    m[primary] = Math.round(m[primary] * 0.3);
+  } else if (roll < 0.30 && m[primary] < -2) {
+    m[secondary] = Math.abs(m[secondary] || 0) + 3;
+  } else if (roll < 0.42) {
+    const pick = keys[Math.floor(Math.random() * keys.length)];
+    if (Math.abs(m[pick]) > 2) m[pick] = -Math.round(m[pick] * 0.5);
+  } else if (roll < 0.50) {
+    const pick = keys[Math.floor(Math.random() * keys.length)];
+    m[pick] = m[pick] + (Math.random() > 0.5 ? 4 : -4);
+  }
+  return m;
+}
+
 const SCENARIOS = [
 
   // ── STANDARD ──────────────────────────────────────
@@ -250,166 +298,244 @@ const SCENARIOS = [
   {id:"s-del-1", type:"standard", category:"Delegation",
    context:"A technician asks how to handle a device modification they've done before.",
    question:"They know the process. They're really asking for permission. What do you do?",
+   tags:["trust","boundaries","delegation"],
    choices:[
      {text:"Walk them through it step by step to be safe",
-      scores:{trust:-5,momentum:3,clarity:0},
+      scores:{trust:-6,momentum:2,clarity:0},
       feedback:"They already knew. You just told them their experience doesn't count. Sometimes helping is the thing that slows everyone down."},
      {text:"Tell them you trust their judgment and to flag you if something unexpected comes up",
-      scores:{trust:8,momentum:5,clarity:3},
+      scores:{trust:9,momentum:5,clarity:2},
       feedback:"They walked away standing taller. That cost you nothing and bought you something you can't fake."},
      {text:"Ask them what they think the right approach is, then confirm it",
-      scores:{trust:4,momentum:0,clarity:5},
+      scores:{trust:4,momentum:0,clarity:6},
       feedback:"Solid middle ground. Just know — do this every time and it starts to feel like a test, not trust."}
    ]},
 
   {id:"s-del-3", type:"standard", category:"Delegation",
    context:"You delegated a task last week. It got done, but not the way you would have done it. The result is fine.",
    question:"Do you say something?",
+   tags:["delegation","trust","clarity"],
    choices:[
      {text:"No — the result met the standard, their method is their business",
-      scores:{trust:7,momentum:4,clarity:2},
+      scores:{trust:8,momentum:4,clarity:1},
       feedback:"Your way isn't the only way. Letting go of method when the outcome is solid is how you build a team that can function without you."},
      {text:"Mention your preferred approach for next time",
-      scores:{trust:-3,momentum:2,clarity:3},
+      scores:{trust:-4,momentum:2,clarity:3},
       feedback:"Next time they'll do it your way — not because it's better, but because it's safer. That's compliance, not growth."},
      {text:"Ask them to walk you through their process — you might learn something",
-      scores:{trust:6,momentum:2,clarity:5},
+      scores:{trust:7,momentum:2,clarity:5},
       feedback:"Most supervisors never ask this question because it means admitting someone else might have a better method. The ones who do get smarter every week."}
    ]},
 
   {id:"s-acc-1", type:"standard", category:"Accountability",
    context:"Someone made a mistake on a device. Not their first time. But they caught it themselves and brought it to you.",
    question:"They self-reported. How do you handle it?",
+   tags:["accountability","trust","self-report"],
    choices:[
      {text:"Thank them for catching it, fix it together, and document it",
-      scores:{trust:7,momentum:2,clarity:4},
+      scores:{trust:8,momentum:2,clarity:4},
       feedback:"They just learned that honesty is safe here. That's worth more than any write-up."},
      {text:"Address the pattern — this keeps happening and it needs to stop",
-      scores:{trust:-3,momentum:0,clarity:5},
+      scores:{trust:-4,momentum:0,clarity:5},
       feedback:"You just punished the one time they came to you voluntarily. Next time they'll hide it."},
      {text:"Let it go this time since they caught it",
-      scores:{trust:2,momentum:4,clarity:-4},
+      scores:{trust:2,momentum:4,clarity:-5},
       feedback:"Kindness without structure is just avoidance. No documentation means no trail."}
    ]},
 
   {id:"s-hard-1", type:"standard", category:"Hard Calls",
    context:"You need to give critical feedback to someone who doesn't take it well. Last time they got defensive.",
    question:"The feedback is necessary. The reaction is predictable. How do you deliver it?",
+   tags:["communication","clarity","trust"],
    choices:[
      {text:"Be direct and clear — they need to hear it regardless",
-      scores:{trust:2,momentum:4,clarity:5},
+      scores:{trust:2,momentum:4,clarity:6},
       feedback:"Delivery isn't about being honest. It's about making sure the other person can actually hear you."},
      {text:"Lead with what they're doing well, then transition to the growth area",
       scores:{trust:4,momentum:2,clarity:2},
       feedback:"The compliment sandwich. Everyone knows what it is. Some people still need it. Just make sure the positives are genuine."},
      {text:"Ask them to self-assess first — 'How do you think that went?'",
-      scores:{trust:6,momentum:0,clarity:6},
+      scores:{trust:7,momentum:0,clarity:7},
       feedback:"If they already know, you're coaching, not criticizing. If they don't know, you've learned something about their self-awareness."}
    ]},
 
   {id:"s-gro-1", type:"standard", category:"Growth",
    context:"A junior tech wants to take on a task above their skill level. There's real risk they'll mess it up.",
    question:"They want to grow. The timing isn't ideal. What do you do?",
+   tags:["delegation","trust","growth"],
    choices:[
      {text:"Let them try with guardrails — check in at key milestones",
-      scores:{trust:7,momentum:2,clarity:4},
+      scores:{trust:8,momentum:2,clarity:4},
       feedback:"Growth requires risk. The guardrails protect the work, the opportunity protects their development."},
      {text:"Not this time — stakes are too high, but you'll find them a chance soon",
       scores:{trust:0,momentum:4,clarity:3},
       feedback:"'Soon' is dangerous. If you mean it, put a date on it."},
      {text:"Give them a meaningful piece of it, not the whole task",
-      scores:{trust:5,momentum:4,clarity:5},
+      scores:{trust:6,momentum:4,clarity:5},
       feedback:"Smart. Exposure without full risk. Just make sure it's real work, not busywork. People can tell."}
    ]},
 
   {id:"s-dyn-1", type:"standard", category:"Dynamics",
    context:"Someone outside your direct scope keeps offering input on how the floor should run. Leadership seems to welcome it. Some of the ideas are solid. Some miss how things actually work.",
    question:"They have leadership's ear. You have the floor knowledge. How do you handle the disconnect?",
+   tags:["dynamics","clarity","leverage"],
    choices:[
      {text:"Push back on the bad ideas with specific evidence from the floor",
-      scores:{trust:3,momentum:4,clarity:4},
+      scores:{trust:3,momentum:4,clarity:5},
       feedback:"Good if your evidence is specific and delivered calmly. Data versus experience arguments rarely have clean winners — bring both."},
      {text:"Propose a pilot — test their idea on a small scale before full rollout",
-      scores:{trust:5,momentum:3,clarity:6},
+      scores:{trust:5,momentum:3,clarity:7},
       feedback:"Smart. You're not saying no, you're saying 'prove it.' And if it works, you adopted a good idea. If it doesn't, the pilot did the arguing for you."},
      {text:"Stop fighting it — implement what leadership wants and document the results",
-      scores:{trust:-2,momentum:6,clarity:0},
+      scores:{trust:-3,momentum:6,clarity:-1},
       feedback:"If you know something won't work and you let it fail silently, you chose peace over the people who live with the consequences. That's avoidance wearing a professional mask."}
    ]},
 
   {id:"s-dyn-2", type:"standard", category:"Dynamics",
    context:"You find out your work is being characterized to leadership in a way that doesn't match what actually happened — not an outright lie, just a framing that doesn't include your best contributions.",
    question:"They're not lying exactly. They're narrating. And the narrative doesn't include your best work. What do you do?",
+   tags:["dynamics","visibility","clarity"],
    choices:[
-     {text:"Start making sure your results are visible to leadership directly",
-      scores:{trust:3,momentum:5,clarity:4},
-      feedback:"Solid long game. If your work is visible, someone else's framing has less power. Just don't let 'making results visible' tip into self-promotion that feels forced."},
-     {text:"Have a direct conversation — 'I've heard how my work is being framed and I want to address it'",
-      scores:{trust:4,momentum:-2,clarity:5},
-      feedback:"Direct and risky. If they're the type to deny it, you've shown your hand. But if they respect directness, this could actually fix it."},
-     {text:"Build your relationship with leadership directly so their read on you comes from firsthand experience",
-      scores:{trust:6,momentum:2,clarity:6},
-      feedback:"The best defense against a bad narrator is being known directly. Takes time. But once leadership has their own read on you, no one else's version sticks."}
+     {text:"Start making your results visible to leadership directly",
+      scores:{trust:3,momentum:5,clarity:5},
+      feedback:"Not petty — strategic. You're not fighting for credit, you're building a direct line. There's a difference."},
+     {text:"Talk to the person doing the framing first — maybe it's unintentional",
+      scores:{trust:6,momentum:2,clarity:4},
+      feedback:"Maybe it's a miss, not a move. One direct conversation is worth more than six months of passive workaround."},
+     {text:"Absorb it — doing good work eventually speaks for itself",
+      scores:{trust:-1,momentum:3,clarity:-3},
+      feedback:"Sometimes true. Often not. 'Eventually' is doing a lot of work in that sentence."}
    ]},
 
-  // ── CASCADE ───────────────────────────────────────
+  // ── NEW: LEADERSHIP PRESSURE ─────────────────────
 
-  {id:"c-del-1", type:"cascade", category:"Delegation",
-   context:"A job is running behind. You could jump in and finish it yourself faster.",
-   question:"You know you can get it done quicker. But should you?",
+  {id:"s-lead-1", type:"standard", category:"Leadership Pressure",
+   context:"Your manager tells you to push through a job that you believe has a quality issue. They're not in the lab. The pressure is real — the patient has been waiting.",
+   question:"You're being asked to release something you're not confident in. What do you do?",
+   tags:["clarity","accountability","boundaries"],
    choices:[
-     {text:"Jump in and get it done — production comes first",
-      scores:{trust:-3,momentum:8,clarity:-2},
-      feedback:"The job got done. But your team just learned that when things get tight, you don't trust them to deliver. They'll wait for you next time too.",
+     {text:"Push back with the specific issue — describe what you're seeing and what it could cost",
+      scores:{trust:4,momentum:-2,clarity:9},
+      feedback:"You named the risk clearly and made them make the call with the right information. That's not insubordination — that's the job."},
+     {text:"Document your concern in writing, then release it since they have authority",
+      scores:{trust:2,momentum:4,clarity:5},
+      feedback:"Defensible. Your documentation protects you. But a quality problem doesn't become their problem just because it's written down — it's still going to the patient."},
+     {text:"Release it — they have the full picture, you're on the floor, trust the process",
+      scores:{trust:-2,momentum:6,clarity:-4},
+      feedback:"Deference has limits. When you release something you didn't believe in and it fails, 'they told me to' won't change the outcome for the patient."}
+   ]},
+
+  {id:"s-lead-2", type:"standard", category:"Leadership Pressure",
+   context:"Leadership asks you to implement a floor change that makes sense on paper but creates real problems for your team. When you raise the concern, you're told 'make it work.'",
+   question:"The direction is set. The problems are real. You're in the middle.",
+   tags:["boundaries","clarity","dynamics"],
+   choices:[
+     {text:"Request a follow-up conversation with specifics — 'I want to make it work, here's what I need to get there'",
+      scores:{trust:5,momentum:2,clarity:8},
+      feedback:"You didn't refuse. You came with specifics and asked for what the team actually needs. That's the version of pushback that gets heard."},
+     {text:"Implement it and track every problem that comes from it — bring the data later",
+      scores:{trust:1,momentum:5,clarity:3},
+      feedback:"Evidence matters. Just be careful — your team lives with the problem while you're building your case. Have a timeline."},
+     {text:"Implement it without comment — you're not the one who made the call",
+      scores:{trust:-3,momentum:5,clarity:-4},
+      feedback:"You are the one they work for. Absorbing a bad direction silently tells your team their supervisor doesn't have their back."}
+   ]},
+
+  // ── NEW: LONG SHIFTS / OVERWORK ──────────────────
+
+  {id:"s-shift-1", type:"standard", category:"Sustainability",
+   context:"Your team has been running extended shifts for two weeks. Production is meeting targets. But you're watching engagement drop and mistakes start to creep in.",
+   question:"Numbers are fine. People aren't. What do you do?",
+   tags:["trust","sustainability","momentum"],
+   choices:[
+     {text:"Name what you're seeing — 'I know this stretch has been hard, and I'm paying attention to it'",
+      scores:{trust:9,momentum:1,clarity:4},
+      feedback:"You don't need to fix it immediately to matter. Being seen is often more stabilizing than being rescued. Follow it with something concrete."},
+     {text:"Push for rest coverage — make the case upward that the pace isn't sustainable",
+      scores:{trust:7,momentum:0,clarity:6},
+      feedback:"This is the supervisor move. You're not just managing down, you're advocating up. Whether it works or not, your team knows you tried."},
+     {text:"Hold the line — the production target is the target and the team will recover",
+      scores:{trust:-4,momentum:5,clarity:1},
+      feedback:"You're choosing the number over the people who produce it. That's a trade. Be honest with yourself that it is one."}
+   ]},
+
+  // ── NEW: CREDIT / VISIBILITY ─────────────────────
+
+  {id:"s-cred-1", type:"standard", category:"Recognition",
+   context:"Your team solved a hard problem this week. You hear through the grapevine that leadership heard about it — and the version they heard has your manager front and center, not the team that actually did the work.",
+   question:"Credit landed in the wrong place. What do you do?",
+   tags:["trust","dynamics","visibility"],
+   choices:[
+     {text:"Make the team's contribution visible directly — send a brief note that names what they did",
+      scores:{trust:9,momentum:2,clarity:5},
+      feedback:"You stepped in front of the narrative with facts. Your team gets the credit and they saw you put it there. That's worth more than a year of 'good jobs.'"},
+     {text:"Mention it to your manager privately — 'just want to make sure the team gets seen here'",
+      scores:{trust:5,momentum:3,clarity:5},
+      feedback:"Gives them a chance to correct it themselves. That's clean. The risk is it doesn't happen and you've handed the only moment to do something."},
+     {text:"Let it go — credit stories are complicated and fighting them creates enemies",
+      scores:{trust:-5,momentum:3,clarity:-2},
+      feedback:"Your team noticed too. And what they concluded is that their supervisor watched someone else take their win and said nothing."}
+   ]},
+
+  // ── CASCADE SCENARIOS ─────────────────────────────
+
+  {id:"c-cas-1", type:"cascade", category:"Production",
+   context:"A job is running behind and the tech managing it is stuck — they're working the problem, but they're visibly overwhelmed.",
+   question:"How do you step in?",
+   tags:["delegation","momentum","trust"],
+   choices:[
+     {text:"Take it over — this needs to move and you can move it faster",
+      scores:{trust:-4,momentum:7,clarity:1},
+      feedback:"The job got done. The tech learned that when they struggle, you take their problem away instead of helping them through it.",
       beat2:{
-        complication:"You finished the job — but the tech is visibly deflated and a second job missed its window because you weren't available to make a call on it.",
-        question:"You solved one problem and created two. What do you address first?",
+        complication:"The tech who you took over from is now doing smaller, safer tasks and avoiding anything complex.",
+        question:"Your efficiency produced avoidance. They used to stretch — now they don't.",
         choices:[
-          {text:"Check in with the tech — the production hit can wait",
-           scores:{trust:6,momentum:-2,adaptability:6},
-           feedback:"The job can be rescheduled. Trust that's been chipped away by repeated takeovers is harder to rebuild. You picked the right thing."},
-          {text:"Get the missed job sorted first — production can't slip further",
-           scores:{trust:-2,momentum:6,adaptability:3},
-           feedback:"Practical. But the tech just watched you fix the production problem and skip them. That's a pattern they'll remember."},
-          {text:"Handle both at once — quick check-in while you sort the job",
-           scores:{trust:4,momentum:4,adaptability:5},
-           feedback:"Attempted both, partial on each. Sometimes the realistic move. The check-in needs to be real though — a 10-second 'you good?' isn't the conversation they needed."}
+          {text:"Have a direct conversation — you want to understand what's shifted",
+           scores:{trust:6,momentum:0,adaptability:6},
+           feedback:"The conversation is the repair. They may not say the real thing immediately — give them room to get there."},
+          {text:"Give them a stretch job and see if the old pattern returns",
+           scores:{trust:3,momentum:5,adaptability:4},
+           feedback:"Might work. Might read as pressure. You won't know until you check in with them about how it feels, not just how it goes."},
+          {text:"Let them settle at their pace — they'll come back to complex work when they're ready",
+           scores:{trust:2,momentum:-1,adaptability:2},
+           feedback:"Possible. But avoidance patterns tend to get stronger without interruption, not weaker."}
         ]
       }},
      {text:"Check in on the bottleneck and help them problem-solve it",
-      scores:{trust:5,momentum:3,clarity:4},
-      feedback:"Slower today. Faster every day after. They solved it with your support, not your hands — that's the difference.",
+      scores:{trust:6,momentum:2,clarity:4},
+      feedback:"Slower today. Faster every day after. They solved it with your support, not your hands.",
       beat2:{
         complication:"While you were coaching through the bottleneck, an urgent job came in and nobody's free to start it.",
         question:"You're already committed. Now what?",
         choices:[
           {text:"Pull yourself out — the urgent job needs a decision, not the coaching",
-           scores:{trust:-2,momentum:6,adaptability:5},
-           feedback:"The urgent job got handled. The tech you were coaching lost momentum mid-problem. Give them a clear handoff point before you leave, not just a disappearing act."},
+           scores:{trust:-2,momentum:7,adaptability:5},
+           feedback:"The urgent job got handled. The tech you were coaching lost momentum mid-problem. Give them a clear handoff point before you leave — not just a disappearing act."},
           {text:"Finish what you started — get the first job moving, then deal with the urgent job",
-           scores:{trust:6,momentum:2,adaptability:4},
+           scores:{trust:7,momentum:2,adaptability:4},
            feedback:"You honored the commitment. The urgent job waited a few minutes. As long as someone knows it's incoming, that's a reasonable sequence."},
           {text:"Ask someone else to handle the urgent intake while you finish",
-           scores:{trust:3,momentum:5,adaptability:6},
-           feedback:"Distributed the load. The risk is they weren't set up well — make sure they know exactly what to capture and where to flag uncertainty."}
+           scores:{trust:3,momentum:5,adaptability:7},
+           feedback:"Distributed the load. Make sure they know exactly what to capture and where to flag uncertainty."}
         ]
       }},
      {text:"Let it run late — they need to feel the consequences",
-      scores:{trust:-2,momentum:-5,clarity:2},
+      scores:{trust:-3,momentum:-6,clarity:2},
       feedback:"Letting production slip to teach a lesson is a cost the whole team pays for one person's education.",
       beat2:{
-        complication:"The job ran late — and now there's a real downstream impact. Someone is asking for a status.",
+        complication:"The job ran late — and now there's a real downstream impact. Someone is asking for a status update.",
         question:"The lesson cost something real. How do you handle it?",
         choices:[
-          {text:"Be straight — there was a production delay and here is the new timeline",
-           scores:{trust:3,momentum:3,adaptability:6},
+          {text:"Be straight — there was a delay and here is the new timeline",
+           scores:{trust:3,momentum:3,adaptability:7},
            feedback:"Clients and colleagues handle honesty better than vagueness. Make sure the new timeline is real before you give it."},
           {text:"Absorb it — move forward and don't explain the delay",
-           scores:{trust:1,momentum:4,adaptability:2},
+           scores:{trust:1,momentum:5,adaptability:2},
            feedback:"Works if the new timeline holds. If it slips again, you have no goodwill left and no explanation on record."},
           {text:"Apologize and offer something to make it right",
-           scores:{trust:4,momentum:2,adaptability:4},
-           feedback:"Gesture of accountability. Just make sure what you offer is actually yours to give."}
+           scores:{trust:5,momentum:2,adaptability:4},
+           feedback:"Gesture of accountability. Make sure what you offer is actually yours to give."}
         ]
       }}
    ]},
@@ -417,9 +543,10 @@ const SCENARIOS = [
   {id:"c-cas-2", type:"cascade", category:"Conflict",
    context:"Two techs are arguing about the right way to do a setup. Both approaches work.",
    question:"How do you handle it?",
+   tags:["conflict","trust","dynamics"],
    choices:[
      {text:"Pick the better method and settle it",
-      scores:{trust:-4,momentum:5,clarity:3},
+      scores:{trust:-5,momentum:5,clarity:3},
       feedback:"Fast. Clean. And one of them just became the person who was wrong in front of their peer.",
       beat2:{
         complication:"The one who 'lost' is now visibly disengaged. A job that was their responsibility just got missed.",
@@ -427,24 +554,24 @@ const SCENARIOS = [
         choices:[
           {text:"Address the missed job first, then circle back to the morale issue later",
            scores:{trust:2,momentum:5,adaptability:4},
-           feedback:"Reasonable sequence. Just make sure the 'later' conversation actually happens. Missed jobs that don't get talked through tend to repeat."},
+           feedback:"Reasonable sequence. Just make sure the 'later' conversation actually happens."},
           {text:"Have a direct conversation — 'I noticed you went quiet after this morning'",
-           scores:{trust:6,momentum:0,adaptability:6},
-           feedback:"You saw what happened and you named it. That takes more courage than either of the other options. It's also the thing that actually repairs the dynamic."},
+           scores:{trust:7,momentum:0,adaptability:7},
+           feedback:"You saw what happened and you named it. That's the thing that actually repairs the dynamic."},
           {text:"Let it play out — they'll reset by tomorrow",
-           scores:{trust:-3,momentum:2,adaptability:-2},
-           feedback:"Disengagement that goes unacknowledged compounds, it doesn't dissolve. And the missed job is already real."}
+           scores:{trust:-4,momentum:2,adaptability:-2},
+           feedback:"Disengagement that goes unacknowledged compounds. And the missed job is already real."}
         ]
       }},
      {text:"Ask them to test both and go with whatever gets better results",
-      scores:{trust:6,momentum:2,clarity:5},
+      scores:{trust:7,momentum:2,clarity:5},
       feedback:"Nobody lost. The work decided. And you just built a decision-making framework they'll use without you next time.",
       beat2:{
         complication:"You catch one tech stacking the test in their favor by using inferior materials for the other method.",
         question:"The process you set up is being gamed. What do you do?",
         choices:[
           {text:"Reset the test with neutral materials and address what happened privately",
-           scores:{trust:5,momentum:-2,adaptability:7},
+           scores:{trust:6,momentum:-2,adaptability:8},
            feedback:"The right call. You protected the process and kept it private — calling it out in front of both would have re-ignited the argument."},
           {text:"Scrap the test and just make the call yourself",
            scores:{trust:2,momentum:5,adaptability:3},
@@ -455,18 +582,18 @@ const SCENARIOS = [
         ]
       }},
      {text:"Separate them and hear both sides before deciding",
-      scores:{trust:3,momentum:-3,clarity:2},
+      scores:{trust:3,momentum:-4,clarity:2},
       feedback:"Sometimes the best move is to not make it bigger than it is.",
       beat2:{
         complication:"While you were doing private conversations, both techs told others what was happening. The whole floor is now waiting to see how you handle it.",
-        question:"What was a two-person issue is now a floor issue. Pressure is on.",
+        question:"What was a two-person issue is now a floor issue.",
         choices:[
           {text:"Don't change your approach — make the decision and communicate it plainly",
            scores:{trust:4,momentum:4,adaptability:5},
-           feedback:"Steady. You didn't let the audience change the quality of your decision. The floor respects calm more than performance."},
+           feedback:"Steady. You didn't let the audience change the quality of your decision."},
           {text:"Acknowledge it — 'I know this got out, I'm working through it'",
-           scores:{trust:5,momentum:2,adaptability:5},
-           feedback:"Transparent. Just make sure 'working through it' has a timeline — vague process makes people more anxious, not less."},
+           scores:{trust:6,momentum:2,adaptability:6},
+           feedback:"Transparent. Just make sure 'working through it' has a timeline."},
           {text:"Speed up and make a faster decision to cut off the speculation",
            scores:{trust:1,momentum:5,adaptability:3},
            feedback:"A rushed decision made under audience pressure is how you end up second-guessing yourself for months."}
@@ -477,78 +604,80 @@ const SCENARIOS = [
   {id:"c-cas-3", type:"cascade", category:"Hard Calls",
    context:"Short-staffed and a tech asks for a day off. Coverage will be brutal.",
    question:"You can say yes or no. Both have consequences.",
+   tags:["trust","momentum","boundaries"],
    choices:[
      {text:"Approve it — they asked, it's available, burning people out protects nothing",
-      scores:{trust:7,momentum:-3,clarity:2},
+      scores:{trust:8,momentum:-4,clarity:2},
       feedback:"Hard day for the floor. But the person who got their day will remember you treated them like a human when it was hard to.",
       beat2:{
         complication:"The day arrived and it's worse than expected. A critical job came in and one remaining tech is showing clear signs of burnout.",
-        question:"You made a promise. The floor is struggling. What do you do?",
+        question:"You made a promise. The floor is struggling.",
         choices:[
           {text:"Hold the approval — you made a commitment and the team will get through it",
-           scores:{trust:5,momentum:-2,adaptability:4},
-           feedback:"You kept your word. Check in with everyone when the day is over — the floor needs to know the hit was seen, not just absorbed."},
-          {text:"Call the person on their day off and ask if they can come in for part of the shift",
-           scores:{trust:-2,momentum:5,adaptability:4},
-           feedback:"If you ask, make it a genuine ask — not a pressure call. And if they say no, the answer is no."},
-          {text:"Redistribute evenly — no one person absorbs it all",
-           scores:{trust:3,momentum:4,adaptability:6},
+           scores:{trust:6,momentum:-2,adaptability:4},
+           feedback:"You kept your word. Check in with everyone at the end of the day — the hit should be seen, not just absorbed."},
+          {text:"Call the person on their day off and ask if they can come in",
+           scores:{trust:-3,momentum:5,adaptability:4},
+           feedback:"If you ask, make it a genuine ask — not a pressure call. If they say no, the answer is no."},
+          {text:"Redistribute the load evenly — no one person absorbs it all",
+           scores:{trust:4,momentum:3,adaptability:6},
            feedback:"Fair distribution of hard. Make sure everyone knows it's recognized, not just expected."}
         ]
       }},
      {text:"Deny it — explain honestly and help them find another day",
-      scores:{trust:-1,momentum:4,clarity:4},
+      scores:{trust:-1,momentum:5,clarity:4},
       feedback:"Honest. Practical. But 'find another day' better happen or you made a promise the system won't let you keep.",
       beat2:{
         complication:"You found them another day — two weeks out. They're working visibly less engaged since the denial.",
         question:"You made the right logistical call. The human part landed hard.",
         choices:[
           {text:"Check in directly — 'I know the timing on that wasn't what you needed'",
-           scores:{trust:6,momentum:1,adaptability:5},
-           feedback:"You named the cost of the decision without reversing it. That's leadership. The engagement dip will likely resolve after this conversation."},
+           scores:{trust:7,momentum:1,adaptability:6},
+           feedback:"You named the cost of the decision without reversing it. That's leadership."},
           {text:"Let it pass — they'll get over it once they have the day",
-           scores:{trust:-2,momentum:3,adaptability:1},
+           scores:{trust:-3,momentum:3,adaptability:1},
            feedback:"Two weeks of disengagement is a real cost. Checking in costs you nothing. Silence reads as indifference."},
           {text:"See if anything changed and try to get them an earlier day",
-           scores:{trust:4,momentum:2,adaptability:4},
+           scores:{trust:5,momentum:2,adaptability:5},
            feedback:"Demonstrates you're still working for them even after saying no. That's the detail that shifts someone from 'my supervisor denied me' to 'my supervisor is trying.'"}
         ]
       }},
      {text:"Approve it but tell them what it costs the team",
-      scores:{trust:3,momentum:0,clarity:3},
+      scores:{trust:2,momentum:0,clarity:3},
       feedback:"You said yes and made them feel guilty about it. Either say yes and mean it, or say no and own it.",
       beat2:{
-        complication:"The guilt landed. They're at work but spending the whole shift apologizing to coworkers, which is making everyone more uncomfortable, not less.",
+        complication:"The guilt landed. They're at work but spending the whole shift apologizing to coworkers, which is making everyone more uncomfortable.",
         question:"You created the dynamic. You have to resolve it.",
         choices:[
           {text:"Take them aside and tell them to let it go — the day is theirs, no debt owed",
-           scores:{trust:5,momentum:4,adaptability:6},
-           feedback:"You corrected your own mistake. That's harder than the original call and more valuable. They'll remember both."},
+           scores:{trust:6,momentum:4,adaptability:7},
+           feedback:"You corrected your own mistake. That's harder than the original call and more valuable."},
           {text:"Let it run its course — the day will end",
-           scores:{trust:-1,momentum:-2,adaptability:1},
+           scores:{trust:-2,momentum:-2,adaptability:1},
            feedback:"The discomfort spreads. Now the whole floor is processing their colleague's guilt on top of the short-staffed day."},
           {text:"Redirect everyone to the work — pull focus back to the floor",
-           scores:{trust:2,momentum:5,adaptability:3},
-           feedback:"You shifted the energy to production. The underlying dynamic didn't get resolved but the shift is survivable. Have the real conversation at end of day."}
+           scores:{trust:2,momentum:6,adaptability:3},
+           feedback:"You shifted the energy to production. Have the real conversation at end of day."}
         ]
       }}
    ]},
 
-  // ── CONSTRAINED ───────────────────────────────────
+  // ── CONSTRAINED SCENARIOS ──────────────────────────
 
   {id:"k-con-1", type:"constrained", category:"Production",
    context:"A quality check catches a defect on a nearly finished device. The patient's fitting is tomorrow morning.",
    question:"Rework is possible but it'll take the rest of the afternoon. What do you do?",
+   tags:["accountability","momentum","clarity"],
    choices:[
      {text:"Pull whoever is available and rework it now — the fitting holds",
       scores:{trust:3,momentum:4,clarity:5},
       feedback:"You prioritized the patient. Good call — assuming you have the bodies to do it without breaking something else."},
      {text:"Call the clinician and give them the real picture — let them decide if the fitting moves",
-      scores:{trust:5,momentum:3,clarity:6},
-      feedback:"You didn't make a clinical decision unilaterally. The clinician has information you don't about whether tomorrow is movable. That's theirs to weigh, not yours."},
+      scores:{trust:6,momentum:3,clarity:7},
+      feedback:"You didn't make a clinical decision unilaterally. The clinician has information you don't about whether tomorrow is movable. That's theirs to weigh."},
      {text:"Flag it to supervision and document it — don't start rework without authorization",
       scores:{trust:4,momentum:2,clarity:5},
-      feedback:"Correct instinct on authorization. Just make sure flagging it doesn't become a delay — this needs to move in the next 30 minutes, not sit in an inbox."}
+      feedback:"Correct instinct on authorization. Just make sure flagging it doesn't become a delay — this needs to move in the next 30 minutes."}
    ],
    constraint:{
      reveal:"You have one available tech — and it's the one who caused the defect. Everyone else is committed to jobs that can't stop.",
@@ -558,10 +687,10 @@ const SCENARIOS = [
         scores:{trust:3,momentum:5,adaptability:5},
         feedback:"Pragmatic and actually good for them — they need to resolve it, not just carry the guilt. Set a checkpoint halfway through."},
        {text:"Do it yourself — this is too high-stakes to risk a second mistake",
-        scores:{trust:-2,momentum:4,adaptability:3},
+        scores:{trust:-3,momentum:4,adaptability:3},
         feedback:"The job gets done. They just learned that when pressure is high, they can't be trusted. That's a real cost to weigh against the risk."},
        {text:"Pair yourself with them — you supervise the rework together",
-        scores:{trust:5,momentum:3,adaptability:6},
+        scores:{trust:6,momentum:3,adaptability:7},
         feedback:"Best of both. They do the repair work, you're the safety net. They finish the shift having fixed it rather than watched you fix it for them."}
      ]
    }},
@@ -569,9 +698,10 @@ const SCENARIOS = [
   {id:"k-con-2", type:"constrained", category:"Delegation",
    context:"You've been developing a junior tech's skills. You finally have a job that's right at their level — a real stretch opportunity.",
    question:"How do you hand it off?",
+   tags:["delegation","trust","growth"],
    choices:[
      {text:"Brief them thoroughly and step back — trust the prep",
-      scores:{trust:6,momentum:4,clarity:4},
+      scores:{trust:7,momentum:4,clarity:4},
       feedback:"The preparation earns the autonomy. As long as they know how to flag you if something unexpected comes up, this is good delegation."},
      {text:"Work the first part together, then hand the rest to them",
       scores:{trust:5,momentum:3,clarity:5},
@@ -585,13 +715,13 @@ const SCENARIOS = [
      question:"Your scaffolding just disappeared. They're on their own whether you planned for it or not.",
      choices:[
        {text:"Send them a quick message: 'You've got this — flag me if anything looks off'",
-        scores:{trust:7,momentum:4,adaptability:5},
-        feedback:"Simple. Clear. You gave them permission to continue and permission to ask for help without making them feel abandoned. This is the right move."},
+        scores:{trust:8,momentum:4,adaptability:6},
+        feedback:"Simple. Clear. You gave them permission to continue and permission to ask for help without making them feel abandoned."},
        {text:"Ask another tech to check in on them once while you're gone",
         scores:{trust:4,momentum:4,adaptability:5},
         feedback:"Reasonable backup. Make sure the other tech knows what the job is — not to take over, just to be available."},
        {text:"Pause the job until you're back",
-        scores:{trust:2,momentum:-3,adaptability:3},
+        scores:{trust:2,momentum:-4,adaptability:3},
         feedback:"Safe for the job. But you just told them that your confidence in them had a very specific radius. That's hard to unlearn."}
      ]
    }},
@@ -599,12 +729,13 @@ const SCENARIOS = [
   {id:"k-con-3", type:"constrained", category:"Accountability",
    context:"A pattern of small errors has been building on one tech's work — nothing catastrophic, but enough that you need to address it.",
    question:"How do you open the conversation?",
+   tags:["accountability","trust","clarity"],
    choices:[
      {text:"Lead with the data — specific dates, specific errors, no editorializing",
-      scores:{trust:3,momentum:3,clarity:6},
+      scores:{trust:3,momentum:3,clarity:7},
       feedback:"The facts anchor the conversation. Just make sure you listen after you present them — data delivery without space for their response is a verdict, not a conversation."},
      {text:"Ask them how they think their work has been going lately",
-      scores:{trust:6,momentum:2,clarity:5},
+      scores:{trust:7,momentum:2,clarity:6},
       feedback:"If they already see the pattern, you're coaching. If they don't, you've learned something about their self-awareness that will shape the rest of the conversation."},
      {text:"Be direct — there's a pattern and it needs to change",
       scores:{trust:2,momentum:5,clarity:4},
@@ -615,7 +746,7 @@ const SCENARIOS = [
      question:"The accountability conversation just became a training gap conversation. Part of this is a systems failure, not a performance failure.",
      choices:[
        {text:"Acknowledge it directly — 'I think part of this is on us, the process change wasn't communicated well'",
-        scores:{trust:7,momentum:2,adaptability:7},
+        scores:{trust:8,momentum:2,adaptability:8},
         feedback:"Owning the system failure in the middle of a feedback conversation is the hardest move in supervision and the most important one. That builds more trust than almost anything else."},
        {text:"Finish the feedback conversation and address the training gap separately",
         scores:{trust:2,momentum:4,adaptability:3},
@@ -638,6 +769,7 @@ const Deck = (() => {
   let beat1Choice = null;
   let selected = null;
   let constraintRevealed = false;
+  let history = [];
 
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -655,26 +787,26 @@ const Deck = (() => {
   }
 
   function start() {
-    // Balanced shuffle: ~30% special types
-    const standards  = SCENARIOS.filter(s => s.type === 'standard').sort(() => Math.random() - 0.5);
-    const cascades   = SCENARIOS.filter(s => s.type === 'cascade').sort(() => Math.random() - 0.5);
+    const standards   = SCENARIOS.filter(s => s.type === 'standard').sort(() => Math.random() - 0.5);
+    const cascades    = SCENARIOS.filter(s => s.type === 'cascade').sort(() => Math.random() - 0.5);
     const constrained = SCENARIOS.filter(s => s.type === 'constrained').sort(() => Math.random() - 0.5);
     const total = CARD_COUNT;
-    const specialTarget = Math.max(
-      Math.min(Math.round(total * 0.3), cascades.length + constrained.length), 2
-    );
-    const cascadeSlots = Math.min(Math.ceil(specialTarget / 2), cascades.length);
-    const constrainedSlots = Math.min(Math.floor(specialTarget / 2), constrained.length);
-    const standardSlots = total - cascadeSlots - constrainedSlots;
+    const cascadeSlots    = Math.min(2, cascades.length);
+    const constrainedSlots = Math.min(2, constrained.length);
+    const standardSlots   = total - cascadeSlots - constrainedSlots;
     shuffle = [
       ...standards.slice(0, standardSlots),
       ...cascades.slice(0, cascadeSlots),
       ...constrained.slice(0, constrainedSlots)
     ].sort(() => Math.random() - 0.5);
-
-    round = 0; beat = 1; beat1Choice = null; selected = null; constraintRevealed = false;
+    // don't start with a cascade or constrained
+    if (shuffle[0].type !== 'standard') {
+      const si = shuffle.findIndex(s => s.type === 'standard');
+      if (si > 0) { const t = shuffle[0]; shuffle[0] = shuffle[si]; shuffle[si] = t; }
+    }
+    round = 0; beat = 1; beat1Choice = null; selected = null; constraintRevealed = false; history = [];
     scores = {};
-    AXES.forEach(a => { scores[a.key] = 50; });
+    AXES.forEach(a => { scores[a.key] = 40; });
     showScreen('play');
     render();
   }
@@ -685,34 +817,39 @@ const Deck = (() => {
 
     if (s.type === 'standard') {
       selected = idx;
-      applyScores(s.choices[idx].scores);
+      const rawScores = s.choices[idx].scores;
+      applyScores(applyVariance(rawScores));
+      history.push({ id: s.id, tags: s.tags || [], choiceText: s.choices[idx].text });
       render();
 
     } else if (s.type === 'cascade') {
       if (beat === 1) {
         beat1Choice = idx; selected = idx;
-        applyScores(s.choices[idx].scores);
+        applyScores(applyVariance(s.choices[idx].scores));
         render();
       } else {
         selected = idx;
-        applyScores(s.choices[beat1Choice].beat2.choices[idx].scores);
+        const b2c = s.choices[beat1Choice].beat2.choices[idx];
+        applyScores(applyVariance(b2c.scores));
+        history.push({ id: s.id, tags: s.tags || [], choiceText: s.choices[beat1Choice].text });
         render();
       }
 
     } else if (s.type === 'constrained') {
       if (!constraintRevealed) {
         beat1Choice = idx; selected = idx;
-        applyScores(s.choices[idx].scores);
+        applyScores(applyVariance(s.choices[idx].scores));
         render();
       } else {
         selected = idx;
-        applyScores(s.constraint.choices[idx].scores);
+        applyScores(applyVariance(s.constraint.choices[idx].scores));
+        history.push({ id: s.id, tags: s.tags || [], choiceText: s.choices[beat1Choice].text });
         render();
       }
     }
   }
 
-  function advanceBeat() { beat = 2; selected = null; render(); }
+  function advanceBeat()      { beat = 2; selected = null; render(); }
   function revealConstraint() { constraintRevealed = true; selected = null; render(); }
 
   function nextRound() {
@@ -729,6 +866,17 @@ const Deck = (() => {
     });
   }
 
+  function findCallback(s) {
+    if (history.length < 2) return null;
+    const tags = s.tags || [];
+    for (let i = history.length - 1; i >= 0; i--) {
+      const h = history[i];
+      if (h.id === s.id) continue;
+      if ((h.tags || []).some(t => tags.includes(t))) return h;
+    }
+    return null;
+  }
+
   // ── RENDER PLAY ──
   function render() {
     const app = document.getElementById('play-app');
@@ -736,11 +884,17 @@ const Deck = (() => {
     const total = shuffle.length;
     const pct = (round / total) * 100;
 
-    const axisBar = AXES.map(a =>
-      `<div class="axis-item">
+    const axisBar = AXES.map(a => {
+      const v = scores[a.key];
+      let glowClass = '';
+      if (a.key === 'trust' && v >= 58) glowClass = ' trust-high';
+      else if (a.key === 'momentum' && v >= 58) glowClass = ' momentum-high';
+      else if (a.key === 'clarity' && v >= 58) glowClass = ' clarity-high';
+      return `<div class="axis-item">
         <div class="ax-label">${a.label}</div>
-        <div class="ax-val" style="color:${a.color}">${scores[a.key]}</div>
-      </div>`).join('');
+        <div class="ax-val${glowClass}" style="color:${a.color}">${v}</div>
+      </div>`;
+    }).join('');
 
     let typeBadge = '';
     if (s.type === 'cascade')
@@ -752,11 +906,16 @@ const Deck = (() => {
     if (s.type === 'cascade') cardClass = 'cascade-card';
     else if (s.type === 'constrained') cardClass = 'constrained-card';
 
+    const cb = (selected === null) ? findCallback(s) : null;
+    const callbackHTML = cb
+      ? `<div class="callback-banner">Earlier on a similar situation, you chose: <strong>"${cb.choiceText}"</strong> — carry that into this one.</div>`
+      : '';
+
     let body = '';
 
     if (s.type === 'standard') {
       if (selected === null) {
-        body = choicesHTML(s.choices, '');
+        body = callbackHTML + choicesHTML(s.choices, '');
       } else {
         body = choicesHTML(s.choices, '', selected)
           + feedbackHTML(s.choices[selected], false)
@@ -766,7 +925,7 @@ const Deck = (() => {
     } else if (s.type === 'cascade') {
       const b2 = beat1Choice !== null ? s.choices[beat1Choice].beat2 : null;
       if (beat === 1 && selected === null) {
-        body = choicesHTML(s.choices, '');
+        body = callbackHTML + choicesHTML(s.choices, '');
       } else if (beat === 1 && selected !== null) {
         body = choicesHTML(s.choices, '', selected)
           + feedbackHTML(s.choices[selected], false)
@@ -794,7 +953,7 @@ const Deck = (() => {
 
     } else if (s.type === 'constrained') {
       if (!constraintRevealed && selected === null) {
-        body = choicesHTML(s.choices, '');
+        body = callbackHTML + choicesHTML(s.choices, '');
       } else if (!constraintRevealed && selected !== null) {
         body = choicesHTML(s.choices, '', selected)
           + feedbackHTML(s.choices[selected], false)
@@ -820,7 +979,7 @@ const Deck = (() => {
 
     app.innerHTML = `
       <div class="deck-header">
-        <div class="brand"><span>Yanke</span> Bionics<span class="v3-pill">v3</span></div>
+        <div class="brand"><span>Yanke</span> Bionics<span class="v3-pill">v4</span></div>
         <div class="header-right">Lab &amp; Fabrication</div>
       </div>
       <div class="progress-wrap">
@@ -877,25 +1036,38 @@ const Deck = (() => {
     const mainAxes = AXES.filter(a => a.key !== 'adaptability');
     const adaptAxis = AXES.find(a => a.key === 'adaptability');
     const sorted = [...mainAxes].sort((a, b) => scores[b.key] - scores[a.key]);
-    const high = sorted[0]; const low = sorted[sorted.length - 1];
+    const high = sorted[0];
+    const low  = sorted[sorted.length - 1];
     const spread = scores[high.key] - scores[low.key];
-    const tendencies = mainAxes.filter(a => scores[a.key] >= 62).map(a => a.label);
+    // Base is 40, so strong = ≥60, high tendency = ≥55
+    const tendencies = mainAxes.filter(a => scores[a.key] >= 55).map(a => a.label);
 
-    const ins1 = spread <= 8
-      ? `Your scores across Trust, Momentum, and Clarity landed within ${spread} points of each other. No single tendency dominated. That's unusual balance.`
-      : `Your highest score was ${high.label} and your lowest was ${low.label} — a ${spread}-point spread. That's not a verdict. It's a signal about where your instincts are strongest and where there's room to stretch.`;
+    const ins1 = spread <= 10
+      ? `Your scores across Trust, Momentum, and Clarity landed within ${spread} points of each other. No single tendency dominated — that's rarer than it sounds.`
+      : `Your highest was ${high.label}, your lowest was ${low.label} — a ${spread}-point spread. That's a signal about where your instincts are strongest and where there's room to stretch.`;
 
-    const ins2 = scores[high.key] >= 68
-      ? `Strong ${high.label} tends to reflect ${
-          high.key === 'trust' ? "a leadership style that builds teams people want to stay on" :
-          high.key === 'momentum' ? "a results-first instinct — things get done around you, but watch what gets left behind in the speed" :
-          "a natural ability to cut through ambiguity and name what's actually happening"
-        }. Cast this deck again in a few months and see what changes.`
-      : `None of your scores ran away in either direction. Real situations are complicated and the instinct to weigh multiple things tends to produce moderate scores. The change over time tells you more than any single run.`;
+    let ins2 = '';
+    if (scores[high.key] >= 60) {
+      const insights = {
+        trust: "Strong Trust usually reflects a leadership style that builds teams people want to stay on. They do more for you when they trust you — even when the work is hard.",
+        momentum: "Strong Momentum reflects a results-first instinct. Things get done around you. Watch what gets left behind in the speed.",
+        clarity: "Strong Clarity reflects a natural ability to cut through ambiguity and name what's actually happening — before others have a word for it."
+      };
+      ins2 = (insights[high.key] || '') + " Cast this deck again in a few months and see what shifts.";
+    } else if (scores[low.key] < 42) {
+      const lowInsights = {
+        trust: "Trust running low can mean the floor is running on compliance instead of confidence. That's sustainable until it isn't.",
+        momentum: "Momentum running low often isn't about speed — it's about decisions that didn't get made, or made too carefully.",
+        clarity: "Clarity running low often shows up as situations that drag longer than they need to. Not because of bad intentions — because the picture wasn't named early enough."
+      };
+      ins2 = (lowInsights[low.key] || '') + " One run isn't a verdict — it's a starting point.";
+    } else {
+      ins2 = "No scores ran away in either direction. Real situations are complicated and the instinct to weigh multiple things tends to produce moderate scores. The change over time tells you more than any single run.";
+    }
 
-    const adaptNote = scores.adaptability !== 50
+    const adaptNote = scores.adaptability !== 40
       ? `<div class="adapt-block">
-          <div class="adapt-val">${scores.adaptability}</div>
+          <div class="adapt-val" style="color:var(--adapt-color)">${scores.adaptability}</div>
           <div>
             <div class="adapt-label">Adaptability</div>
             <div class="adapt-desc">Only scored on cascades and curveballs — measures how you perform after the plan breaks, not before it.</div>
@@ -917,7 +1089,7 @@ const Deck = (() => {
       <div class="results-divider"></div>
       <div class="results-insight">${ins1}</div>
       <div class="results-insight">${ins2}</div>
-      <div class="results-insight" style="font-size:0.75rem;color:rgba(255,255,255,0.27);font-style:italic;margin-top:4px;">Your results are saved on this device only. Not visible to Yanke Bionics, your supervisor, or anyone else.</div>
+      <div class="results-insight" style="font-size:0.73rem;color:rgba(255,255,255,0.22);font-style:italic;margin-top:4px;">Your results stay on this device. Not visible to Yanke Bionics, your supervisor, or anyone else.</div>
       <div class="results-btn-row">
         <button class="btn-ghost" onclick="Deck.reset()">Start Screen</button>
         <button class="btn-green" onclick="Deck.start()">Play Again</button>
@@ -927,8 +1099,7 @@ const Deck = (() => {
   }
 
   function reset() { showScreen('start'); }
-
-  function init() { buildAxesIntro(); }
+  function init()  { buildAxesIntro(); }
 
   return { init, start, choose, advanceBeat, revealConstraint, nextRound, reset };
 })();
