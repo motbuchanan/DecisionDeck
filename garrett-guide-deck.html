@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Garrett Guide Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c1018;
+    --surface: #151c26;
+    --surface2: #1b2434;
+    --warm: #e8804a;
+    --warm-glow: rgba(232,128,74,0.25);
+    --calm: #5ec4b0;
+    --calm-glow: rgba(94,196,176,0.25);
+    --anchor: #9bafc8;
+    --anchor-glow: rgba(155,175,200,0.25);
+    --gold: #f0c040;
+    --gold-dim: rgba(240,192,64,0.15);
+    --cream: #f2e8d8;
+    --text: #e4dcd0;
+    --text-dim: #6e7a8a;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.13);
+    --r: 18px;
+    --r-sm: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%; min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Starfield */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 38% 6%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 58% 28%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 76% 14%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 91% 22%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 8% 58%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 30% 74%, rgba(255,255,255,0.35) 0%, transparent 100%),
+      radial-gradient(1px 1px at 68% 82%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 68%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 48% 92%, rgba(255,255,255,0.35) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 4% 88%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 94% 48%, rgba(255,255,255,0.25) 0%, transparent 100%);
+  }
+
+  /* ═══════════ SCREEN SYSTEM ═══════════ */
+  .screen {
+    position: fixed; inset: 0; z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: center;
+    overflow-y: auto; overflow-x: hidden;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.45s ease;
+  }
+  .screen.active { opacity: 1; pointer-events: all; }
+
+  /* ═══════════ TITLE SCREEN ═══════════ */
+  #screen-title {
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 40%, rgba(94,196,176,0.07) 0%, transparent 65%);
+  }
+
+  .title-inner {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 52px 28px 48px;
+    max-width: 420px; width: 100%;
+    gap: 0;
+  }
+
+  .title-icon {
+    font-size: 58px; margin-bottom: 10px;
+    animation: float-icon 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 24px rgba(94,196,176,0.4));
+  }
+  @keyframes float-icon {
+    0%,100%{ transform: translateY(0); filter: drop-shadow(0 0 24px rgba(94,196,176,0.4)); }
+    50%{ transform: translateY(-10px); filter: drop-shadow(0 0 36px rgba(94,196,176,0.65)); }
+  }
+
+  .title-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 38px; color: var(--cream);
+    letter-spacing: 1px; margin-bottom: 4px;
+    text-shadow: 0 0 40px rgba(94,196,176,0.3);
+  }
+
+  .title-tag {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 15px; color: var(--text-dim);
+    margin-bottom: 32px; letter-spacing: 0.5px;
+  }
+
+  .title-axes {
+    display: flex; gap: 16px; margin-bottom: 32px;
+  }
+  .t-axis {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .t-axis .emoji { font-size: 22px; }
+  .t-axis.warm { color: var(--warm); }
+  .t-axis.calm { color: var(--calm); }
+  .t-axis.anchor { color: var(--anchor); }
+
+  .title-desc {
+    font-family: 'Lora', serif;
+    font-size: 14.5px; line-height: 1.8;
+    color: rgba(228,220,208,0.75);
+    margin-bottom: 36px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 18px 22px;
+  }
+
+  .title-note {
+    font-size: 12px; color: var(--text-dim);
+    margin-bottom: 24px; line-height: 1.6;
+    font-family: 'Lora', serif; font-style: italic;
+  }
+
+  /* ═══════════ BUTTONS ═══════════ */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--calm), #3da898);
+    color: #0a1a18;
+    border: none; border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 17px; font-weight: 900;
+    padding: 15px 44px;
+    cursor: pointer;
+    box-shadow: 0 4px 24px rgba(94,196,176,0.3);
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    margin-bottom: 12px;
+  }
+  .btn-primary:active { transform: scale(0.96); }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid var(--border-bright);
+    border-radius: 50px; color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700;
+    padding: 12px 32px;
+    cursor: pointer; transition: all 0.2s;
+    margin-bottom: 8px;
+  }
+  .btn-secondary:active { background: rgba(255,255,255,0.1); }
+
+  .btn-next {
+    background: rgba(240,192,64,0.1);
+    border: 1.5px solid rgba(240,192,64,0.3);
+    border-radius: 50px; color: var(--gold);
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 900;
+    padding: 12px 28px;
+    cursor: pointer; transition: all 0.2s;
+    align-self: center;
+  }
+  .btn-next:active { background: rgba(240,192,64,0.18); }
+
+  /* ═══════════ SITUATION PICKER ═══════════ */
+  #screen-pick {
+    background: radial-gradient(ellipse at 50% 30%, rgba(232,128,74,0.06) 0%, transparent 65%);
+    padding-top: 0;
+    justify-content: flex-start;
+  }
+
+  .pick-header {
+    width: 100%; max-width: 480px;
+    padding: 28px 24px 0;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 10px;
+    text-align: center;
+  }
+
+  .pick-label {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--warm); margin-bottom: 2px;
+  }
+
+  .pick-heading {
+    font-family: 'Lora', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--cream); line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .pick-sub {
+    font-size: 13px; color: var(--text-dim);
+    font-family: 'Lora', serif; font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .situations-grid {
+    width: 100%; max-width: 480px;
+    padding: 18px 18px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .sit-btn {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 14px;
+    cursor: pointer; text-align: left;
+    transition: all 0.2s;
+    display: flex; flex-direction: column;
+    gap: 8px;
+  }
+  .sit-btn:active { background: var(--surface2); border-color: var(--border-bright); }
+
+  .sit-icon { font-size: 28px; }
+
+  .sit-title {
+    font-size: 13px; font-weight: 800;
+    color: var(--cream); line-height: 1.3;
+  }
+
+  .sit-desc {
+    font-size: 11px; color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .sit-btn.warm { border-color: rgba(232,128,74,0.3); }
+  .sit-btn.warm:active { border-color: rgba(232,128,74,0.55); }
+  .sit-btn.calm { border-color: rgba(94,196,176,0.3); }
+  .sit-btn.anchor { border-color: rgba(155,175,200,0.3); }
+
+  .sit-tag {
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 20px;
+    display: inline-block;
+    align-self: flex-start;
+  }
+  .sit-tag.warm { background: rgba(232,128,74,0.15); color: var(--warm); }
+  .sit-tag.calm { background: rgba(94,196,176,0.15); color: var(--calm); }
+  .sit-tag.anchor { background: rgba(155,175,200,0.15); color: var(--anchor); }
+
+  /* ═══════════ CARD / GUIDE SCREEN ═══════════ */
+  #screen-card {
+    background: radial-gradient(ellipse at 50% 20%, rgba(94,196,176,0.05) 0%, transparent 60%);
+    padding-top: 0;
+    justify-content: flex-start;
+  }
+
+  .card-header {
+    width: 100%; max-width: 500px;
+    padding: 20px 20px 0;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 12px;
+  }
+
+  .progress-row {
+    display: flex; gap: 5px; width: 100%;
+  }
+  .pdot {
+    flex: 1; height: 4px; border-radius: 2px;
+    background: rgba(255,255,255,0.08);
+    transition: background 0.4s;
+  }
+  .pdot.done { background: var(--gold); }
+  .pdot.current { background: rgba(240,192,64,0.4); }
+
+  .axes-row {
+    display: flex; gap: 8px; width: 100%;
+  }
+  .ax-bar {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 7px 10px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+  }
+  .ax-label {
+    font-size: 9px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .ax-track {
+    width: 100%; height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px; overflow: hidden;
+  }
+  .ax-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  }
+  .ax-bar.warm .ax-label { color: var(--warm); }
+  .ax-bar.warm .ax-fill { background: var(--warm); }
+  .ax-bar.calm .ax-label { color: var(--calm); }
+  .ax-bar.calm .ax-fill { background: var(--calm); }
+  .ax-bar.anchor .ax-label { color: var(--anchor); }
+  .ax-bar.anchor .ax-fill { background: var(--anchor); }
+
+  /* ═══════════ SCENARIO CARD ═══════════ */
+  .scenario-wrap {
+    width: 100%; max-width: 500px;
+    padding: 16px 18px 40px;
+    display: flex; flex-direction: column;
+    gap: 14px;
+  }
+
+  .scenario-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+    position: relative;
+    animation: card-rise 0.4s cubic-bezier(0.34,1.2,0.64,1) forwards;
+  }
+  @keyframes card-rise {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .card-top-bar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--warm), var(--calm), var(--anchor));
+    background-size: 200% 100%;
+    animation: bar-flow 4s linear infinite;
+  }
+  @keyframes bar-flow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+  }
+
+  .card-body { padding: 20px 22px 22px; }
+
+  .card-situation-tag {
+    display: flex; align-items: center;
+    gap: 8px; margin-bottom: 14px;
+  }
+  .tag-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .tag-dot.warm { background: var(--warm); }
+  .tag-dot.calm { background: var(--calm); }
+  .tag-dot.anchor { background: var(--anchor); }
+  .tag-label {
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .card-situation {
+    font-family: 'Lora', serif;
+    font-size: 15px; line-height: 1.75;
+    color: rgba(228,220,208,0.75);
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-question {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px; font-weight: 800;
+    color: var(--cream); line-height: 1.4;
+    margin-bottom: 0;
+  }
+
+  /* Choices */
+  .choices-wrap {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .choice-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 14px 16px;
+    cursor: pointer; text-align: left;
+    transition: all 0.18s;
+    display: flex; gap: 12px;
+    align-items: flex-start;
+    width: 100%;
+  }
+  .choice-btn:active { background: rgba(255,255,255,0.09); }
+
+  .choice-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+  .choice-text {
+    font-size: 14px; font-weight: 700;
+    color: var(--cream); line-height: 1.5;
+  }
+
+  .choice-sub {
+    font-size: 12px; color: var(--text-dim);
+    font-family: 'Lora', serif; font-style: italic;
+    margin-top: 3px; line-height: 1.5;
+  }
+
+  /* Feedback block */
+  .feedback-block {
+    display: none; flex-direction: column; gap: 14px;
+    animation: fb-rise 0.4s ease forwards;
+  }
+  @keyframes fb-rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-block.show { display: flex; }
+
+  .fb-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .fb-top { height: 2px; }
+  .fb-top.warm { background: var(--warm); }
+  .fb-top.calm { background: var(--calm); }
+  .fb-top.anchor { background: var(--anchor); }
+
+  .fb-body { padding: 18px 20px 20px; }
+
+  .fb-choice-label {
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .fb-choice-label.warm { color: var(--warm); }
+  .fb-choice-label.calm { color: var(--calm); }
+  .fb-choice-label.anchor { color: var(--anchor); }
+
+  .fb-text {
+    font-family: 'Lora', serif;
+    font-size: 14.5px; line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Key move card */
+  .key-move-card {
+    background: linear-gradient(135deg, rgba(94,196,176,0.08), rgba(155,175,200,0.06));
+    border: 1px solid rgba(94,196,176,0.2);
+    border-radius: var(--r);
+    padding: 18px 20px;
+  }
+
+  .km-label {
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--calm); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .km-moves {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .km-move {
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+
+  .km-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(94,196,176,0.15);
+    border: 1px solid rgba(94,196,176,0.3);
+    color: var(--calm);
+    font-size: 11px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+  .km-text {
+    font-size: 13.5px; line-height: 1.6;
+    color: var(--cream); font-weight: 600;
+  }
+
+  .km-text em {
+    font-style: italic; color: var(--calm);
+    font-family: 'Lora', serif;
+  }
+
+  /* Warning card */
+  .warning-card {
+    background: rgba(232,128,74,0.07);
+    border: 1px solid rgba(232,128,74,0.25);
+    border-radius: var(--r);
+    padding: 14px 18px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .warn-icon { font-size: 18px; flex-shrink: 0; }
+  .warn-text {
+    font-size: 13px; line-height: 1.6;
+    color: rgba(232,128,74,0.9);
+    font-family: 'Lora', serif; font-style: italic;
+  }
+
+  /* Scores */
+  .score-pills {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .score-pill {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 1px;
+    padding: 5px 12px; border-radius: 20px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .score-pill.warm { background: rgba(232,128,74,0.14); color: var(--warm); }
+  .score-pill.calm { background: rgba(94,196,176,0.14); color: var(--calm); }
+  .score-pill.anchor { background: rgba(155,175,200,0.14); color: var(--anchor); }
+  .score-pill .delta { font-size: 12px; }
+
+  /* ═══════════ READING SCREEN ═══════════ */
+  #screen-reading {
+    background: radial-gradient(ellipse at 50% 50%, rgba(94,196,176,0.08) 0%, transparent 65%);
+    padding: 0 0 60px;
+    justify-content: flex-start;
+  }
+
+  .reading-inner {
+    width: 100%; max-width: 500px;
+    padding: 40px 22px 0;
+    display: flex; flex-direction: column;
+    gap: 20px;
+  }
+
+  .reading-crown { text-align: center; }
+
+  .reading-icon {
+    font-size: 52px;
+    filter: drop-shadow(0 0 20px rgba(240,192,64,0.4));
+    margin-bottom: 10px;
+    display: block;
+    animation: crown-pulse 3s ease-in-out infinite;
+  }
+  @keyframes crown-pulse {
+    0%,100%{ filter: drop-shadow(0 0 20px rgba(240,192,64,0.4)); }
+    50%{ filter: drop-shadow(0 0 36px rgba(240,192,64,0.7)); }
+  }
+
+  .reading-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 30px; color: var(--cream);
+    margin-bottom: 6px;
+  }
+
+  .reading-sub {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 14px; color: var(--text-dim);
+  }
+
+  .axis-reading {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .ar-top { height: 3px; }
+  .ar-top.warm { background: var(--warm); }
+  .ar-top.calm { background: var(--calm); }
+  .ar-top.anchor { background: var(--anchor); }
+
+  .ar-body { padding: 18px 20px 20px; }
+
+  .ar-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .ar-icon { font-size: 24px; }
+
+  .ar-name-block { flex: 1; }
+
+  .ar-axis-name {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .ar-axis-name.warm { color: var(--warm); }
+  .ar-axis-name.calm { color: var(--calm); }
+  .ar-axis-name.anchor { color: var(--anchor); }
+
+  .ar-score-label {
+    font-size: 12px; color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .ar-value {
+    font-family: 'Fredoka One', cursive;
+    font-size: 36px; line-height: 1;
+  }
+  .ar-value.warm { color: var(--warm); }
+  .ar-value.calm { color: var(--calm); }
+  .ar-value.anchor { color: var(--anchor); }
+
+  .ar-bar-full {
+    width: 100%; height: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px; overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .ar-bar-inner {
+    height: 100%; border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  .ar-bar-inner.warm { background: var(--warm); }
+  .ar-bar-inner.calm { background: var(--calm); }
+  .ar-bar-inner.anchor { background: var(--anchor); }
+
+  .ar-text {
+    font-family: 'Lora', serif;
+    font-size: 14px; line-height: 1.8;
+    color: rgba(228,220,208,0.85);
+  }
+
+  .summary-card {
+    background: linear-gradient(135deg, rgba(94,196,176,0.07), rgba(155,175,200,0.05));
+    border: 1px solid rgba(94,196,176,0.2);
+    border-radius: var(--r);
+    padding: 20px 22px;
+  }
+
+  .summary-label {
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--calm); margin-bottom: 12px;
+  }
+
+  .summary-text {
+    font-family: 'Lora', serif;
+    font-size: 15px; line-height: 1.85;
+    color: var(--cream);
+  }
+
+  .reading-actions {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 10px;
+    padding-top: 8px;
+  }
+
+  /* ═══════════ REFERENCE SCREEN ═══════════ */
+  #screen-ref {
+    background: radial-gradient(ellipse at 50% 30%, rgba(155,175,200,0.06) 0%, transparent 65%);
+    padding-bottom: 40px;
+    justify-content: flex-start;
+  }
+
+  .ref-inner {
+    width: 100%; max-width: 500px;
+    padding: 28px 20px 0;
+    display: flex; flex-direction: column;
+    gap: 16px;
+  }
+
+  .ref-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 26px; color: var(--cream);
+    margin-bottom: 2px;
+  }
+
+  .ref-sub {
+    font-size: 13px; color: var(--text-dim);
+    font-family: 'Lora', serif; font-style: italic;
+  }
+
+  .ref-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .ref-section-head {
+    padding: 14px 18px 0;
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    padding-bottom: 14px;
+  }
+
+  .ref-section-icon { font-size: 22px; }
+
+  .ref-section-name {
+    font-size: 14px; font-weight: 800;
+    color: var(--cream); flex: 1;
+  }
+
+  .ref-section-arrow {
+    font-size: 12px; color: var(--text-dim);
+    transition: transform 0.25s;
+  }
+  .ref-section.open .ref-section-arrow { transform: rotate(180deg); }
+
+  .ref-section-body {
+    display: none;
+    padding: 0 18px 16px;
+    flex-direction: column; gap: 10px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .ref-section.open .ref-section-body { display: flex; }
+
+  .ref-item {
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+
+  .ref-bullet {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--calm);
+    margin-top: 7px; flex-shrink: 0;
+  }
+  .ref-bullet.warm { background: var(--warm); }
+  .ref-bullet.anchor { background: var(--anchor); }
+
+  .ref-item-text {
+    font-size: 13.5px; line-height: 1.65;
+    color: rgba(228,220,208,0.85);
+  }
+
+  .ref-item-text strong {
+    color: var(--cream); font-weight: 800;
+  }
+
+  .ref-item-text em {
+    font-style: italic; color: var(--calm);
+    font-family: 'Lora', serif;
+  }
+
+  /* Back button floating */
+  .back-btn {
+    position: fixed; top: 18px; left: 18px; z-index: 100;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--border-bright);
+    border-radius: 50px; color: var(--text-dim);
+    font-size: 12px; font-weight: 700;
+    padding: 7px 14px;
+    cursor: pointer; display: none;
+    letter-spacing: 0.5px;
+  }
+  .back-btn.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TITLE ═══════════ -->
+<div class="screen active" id="screen-title">
+  <div class="title-inner">
+    <div class="title-icon">🌊</div>
+    <div class="title-name">The Garrett Guide</div>
+    <div class="title-tag">A field deck for the people who love him</div>
+
+    <div class="title-axes">
+      <div class="t-axis warm"><div class="emoji">🔥</div>PRESENCE</div>
+      <div class="t-axis calm"><div class="emoji">🧵</div>TIMING</div>
+      <div class="t-axis anchor"><div class="emoji">⚓</div>BRIDGE</div>
+    </div>
+
+    <div class="title-desc">
+      When Garrett's nervous system is overloaded, the people around him need a clear playbook — not a lecture. Pick a situation. Follow the signal. Stay connected.
+    </div>
+
+    <div class="title-note">
+      For Mot, Kathy, aunts, grandparents — anyone who loves Garrett and wants to help him find his way back.
+    </div>
+
+    <button class="btn-primary" onclick="showScreen('screen-pick')">
+      What's happening? 🌊
+    </button>
+    <button class="btn-secondary" onclick="showScreen('screen-ref')">
+      Quick Reference 📋
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════ SITUATION PICKER ═══════════ -->
+<div class="screen" id="screen-pick">
+  <button class="back-btn show" onclick="showScreen('screen-title')">← Back</button>
+  <div class="pick-header">
+    <div class="pick-label">🌊 Read the Wave</div>
+    <div class="pick-heading">What's Garrett doing right now?</div>
+    <div class="pick-sub">Pick the closest match. No wrong answer.</div>
+  </div>
+
+  <div class="situations-grid" id="situations-grid">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- ═══════════ SCENARIO CARD SCREEN ═══════════ -->
+<div class="screen" id="screen-card">
+  <button class="back-btn show" id="card-back-btn" onclick="showScreen('screen-pick')">← Situations</button>
+
+  <div class="card-header">
+    <div class="progress-row" id="progress-row"></div>
+    <div class="axes-row">
+      <div class="ax-bar warm">
+        <div class="ax-label">🔥 Presence</div>
+        <div class="ax-track"><div class="ax-fill" id="ax-presence" style="width:50%"></div></div>
+      </div>
+      <div class="ax-bar calm">
+        <div class="ax-label">🧵 Timing</div>
+        <div class="ax-track"><div class="ax-fill" id="ax-timing" style="width:50%"></div></div>
+      </div>
+      <div class="ax-bar anchor">
+        <div class="ax-label">⚓ Bridge</div>
+        <div class="ax-track"><div class="ax-fill" id="ax-bridge" style="width:50%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scenario-wrap" id="scenario-wrap">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- ═══════════ READING SCREEN ═══════════ -->
+<div class="screen" id="screen-reading">
+  <div class="reading-inner" id="reading-inner">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- ═══════════ REFERENCE SCREEN ═══════════ -->
+<div class="screen" id="screen-ref">
+  <button class="back-btn show" onclick="showScreen('screen-title')">← Back</button>
+  <div class="ref-inner">
+    <div>
+      <div class="ref-title">Quick Reference</div>
+      <div class="ref-sub">The rules that don't change, no matter the situation.</div>
+    </div>
+
+    <div class="ref-section" id="ref-sec-1">
+      <div class="ref-section-head" onclick="toggleRef('ref-sec-1')">
+        <div class="ref-section-icon">🌋</div>
+        <div class="ref-section-name">When he's flooding (meltdown in progress)</div>
+        <div class="ref-section-arrow">▼</div>
+      </div>
+      <div class="ref-section-body">
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>Words don't land right now.</strong> Logic, explanations, "why did you do that" — his brain can't process them. Save it for later.</div></div>
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>Lower your voice, slow your body.</strong> His nervous system is mirroring yours. Calm outside helps calm inside.</div></div>
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>If he's circular-arguing</strong> (same points on repeat, no resolution): say <em>"I can see we're both stuck. I'm going to give us some space."</em> Then actually leave. Not punishment — reset.</div></div>
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>The last trigger is rarely the real cause.</strong> Ask yourself: what happened before this? The stack is the issue, not just the final hit.</div></div>
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>Big language (death, hate, terrible mom) = enormous feelings with no better words.</strong> Don't argue the content. Validate the size. Route to Mom or Dad.</div></div>
+      </div>
+    </div>
+
+    <div class="ref-section" id="ref-sec-2">
+      <div class="ref-section-head" onclick="toggleRef('ref-sec-2')">
+        <div class="ref-section-icon">🧊</div>
+        <div class="ref-section-name">After it passes (the calm after the storm)</div>
+        <div class="ref-section-arrow">▼</div>
+      </div>
+      <div class="ref-section-body">
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>Wait until he's fully calm — genuinely calm.</strong> Not "quiet because he's still activated." The difference is visible.</div></div>
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>Repair, not review.</strong> Open with warmth, not "now let's talk about what happened." He already knows. He feels shame about it.</div></div>
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>One specific true thing</strong> beats general reassurance. Not "you're so smart." Try: <em>"You figured out how to get Mismageus into the Outer Rings. You did that."</em></div></div>
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>Collaborative problem solving works here.</strong> "That was really hard. Can we figure out together what might help next time?" His own solutions have much higher compliance than imposed ones.</div></div>
+      </div>
+    </div>
+
+    <div class="ref-section" id="ref-sec-3">
+      <div class="ref-section-head" onclick="toggleRef('ref-sec-3')">
+        <div class="ref-section-icon">🚫</div>
+        <div class="ref-section-name">Things that make it worse — always</div>
+        <div class="ref-section-arrow">▼</div>
+      </div>
+      <div class="ref-section-body">
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>Asking the same thing more than once.</strong> Each repeat stacks as a threat to his autonomy. Ask once, then wait.</div></div>
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>Helping anyway when he said no.</strong> Offer once, neutrally. Back off completely. Let him come to you.</div></div>
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>Consequences during flooding.</strong> He cannot process them. They escalate. Wait until he's calm.</div></div>
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>Long explanations of why he's wrong.</strong> His brain is full. Short, calm, one thing.</div></div>
+        <div class="ref-item"><div class="ref-bullet warm"></div><div class="ref-item-text"><strong>Escalating power struggles.</strong> He will always escalate further. The exit is yours to model.</div></div>
+      </div>
+    </div>
+
+    <div class="ref-section" id="ref-sec-4">
+      <div class="ref-section-head" onclick="toggleRef('ref-sec-4')">
+        <div class="ref-section-icon">🧰</div>
+        <div class="ref-section-name">Regulation tools that actually work</div>
+        <div class="ref-section-arrow">▼</div>
+      </div>
+      <div class="ref-section-body">
+        <div class="ref-item"><div class="ref-bullet anchor"></div><div class="ref-item-text"><strong>Breath game:</strong> <em>"Smell the pizza, blow out the candles."</em> Playful framing keeps it accessible.</div></div>
+        <div class="ref-item"><div class="ref-bullet anchor"></div><div class="ref-item-text"><strong>Frustration bucket:</strong> <em>"How full is your bucket right now — like 1 to 10?"</em> Helps him name it.</div></div>
+        <div class="ref-item"><div class="ref-bullet anchor"></div><div class="ref-item-text"><strong>Heavy work:</strong> Push palms together hard. Stomp feet. Push against a wall. His body needs the input.</div></div>
+        <div class="ref-item"><div class="ref-bullet anchor"></div><div class="ref-item-text"><strong>First/then:</strong> <em>"First one quick thing, then Kirby."</em> Makes the demand visible and bounded.</div></div>
+        <div class="ref-item"><div class="ref-bullet anchor"></div><div class="ref-item-text"><strong>Genuine laughter</strong> interrupts spirals better than any technique. Use it when you can find it.</div></div>
+        <div class="ref-item"><div class="ref-bullet anchor"></div><div class="ref-item-text"><strong>Feeling at a distance:</strong> Route emotional questions through his worlds. <em>"What do you think makes Bay-bay feel scared?"</em> instead of asking him directly.</div></div>
+      </div>
+    </div>
+
+    <div class="ref-section" id="ref-sec-5">
+      <div class="ref-section-head" onclick="toggleRef('ref-sec-5')">
+        <div class="ref-section-icon">💜</div>
+        <div class="ref-section-name">For aunts visiting — what to know first</div>
+        <div class="ref-section-arrow">▼</div>
+      </div>
+      <div class="ref-section-body">
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>Two exciting things on the same day = collapse risk.</strong> Library + your visit + a shower before leaving = too much stacked. Know this going in.</div></div>
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>He agreed to seeing you and he means it.</strong> When he fights it right before you arrive, that's not about you — it's that the plan became real and real plans have variables he can't control.</div></div>
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>Give him micro-choices:</strong> <em>"When I get there, do you want to show me Treat Land first, or something else?"</em> Gives him control over a small piece.</div></div>
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>His creatures and worlds are real to him.</strong> Ask about them with genuine curiosity. Ask who lives in Outer Rings. Ask what Mismageus sounds like. He will light up.</div></div>
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>Bay-bay is his plushie dinosaur and she matters deeply.</strong> Don't tease it. Ask about her if he mentions her.</div></div>
+        <div class="ref-item"><div class="ref-bullet calm"></div><div class="ref-item-text"><strong>If he melts down during your visit, it is not your fault.</strong> Follow his parents' lead. You being calm is the best help you can give.</div></div>
+      </div>
+    </div>
+
+    <div style="padding-top: 4px; padding-bottom: 40px; text-align: center;">
+      <button class="btn-secondary" onclick="showScreen('screen-pick')">Go to Situations →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════ DATA ═══════════
+
+const SITUATIONS = [
+  {
+    id: 'building',
+    icon: '🌋',
+    title: 'Building up — not flooded yet',
+    desc: 'He\'s irritable, snapping, not listening. Something is loading.',
+    color: 'warm',
+    scenarios: ['s-buildup-1','s-buildup-2','s-buildup-3']
+  },
+  {
+    id: 'flood',
+    icon: '🌊',
+    title: 'Full meltdown in progress',
+    desc: 'Yelling, crying, big language, not reachable by words.',
+    color: 'warm',
+    scenarios: ['s-flood-1','s-flood-2','s-flood-3']
+  },
+  {
+    id: 'shutdown',
+    icon: '🧊',
+    title: 'Shutdown / withdrawal',
+    desc: 'Going quiet, hiding, won\'t respond. Frozen.',
+    color: 'calm',
+    scenarios: ['s-shutdown-1','s-shutdown-2','s-shutdown-3']
+  },
+  {
+    id: 'repair',
+    icon: '🌱',
+    title: 'After the storm — repair time',
+    desc: 'He\'s calmer now. How do we reconnect?',
+    color: 'calm',
+    scenarios: ['s-repair-1','s-repair-2','s-repair-3']
+  },
+  {
+    id: 'demand',
+    icon: '⚡',
+    title: 'Refusing a request',
+    desc: 'Can\'t get him to do the thing — chores, school, transitions.',
+    color: 'anchor',
+    scenarios: ['s-demand-1','s-demand-2','s-demand-3']
+  },
+  {
+    id: 'visit',
+    icon: '🏠',
+    title: 'Exciting thing → crash',
+    desc: 'He agreed, got excited, now won\'t go / is fighting the plan.',
+    color: 'anchor',
+    scenarios: ['s-visit-1','s-visit-2','s-visit-3']
+  }
+];
+
+const SCENARIOS = {
+  // ── BUILDING ──
+  's-buildup-1': {
+    type: 'warm',
+    category: 'Building Up',
+    context: 'He stopped Kirby mid-level to come to dinner, ate almost nothing, and now can\'t find his stylus. The frustration is visible and climbing. He hasn\'t melted down yet — but the window is small.',
+    question: 'You notice he\'s getting activated. What\'s your first move?',
+    choices: [
+      {
+        icon: '👁️',
+        text: 'Notice out loud, gently',
+        sub: 'Name what you see without judgment.',
+        color: 'calm',
+        scores: { presence: 6, timing: 8, bridge: 4 },
+        feedback: 'Naming the feeling without judgment ("you seem really frustrated right now — that makes sense") gives him a handhold. He may not respond, but it shows him someone sees the wave before it crashes. This is presence that costs nothing and buys a lot.',
+        key_moves: ['Say: "You seem really frustrated. That makes sense."', 'Don\'t ask why. Don\'t offer solutions yet.', 'Stay near but not hovering.'],
+        warning: null
+      },
+      {
+        icon: '🙋',
+        text: 'Offer to help find the stylus',
+        sub: 'Jump in — it\'s a solvable problem.',
+        color: 'anchor',
+        scores: { presence: 5, timing: 3, bridge: 6 },
+        feedback: 'Good instinct — but offer once and only once. If he says no or ignores you, back off completely. Pressing for "are you sure?" or helping anyway registers as another demand on a system that\'s already full.',
+        key_moves: ['Offer once: "Want help looking?"', 'If he says no — back off. Fully.', 'Side-by-side presence is fine. Directing is not.'],
+        warning: 'If he refuses help and you keep pressing, he may pivot to fighting you instead of finding the stylus.'
+      },
+      {
+        icon: '📋',
+        text: 'Redirect to something calming',
+        sub: 'Maybe now\'s a good time for a break.',
+        color: 'warm',
+        scores: { presence: 2, timing: -3, bridge: 3 },
+        feedback: 'Introducing a new agenda when he\'s already activated adds one more demand to the stack. He wasn\'t done with the thing he was doing. An unsolicited redirect at this moment often lands as a dismissal of his frustration.',
+        key_moves: ['Wait for him to reach for a break himself.', 'If you want to offer it: "We could take a breath whenever you\'re ready — no rush."', 'Keep it available, not directive.'],
+        warning: 'Redirecting feels helpful but can feel controlling to a child who is losing control of his environment.'
+      }
+    ]
+  },
+
+  's-buildup-2': {
+    type: 'warm',
+    category: 'Building Up',
+    context: 'He\'s asked you for the same thing three times and you\'ve said no each time. Now he\'s starting to bargain harder, his voice is getting sharper, and you can feel where this is heading.',
+    question: 'He asks again — a fourth time. How do you respond?',
+    choices: [
+      {
+        icon: '🪨',
+        text: 'One calm sentence, then silence',
+        sub: '"The answer is still no. I love you." Then stop.',
+        color: 'calm',
+        scores: { presence: 7, timing: 9, bridge: 5 },
+        feedback: 'Saying it once, calmly, and then going quiet is the hardest and most effective move. Every repetition of the explanation or the no is fuel for the argument loop. The silence isn\'t cold — it\'s the answer. His brain needs to process it without new words landing on top.',
+        key_moves: ['One sentence. Then stop.', 'Don\'t justify, explain, or defend after that.', 'Stay in the room if you can — leave only if he escalates.'],
+        warning: null
+      },
+      {
+        icon: '💬',
+        text: 'Explain why one more time',
+        sub: 'Maybe he\'ll understand if you break it down.',
+        color: 'warm',
+        scores: { presence: 4, timing: -2, bridge: 3 },
+        feedback: 'His brain is not waiting for a better explanation — it\'s in a loop. Adding more words adds more load. He may be highly verbal, but verbal intelligence and emotional regulation are in different parts of the brain. Right now the regulation part is struggling.',
+        key_moves: ['Use fewer words, not more.', 'If he keeps asking, mirror back: "I can see how much you want this."', 'Then be quiet.'],
+        warning: 'Long explanations are a common trap. They feel fair but they extend the window where escalation can happen.'
+      },
+      {
+        icon: '🔀',
+        text: 'Offer a small compromise',
+        sub: 'Maybe there\'s a middle path here.',
+        color: 'anchor',
+        scores: { presence: 5, timing: 4, bridge: 7 },
+        feedback: 'If a genuine compromise exists — one that\'s real, not a dodge — it can work. But negotiate from a calm place. If you offer a compromise because you\'re worn down and want the asking to stop, he will sense that and push further. Compromises work best when offered proactively, not as a response to pressure.',
+        key_moves: ['Only offer if it\'s a real option you\'d have offered anyway.', 'Name it clearly: "Here\'s what I can actually do."', 'Then hold that line.'],
+        warning: 'Giving in to pressure teaches him that pressure works. Be honest with yourself about why you\'re offering the compromise.'
+      }
+    ]
+  },
+
+  's-buildup-3': {
+    type: 'warm',
+    category: 'Building Up',
+    context: 'He\'s been around a lot of adults today, had a transition earlier that went rough, and was interrupted mid-game. None of it was a catastrophe. But now a small thing — you asked him to put his cup in the sink — is getting a reaction way bigger than the request.',
+    question: 'The cup isn\'t the real issue. What do you do?',
+    choices: [
+      {
+        icon: '🔍',
+        text: 'Acknowledge the stack, not just the cup',
+        sub: 'See the whole day, not just this moment.',
+        color: 'calm',
+        scores: { presence: 9, timing: 7, bridge: 8 },
+        feedback: 'This is the most important read you can make. The cup is the last domino. When you say "today had a lot of hard things, not just this" — he feels seen, not managed. You don\'t have to solve the earlier things. Just naming them tells him his whole experience is real, not just the moment you\'re in.',
+        key_moves: ['Say something like: "Today had a lot of stuff. That adds up."', 'Don\'t list everything — just acknowledge there\'s a stack.', 'Then let the cup wait. Or ask once, gently, and back off.'],
+        warning: null
+      },
+      {
+        icon: '🎯',
+        text: 'Hold the line — the cup still needs to go in',
+        sub: 'The request is reasonable. He needs to hear it.',
+        color: 'warm',
+        scores: { presence: 3, timing: 2, bridge: 4 },
+        feedback: 'You\'re right that the request is reasonable. But his nervous system is reading it as the fourth impossible thing today. The cup will still be there in ten minutes. Holding a firm line in this moment trains the battle, not the skill. The skill builds when he\'s calm.',
+        key_moves: ['The cup can wait ten minutes.', 'Say: "I\'m going to let that wait. Let\'s take a breath first."', 'Return to it when he\'s genuinely settled.'],
+        warning: 'When a child is already depleted, the "reasonable request" feels like the thing that broke everything. That\'s not defiance — it\'s a full tank.'
+      },
+      {
+        icon: '🧊',
+        text: 'Drop it entirely and just give him space',
+        sub: 'Today\'s been too much — let this one go.',
+        color: 'anchor',
+        scores: { presence: 6, timing: 8, bridge: 5 },
+        feedback: 'If you genuinely drop it — not as a withdrawal but as a choice — that\'s a kind move. What matters is that you do it cleanly. If you let it go but stew about it, he will feel the residue of the tension even without words. Let go like you mean it.',
+        key_moves: ['Say: "You know what — forget the cup. You good?"', 'Then actually move on. No sighing. No returning to it later as "see?"', 'This is a regulation win for you both.'],
+        warning: null
+      }
+    ]
+  },
+
+  // ── FLOOD ──
+  's-flood-1': {
+    type: 'warm',
+    category: 'Full Meltdown',
+    context: 'He\'s crying and yelling at the same time. He said something that would normally require a response — something about you, or about wanting to disappear. He\'s not reachable right now. Nothing you say is landing.',
+    question: 'He\'s at the top of the wave. What do you do with your body and your voice?',
+    choices: [
+      {
+        icon: '🌊',
+        text: 'Lower everything — voice, pace, presence',
+        sub: 'Get slow. Get quiet. Get close-but-not-too-close.',
+        color: 'calm',
+        scores: { presence: 9, timing: 8, bridge: 7 },
+        feedback: 'His nervous system is mirroring the energy around him. You can\'t think him down from flooding — but you can model a different nervous system and give his somewhere to land. Slow breath. Soft voice. Not hovering. The message is: the storm doesn\'t scare me, and I\'m still here.',
+        key_moves: ['Lower your voice below what feels necessary.', 'Slow your breathing audibly — he may sync unconsciously.', 'Stay visible, not crowding. A doorway or across the room is fine.'],
+        warning: null
+      },
+      {
+        icon: '💬',
+        text: 'Name what he said and address it',
+        sub: 'He said something serious — it shouldn\'t go unanswered.',
+        color: 'warm',
+        scores: { presence: 4, timing: -4, bridge: 3 },
+        feedback: 'What he said is worth coming back to — later, when he\'s genuinely calm. Right now, engaging with the content of what he said is adding words to a system that can\'t process them. He is reaching for the biggest words he has because the feelings are enormous. The answer to enormous feelings is not more words right now.',
+        key_moves: ['File it for the calm window.', 'In the moment, one sentence maximum: "That sounds like really big feelings."', 'Then go quiet.'],
+        warning: 'Addressing serious language during flooding validates the power of the words. Handle it in the calm window instead.'
+      },
+      {
+        icon: '🚪',
+        text: 'Give him space — leave the room',
+        sub: '"I can see we\'re both stuck. I\'m going to give us some space."',
+        color: 'anchor',
+        scores: { presence: 6, timing: 9, bridge: 6 },
+        feedback: 'Leaving is not abandonment — it\'s modeling the exit from the loop. Say it plainly and calmly, then actually go. The key: don\'t slam anything, don\'t say it in frustration, and check back in ten to fifteen minutes. The space is the intervention. You are not withdrawing love — you\'re withdrawing the fuel that keeps the loop running.',
+        key_moves: ['Say it once: "I can see we\'re both stuck. I\'m going to give us some space."', 'Leave calmly. No slammed doors, no sighing.', 'Check back in 10-15 minutes with a low-demand opener.'],
+        warning: null
+      }
+    ]
+  },
+
+  's-flood-2': {
+    type: 'warm',
+    category: 'Full Meltdown',
+    context: 'He hit someone — a quick slap, a frustrated shove. It\'s done. He\'s still activated.',
+    question: 'Hitting just happened. What\'s the immediate response?',
+    choices: [
+      {
+        icon: '🛑',
+        text: 'One sentence. Move him. No words.',
+        sub: '"You hit. We\'re done." Then remove him physically if needed.',
+        color: 'warm',
+        scores: { presence: 8, timing: 9, bridge: 5 },
+        feedback: 'Zero verbal engagement in the moment is the right call. His nervous system cannot process a consequence right now — but it can process a physical change in the situation. Move him to his room or a safe space. One sentence, calm voice, no argument. The conversation happens later, when he\'s genuinely calm.',
+        key_moves: ['"You hit. We\'re done." Said once, flatly, calmly.', 'Move him to his room (or let him go there).', 'Do not lecture, explain, or revisit until he is fully calm.'],
+        warning: null
+      },
+      {
+        icon: '📢',
+        text: 'Address it immediately — he needs to understand',
+        sub: 'He has to know this isn\'t acceptable right now.',
+        color: 'warm',
+        scores: { presence: 2, timing: -5, bridge: 2 },
+        feedback: 'He already knows hitting is wrong — he will know it even more clearly in the shame window after he calms down. Addressing it now adds fuel. His brain is in threat mode. Logic delivered during flooding does not land. It escalates.',
+        key_moves: ['Hold the conversation until he\'s calm.', 'In the calm window: brief, logical, tied directly to the hitting.', 'Delivered once. Not argued.'],
+        warning: 'The impulse to address it immediately is completely understandable. It also consistently makes the situation worse in the short term.'
+      },
+      {
+        icon: '🧊',
+        text: 'Give space first, then address it',
+        sub: 'Let him cool down, then have the conversation.',
+        color: 'calm',
+        scores: { presence: 7, timing: 8, bridge: 6 },
+        feedback: 'Yes — this is the sequence. The hitting must be addressed, but the address lands only when his nervous system is no longer in crisis mode. Giving genuine space first (not punitive isolation, just time and quiet) sets up the later conversation to actually work.',
+        key_moves: ['Move him to a quiet space without a lecture.', 'Wait until he is genuinely calm — maybe 20-30 minutes.', 'Then: brief, warm, specific. "When you hit, the screens go off until lunch. That\'s the plan, and I love you."'],
+        warning: null
+      }
+    ]
+  },
+
+  's-flood-3': {
+    type: 'warm',
+    category: 'Full Meltdown',
+    context: 'He\'s been arguing in circles for twenty minutes. Same points. No resolution. He\'s escalating each time you respond. You\'re exhausted.',
+    question: 'You\'re stuck in the circular loop. What breaks it?',
+    choices: [
+      {
+        icon: '🚪',
+        text: 'Model the exit yourself',
+        sub: 'Stop engaging. Leave calmly. The loop needs two people.',
+        color: 'calm',
+        scores: { presence: 8, timing: 10, bridge: 7 },
+        feedback: 'The circular argument has one fuel source: continued engagement. Every response — even a calm one — tells his brain the loop is still viable. You are the one who can end it, because you are not flooded. Leave. Calmly. Without anger. The loop cannot run on one person.',
+        key_moves: ['"I can see we\'re going in circles. I\'m going to take a break and check back in."', 'Then leave. Quietly.', 'Come back in 15 minutes with something low-demand: "Hey. You okay?"'],
+        warning: null
+      },
+      {
+        icon: '🏳️',
+        text: 'Concede to end it',
+        sub: 'Just give him what he wants. It\'s not worth this.',
+        color: 'warm',
+        scores: { presence: 1, timing: -3, bridge: 2 },
+        feedback: 'Conceding to end the loop tells him the loop works. He\'s not consciously running a strategy — but his nervous system is learning that this is how needs get met. It also doesn\'t actually end the loop sometimes; he may keep going even after getting the thing.',
+        key_moves: ['If you need to give something: give it before the loop starts, not inside it.', 'Concessions inside a meltdown teach the wrong lesson.'],
+        warning: 'This one is genuinely hard because the relief is immediate and real. Just know the cost.'
+      },
+      {
+        icon: '🌊',
+        text: 'Stay present but go quiet',
+        sub: 'Don\'t leave — just stop adding words.',
+        color: 'anchor',
+        scores: { presence: 7, timing: 7, bridge: 5 },
+        feedback: 'Staying in the room while going quiet can work — if you can genuinely do it without tension radiating off you. The goal is to signal "I\'m here, I\'m not mad, and I\'m not feeding the loop." Hard to sustain, but effective when you can manage it.',
+        key_moves: ['Stay. Say nothing.', 'If he escalates into hitting or unsafe behavior: then leave.', 'Neutral body language matters — don\'t sigh, check your phone, or look away in frustration.'],
+        warning: null
+      }
+    ]
+  },
+
+  // ── SHUTDOWN ──
+  's-shutdown-1': {
+    type: 'calm',
+    category: 'Shutdown',
+    context: 'He\'s gone quiet. He\'s in his room or under something. He\'s not responding to normal check-ins. Something happened — you\'re not sure exactly what.',
+    question: 'He\'s shut down. How do you approach?',
+    choices: [
+      {
+        icon: '🧵',
+        text: 'Low-demand check-in, no pressure',
+        sub: 'Show up with something simple. No questions.',
+        color: 'calm',
+        scores: { presence: 8, timing: 9, bridge: 7 },
+        feedback: 'Shutdown means his system is overloaded and trying to protect itself. Pressure to come out or explain makes it worse. What works: show up quietly, offer something small (a drink, a snack, just your presence), and ask nothing. "I brought you some water. I\'ll be in the other room" is a full intervention.',
+        key_moves: ['Show up quietly. Knock if the door is closed.', 'Offer without asking: "I brought some water."', 'Leave the offer and go. Don\'t wait for a response.'],
+        warning: null
+      },
+      {
+        icon: '❓',
+        text: 'Ask what\'s wrong — he should be able to tell you',
+        sub: 'Give him the chance to process out loud.',
+        color: 'warm',
+        scores: { presence: 4, timing: -2, bridge: 3 },
+        feedback: 'In a calm moment, "what\'s wrong?" opens a door. In a shutdown, it\'s a demand — and the real answer is "I don\'t know and can\'t explain it right now." He may genuinely not be able to access what happened. The question can deepen the shutdown.',
+        key_moves: ['Wait for the natural opening.', 'When he re-emerges, let him lead.', 'A short simple check-in is better than a question: "Hey. I\'m glad you\'re back."'],
+        warning: null
+      },
+      {
+        icon: '⏳',
+        text: 'Give him time and check back later',
+        sub: 'He knows where to find you when he\'s ready.',
+        color: 'anchor',
+        scores: { presence: 7, timing: 8, bridge: 5 },
+        feedback: 'Giving space is right — but don\'t disappear entirely. A quiet return in 10-15 minutes with no agenda ("just checking in, no rush") tells him someone is tracking him without crowding him. The re-entry after shutdown can come too fast — he may seem fine but still be fragile.',
+        key_moves: ['Let him have the initial space.', 'Return in 10-15 min: knock, say "just checking in." Leave again if no response.', 'When he re-emerges: short, warm, low-demand. "Hey. You good? Want a snack?"'],
+        warning: 'Quick re-entry after shutdown can mask cumulative stress. A short positive opening doesn\'t mean the system has fully reset.'
+      }
+    ]
+  },
+
+  's-shutdown-2': {
+    type: 'calm',
+    category: 'Shutdown',
+    context: 'He just said "fine" and went blank. Eye contact dropped. He\'s technically in the room but not present. You\'re not sure if something happened or if he\'s just done for the day.',
+    question: 'He\'s checked out mid-conversation. What\'s your move?',
+    choices: [
+      {
+        icon: '🌿',
+        text: 'Quietly wrap up the thing you were doing',
+        sub: 'Finish without him needing to participate.',
+        color: 'calm',
+        scores: { presence: 7, timing: 8, bridge: 6 },
+        feedback: 'If you can finish the task or conversation without requiring his active participation, do. This gives him the gift of the pressure lifting without him having to negotiate it. "I\'ve got this part. You can just be here." is a complete sentence.',
+        key_moves: ['Wrap up without requiring his input.', 'Say: "I\'ve got it. You just rest."', 'Don\'t narrate what you\'re doing — just do it quietly.'],
+        warning: null
+      },
+      {
+        icon: '💡',
+        text: 'Try to re-engage with something he likes',
+        sub: 'Offer Treat Land or his creatures — pivot to something good.',
+        color: 'warm',
+        scores: { presence: 5, timing: 3, bridge: 6 },
+        feedback: 'This can work if done gently and with a genuine offer — not as a strategy to "fix" him. "Hey, do you want to tell me something about Spaceland?" as a soft opening, not a demand. If he shuts it down, back off. Don\'t try a second angle.',
+        key_moves: ['Offer it once, lightly: "If you want to tell me anything about Outer Rings later, I\'m around."', 'Leave it there.', 'Let him pick it up in his own time.'],
+        warning: 'Warm enthusiasm can destabilize a fragile baseline. Keep the offer neutral and low-temperature.'
+      },
+      {
+        icon: '📵',
+        text: 'Say nothing — just be in the room',
+        sub: 'No questions. No tasks. Just present.',
+        color: 'anchor',
+        scores: { presence: 9, timing: 9, bridge: 5 },
+        feedback: 'This is underrated. Being in the room without an agenda — without needing anything from him — is one of the most powerful things an adult can do for a child who is overloaded. You don\'t have to talk. You don\'t have to fix it. You just have to stay.',
+        key_moves: ['Sit down nearby with something of your own (phone, book).', 'No conversation required.', 'If he starts talking, follow his lead without acceleration.'],
+        warning: null
+      }
+    ]
+  },
+
+  's-shutdown-3': {
+    type: 'calm',
+    category: 'Shutdown',
+    context: 'He had a good morning — he said so himself. Then something small happened (a game glitch, a wait that was too long) and he completely collapsed. He declared a good day, then crashed.',
+    question: 'The declared good day just turned. He\'s devastated and confused. What do you say?',
+    choices: [
+      {
+        icon: '🌧️',
+        text: 'Acknowledge both the good and the hard',
+        sub: 'The morning was real. This is also real.',
+        color: 'calm',
+        scores: { presence: 9, timing: 8, bridge: 8 },
+        feedback: 'Both things can be true. "The morning was really good. And this is hard right now. Both of those are real." He may have over-extended his good baseline by declaring it — positive mirroring can destabilize a fragile state. He doesn\'t need to understand that. He just needs to know both are allowed.',
+        key_moves: ['"This morning was genuinely good. And right now is hard. Both of those are true."', 'Don\'t try to restore the good morning.', 'Let the hard moment be what it is without treating it as a problem to solve.'],
+        warning: null
+      },
+      {
+        icon: '☀️',
+        text: 'Remind him the morning was good — help him hold onto it',
+        sub: 'You don\'t want the bad ending to erase the good start.',
+        color: 'warm',
+        scores: { presence: 4, timing: 2, bridge: 3 },
+        feedback: 'The instinct to protect the good memory is kind. But right now he can\'t access those memories while flooded — and the contrast between what he declared and what he feels now can deepen the shame. Let the morning be the morning. Be with him where he actually is.',
+        key_moves: ['Don\'t reference the good morning in this moment.', 'Return to it later in the calm window if it feels right.', 'Right now, just be with him in the hard part.'],
+        warning: 'Positive mirroring during a fragile baseline can make the crash worse. Match where he is, not where you want him to be.'
+      },
+      {
+        icon: '⏸️',
+        text: 'Don\'t label it — just sit with him',
+        sub: 'Words might be the wrong tool right now.',
+        color: 'anchor',
+        scores: { presence: 8, timing: 9, bridge: 6 },
+        feedback: 'Sometimes the crash doesn\'t need naming. Just sitting with him without trying to categorize the morning or fix the afternoon is enough. Let him lead when he\'s ready to talk.',
+        key_moves: ['Sit nearby without commentary.', 'If he talks, follow.', 'If he doesn\'t, that\'s fine too. Your presence is the thing.'],
+        warning: null
+      }
+    ]
+  },
+
+  // ── REPAIR ──
+  's-repair-1': {
+    type: 'calm',
+    category: 'After the Storm',
+    context: 'It\'s been 30 minutes. He\'s quiet now. Genuinely calm — you can tell. He might come find you, or he might still be in his room. The meltdown is over.',
+    question: 'He\'s calm. How do you open the repair window?',
+    choices: [
+      {
+        icon: '🌱',
+        text: 'Low-demand opening — no reference to what happened',
+        sub: '"Hey. You good? Want a snack?"',
+        color: 'calm',
+        scores: { presence: 9, timing: 9, bridge: 8 },
+        feedback: 'The repair window works best when it doesn\'t feel like a repair. A normal, warm, low-stakes interaction — checking in, offering food, being easy — tells him the relationship survived without making him perform remorse on cue. He already knows what happened. He\'s probably in the shame window.',
+        key_moves: ['Open with something simple: "Hey. Want some crackers or something?"', 'Let him respond however he responds.', 'Follow his lead before introducing anything heavier.'],
+        warning: null
+      },
+      {
+        icon: '💬',
+        text: 'Open the conversation — now\'s the time to process it',
+        sub: 'He\'s calm. This is the window to talk about what happened.',
+        color: 'anchor',
+        scores: { presence: 6, timing: 5, bridge: 6 },
+        feedback: 'The window is open — but lead with repair, not review. "Sometimes after something really hard, I wonder how you feel about it later" is different from "let\'s talk about what you did." The first invites. The second triggers shame. Wait for him to bring up the event before you name it directly.',
+        key_moves: ['"Sometimes after something really hard, I wonder how you\'re feeling."', 'Don\'t recount what happened. Wait for him to lead.', 'Collaborative problem solving only if he opens it: "What could help next time?"'],
+        warning: 'Immediate review of behavior — even gently — while he\'s in the shame window can deepen it rather than resolve it.'
+      },
+      {
+        icon: '🧸',
+        text: 'Find something fun to do together',
+        sub: 'Skip the debrief. Just reconnect.',
+        color: 'warm',
+        scores: { presence: 8, timing: 8, bridge: 7 },
+        feedback: 'This is often the right call. A shared laugh, a game, a question about his worlds — the reconnection happens through doing, not just talking. Laughter genuinely interrupts shame spirals. You don\'t always have to talk about the hard thing to repair from it.',
+        key_moves: ['Offer something you can do together: "You want to show me anything in Treat Land right now?"', 'Or just be near him while he plays.', 'Let the connection rebuild through ease.'],
+        warning: null
+      }
+    ]
+  },
+
+  's-repair-2': {
+    type: 'calm',
+    category: 'After the Storm',
+    context: 'He\'s come to you — voluntarily. He\'s being extra sweet, a little compliant, hovering close. This is the post-meltdown oscillation: the shame has kicked in and he\'s trying to repair the bond.',
+    question: 'He\'s being sweet — almost over-sweet. How do you receive it?',
+    choices: [
+      {
+        icon: '💛',
+        text: 'Receive it warmly and simply',
+        sub: 'Match his bid without making it a big moment.',
+        color: 'calm',
+        scores: { presence: 9, timing: 9, bridge: 8 },
+        feedback: 'He is asking "are we still okay?" through his behavior, not his words. Answer with warmth that doesn\'t comment on the storm or the sweetness. A hug, a gentle response, normal conversation — "yes, we\'re still okay" delivered through ease. Don\'t make the repair itself a moment he has to perform.',
+        key_moves: ['Receive his bid warmly.', 'Don\'t say "I\'m glad you\'re being nicer now" — it makes the repair conditional.', 'Just be easy. Warm. Normal. That\'s the full answer.'],
+        warning: null
+      },
+      {
+        icon: '🔄',
+        text: 'Use this moment to circle back to earlier',
+        sub: 'He\'s calm and sweet — now\'s a good opening.',
+        color: 'warm',
+        scores: { presence: 4, timing: 3, bridge: 4 },
+        feedback: 'The sweetness is a repair bid, not an opening for review. He is not in a place to productively process what happened — he\'s managing the shame of it. Bringing it up now may feel like you\'re attaching conditions to his warmth.',
+        key_moves: ['Let the sweetness be the connection, not the opening.', 'If you want to do some collaborative problem solving, wait for a genuinely neutral moment — not a repair bid.'],
+        warning: 'Connecting accountability to his warm bids can accidentally teach him that reaching for connection comes with a debrief.'
+      },
+      {
+        icon: '✨',
+        text: 'Acknowledge him — one specific true thing',
+        sub: 'Not compliments. A fact.',
+        color: 'anchor',
+        scores: { presence: 8, timing: 7, bridge: 9 },
+        feedback: 'If you want to actively counter the shame narrative, this is the tool: one specific recent true thing. Not "you\'re so smart." Something like "You figured out that Mismageus came from a sound experiment. That was you." Specific and recent beats abstract and general. Don\'t layer it — one thing, then let it land.',
+        key_moves: ['Find one specific recent true thing he did.', 'Say it simply: "You did that." Then stop.', 'Don\'t add a lesson or a but.'],
+        warning: null
+      }
+    ]
+  },
+
+  's-repair-3': {
+    type: 'calm',
+    category: 'After the Storm',
+    context: 'He\'s used self-punishment language: "I\'m a fuck-up. I can\'t do anything right." It\'s after the meltdown. He genuinely believes it in this moment.',
+    question: 'He\'s in the shame spiral — saying terrible things about himself. What do you offer?',
+    choices: [
+      {
+        icon: '🤝',
+        text: 'Acknowledge the feeling before the reframe',
+        sub: '"That makes sense you feel bad. That was really hard."',
+        color: 'calm',
+        scores: { presence: 10, timing: 9, bridge: 9 },
+        feedback: 'This is the sequence: acknowledge first, always. Skipping to reassurance before acknowledging the feeling tells him you didn\'t quite hear him. "It makes sense you feel bad. That was hard." — then silence. Then, later, one specific true fact if it feels right. Not a list of his strengths. One thing.',
+        key_moves: ['"That makes sense you feel bad. That was really hard."', 'Silence. Let it land.', 'Later — not immediately: one specific recent true thing. "You figured out the Alcremie tower when it fell. You did that."'],
+        warning: null
+      },
+      {
+        icon: '💪',
+        text: 'Counter it with his strengths',
+        sub: '"That\'s not true — you\'re great at so many things."',
+        color: 'warm',
+        scores: { presence: 3, timing: 2, bridge: 3 },
+        feedback: 'It feels true and kind — but direct argument to the shame narrative doesn\'t land. It often feels dismissive ("you\'re not listening to how bad I feel") or like pressure to perform not-feeling-bad. Abstract praise after specific shame doesn\'t work. Specific recent facts after acknowledging the feeling — that works.',
+        key_moves: ['Acknowledge the feeling first, always.', 'Then, after a beat: one specific true thing. Not general praise.'],
+        warning: 'Immediate reassurance that skips the acknowledgment is the most common well-intentioned mistake in these moments.'
+      },
+      {
+        icon: '🌿',
+        text: 'Sit with him without saying anything',
+        sub: 'Sometimes presence is the response.',
+        color: 'anchor',
+        scores: { presence: 8, timing: 8, bridge: 6 },
+        feedback: 'If words feel like the wrong tool, your presence still says something. Sitting near him without an agenda — after a quiet acknowledgment of the feeling — tells him you\'re not leaving and you\'re not scared of his pain. Sometimes that\'s everything.',
+        key_moves: ['Say one thing: "That sounds like it feels really bad."', 'Then be near.', 'Let him talk if he talks. If he doesn\'t, that\'s okay.'],
+        warning: null
+      }
+    ]
+  },
+
+  // ── DEMAND ──
+  's-demand-1': {
+    type: 'anchor',
+    category: 'Refusing a Request',
+    context: 'You asked him to do something simple. He ignored it the first time. You asked again. Now he\'s digging in and the ask itself seems to have become the problem.',
+    question: 'He\'s dug in on the request. Where do you go from here?',
+    choices: [
+      {
+        icon: '⏳',
+        text: 'Give real processing time — stop talking',
+        sub: 'Ask once, then wait longer than feels comfortable.',
+        color: 'calm',
+        scores: { presence: 7, timing: 9, bridge: 6 },
+        feedback: 'His processing time is real. The gap between hearing a request and being ready to act on it is longer than it looks. Every additional repetition before he\'s processed the first one adds a new demand on top. Ask once, then give a minute of actual silence. What feels like a long wait is often right.',
+        key_moves: ['Ask once, clearly.', 'Then stop. Wait. Count to 60 in your head.', 'If nothing: "Whenever you\'re ready." Then back off.'],
+        warning: null
+      },
+      {
+        icon: '🪜',
+        text: 'Break it down to the first micro-step only',
+        sub: '"Just the first part. That\'s it."',
+        color: 'anchor',
+        scores: { presence: 7, timing: 7, bridge: 8 },
+        feedback: 'Task initiation is its own demand spike — separate from the task itself. Shrinking the entry point ("just put one thing away, that\'s the whole job for now") lowers the cost of starting. He often keeps going once started. The first step is the hardest.',
+        key_moves: ['"Just one thing — that\'s it for right now."', 'Give him the first step only. Back off.', 'If he does it: acknowledge it ("thank you") and let him finish or not.'],
+        warning: null
+      },
+      {
+        icon: '🔁',
+        text: 'Repeat the request more clearly — maybe he didn\'t hear',
+        sub: 'Try again, louder and more specific.',
+        color: 'warm',
+        scores: { presence: 1, timing: -4, bridge: 2 },
+        feedback: 'Each repeated request stacks as a threat to his autonomy. By the third repetition it reads as an attack, not a reminder. He likely heard you. He\'s not ready. Louder and more specific escalates the threat signal.',
+        key_moves: ['Ask once.', 'If nothing after real wait time: name it once ("I notice that hasn\'t happened yet") and leave it.', 'Return to it when he\'s genuinely receptive.'],
+        warning: 'Repeating requests with increasing urgency is the most reliable way to turn a simple task into a battle.'
+      }
+    ]
+  },
+
+  's-demand-2': {
+    type: 'anchor',
+    category: 'Refusing a Request',
+    context: 'Transition time. He needs to stop what he\'s doing and shift to the next thing. The activity isn\'t finished — there\'s an open loop in his brain.',
+    question: 'He needs to transition and he\'s not ready. How do you help?',
+    choices: [
+      {
+        icon: '⏰',
+        text: 'Warning before the transition — not at it',
+        sub: '"Five more minutes, then we shift." Said five minutes early.',
+        color: 'calm',
+        scores: { presence: 8, timing: 10, bridge: 7 },
+        feedback: 'Transition dysregulation is real and it\'s about the open loop, not defiance. His brain stays engaged with the interrupted task. Warning before — not at — the transition point gives the loop somewhere to start closing. The warning is not a countdown to fight. It\'s a signal to his brain that an ending is coming.',
+        key_moves: ['Give the warning 5 minutes early — not 30 seconds.', '"Five more minutes, then we shift."', 'At transition: "That\'s the five. We\'re moving." Said once, calmly.'],
+        warning: null
+      },
+      {
+        icon: '📝',
+        text: 'Give the loop a place to close',
+        sub: '"Let\'s write down where you are so you can come back."',
+        color: 'anchor',
+        scores: { presence: 8, timing: 8, bridge: 9 },
+        feedback: 'If the loop can\'t close by finishing, it can close by marking. A note, a screenshot, a saved spot — anything that tells his brain "this isn\'t abandoned, it\'s paused." The cognitive relief of knowing he can return is often enough to make the transition possible.',
+        key_moves: ['"Where are you in this? Let\'s mark it so you can find it later."', 'Let him name the save point — that\'s him closing the loop.', 'Then transition from a closed place, not an open one.'],
+        warning: null
+      },
+      {
+        icon: '🏎️',
+        text: 'Require it immediately — we\'re on a schedule',
+        sub: 'The transition needs to happen now.',
+        color: 'warm',
+        scores: { presence: 1, timing: -5, bridge: 1 },
+        feedback: 'Abrupt transitions with no warning create their own regulation event — separate from whatever else is happening. The unresolved loop stays active. The demand of the transition adds load. You\'re now managing the transition dysregulation on top of everything else.',
+        key_moves: ['If you have to do it right now: one calm sentence, then move physically with him.', '"I know this isn\'t done. We have to go. I\'m sorry." Then go.', 'Acknowledge later: "That was a hard stop. I know."'],
+        warning: 'Emergency abrupt transitions are sometimes unavoidable. When they happen, the repair matters more than the explanation.'
+      }
+    ]
+  },
+
+  's-demand-3': {
+    type: 'anchor',
+    category: 'Refusing a Request',
+    context: 'He did the thing — barely. Minimum viable compliance. He technically did it in a way that feels like it\'s designed to make you respond.',
+    question: 'He complied — at the absolute floor. What\'s your response?',
+    choices: [
+      {
+        icon: '✅',
+        text: 'Acknowledge it genuinely and move on',
+        sub: '"You did it. Thank you." And leave it there.',
+        color: 'calm',
+        scores: { presence: 8, timing: 8, bridge: 7 },
+        feedback: 'The bare minimum is still compliance, and it often reflects the last available autonomy in a system that\'s running low. Acknowledging it genuinely — without commentary on quality — and leaving room often produces more. He frequently adds more voluntarily after a no-strings acknowledgment.',
+        key_moves: ['"You did it. Thank you." Said simply.', 'Leave the room if you can — give him space to add more on his own.', 'No "that\'s not good enough, do it properly."'],
+        warning: null
+      },
+      {
+        icon: '📈',
+        text: 'Raise the bar — that wasn\'t enough',
+        sub: '"That\'s not quite right. Can you do it properly?"',
+        color: 'warm',
+        scores: { presence: 1, timing: -4, bridge: 1 },
+        feedback: '"That\'s not good enough" removes the last autonomy he had. He was holding the minimum compliance as the one thing he could still control. Taking it triggers flooding. You will now spend significant energy on the emotional response instead of the actual task.',
+        key_moves: ['Accept the minimum for now.', 'Return to quality standards in a genuinely calm moment as a separate conversation.', '"Next time, the thing I\'m looking for is X" — not "that wasn\'t right."'],
+        warning: 'This is one of the most reliable escalation triggers. The task is not worth what comes next.'
+      },
+      {
+        icon: '🤔',
+        text: 'Notice it and wonder aloud',
+        sub: 'Let him know you saw it without making it a battle.',
+        color: 'anchor',
+        scores: { presence: 6, timing: 6, bridge: 5 },
+        feedback: 'Naming what you saw without judgment can sometimes open a conversation: "I noticed that was pretty minimal — is there something making that hard right now?" But only if he\'s regulated enough to actually hear it. If he\'s already activated, this becomes another confrontation.',
+        key_moves: ['Only try this when he\'s genuinely settled.', '"I noticed that was pretty quick. Is there something going on?"', 'Be ready for either an honest answer or a short no. Receive both warmly.'],
+        warning: null
+      }
+    ]
+  },
+
+  // ── VISIT ──
+  's-visit-1': {
+    type: 'anchor',
+    category: 'Exciting Thing → Crash',
+    context: 'He agreed to the fun thing. He was excited about it. Now it\'s real — someone arrived, shoes need to go on, a time appeared — and he\'s fighting it. He\'s saying he doesn\'t want to go.',
+    question: 'The excitement collapsed into refusal right before the thing. What\'s happening and what do you do?',
+    choices: [
+      {
+        icon: '🌀',
+        text: 'Name what happened without pressure',
+        sub: 'The imagined thing was safe. The real one has variables.',
+        color: 'calm',
+        scores: { presence: 9, timing: 8, bridge: 8 },
+        feedback: 'While imagined, he controlled the event perfectly. The moment it became real — someone arrived, a time appeared — he lost control of the variables. His nervous system, already elevated from excitement, read those variables as threat. The fight isn\'t about the event. It\'s about regaining control of something that suddenly felt out of his hands.',
+        key_moves: ['"You were so excited about this. And now it feels different because it got real. That makes sense."', 'Don\'t push. Let it land.', 'Then: a micro-choice that restores a small piece of control.'],
+        warning: null
+      },
+      {
+        icon: '🔧',
+        text: 'Give him a micro-choice within the plan',
+        sub: '"When we get there, do you want to start with X or Y?"',
+        color: 'anchor',
+        scores: { presence: 8, timing: 8, bridge: 9 },
+        feedback: 'Giving him control over a small piece of the plan restores some of what went missing when the event became real. It doesn\'t have to be a significant choice — just something real that\'s his to decide. "When we get there, do you want to show me your favorite part first, or start somewhere else?" gives him back an authorship.',
+        key_moves: ['"When we get there, do you want to start with [A] or [B]?"', 'Make both options genuine.', 'His answer is binding — follow through on it.'],
+        warning: null
+      },
+      {
+        icon: '📢',
+        text: 'Hold to the plan — he said he wanted this',
+        sub: 'He made an agreement. Help him honor it.',
+        color: 'warm',
+        scores: { presence: 3, timing: -2, bridge: 3 },
+        feedback: 'He did mean it when he agreed. But the person who agreed was managing the imagined event, not the real one. Reminding him of the agreement adds demand pressure on a system already in conflict. The argument about the agreement rarely resolves it.',
+        key_moves: ['You can acknowledge the agreement without using it as leverage: "I know you said you wanted this — and something shifted."', 'Then work on the control piece, not the commitment piece.'],
+        warning: 'Holding the agreement as a behavior lever ("you said you wanted to go") usually extends the fight, not the plan.'
+      }
+    ]
+  },
+
+  's-visit-2': {
+    type: 'anchor',
+    category: 'Exciting Thing → Crash',
+    context: 'Two exciting things were planned for today. It started great. By the second thing, he\'s completely out of capacity — overstimulated, activated, not the kid who agreed to any of this.',
+    question: 'He\'s run out of runway. The second exciting thing broke him. How do you handle it?',
+    choices: [
+      {
+        icon: '🏳️',
+        text: 'Let the second thing go — today is done',
+        sub: 'Read the room. He\'s used everything he had.',
+        color: 'calm',
+        scores: { presence: 9, timing: 10, bridge: 7 },
+        feedback: 'Two exciting things on the same day stack the nervous system baseline before the day even starts. Each additional exciting thing raises the arousal floor. By the second event, he\'s running on empty and the smallest variable can collapse everything. This is not failure — it\'s the pattern. Know it going in.',
+        key_moves: ['Call it clearly: "We\'re going to skip [thing] today. You\'ve had a big day."', 'No guilt, no mourning the lost plan.', 'Plan differently next time: one exciting thing per day when possible.'],
+        warning: null
+      },
+      {
+        icon: '✂️',
+        text: 'Shorten the second thing — just go briefly',
+        sub: 'Maybe a partial win is possible.',
+        color: 'anchor',
+        scores: { presence: 6, timing: 6, bridge: 6 },
+        feedback: 'If the relationship matters (an aunt visiting, someone who came a long way), a shortened version may be the right call. Give him an acknowledged exit option before you go: "We\'re going for a little bit, and if you need to leave at any point, we have a plan for that." Named exits reduce the felt threat of the variable.',
+        key_moves: ['Name the exit before you arrive: "If you need to leave, we just say the word."', 'Keep it genuinely short — not "short" meaning "until he melts down."', 'Leave while he\'s still okay, not after.'],
+        warning: 'Staying longer than agreed trains him that "short" doesn\'t mean what you said. Follow through exactly.'
+      },
+      {
+        icon: '💪',
+        text: 'Push through — these commitments matter',
+        sub: 'He needs to learn that plans don\'t just change.',
+        color: 'warm',
+        scores: { presence: 1, timing: -4, bridge: 1 },
+        feedback: 'The lesson "plans don\'t just change" is real and worth teaching — but only when he has enough regulation capacity to receive it. Right now his tank is empty. Pushing through a depleted system doesn\'t build resilience. It builds shame, exhaustion, and association between exciting things and inevitable collapse.',
+        key_moves: ['This lesson teaches better in a calm moment, not an empty one.', 'Better framing later: "Big exciting days are a lot for your body. We\'re going to try one big thing at a time for a while."'],
+        warning: 'Forcing through depletion teaches the wrong lesson about what his body needs.'
+      }
+    ]
+  },
+
+  's-visit-3': {
+    type: 'anchor',
+    category: 'Exciting Thing → Crash',
+    context: 'You\'re the aunt. You drove here to see him. He was excited yesterday. Today he\'s acting like he doesn\'t want you here at all.',
+    question: 'You\'re the visiting relative and he\'s rejecting the visit. What do you do with that?',
+    choices: [
+      {
+        icon: '💛',
+        text: 'Take it off yourself — it\'s not about you',
+        sub: 'Understand what\'s actually happening.',
+        color: 'calm',
+        scores: { presence: 10, timing: 9, bridge: 8 },
+        feedback: 'He was thrilled about this visit yesterday. What changed is that the visit became real and real things have variables he can\'t control. He wasn\'t rejecting you — he was overwhelmed by the loss of control over the thing he\'d been anticipating. Understanding this doesn\'t make it easy. But it means you can stay open instead of hurt.',
+        key_moves: ['Give him space to come around without pressure.', 'Be easy — low demands, no big energy.', 'When he\'s ready, let him lead the interaction.'],
+        warning: null
+      },
+      {
+        icon: '🌊',
+        text: 'Stay low-demand — just be present in the house',
+        sub: 'Don\'t try to have The Visit. Just be around.',
+        color: 'anchor',
+        scores: { presence: 9, timing: 9, bridge: 8 },
+        feedback: 'Sometimes the best visit is the one that doesn\'t try to be a visit. Sit in the living room. Be comfortable. Be boring in the best way. Give him time to adjust to the fact of your presence without it carrying expectation. He will find you when he\'s ready — and when he does, that connection will be genuine.',
+        key_moves: ['Don\'t plan activities. Just be there.', 'Let him approach you on his terms.', 'When he does: follow his thread. Ask about his worlds. Ask about his creatures by name.'],
+        warning: null
+      },
+      {
+        icon: '🤝',
+        text: 'Try to connect through his interests',
+        sub: 'Ask about Spaceland or his creatures.',
+        color: 'warm',
+        scores: { presence: 7, timing: 6, bridge: 9 },
+        feedback: 'This works well as a second move, not a first one. Give him a few minutes to adjust to your presence before trying to engage. Then — gently, with genuine curiosity — ask about something specific. "I heard there\'s something called the Outer Rings — what\'s in there?" is a real opening.',
+        key_moves: ['Give him arrival time first (10-15 min of low-pressure presence).', 'Then one genuine specific question about his world.', '"I heard you invented Mismageus. How did that happen?"'],
+        warning: 'Warm enthusiasm too fast can feel overwhelming when he\'s still adjusting. Keep the first approach quiet.'
+      }
+    ]
+  }
+};
+
+// ═══════════ STATE ═══════════
+let axes = { presence: 50, timing: 50, bridge: 50 };
+let currentSituationId = null;
+let currentScenarios = [];
+let currentIndex = 0;
+let currentCard = null;
+let choiceMade = false;
+let choiceColor = 'calm';
+
+// ═══════════ SCREEN MANAGEMENT ═══════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById(id).scrollTop = 0;
+}
+
+// ═══════════ BUILD SITUATIONS ═══════════
+function buildSituations() {
+  const grid = document.getElementById('situations-grid');
+  grid.innerHTML = '';
+  SITUATIONS.forEach(sit => {
+    const btn = document.createElement('button');
+    btn.className = `sit-btn ${sit.color}`;
+    btn.innerHTML = `
+      <div class="sit-icon">${sit.icon}</div>
+      <div class="sit-title">${sit.title}</div>
+      <div class="sit-desc">${sit.desc}</div>
+      <div class="sit-tag ${sit.color}">${sit.color === 'warm' ? '🔥 High Load' : sit.color === 'calm' ? '🧵 Recovery' : '⚓ Navigate'}</div>
+    `;
+    btn.onclick = () => startSituation(sit);
+    grid.appendChild(btn);
+  });
+}
+
+// ═══════════ START SITUATION ═══════════
+function startSituation(sit) {
+  currentSituationId = sit.id;
+  currentScenarios = [...sit.scenarios];
+  currentIndex = 0;
+  axes = { presence: 50, timing: 50, bridge: 50 };
+  choiceMade = false;
+  showScreen('screen-card');
+  renderCard();
+}
+
+// ═══════════ RENDER CARD ═══════════
+function renderCard() {
+  const scenarioId = currentScenarios[currentIndex];
+  currentCard = SCENARIOS[scenarioId];
+  choiceMade = false;
+
+  // Progress dots
+  const pr = document.getElementById('progress-row');
+  pr.innerHTML = '';
+  currentScenarios.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'pdot' + (i < currentIndex ? ' done' : i === currentIndex ? ' current' : '');
+    pr.appendChild(dot);
+  });
+
+  // Axes
+  updateAxes();
+
+  // Card
+  const wrap = document.getElementById('scenario-wrap');
+  wrap.innerHTML = `
+    <div class="scenario-card">
+      <div class="card-top-bar"></div>
+      <div class="card-body">
+        <div class="card-situation-tag">
+          <div class="tag-dot ${currentCard.type}"></div>
+          <div class="tag-label">${currentCard.category}</div>
+        </div>
+        <div class="card-situation">${currentCard.context}</div>
+        <div class="card-question">${currentCard.question}</div>
+      </div>
+    </div>
+    <div class="choices-wrap" id="choices-wrap"></div>
+    <div class="feedback-block" id="feedback-block"></div>
+  `;
+
+  renderChoices();
+}
+
+function renderChoices() {
+  const wrap = document.getElementById('choices-wrap');
+  wrap.innerHTML = '';
+  currentCard.choices.forEach((choice, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `
+      <div class="choice-icon">${choice.icon}</div>
+      <div>
+        <div class="choice-text">${choice.text}</div>
+        <div class="choice-sub">${choice.sub}</div>
+      </div>
+    `;
+    btn.onclick = () => makeChoice(i);
+    wrap.appendChild(btn);
+  });
+}
+
+function makeChoice(idx) {
+  if (choiceMade) return;
+  choiceMade = true;
+
+  const choice = currentCard.choices[idx];
+  choiceColor = choice.color;
+
+  // Score
+  axes.presence = Math.max(0, Math.min(100, axes.presence + (choice.scores.presence || 0)));
+  axes.timing = Math.max(0, Math.min(100, axes.timing + (choice.scores.timing || 0)));
+  axes.bridge = Math.max(0, Math.min(100, axes.bridge + (choice.scores.bridge || 0)));
+  updateAxes();
+
+  // Hide choices
+  document.getElementById('choices-wrap').style.display = 'none';
+
+  // Build feedback
+  const fb = document.getElementById('feedback-block');
+
+  // Score pills
+  const pills = [
+    { axis: 'presence', label: '🔥 Presence', delta: choice.scores.presence, cls: 'warm' },
+    { axis: 'timing', label: '🧵 Timing', delta: choice.scores.timing, cls: 'calm' },
+    { axis: 'bridge', label: '⚓ Bridge', delta: choice.scores.bridge, cls: 'anchor' }
+  ].filter(p => p.delta !== 0);
+
+  const pillsHtml = pills.map(p => `
+    <div class="score-pill ${p.cls}">
+      ${p.label}
+      <span class="delta">${p.delta > 0 ? '+'+p.delta : p.delta}</span>
+    </div>
+  `).join('');
+
+  // Key moves
+  const movesHtml = choice.key_moves.map((m, i) => `
+    <div class="km-move">
+      <div class="km-num">${i+1}</div>
+      <div class="km-text">${m}</div>
+    </div>
+  `).join('');
+
+  const warningHtml = choice.warning ? `
+    <div class="warning-card">
+      <div class="warn-icon">⚠️</div>
+      <div class="warn-text">${choice.warning}</div>
+    </div>
+  ` : '';
+
+  const isLast = currentIndex >= currentScenarios.length - 1;
+  const nextLabel = isLast ? 'See Your Reading 🌟' : 'Next Scenario →';
+
+  fb.innerHTML = `
+    <div class="fb-card">
+      <div class="fb-top ${choice.color}"></div>
+      <div class="fb-body">
+        <div class="fb-choice-label ${choice.color}">YOUR CHOICE: ${choice.text.toUpperCase()}</div>
+        <div class="fb-text">${choice.feedback}</div>
+      </div>
+    </div>
+
+    <div class="score-pills">${pillsHtml}</div>
+
+    <div class="key-move-card">
+      <div class="km-label">✦ KEY MOVES</div>
+      <div class="km-moves">${movesHtml}</div>
+    </div>
+
+    ${warningHtml}
+
+    <button class="btn-next" onclick="${isLast ? 'showReading()' : 'nextCard()'}">${nextLabel}</button>
+  `;
+
+  fb.classList.add('show');
+  setTimeout(() => fb.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function nextCard() {
+  currentIndex++;
+  document.getElementById('scenario-wrap').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('scenario-wrap').style.opacity = '1';
+    renderCard();
+    document.getElementById('card-header') && document.getElementById('card-header').scrollIntoView();
+    document.getElementById('screen-card').scrollTo({ top: 0, behavior: 'smooth' });
+  }, 200);
+}
+
+function updateAxes() {
+  document.getElementById('ax-presence').style.width = axes.presence + '%';
+  document.getElementById('ax-timing').style.width = axes.timing + '%';
+  document.getElementById('ax-bridge').style.width = axes.bridge + '%';
+}
+
+// ═══════════ READING ═══════════
+function showReading() {
+  const inner = document.getElementById('reading-inner');
+
+  // Axis readings
+  function getPresenceReading(v) {
+    if (v >= 70) return 'You stayed connected when it was hard. That\'s the hardest thing. His nervous system felt you there — steady, not scared, not gone. That\'s the anchor he needed.';
+    if (v >= 55) return 'You held your ground most of the time. There were moments where staying connected was hard, and you mostly managed it. Keep practicing the instinct to lower your energy first.';
+    return 'Presence was hard today — you may have stepped in when waiting was better, or stepped back when staying was the call. These instincts take time to calibrate. The awareness is already the work.';
+  }
+
+  function getTimingReading(v) {
+    if (v >= 70) return 'You read the wave before it broke. Giving the warning before the transition, the space before the word, the silence instead of the explanation — that\'s what timing looks like. It\'s invisible when it works.';
+    if (v >= 55) return 'Your timing was mostly right. A few moments where you moved earlier or later than the window was ready — but you adjusted. Timing for Garrett runs about 30 seconds behind where our instincts say to go.';
+    return 'Timing was the friction point today. The instinct to speak, explain, or push while he\'s flooding is very human — and it almost always extends the window. Try: say the thing, then stop. Wait longer than feels right.';
+  }
+
+  function getBridgeReading(v) {
+    if (v >= 70) return 'You found the language — and when language wasn\'t the tool, you found something else. The specific true fact instead of the compliment. The micro-choice instead of the full plan. The question through his worlds instead of at him. These are the bridges that actually hold.';
+    if (v >= 55) return 'Your bridge-building was solid. Some moments where the instinct was right but the delivery needed tuning — a little more acknowledgment before the reframe, a little more specificity in the fact. You\'re working with the right tools.';
+    return 'The bridge is the hardest part — knowing which word or move creates connection instead of pressure. You\'re building the map. Every interaction adds a data point. Trust the patterns over time.';
+  }
+
+  function getSummary(p, t, b) {
+    const high = Math.max(p, t, b);
+    const low = Math.min(p, t, b);
+    const spread = high - low;
+
+    if (spread <= 10) {
+      return 'You brought a balanced toolkit today. No single instinct dominated — you stayed flexible and responsive. That\'s the long game.';
+    }
+    if (p === high) {
+      return 'Your strongest read today was staying connected. That\'s the foundation everything else builds on. A regulated adult is the most powerful regulation tool a child has.';
+    }
+    if (t === high) {
+      return 'Your strongest read was knowing when. That\'s the invisible skill — the pause before the word, the space before the question, the silence that holds instead of fills.';
+    }
+    return 'Your strongest read was knowing what to say. The bridge between his nervous system and yours runs through specific, warm, non-pressuring language. You built it well today.';
+  }
+
+  const pv = axes.presence;
+  const tv = axes.timing;
+  const bv = axes.bridge;
+
+  inner.innerHTML = `
+    <div class="reading-crown">
+      <span class="reading-icon">🌟</span>
+      <div class="reading-title">Your Reading</div>
+      <div class="reading-sub">Three axes. What they say about you today.</div>
+    </div>
+
+    <div class="axis-reading">
+      <div class="ar-top warm"></div>
+      <div class="ar-body">
+        <div class="ar-header">
+          <div class="ar-icon">🔥</div>
+          <div class="ar-name-block">
+            <div class="ar-axis-name warm">PRESENCE</div>
+            <div class="ar-score-label">Staying connected</div>
+          </div>
+          <div class="ar-value warm">${Math.round(pv)}</div>
+        </div>
+        <div class="ar-bar-full"><div class="ar-bar-inner warm" style="width:0%" id="rbar-p"></div></div>
+        <div class="ar-text">${getPresenceReading(pv)}</div>
+      </div>
+    </div>
+
+    <div class="axis-reading">
+      <div class="ar-top calm"></div>
+      <div class="ar-body">
+        <div class="ar-header">
+          <div class="ar-icon">🧵</div>
+          <div class="ar-name-block">
+            <div class="ar-axis-name calm">TIMING</div>
+            <div class="ar-score-label">When to act vs. when to wait</div>
+          </div>
+          <div class="ar-value calm">${Math.round(tv)}</div>
+        </div>
+        <div class="ar-bar-full"><div class="ar-bar-inner calm" style="width:0%" id="rbar-t"></div></div>
+        <div class="ar-text">${getTimingReading(tv)}</div>
+      </div>
+    </div>
+
+    <div class="axis-reading">
+      <div class="ar-top anchor"></div>
+      <div class="ar-body">
+        <div class="ar-header">
+          <div class="ar-icon">⚓</div>
+          <div class="ar-name-block">
+            <div class="ar-axis-name anchor">BRIDGE</div>
+            <div class="ar-score-label">The words and moves that reach him</div>
+          </div>
+          <div class="ar-value anchor">${Math.round(bv)}</div>
+        </div>
+        <div class="ar-bar-full"><div class="ar-bar-inner anchor" style="width:0%" id="rbar-b"></div></div>
+        <div class="ar-text">${getBridgeReading(bv)}</div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">✦ THE READ</div>
+      <div class="summary-text">${getSummary(pv, tv, bv)}</div>
+    </div>
+
+    <div class="reading-actions">
+      <button class="btn-primary" onclick="showScreen('screen-pick')">Try Another Situation</button>
+      <button class="btn-secondary" onclick="showScreen('screen-ref')">Quick Reference</button>
+      <button class="btn-secondary" onclick="showScreen('screen-title')">Home</button>
+    </div>
+  `;
+
+  showScreen('screen-reading');
+
+  setTimeout(() => {
+    const pb = document.getElementById('rbar-p');
+    const tb = document.getElementById('rbar-t');
+    const bb = document.getElementById('rbar-b');
+    if (pb) pb.style.width = pv + '%';
+    if (tb) tb.style.width = tv + '%';
+    if (bb) bb.style.width = bv + '%';
+  }, 200);
+}
+
+// ═══════════ REFERENCE ACCORDION ═══════════
+function toggleRef(id) {
+  const sec = document.getElementById(id);
+  sec.classList.toggle('open');
+}
+
+// ═══════════ INIT ═══════════
+buildSituations();
+</script>
+</body>
+</html>
