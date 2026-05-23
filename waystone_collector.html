@@ -20,7 +20,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 
 /* Layered gradient sky */
 .title-sky{position:absolute;inset:0;
-  background:radial-gradient(ellipse at 30% 40%,#0d2a4a 0%,#060e1a 55%,#020508 100%);}
+  background:linear-gradient(180deg,#0d2848 0%,#1a4a6a 45%,#0a2038 100%);}
 
 /* Star field layer */
 .title-stars{position:absolute;inset:0;overflow:hidden;}
@@ -29,7 +29,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 
 /* Parallax island layers - horizon glow */
 .title-horizon{position:absolute;bottom:0;left:0;right:0;height:55%;
-  background:radial-gradient(ellipse at 50% 90%,rgba(240,140,40,.14) 0%,rgba(90,30,120,.08) 40%,transparent 70%);}
+  background:radial-gradient(ellipse at 50% 85%,rgba(255,200,60,.22) 0%,rgba(255,140,20,.1) 35%,transparent 65%);}
 
 /* Aurora ribbons */
 .aurora{position:absolute;top:0;left:-20%;right:-20%;height:45%;pointer-events:none;}
@@ -400,139 +400,207 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 /* Tap link style (also set inline for encounters) */
 .tap-link{transition:opacity .1s;}
 .tap-link:active{opacity:.6;}
-</style>
-</head>
-<body>
 
-<!-- ══ TITLE ══ -->
+/* Title sun glow */
+.title-sun-glow<!-- ══ TITLE ══ -->
+</style>
 <div class="screen active" id="s-title">
-  <!-- Sky/atmosphere -->
+  <!-- Sky layers -->
   <div class="title-sky"></div>
-  <!-- Star field -->
   <div class="title-stars" id="title-stars"></div>
-  <!-- Aurora bands -->
+  <!-- Sun glow -->
+  <div class="title-sun-glow"></div>
+  <!-- Cloud layers -->
+  <div class="title-clouds" id="title-clouds"></div>
+  <!-- Aurora / light rays in warm gold -->
   <div class="aurora">
-    <div class="aurora-band" style="top:20%;left:5%;right:10%;height:120px;background:linear-gradient(180deg,transparent,rgba(94,196,176,.18),transparent);--dur:14s;--del:0s;"></div>
-    <div class="aurora-band" style="top:5%;left:20%;right:-5%;height:90px;background:linear-gradient(180deg,transparent,rgba(212,160,255,.14),transparent);--dur:18s;--del:3s;"></div>
-    <div class="aurora-band" style="top:30%;left:-10%;right:25%;height:80px;background:linear-gradient(180deg,transparent,rgba(240,192,64,.1),transparent);--dur:22s;--del:7s;"></div>
+    <div class="aurora-band" style="top:8%;left:-10%;right:5%;height:100px;background:linear-gradient(180deg,transparent,rgba(255,210,80,.13),transparent);--dur:16s;--del:0s;"></div>
+    <div class="aurora-band" style="top:20%;left:15%;right:-10%;height:80px;background:linear-gradient(180deg,transparent,rgba(255,170,40,.1),transparent);--dur:22s;--del:5s;"></div>
+    <div class="aurora-band" style="top:35%;left:5%;right:20%;height:60px;background:linear-gradient(180deg,transparent,rgba(255,230,120,.08),transparent);--dur:18s;--del:9s;"></div>
   </div>
-  <!-- Horizon glow -->
+  <!-- Horizon glow warm -->
   <div class="title-horizon"></div>
-  <!-- Island scene SVG -->
+  <!-- Island scene -->
   <div class="title-island-wrap">
     <svg class="title-island-svg" viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
-      <!-- Distant fog/mist layers -->
-      <ellipse cx="300" cy="260" rx="320" ry="40" fill="#0d1a2a" opacity="0.9"/>
-      <ellipse cx="300" cy="248" rx="280" ry="32" fill="#0a1620"/>
-      <!-- Far hills -->
-      <ellipse cx="100" cy="230" rx="140" ry="60" fill="#0d1e10"/>
-      <ellipse cx="500" cy="235" rx="120" ry="55" fill="#0d1e10"/>
-      <!-- Mid forest band -->
-      <path d="M0 200 Q60 170 120 185 Q180 200 240 180 Q300 165 360 180 Q420 195 480 172 Q540 152 600 165 L600 280 L0 280 Z" fill="#0e2210"/>
-      <!-- Tree silhouettes in forest band -->
-      <path d="M50 200 L50 175 L35 175 L50 155 L65 175 L50 175" fill="#091808" opacity="0.8"/>
-      <path d="M130 195 L130 172 L116 172 L130 150 L144 172 L130 172" fill="#091808" opacity="0.7"/>
-      <path d="M520 180 L520 158 L507 158 L520 138 L533 158 L520 158" fill="#091808" opacity="0.8"/>
-      <!-- Water/shore -->
-      <path d="M0 225 Q150 215 300 220 Q450 225 600 215 L600 280 L0 280 Z" fill="#0a1828"/>
-      <!-- Wave animations -->
-      <g style="animation:wave-drift 8s ease-in-out infinite;">
-        <path d="M20 232 Q80 227 140 232 Q200 237 260 232" stroke="#1a3a5a" stroke-width="2" fill="none" opacity="0.6"/>
-        <path d="M300 228 Q360 223 420 228 Q480 233 540 228" stroke="#1a3a5a" stroke-width="2" fill="none" opacity="0.5"/>
+      <!-- Sky gradient fill in SVG -->
+      <defs>
+        <linearGradient id="sky-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1a3a6a" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#0a1828" stop-opacity="0.3"/>
+        </linearGradient>
+        <radialGradient id="sun-grad" cx="75%" cy="18%" r="25%">
+          <stop offset="0%" stop-color="#fff8c0" stop-opacity="0.9"/>
+          <stop offset="30%" stop-color="#ffd060" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#ff9020" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="water-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1a6a8a"/>
+          <stop offset="100%" stop-color="#0a2840"/>
+        </linearGradient>
+      </defs>
+      <!-- Sun and rays -->
+      <circle cx="450" cy="48" r="28" fill="#fff4a0" opacity="0.85"/>
+      <circle cx="450" cy="48" r="22" fill="#fff8d0" opacity="0.95"/>
+      <!-- Sun rays -->
+      <g style="animation:spin-slow 18s linear infinite;transform-origin:450px 48px;" opacity="0.4">
+        <line x1="450" y1="10" x2="450" y2="2" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
+        <line x1="450" y1="86" x2="450" y2="94" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
+        <line x1="412" y1="48" x2="404" y2="48" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
+        <line x1="488" y1="48" x2="496" y2="48" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
+        <line x1="423" y1="21" x2="417" y2="15" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="477" y1="75" x2="483" y2="81" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="477" y1="21" x2="483" y2="15" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="423" y1="75" x2="417" y2="81" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
       </g>
-      <g style="animation:wave-drift2 11s ease-in-out infinite;">
-        <path d="M60 238 Q130 233 200 238 Q270 243 340 238" stroke="#1a4a6a" stroke-width="1.5" fill="none" opacity="0.4"/>
-        <path d="M380 234 Q440 229 500 234 Q560 239 600 234" stroke="#1a4a6a" stroke-width="1.5" fill="none" opacity="0.35"/>
+      <!-- Sun halo glow -->
+      <circle cx="450" cy="48" r="55" fill="url(#sun-grad)"/>
+      <!-- Distant hills warm greens -->
+      <ellipse cx="80" cy="190" rx="150" ry="50" fill="#1a3810"/>
+      <ellipse cx="520" cy="195" rx="130" ry="45" fill="#1a3810"/>
+      <!-- Mid forest - lush summer green -->
+      <path d="M0 190 Q80 158 160 172 Q240 186 320 165 Q400 148 480 162 Q540 150 600 158 L600 280 L0 280 Z" fill="#1a4a10"/>
+      <!-- Individual trees - summer full canopy -->
+      <ellipse cx="55" cy="174" rx="28" ry="22" fill="#226012"/>
+      <ellipse cx="55" cy="168" rx="22" ry="16" fill="#2a7818"/>
+      <rect x="52" y="190" width="6" height="14" fill="#1a2e08"/>
+      <ellipse cx="140" cy="168" rx="26" ry="20" fill="#226012"/>
+      <ellipse cx="140" cy="162" rx="20" ry="14" fill="#2a7818"/>
+      <rect x="137" y="182" width="6" height="12" fill="#1a2e08"/>
+      <ellipse cx="510" cy="172" rx="28" ry="22" fill="#1e5810"/>
+      <ellipse cx="510" cy="166" rx="22" ry="16" fill="#267018"/>
+      <rect x="507" y="188" width="6" height="14" fill="#1a2e08"/>
+      <ellipse cx="570" cy="166" rx="22" ry="18" fill="#1e5810"/>
+      <ellipse cx="570" cy="160" rx="17" ry="13" fill="#267018"/>
+      <!-- Sunlit water -->
+      <path d="M0 220 Q150 210 300 215 Q450 220 600 210 L600 280 L0 280 Z" fill="url(#water-grad)"/>
+      <!-- Sun reflection on water - shimmering -->
+      <g style="animation:wave-drift 4s ease-in-out infinite;" opacity="0.6">
+        <ellipse cx="450" cy="235" rx="60" ry="5" fill="#ffd060"/>
+        <ellipse cx="450" cy="242" rx="40" ry="3" fill="#ffd060" opacity="0.7"/>
+        <ellipse cx="450" cy="248" rx="25" ry="2" fill="#ffd060" opacity="0.5"/>
       </g>
-      <!-- LIGHTHOUSE - center, properly proportioned and connected -->
-      <!-- Base foundation -->
-      <ellipse cx="300" cy="215" rx="28" ry="8" fill="#1a2838"/>
-      <rect x="284" y="175" width="32" height="45" rx="4" fill="#1a2840"/>
-      <!-- Lighthouse body segments -->
-      <rect x="287" y="152" width="26" height="28" rx="3" fill="#243250"/>
-      <rect x="289" y="130" width="22" height="26" rx="3" fill="#2e3e5e"/>
-      <!-- Windows in body -->
-      <rect x="295" y="158" width="10" height="14" rx="5" fill="#304060" opacity="0.7"/>
-      <rect x="296" y="136" width="8" height="10" rx="4" fill="#f0c040" opacity="0.3" style="animation:flicker 3s ease-in-out infinite;"/>
-      <!-- Lamp room -->
-      <rect x="287" y="114" width="26" height="18" rx="3" fill="#364870"/>
-      <!-- Lamp room glass panels -->
-      <rect x="289" y="116" width="10" height="14" rx="1" fill="rgba(240,200,80,.12)"/>
-      <rect x="301" y="116" width="10" height="14" rx="1" fill="rgba(240,200,80,.12)"/>
-      <!-- THE LIGHT -->
-      <circle cx="300" cy="122" r="8" fill="#f0c040"/>
-      <circle cx="300" cy="122" r="5" fill="#fff8e0"/>
-      <!-- Light glow -->
-      <circle cx="300" cy="122" r="14" fill="#f0c040" opacity="0.2" style="animation:breathe 2s ease-in-out infinite;"/>
-      <!-- Rotating beam - FIXED: two wedges rotating around the lamp point (300,122) -->
-      <g style="animation:spin-slow 5s linear infinite;transform-origin:300px 122px;">
-        <path d="M300 122 L380 60 L360 100 Z" fill="rgba(240,192,64,.18)"/>
-        <path d="M300 122 L360 55 L345 90 Z" fill="rgba(240,192,64,.12)"/>
+      <!-- Warm wave lines -->
+      <g style="animation:wave-drift 7s ease-in-out infinite;">
+        <path d="M20 228 Q80 223 140 228 Q200 233 260 228" stroke="#2a8aaa" stroke-width="1.8" fill="none" opacity="0.55"/>
+        <path d="M300 224 Q360 219 420 224 Q480 229 540 224" stroke="#2a8aaa" stroke-width="1.8" fill="none" opacity="0.5"/>
       </g>
-      <!-- Lantern room cap -->
-      <polygon points="285,114 300,102 315,114" fill="#2a3a58"/>
-      <polygon points="287,114 300,104 313,114" fill="#36486a"/>
-      <!-- Bridge silhouette right -->
-      <rect x="370" y="218" width="180" height="10" rx="3" fill="#1a2838"/>
-      <rect x="390" y="194" width="6" height="30" rx="2" fill="#1a2838"/>
-      <rect x="440" y="188" width="6" height="36" rx="2" fill="#1a2838"/>
-      <rect x="490" y="188" width="6" height="36" rx="2" fill="#1a2838"/>
-      <line x1="393" y1="196" x2="443" y2="190" stroke="#243248" stroke-width="1.5"/>
-      <line x1="443" y1="190" x2="493" y2="190" stroke="#243248" stroke-width="1.5"/>
-      <!-- Market lanterns far left -->
-      <circle cx="80" cy="190" r="5" fill="#f08040" opacity="0.7" style="animation:flicker 2.2s ease-in-out infinite;"/>
-      <circle cx="80" cy="190" r="9" fill="#f08040" opacity="0.12" style="animation:flicker 2.2s ease-in-out infinite;"/>
-      <circle cx="140" cy="182" r="4" fill="#f0c040" opacity="0.6" style="animation:flicker 3s ease-in-out infinite .5s;"/>
-      <circle cx="140" cy="182" r="8" fill="#f0c040" opacity="0.1" style="animation:flicker 3s ease-in-out infinite .5s;"/>
-      <!-- Fireflies / floating particles -->
-      <circle cx="200" cy="165" r="2" fill="#a0e060" opacity="0.7" style="animation:flicker 2s ease-in-out infinite;"/>
-      <circle cx="380" cy="170" r="1.5" fill="#a0e060" opacity="0.6" style="animation:flicker 2.8s ease-in-out infinite .7s;"/>
-      <circle cx="160" cy="175" r="1.5" fill="#a0e060" opacity="0.5" style="animation:flicker 3.5s ease-in-out infinite 1.4s;"/>
-      <!-- Moon reflection on water -->
-      <ellipse cx="300" cy="240" rx="30" ry="8" fill="rgba(248,230,160,.06)"/>
+      <g style="animation:wave-drift2 10s ease-in-out infinite;">
+        <path d="M60 236 Q130 231 200 236 Q270 241 340 236" stroke="#1a7a9a" stroke-width="1.2" fill="none" opacity="0.4"/>
+      </g>
+      <!-- Sandy beach strip -->
+      <path d="M0 218 Q100 214 200 216 Q300 218 400 215 Q500 213 600 216 L600 225 Q500 222 400 224 Q300 226 200 224 Q100 222 0 226 Z" fill="#c8a850" opacity="0.6"/>
+      <!-- LIGHTHOUSE - day version - white with red bands -->
+      <ellipse cx="300" cy="215" rx="26" ry="7" fill="#8a7030" opacity="0.7"/>
+      <rect x="286" y="175" width="28" height="44" rx="3" fill="#e8e4d8"/>
+      <rect x="295" y="175" width="10" height="14" fill="#c84030" opacity="0.6"/>
+      <rect x="286" y="195" width="28" height="10" fill="#c84030" opacity="0.5"/>
+      <rect x="289" y="148" width="22" height="30" rx="2" fill="#e8e4d8"/>
+      <rect x="291" y="158" width="8" height="10" rx="4" fill="#d8e8ff" opacity="0.6"/>
+      <rect x="291" y="131" width="22" height="20" rx="2" fill="#e8e4d8"/>
+      <rect x="289" y="166" width="22" height="6" fill="#c84030" opacity="0.5"/>
+      <!-- Lamp room - glass glinting in sun -->
+      <rect x="288" y="112" width="24" height="20" rx="2" fill="#daeeff"/>
+      <rect x="290" y="114" width="9" height="16" rx="1" fill="rgba(255,240,160,.35)"/>
+      <rect x="301" y="114" width="9" height="16" rx="1" fill="rgba(255,240,160,.25)"/>
+      <!-- Daytime beam - subtle -->
+      <g style="animation:spin-slow 6s linear infinite;transform-origin:300px 120px;" opacity="0.12">
+        <path d="M300 120 L390 55 L370 95 Z" fill="#fff8c0"/>
+        <path d="M300 120 L370 50 L355 85 Z" fill="#fff8c0"/>
+      </g>
+      <circle cx="300" cy="120" r="6" fill="#fff4a0" opacity="0.9"/>
+      <!-- Cap -->
+      <polygon points="286,112 300,100 314,112" fill="#c84030"/>
+      <!-- Bridge - daytime wood tones -->
+      <rect x="370" y="218" width="180" height="9" rx="3" fill="#8a6020"/>
+      <rect x="390" y="194" width="5" height="30" rx="2" fill="#6a4818"/>
+      <rect x="440" y="188" width="5" height="36" rx="2" fill="#6a4818"/>
+      <rect x="490" y="188" width="5" height="36" rx="2" fill="#6a4818"/>
+      <line x1="392" y1="196" x2="442" y2="190" stroke="#8a6828" stroke-width="1.5"/>
+      <line x1="442" y1="190" x2="492" y2="190" stroke="#8a6828" stroke-width="1.5"/>
+      <!-- Bridge lanterns - off in daytime -->
+      <circle cx="392" cy="188" r="3" fill="#c8a030" opacity="0.5"/>
+      <circle cx="442" cy="182" r="3" fill="#c8a030" opacity="0.5"/>
+      <!-- Market area - colorful awnings -->
+      <rect x="50" y="172" width="70" height="32" rx="2" fill="#2a1808" opacity="0.7"/>
+      <rect x="62" y="168" width="80" height="10" rx="2" fill="#c03828"/>
+      <rect x="58" y="168" width="82" height="6" rx="2" fill="#d84030" opacity="0.8"/>
+      <!-- Market awning stripe -->
+      <rect x="62" y="168" width="10" height="10" fill="#f0c040" opacity="0.6"/>
+      <rect x="82" y="168" width="10" height="10" fill="#f0c040" opacity="0.6"/>
+      <rect x="102" y="168" width="10" height="10" fill="#f0c040" opacity="0.6"/>
+      <rect x="122" y="168" width="10" height="10" fill="#f0c040" opacity="0.6"/>
+      <!-- Market lanterns - daytime, unlit -->
+      <circle cx="85" cy="162" r="4" fill="#e07030" opacity="0.6"/>
+      <circle cx="125" cy="158" r="3.5" fill="#e0a030" opacity="0.5"/>
+      <!-- Flowers/summer foliage along waterline -->
+      <circle cx="220" cy="214" r="3" fill="#ff6060" opacity="0.7"/>
+      <circle cx="228" cy="211" r="2.5" fill="#ff9040" opacity="0.7"/>
+      <circle cx="235" cy="213" r="3" fill="#ffcc40" opacity="0.7"/>
+      <circle cx="350" cy="215" r="2.5" fill="#ff6060" opacity="0.6"/>
+      <circle cx="358" cy="212" r="3" fill="#ff9040" opacity="0.6"/>
+      <!-- Butterflies/birds in sky -->
+      <g style="animation:wave-drift 8s ease-in-out infinite;" opacity="0.6">
+        <path d="M180 80 Q185 76 190 80 Q185 84 180 80 Z" fill="#fff8e0"/>
+        <path d="M192 80 Q197 76 202 80 Q197 84 192 80 Z" fill="#fff8e0"/>
+      </g>
+      <g style="animation:wave-drift2 12s ease-in-out infinite 2s;" opacity="0.5">
+        <path d="M380 65 Q384 62 388 65 Q384 68 380 65 Z" fill="#fff0c0"/>
+        <path d="M390 65 Q394 62 398 65 Q394 68 390 65 Z" fill="#fff0c0"/>
+      </g>
     </svg>
   </div>
-  <!-- Creature peeks at bottom corners -->
-  <div class="title-peek" style="left:6%;--dur:4.2s;--del:0s;width:60px;height:60px;">
-    <svg viewBox="0 0 200 200" width="60" height="60" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 8px rgba(255,107,53,.4));">
+  <!-- Summer creature peeks - daytime friendly -->
+  <div class="title-peek" style="left:4%;--dur:4.2s;--del:0s;width:62px;height:62px;">
+    <svg viewBox="0 0 200 200" width="62" height="62" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 10px rgba(255,107,53,.5));">
       <g style="animation:breathe 2.2s ease-in-out infinite;transform-origin:100px 128px;">
-      <ellipse cx="100" cy="130" rx="36" ry="38" fill="#b02800"/><ellipse cx="100" cy="124" rx="28" ry="30" fill="#ffaa60"/>
-      <circle cx="87" cy="116" r="10" fill="white"/><circle cx="113" cy="116" r="10" fill="white"/>
-      <circle cx="89" cy="118" r="5.5" fill="#1a0800"/><circle cx="115" cy="118" r="5.5" fill="#1a0800"/>
-      <circle cx="90" cy="117" r="2" fill="white"/><circle cx="116" cy="117" r="2" fill="white"/>
-      <path d="M88 136 Q100 144 114 135" stroke="#881400" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="100" cy="130" rx="36" ry="38" fill="#b02800"/>
+        <ellipse cx="100" cy="124" rx="28" ry="30" fill="#ffaa60"/>
+        <circle cx="87" cy="116" r="10" fill="white"/><circle cx="113" cy="116" r="10" fill="white"/>
+        <circle cx="89" cy="118" r="5.5" fill="#1a0800"/><circle cx="115" cy="118" r="5.5" fill="#1a0800"/>
+        <circle cx="90" cy="117" r="2" fill="white"/><circle cx="116" cy="117" r="2" fill="white"/>
+        <path d="M88 136 Q100 144 114 135" stroke="#881400" stroke-width="2.5" fill="none" stroke-linecap="round"/>
       </g>
       <g style="animation:flicker 0.75s ease-in-out infinite;transform-origin:100px 90px;">
-      <path d="M80 94 Q74 70 92 54 Q100 46 108 54 Q126 70 120 94" fill="#ff8820" opacity="0.95"/></g>
+        <path d="M80 94 Q74 70 92 54 Q100 46 108 54 Q126 70 120 94" fill="#ff8820" opacity="0.95"/>
+      </g>
     </svg>
   </div>
-  <div class="title-peek" style="right:8%;--dur:5s;--del:1.5s;width:54px;height:54px;">
-    <svg viewBox="0 0 200 200" width="54" height="54" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 8px rgba(94,196,176,.4));">
+  <div class="title-peek" style="right:6%;--dur:5s;--del:1.5s;width:56px;height:56px;">
+    <svg viewBox="0 0 200 200" width="56" height="56" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 10px rgba(94,196,176,.5));">
       <g style="animation:breathe 3s ease-in-out infinite;transform-origin:100px 130px;">
-      <circle cx="100" cy="138" r="44" fill="#502888"/><circle cx="100" cy="131" r="36" fill="#c898e8"/>
-      <circle cx="85" cy="110" r="13" fill="white"/><circle cx="115" cy="110" r="13" fill="white"/>
-      <circle cx="87" cy="112" r="8" fill="#3a1060"/><circle cx="117" cy="112" r="8" fill="#3a1060"/>
-      <circle cx="89" cy="110" r="3" fill="white"/><circle cx="119" cy="110" r="3" fill="white"/>
+        <circle cx="100" cy="138" r="44" fill="#502888"/>
+        <circle cx="100" cy="131" r="36" fill="#c898e8"/>
+        <circle cx="85" cy="110" r="13" fill="white"/><circle cx="115" cy="110" r="13" fill="white"/>
+        <circle cx="87" cy="112" r="8" fill="#3a1060"/><circle cx="117" cy="112" r="8" fill="#3a1060"/>
+        <circle cx="89" cy="110" r="3" fill="white"/><circle cx="119" cy="110" r="3" fill="white"/>
       </g>
     </svg>
   </div>
-  <div class="title-peek" style="left:28%;--dur:3.8s;--del:2.8s;width:46px;height:46px;bottom:20px;">
-    <svg viewBox="0 0 200 200" width="46" height="46" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 6px rgba(104,184,40,.4));">
+  <div class="title-peek" style="left:24%;--dur:3.8s;--del:2.2s;width:50px;height:50px;bottom:22px;">
+    <svg viewBox="0 0 200 200" width="50" height="50" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 8px rgba(104,184,40,.5));">
       <g style="animation:breathe 6s ease-in-out infinite;transform-origin:100px 118px;">
-      <circle cx="100" cy="120" r="50" fill="#1e4808"/><circle cx="100" cy="114" r="38" fill="#5a9830"/>
-      <circle cx="88" cy="112" r="9" fill="white" opacity="0.92"/><circle cx="112" cy="112" r="9" fill="white" opacity="0.92"/>
-      <circle cx="89" cy="113" r="5.5" fill="#1e3008"/><circle cx="113" cy="113" r="5.5" fill="#1e3008"/>
-      <circle cx="90" cy="112" r="2" fill="white"/><circle cx="114" cy="112" r="2" fill="white"/>
+        <circle cx="100" cy="120" r="50" fill="#1e4808"/>
+        <circle cx="100" cy="114" r="38" fill="#5a9830"/>
+        <circle cx="82" cy="90" r="14" fill="#70b830" opacity="0.85"/>
+        <circle cx="100" cy="84" r="13" fill="#68b028" opacity="0.88"/>
+        <circle cx="118" cy="90" r="12" fill="#78c038" opacity="0.82"/>
+        <circle cx="88" cy="112" r="9" fill="white" opacity="0.92"/>
+        <circle cx="112" cy="112" r="9" fill="white" opacity="0.92"/>
+        <circle cx="89" cy="113" r="5.5" fill="#1e3008"/><circle cx="113" cy="113" r="5.5" fill="#1e3008"/>
+        <circle cx="90" cy="112" r="2" fill="white"/><circle cx="114" cy="112" r="2" fill="white"/>
+        <path d="M89 126 Q100 132 111 126" stroke="#1e4808" stroke-width="2.2" fill="none" stroke-linecap="round"/>
       </g>
     </svg>
   </div>
-  <div class="title-peek" style="right:25%;--dur:4.6s;--del:0.8s;width:46px;height:46px;bottom:12px;">
-    <svg viewBox="0 0 200 200" width="46" height="46" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 6px rgba(240,192,64,.4));">
+  <div class="title-peek" style="right:22%;--dur:4.6s;--del:0.6s;width:48px;height:48px;bottom:14px;">
+    <svg viewBox="0 0 200 200" width="48" height="48" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 8px rgba(240,192,64,.5));">
       <g style="animation:bob 3.8s ease-in-out infinite;transform-origin:100px 112px;">
-      <ellipse cx="100" cy="118" rx="40" ry="35" fill="#384858"/><ellipse cx="100" cy="107" rx="28" ry="23" fill="#8ea0b8"/>
-      <circle cx="89" cy="106" r="9.5" fill="#181e28"/><circle cx="111" cy="106" r="9.5" fill="#181e28"/>
-      <circle cx="89" cy="107" r="5.5" fill="#6090c0"/><circle cx="111" cy="107" r="5.5" fill="#6090c0"/>
-      <circle cx="90" cy="106" r="2.2" fill="rgba(180,222,255,0.92)"/><circle cx="112" cy="106" r="2.2" fill="rgba(180,222,255,0.92)"/>
+        <ellipse cx="100" cy="118" rx="40" ry="35" fill="#384858"/>
+        <ellipse cx="100" cy="107" rx="28" ry="23" fill="#8ea0b8"/>
+        <circle cx="89" cy="106" r="9.5" fill="#181e28"/><circle cx="111" cy="106" r="9.5" fill="#181e28"/>
+        <circle cx="89" cy="107" r="5.5" fill="#6090c0"/><circle cx="111" cy="107" r="5.5" fill="#6090c0"/>
+        <circle cx="90" cy="106" r="2.2" fill="rgba(180,222,255,0.92)"/><circle cx="112" cy="106" r="2.2" fill="rgba(180,222,255,0.92)"/>
       </g>
     </svg>
   </div>
@@ -541,7 +609,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
     <div class="title-logo-wrap">
       <div class="title-eyebrow">Island Adventure</div>
       <div class="title-logo">Way<span>stone</span></div>
-      <div class="title-edition">&#x1F49B; Friendship Edition</div>
+      <div class="title-edition">&#x2600;&#xFE0F; Golden Season Edition</div>
       <div class="title-subtitle">Creature Collector</div>
     </div>
     <div class="title-btns-new">
@@ -556,21 +624,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
       </div>
     </div>
   </div>
-</div>
-
-<!-- ══ RESIDENTS ══ -->
-<div class="screen" id="s-residents">
-  <div class="comp-hdr">
-    <div class="comp-title">&#x1F3D8; Island Residents</div>
-    <button class="btn-outline" style="padding:6px 14px;font-size:12px;" id="btn-res-back">&#x2190; Back</button>
-  </div>
-  <div style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px;" id="residents-list"></div>
-</div>
-
-<!-- ══ RESIDENT DETAIL ══ -->
-<div class="screen" id="s-resident-detail">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;">
-    <div style="font-family:'Fredoka One',cursive;font-size:22px;color:white;" id="rdet-name"></div>
+</div>e"></div>
     <button class="btn-outline" style="padding:6px 14px;font-size:12px;" id="btn-rdet-back">&#x2190; Back</button>
   </div>
   <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:16px;" id="rdet-body"></div>
@@ -590,7 +644,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
     <div class="loc-art" id="loc-art"></div>
     <div class="loc-label" id="loc-label">The Island</div>
   </div>
-  <div class="explore-right">
+  <div class="explore-right" id="explore-right">
     <div class="axes-row">
       <div class="ax flame"><div class="ax-label">&#x1F525; Flame</div><div class="ax-bar"><div class="ax-fill" id="ax-flame" style="width:50%"></div></div></div>
       <div class="ax thread"><div class="ax-label">&#x1F9F5; Thread</div><div class="ax-bar"><div class="ax-fill" id="ax-thread" style="width:50%"></div></div></div>
@@ -709,7 +763,7 @@ const CREATURES = [
     hobby:`Practicing speeches for occasions that haven't happened yet.`,
     food:`Cinnamon — the kind that makes your mouth feel warm already.`,
     quirk:`The flame on its head goes out during sleep. Cinder finds this deeply embarrassing and will deny it forever.`,
-    threshold:{"flame": 65},
+    threshold:{"flame": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <radialGradient id="ci-b" cx="38%" cy="30%" r="65%"><stop offset="0%" stop-color="#ffaa60"/><stop offset="55%" stop-color="#e85520"/><stop offset="100%" stop-color="#b02800"/></radialGradient>
@@ -1329,7 +1383,7 @@ const CREATURES = [
     hobby:`Patrolling. Being mistaken for a decorative boulder. Watching over sleeping creatures with an expression of deep disapproval that means nothing.`,
     food:`River mushrooms. The earthy ones near wet stone. Eaten slowly and without comment.`,
     quirk:`Grumble purrs. Like a very distant cart on cobblestones. It happens when happy and Grumble suppresses it in company, which takes visible effort.`,
-    threshold:{"stone": 65},
+    threshold:{"stone": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="gr-b" cx="38%" cy="28%" r="66%"><stop offset="0%" stop-color="#8898a8"/><stop offset="58%" stop-color="#606878"/><stop offset="100%" stop-color="#383e48"/></radialGradient></defs>
 <ellipse cx="100" cy="176" rx="58" ry="11" fill="#282e38" opacity="0.55"/>
@@ -1532,7 +1586,7 @@ const CREATURES = [
     hobby:`Drawing. Redesigning things that work fine to see if they could work differently.`,
     food:`Anything that leaves a mark — blueberries eaten with hands, squid ink pasta which it found once and has been seeking ever since.`,
     quirk:`Scribb's drawings occasionally predict small events. It denies this is intentional but has never stopped drawing.`,
-    threshold:{"spark": 72},
+    threshold:{"spark": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="sc-b" cx="36%" cy="30%" r="64%"><stop offset="0%" stop-color="#f8eea0"/><stop offset="55%" stop-color="#d4c060"/><stop offset="100%" stop-color="#a89030"/></radialGradient></defs>
 <g style="animation:bob 3.5s ease-in-out infinite;transform-origin:148px 80px;">
@@ -1755,7 +1809,7 @@ const CREATURES = [
     hobby:`Growing things. Watching the light move across the same ground over a full day. Being visited.`,
     food:`Rain. Literally absorbs nutrients from rainfall and considers a good rainstorm a fine meal.`,
     quirk:`Knows the names of every creature that has ever visited its location. Considers all of them friends, including the ones who didn't notice it.`,
-    threshold:{"root": 70},
+    threshold:{"root": 60},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="ms-b" cx="48%" cy="38%" r="58%"><stop offset="0%" stop-color="#5a9830"/><stop offset="55%" stop-color="#387018"/><stop offset="100%" stop-color="#1e4808"/></radialGradient></defs>
 <g style="animation:breathe 6s ease-in-out infinite;transform-origin:100px 118px;">
@@ -1799,7 +1853,7 @@ const CREATURES = [
     hobby:`Growing. Processing. Sending nutrients through the root system to other plants without announcement.`,
     food:`Deep mineral water from the water table, which tastes of old stone and time.`,
     quirk:`Occasionally all the plants on the island lean slightly in the same direction for a moment. This is Deeproot sending a message. No one has decoded it.`,
-    threshold:{"root": 65},
+    threshold:{"root": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="dr-s" cx="50%" cy="20%" r="80%"><stop offset="0%" stop-color="#3a8428" stop-opacity="0.45"/><stop offset="100%" stop-color="#3a8428" stop-opacity="0"/></radialGradient></defs>
 <path d="M86 148 Q68 152 54 162 Q44 172 38 184" stroke="#2a5010" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.65"/>
@@ -2074,7 +2128,7 @@ const CREATURES = [
     hobby:`Moving. Leaving marks. Trying to stop leaving marks and failing immediately.`,
     food:`Stories told aloud — specifically the parts where something changes.`,
     quirk:`If you follow Inkfall's trail carefully it tells the story of that day in complete emotional accuracy.`,
-    threshold:{"spark": 68, "thread": 65},
+    threshold:{"spark": 68, "thread": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="ik-b" cx="40%" cy="32%" r="62%"><stop offset="0%" stop-color="#2a2848"/><stop offset="100%" stop-color="#0c0a18"/></radialGradient></defs>
 <g opacity="0.68">
@@ -3839,7 +3893,40 @@ function getLocationTier(locId) {
 
 // All tappable names — chars + locations — for inline linking
 var GLOSSARY_NAMES = {
-  // Characters (map display name to resident id or special key)
+  // Creatures
+  'Cinder': {type:'creature', id:'cinder'},
+  'Boldur': {type:'creature', id:'boldur'},
+  'Flicka': {type:'creature', id:'flicka'},
+  'Roarette': {type:'creature', id:'roarette'},
+  'Embrix': {type:'creature', id:'embrix'},
+  'Wibble': {type:'creature', id:'wibble'},
+  'Tangle': {type:'creature', id:'tangle'},
+  'Mosswhir': {type:'creature', id:'mosswhir'},
+  'Lumble': {type:'creature', id:'lumble'},
+  'Silkwynn': {type:'creature', id:'silkwynn'},
+  'Pin-curchin': {type:'creature', id:'pin'},
+  'Bobbin': {type:'creature', id:'bobbin'},
+  'Grumble': {type:'creature', id:'grumble'},
+  'Pebb': {type:'creature', id:'pebb'},
+  'Stonk': {type:'creature', id:'stonk'},
+  'Murrock': {type:'creature', id:'murrock'},
+  'Veilstone': {type:'creature', id:'veilstone'},
+  'Scribb': {type:'creature', id:'scribb'},
+  'Buzzwing': {type:'creature', id:'buzzwing'},
+  'Glintmaw': {type:'creature', id:'glintmaw'},
+  'Whirlix': {type:'creature', id:'whirlix'},
+  'Aethon': {type:'creature', id:'aethon'},
+  'Mosse': {type:'creature', id:'mosse'},
+  'Deeproot': {type:'creature', id:'deeproot'},
+  'Hushling': {type:'creature', id:'hushling'},
+  'Oldstone': {type:'creature', id:'oldstone'},
+  'Verdynn': {type:'creature', id:'verdynn'},
+  'Lumenwing': {type:'creature', id:'lumenwing'},
+  'Stoneheart': {type:'creature', id:'stoneheart'},
+  'Inkfall': {type:'creature', id:'inkfall'},
+  'Fernwhist': {type:'creature', id:'fernwhist'},
+  'Calmyr': {type:'creature', id:'calmyr'},
+  // Residents
   'Pip':       {type:'resident', id:'pip'},
   'Brin':      {type:'resident', id:'brin'},
   'Wellow':    {type:'resident', id:'wellow'},
@@ -3865,7 +3952,6 @@ var glossaryReturn = null;
 
 function linkifyText(html) {
   var names = Object.keys(GLOSSARY_NAMES).sort(function(a,b){return b.length-a.length;});
-  // Split on HTML tags, only process text nodes
   var parts = html.split(/(<[^>]+>)/);
   for (var p = 0; p < parts.length; p++) {
     if (parts[p].charAt(0) === '<') continue;
@@ -3874,21 +3960,24 @@ function linkifyText(html) {
     names.forEach(function(name) {
       if (seg.indexOf(name) === -1) return;
       var entry = GLOSSARY_NAMES[name];
-      var color = '#f0c040';
+      var color = '#a0b8d0';
       try {
         if (entry.type === 'location' && LOCATION_GLOSSARY[entry.id]) {
           color = LOCATION_GLOSSARY[entry.id].color;
-        } else {
+        } else if (entry.type === 'resident') {
           for (var ri = 0; ri < RESIDENTS.length; ri++) {
             if (RESIDENTS[ri].id === entry.id) { color = RESIDENTS[ri].color; break; }
           }
         }
+        // Build boundary pattern that handles hyphens and spaces in names
         var esc = name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-        var re = new RegExp('(^|[\\s,.\'"!?;:()])(' + esc + ')([\\s,.\'"!?;:()]|$)', 'g');
-        seg = seg.replace(re, function(m, pre, word, post) {
+        // Use start/end of string or non-word chars as boundaries
+        var boundary = '[^a-zA-Z0-9]';
+        var re2 = new RegExp('(^|' + boundary + ')(' + esc + ')($|' + boundary + ')', 'g');
+        seg = seg.replace(re2, function(m, pre, word, post) {
           return pre + '<span class="tap-link" style="color:' + color +
-            ';border-bottom:1px dotted ' + color + ';cursor:pointer;" ' +
-            'onclick="openGlossaryEntry(\'' + entry.type + '\',\'' + entry.id + '\')">' +
+            ';border-bottom:1px dotted ' + color + ';" ' +
+            'data-gl-type="' + entry.type + '" data-gl-id="' + entry.id + '">' +
             word + '</span>' + post;
         });
       } catch(ex) {}
@@ -3899,21 +3988,118 @@ function linkifyText(html) {
 }
 
 function openGlossaryEntry(type, id) {
-  // Remember where we were
   var current = document.querySelector('.screen.active');
   glossaryReturn = current ? current.id : 's-explore';
   if (type === 'location') {
     showLocationDetail(id);
+  } else if (type === 'creature') {
+    openCreatureGlossary(id);
   } else {
     showResidentDetail(id);
-    // Patch the back button for in-run return
-    document.getElementById('btn-rdet-back').onclick = function() {
-      show(glossaryReturn);
-      // Restore btn-rdet-back to normal after
-      document.getElementById('btn-rdet-back').onclick = showResidents;
-    };
+    var backBtn = document.getElementById('btn-rdet-back');
+    if (backBtn) {
+      backBtn.onclick = function() {
+        show(glossaryReturn);
+        backBtn.onclick = showResidents;
+      };
+    }
   }
 }
+
+function openCreatureGlossary(id) {
+  var creature = null;
+  for (var i = 0; i < CREATURES.length; i++) {
+    if (CREATURES[i].id === id) { creature = CREATURES[i]; break; }
+  }
+  if (!creature) return;
+  if (!collection[id]) collection[id] = {found:false, nick:'', friendship:0};
+  var isFound = collection[id].found;
+  if (isFound) {
+    showDetail(id);
+    var backBtn = document.getElementById('btn-detail-back');
+    if (backBtn) {
+      backBtn.onclick = function() {
+        show(glossaryReturn);
+        backBtn.onclick = showCompendium;
+      };
+    }
+  } else {
+    showCreatureMystery(creature);
+  }
+}
+
+function showCreatureMystery(creature) {
+  var typeColors = {flame:'#ff6b35',thread:'#5ec4b0',stone:'#8ba7c0',spark:'#f0c040',root:'#68b828',rare:'#d4a0ff'};
+  var col = typeColors[creature.type] || '#8ba7c0';
+  var silSvg = creature.svg
+    .replace(/fill="[^"]*"/g, 'fill="#1e2838"')
+    .replace(/stroke="[^"]*"/g, 'stroke="#1e2838"')
+    .replace(/style="[^"]*"/g, '');
+
+  // Build hint text
+  var hintText = '';
+  if (creature.item) {
+    var itm = ITEMS[creature.item];
+    var itm2 = creature.item2 ? ITEMS[creature.item2] : null;
+    hintText = 'Requires: ' + (itm ? itm.icon + ' ' + itm.name : creature.item);
+    if (itm2) hintText += ' + ' + itm2.icon + ' ' + itm2.name;
+  } else {
+    var axNames = {flame:'Flame',thread:'Thread',stone:'Stone',spark:'Spark',root:'Root'};
+    var axList = Object.keys(creature.threshold).map(function(k){ return axNames[k] || k; }).join(' + ');
+    hintText = 'A ' + axList + ' creature. Keep exploring.';
+  }
+  var typeLabel = creature.rare ? 'Rare Creature' :
+    (creature.type.charAt(0).toUpperCase() + creature.type.slice(1) + ' Type');
+
+  // Remove any existing overlay
+  var existing = document.getElementById('creature-mystery-overlay');
+  if (existing) existing.parentNode.removeChild(existing);
+
+  var overlay = document.createElement('div');
+  overlay.id = 'creature-mystery-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(4,6,14,.92);' +
+    'display:flex;align-items:center;justify-content:center;padding:24px;';
+
+  var box = document.createElement('div');
+  box.style.cssText = 'background:#0e1422;border:1.5px solid rgba(255,255,255,.1);border-radius:20px;' +
+    'padding:28px;max-width:320px;width:100%;text-align:center;display:flex;flex-direction:column;gap:12px;';
+
+  var silDiv = document.createElement('div');
+  silDiv.style.cssText = 'width:140px;height:140px;margin:0 auto;animation:sil-pulse 3s ease-in-out infinite;';
+  silDiv.innerHTML = silSvg;
+
+  var nameDiv = document.createElement('div');
+  nameDiv.style.cssText = 'font-family:Fredoka One,cursive;font-size:28px;color:rgba(255,255,255,.25);';
+  nameDiv.textContent = '???';
+
+  var typeDiv = document.createElement('div');
+  typeDiv.style.cssText = 'font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:' + col + ';opacity:0.6;';
+  typeDiv.textContent = typeLabel;
+
+  var hintDiv = document.createElement('div');
+  hintDiv.style.cssText = 'font-size:12px;color:#6a7890;font-style:italic;font-family:Lora,serif;margin-top:8px;';
+  hintDiv.textContent = hintText;
+
+  var backBtn = document.createElement('button');
+  backBtn.style.cssText = 'background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.12);' +
+    'border-radius:50px;color:#e8e4d8;font-family:Nunito,sans-serif;' +
+    'font-size:13px;font-weight:800;padding:10px 24px;cursor:pointer;margin-top:4px;';
+  backBtn.textContent = '← Back';
+  backBtn.onclick = function() {
+    var ol = document.getElementById('creature-mystery-overlay');
+    if (ol) ol.parentNode.removeChild(ol);
+    if (glossaryReturn) show(glossaryReturn);
+  };
+
+  box.appendChild(silDiv);
+  box.appendChild(nameDiv);
+  box.appendChild(typeDiv);
+  box.appendChild(hintDiv);
+  box.appendChild(backBtn);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
 
 function showLocationDetail(locId) {
   var loc = LOCATION_GLOSSARY[locId];
@@ -4117,7 +4303,7 @@ var AX_POOLS = {
 // ═══════════════════════════════════════════════════════════════
 // GAME STATE
 // ═══════════════════════════════════════════════════════════════
-var axes = {flame:30,thread:30,stone:30,spark:30,root:30};
+var axes = {flame:35,thread:35,stone:35,spark:35,root:35};
 var collection = {};    // id -> {found,nick}
 var inventory = {};     // item_id -> true
 var lucky_sparks = 0;
@@ -4199,7 +4385,7 @@ function buildRun() {
   // Carry 60% of current axes into new run
   var keys = [`flame`,`thread`,`stone`,`spark`,`root`];
   keys.forEach(function(k) {
-    axes[k] = Math.round(30 + (axes[k] - 30) * CARRY);
+    axes[k] = Math.round(35 + (axes[k] - 35) * CARRY);
     axes[k] = Math.max(15, Math.min(85, axes[k]));
   });
 
@@ -4366,7 +4552,24 @@ function nextEncounter() {
 function endRun() {
   saveState();
 
-  // Find unlockable creatures — one per run, highest rarity first
+  // Award friendship points for already-collected creatures that qualify
+  pendingFriendship = [];
+  CREATURES.forEach(function(c) {
+    if (!collection[c.id] || !collection[c.id].found) return;
+    var req = c.threshold;
+    var axesOk = Object.keys(req).every(function(k) { return axes[k] >= req[k]; });
+    if (!axesOk) return;
+    if (c.item && !inventory[c.item]) return;
+    if (c.item2 && !inventory[c.item2]) return;
+    var col = collection[c.id];
+    if (!col.friendship) col.friendship = 0;
+    if (col.friendship < 3) {
+      col.friendship++;
+      if (col.friendship === 3) pendingFriendship.push(c);
+    }
+  });
+
+  // Find unlockable creatures — up to 3 per run, highest rarity first
   var unlockable = CREATURES.filter(function(c) {
     if (collection[c.id].found) return false;
     var req = c.threshold;
@@ -4684,7 +4887,8 @@ function showDetail(id) {
   detailId = id;
   document.getElementById(`detail-art`).innerHTML = c.svg;
   document.getElementById(`detail-name`).textContent = c.name;
-  var nick = collection[id].nick;
+  if (!collection[id]) collection[id] = {found:false, nick:'', friendship:0};
+  var nick = collection[id].nick || '';
   document.getElementById(`detail-nick-disp`).textContent = nick ? `"${nick}"` : ``;
   var tl = {flame:`🔥 Flame Type`,thread:`🧵 Thread Type`,stone:`🪨 Stone Type`,spark:`⚡ Spark Type`,root:`🌿 Root Type`,rare:`✨ Rare Creature`};
   document.getElementById(`detail-type`).innerHTML = tl[c.type] || c.type;
@@ -4782,6 +4986,16 @@ window.onload = function() {
   wire('btn-friend-ok', nextAfterFriendship);
   wire('btn-again', startExplore);
   wire('btn-runend-coll', showCompendium);
+
+  // Tap-link delegation — handles creature/location/resident links in encounter text
+  document.addEventListener('click', function(e) {
+    var el = e.target;
+    if (el.classList && el.classList.contains('tap-link')) {
+      var type = el.getAttribute('data-gl-type');
+      var id = el.getAttribute('data-gl-id');
+      if (type && id) openGlossaryEntry(type, id);
+    }
+  });
 
   // Compendium family tabs
   try {
