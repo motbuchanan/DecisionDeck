@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>The Brew Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --ink:        #1a1410;
+  --ink2:       #251d17;
+  --ink3:       #312720;
+  --wood2:      #4e3a25;
+  --copper:     #c8722a;
+  --copper2:    #e08840;
+  --copper-glow:rgba(200,114,42,0.18);
+  --copper-dim: rgba(200,114,42,0.08);
+  --amber:      #e8b84a;
+  --foam:       #f5ede0;
+  --parchment:  #c4a882;
+  --parchment2: #a08060;
+  --muted:      #7a6650;
+  --muted2:     #9a8468;
+  --good:       #7ec850;
+  --good-dim:   rgba(126,200,80,0.12);
+  --bad:        #e05040;
+  --bad-dim:    rgba(224,80,64,0.12);
+  --warn:       #e8b030;
+  --warn-dim:   rgba(232,176,48,0.12);
+  --rad:  10px;
+  --rad2: 18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--foam);min-height:100dvh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6;}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(200,114,42,0.07) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 10% 0%,rgba(232,184,74,0.04) 0%,transparent 50%);pointer-events:none;z-index:0;}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100dvh;flex-direction:column;position:relative;z-index:1;}
+.screen.active{display:flex;}
+.app{max-width:460px;margin:0 auto;padding:0 16px 100px;min-height:100dvh;display:flex;flex-direction:column;width:100%;}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0 14px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:20px;position:sticky;top:0;background:var(--ink);z-index:10;}
+.wordmark{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--foam);}
+.wordmark em{font-style:italic;color:var(--copper2);}
+.xp-badge{display:flex;align-items:center;gap:6px;background:var(--ink3);border:1px solid rgba(200,114,42,0.25);border-radius:20px;padding:5px 12px;font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--parchment);}
+.xp-dot{width:8px;height:8px;background:var(--copper);border-radius:50%;flex-shrink:0;}
+.back-btn{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:0.8rem;display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;padding:4px 0;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink2);border-top:1px solid rgba(255,255,255,0.07);display:flex;z-index:20;padding-bottom:env(safe-area-inset-bottom,0);}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px 10px;background:none;border:none;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.6rem;font-weight:500;letter-spacing:0.8px;text-transform:uppercase;transition:color 0.2s;position:relative;}
+.nav-btn.active{color:var(--copper2);}
+.nav-btn.active::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--copper);border-radius:0 0 2px 2px;box-shadow:0 0 12px var(--copper-glow);}
+.nav-icon{font-size:1.3rem;line-height:1;}
+
+/* ── SPLASH ── */
+.splash-hero{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 0 60px;text-align:center;}
+.hero-glass-wrap{position:relative;margin-bottom:32px;animation:glassFloat 4s ease-in-out infinite;}
+@keyframes glassFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.hero-glow{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:120px;height:30px;background:radial-gradient(ellipse,rgba(200,114,42,0.3) 0%,transparent 70%);filter:blur(8px);}
+.splash-title{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:0.95;color:var(--foam);margin-bottom:10px;}
+.splash-title em{font-style:italic;color:var(--copper2);display:block;}
+.splash-sub{font-size:0.8rem;color:var(--muted2);letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;}
+.hop-divider{display:flex;align-items:center;gap:12px;margin:0 auto 32px;width:200px;}
+.hop-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--copper),transparent);}
+.hop-icon{font-size:1rem;color:var(--copper);animation:hopSpin 8s linear infinite;}
+@keyframes hopSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.mode-cards{display:flex;flex-direction:column;gap:14px;width:100%;max-width:340px;}
+.mode-card{background:var(--ink2);border:1px solid rgba(200,114,42,0.2);border-radius:var(--rad2);padding:20px 22px;cursor:pointer;text-align:left;transition:all 0.25s;position:relative;overflow:hidden;}
+.mode-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--copper-dim) 0%,transparent 60%);opacity:0;transition:opacity 0.25s;}
+.mode-card:hover::before,.mode-card:active::before{opacity:1;}
+.mode-card:active{transform:scale(0.98);}
+.mode-card-icon{font-size:1.8rem;margin-bottom:8px;display:block;}
+.mode-card-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--foam);margin-bottom:4px;}
+.mode-card-desc{font-size:0.77rem;color:var(--muted2);line-height:1.5;}
+.mode-card-arrow{position:absolute;right:20px;top:50%;transform:translateY(-50%);color:var(--copper);font-size:1.2rem;opacity:0.5;transition:opacity 0.2s,transform 0.2s;}
+.mode-card:hover .mode-card-arrow{opacity:1;transform:translateY(-50%) translateX(3px);}
+
+/* ── BREW BOOK ── */
+.screen-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--foam);margin-bottom:4px;}
+.screen-title em{font-style:italic;color:var(--copper2);}
+.screen-subtitle{font-size:0.75rem;color:var(--muted2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;}
+.family-tabs{display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.family-tabs::-webkit-scrollbar{display:none;}
+.family-tab{flex-shrink:0;background:var(--ink3);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:7px 16px;font-size:0.72rem;font-weight:500;color:var(--muted2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.family-tab.active{background:var(--copper);border-color:var(--copper);color:var(--ink);font-weight:600;box-shadow:0 0 16px var(--copper-glow);}
+.recipe-grid{display:flex;flex-direction:column;gap:16px;}
+
+/* ── FLIP CARDS ── */
+.flip-card-outer{perspective:1200px;cursor:pointer;}
+/* Use CSS grid so both faces occupy the same cell and size each other.
+   This prevents the absolute-positioned back face from overflowing
+   the card container and overlapping adjacent cards. */
+.flip-card-inner{
+  display:grid;
+  width:100%;
+  transform-style:preserve-3d;
+  transition:transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+  border-radius:var(--rad2);
+}
+.flip-card-outer.flipped .flip-card-inner{transform:rotateY(180deg);}
+.card-face{
+  grid-area:1/1;
+  width:100%;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  border-radius:var(--rad2);
+  overflow:hidden;
+}
+.card-back{transform:rotateY(180deg);}
+.card-front{background:var(--ink2);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:stretch;min-height:130px;position:relative;overflow:hidden;}
+.card-front::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.025) 0%,transparent 50%);pointer-events:none;}
+.card-glass-panel{width:100px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:16px 8px;position:relative;}
+.card-info{flex:1;padding:18px 16px 18px 8px;display:flex;flex-direction:column;justify-content:space-between;}
+.card-style-name{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--foam);margin-bottom:4px;line-height:1.2;}
+.card-style-sub{font-size:0.7rem;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.card-tag{font-size:0.62rem;font-family:'DM Mono',monospace;padding:3px 8px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);color:var(--parchment2);background:rgba(255,255,255,0.04);}
+.card-tag.highlight{border-color:rgba(200,114,42,0.4);color:var(--copper2);background:rgba(200,114,42,0.08);}
+.card-hint{font-size:0.63rem;color:var(--muted);display:flex;align-items:center;gap:4px;letter-spacing:0.5px;}
+.card-back-inner{background:var(--ink3);border:1px solid rgba(200,114,42,0.25);padding:20px;min-height:130px;}
+.card-back-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.card-back-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--foam);}
+.card-back-close{font-size:0.7rem;color:var(--muted);letter-spacing:1px;}
+.flavor-row{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.flavor-item{display:flex;align-items:center;gap:10px;}
+.flavor-label{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted2);letter-spacing:1px;width:54px;flex-shrink:0;text-transform:uppercase;}
+.flavor-bar-wrap{flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;}
+.flavor-bar-fill{height:100%;border-radius:3px;}
+.flavor-value{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--parchment);width:28px;text-align:right;}
+.card-desc{font-size:0.75rem;color:var(--muted2);line-height:1.6;margin-bottom:16px;}
+.brew-btn{width:100%;background:linear-gradient(135deg,var(--copper),var(--copper2));border:none;border-radius:var(--rad);padding:12px;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;color:var(--ink);cursor:pointer;letter-spacing:0.5px;transition:all 0.2s;box-shadow:0 4px 20px rgba(200,114,42,0.25);}
+.brew-btn:active{transform:scale(0.98);}
+.flip-card-outer.locked .card-front{opacity:0.45;}
+.flip-card-outer.locked{cursor:default;}
+.locked-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(26,20,16,0.6);font-size:0.72rem;color:var(--muted2);letter-spacing:1px;}
+
+/* ── RECIPE MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,6,4,0.9);z-index:100;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.modal-overlay.open{display:block;}
+.modal{max-width:460px;margin:0 auto;padding:20px 16px 120px;min-height:100dvh;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 0 16px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:24px;position:sticky;top:0;background:rgba(10,6,4,0.96);backdrop-filter:blur(8px);z-index:5;}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--foam);}
+.modal-close{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:1.4rem;line-height:1;padding:4px;}
+.modal-glass-hero{display:flex;flex-direction:column;align-items:center;padding:28px 0 24px;position:relative;}
+.modal-glass-glow{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:160px;height:40px;border-radius:50%;filter:blur(20px);opacity:0.5;}
+.modal-style-label{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted2);letter-spacing:3px;text-transform:uppercase;margin-top:14px;}
+.modal-abv-row{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;justify-content:center;}
+.abv-chip{background:var(--ink3);border:1px solid rgba(200,114,42,0.2);border-radius:20px;padding:4px 14px;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--copper2);}
+.recipe-section{margin-bottom:28px;}
+.recipe-section-title{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--copper);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.recipe-section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(200,114,42,0.3),transparent);}
+.ingredient-list{display:flex;flex-direction:column;gap:8px;}
+.ingredient-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--ink2);border-radius:var(--rad);border-left:3px solid transparent;}
+.ingredient-row.malt{border-left-color:#c8a040;}
+.ingredient-row.hops{border-left-color:#7aaa30;}
+.ingredient-row.yeast{border-left-color:#c8722a;}
+.ingredient-row.other{border-left-color:#6080a0;}
+.ingredient-icon{font-size:1rem;flex-shrink:0;}
+.ingredient-name{flex:1;font-size:0.8rem;font-weight:500;color:var(--foam);}
+.ingredient-amount{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--parchment2);}
+.ingredient-role{font-size:0.66rem;color:var(--muted);margin-top:2px;}
+.step-list{display:flex;flex-direction:column;}
+.step-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.step-item:last-child{border-bottom:none;}
+.step-num-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.step-num{width:28px;height:28px;background:var(--ink3);border:1px solid rgba(200,114,42,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:500;color:var(--copper2);flex-shrink:0;}
+.step-line{flex:1;width:1px;background:linear-gradient(180deg,rgba(200,114,42,0.2),transparent);margin-top:6px;}
+.step-content{flex:1;padding-top:4px;}
+.step-title{font-size:0.82rem;font-weight:600;color:var(--foam);margin-bottom:4px;}
+.step-body{font-size:0.76rem;color:var(--muted2);line-height:1.65;}
+.step-time{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--amber);background:rgba(232,184,74,0.08);border:1px solid rgba(232,184,74,0.15);border-radius:20px;padding:2px 10px;}
+.step-warning{margin-top:8px;padding:8px 12px;background:rgba(200,114,42,0.08);border-left:2px solid var(--copper);border-radius:0 var(--rad) var(--rad) 0;font-size:0.72rem;color:var(--parchment2);line-height:1.5;}
+.tips-box{background:var(--ink2);border:1px solid rgba(200,114,42,0.15);border-radius:var(--rad2);padding:18px;}
+.tips-box ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.tips-box li{display:flex;gap:10px;font-size:0.76rem;color:var(--muted2);line-height:1.6;}
+.tips-box li::before{content:'→';color:var(--copper);flex-shrink:0;font-size:0.8rem;margin-top:1px;}
+@keyframes modalSlideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.modal-overlay.open .modal{animation:modalSlideUp 0.35s cubic-bezier(0.34,1.3,0.64,1) both;}
+
+/* ── SIM STYLES ── */
+.sim-pick-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--foam);margin-bottom:4px;}
+.sim-pick-title em{font-style:italic;color:var(--copper2);}
+.sim-pick-sub{font-size:0.75rem;color:var(--muted2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;}
+.sim-recipe-cards{display:flex;flex-direction:column;gap:12px;}
+.sim-recipe-btn{background:var(--ink2);border:1px solid rgba(200,114,42,0.2);border-radius:var(--rad2);padding:18px 20px;cursor:pointer;text-align:left;transition:all 0.22s;display:flex;align-items:center;gap:16px;}
+.sim-recipe-btn:active{transform:scale(0.98);}
+.sim-recipe-btn:hover{border-color:rgba(200,114,42,0.45);background:rgba(200,114,42,0.06);}
+.sim-recipe-btn.locked{opacity:0.4;cursor:default;}
+.sim-recipe-icon{font-size:2rem;flex-shrink:0;}
+.sim-recipe-info{flex:1;}
+.sim-recipe-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--foam);margin-bottom:3px;}
+.sim-recipe-meta{font-size:0.7rem;color:var(--muted2);}
+.sim-recipe-arrow{color:var(--copper);font-size:1rem;opacity:0.5;}
+.sim-header{margin-bottom:20px;}
+.sim-recipe-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);margin-bottom:6px;}
+.sim-step-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--foam);margin-bottom:12px;line-height:1.2;}
+.sim-progress-wrap{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.sim-progress-track{flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;}
+.sim-progress-fill{height:100%;background:linear-gradient(90deg,var(--copper),var(--amber));border-radius:3px;transition:width 0.5s cubic-bezier(0.34,1.2,0.64,1);}
+.sim-progress-label{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted2);white-space:nowrap;}
+.quality-meters{display:flex;gap:8px;margin-bottom:20px;}
+.quality-meter{flex:1;background:var(--ink3);border:1px solid rgba(255,255,255,0.07);border-radius:var(--rad);padding:10px 12px;text-align:center;}
+.quality-meter-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2);margin-bottom:4px;}
+.quality-meter-val{font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;transition:color 0.4s;}
+.quality-meter-val.high{color:var(--good);}
+.quality-meter-val.mid{color:var(--amber);}
+.quality-meter-val.low{color:var(--bad);}
+.sim-card{background:var(--ink2);border:1px solid rgba(255,255,255,0.08);border-radius:var(--rad2);padding:22px 20px;margin-bottom:16px;position:relative;overflow:hidden;animation:simCardIn 0.35s cubic-bezier(0.34,1.1,0.64,1) both;}
+@keyframes simCardIn{from{opacity:0;transform:translateY(20px) scale(0.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.sim-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--copper),transparent);}
+.sim-card.curveball::before{background:linear-gradient(90deg,var(--bad),#ff8060);}
+.sim-card.curveball{border-color:rgba(224,80,64,0.3);}
+.sim-card-type{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;}
+.sim-card-type.normal{color:var(--copper);}
+.sim-card-type.curveball{color:var(--bad);}
+.sim-card-type.checkin{color:#a080e0;}
+.sim-card-context{font-size:0.75rem;color:var(--muted2);font-style:italic;line-height:1.55;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:14px;}
+.sim-card-question{font-size:1rem;font-weight:500;color:var(--foam);line-height:1.55;}
+.sim-choices{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.sim-choice{background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:var(--rad);padding:14px 16px;color:var(--foam);font-family:'DM Sans',sans-serif;font-size:0.85rem;text-align:left;cursor:pointer;transition:all 0.2s;line-height:1.5;}
+.sim-choice:hover{border-color:var(--copper);background:var(--copper-dim);}
+.sim-choice:active{transform:scale(0.98);}
+.sim-choice:disabled{cursor:default;opacity:0.35;}
+.sim-choice.selected-good{border-color:var(--good);background:var(--good-dim);}
+.sim-choice.selected-bad{border-color:var(--bad);background:var(--bad-dim);}
+.sim-choice.selected-mid{border-color:var(--warn);background:var(--warn-dim);}
+.sim-feedback{background:var(--ink3);border-radius:var(--rad2);padding:18px 20px;margin-bottom:16px;animation:fadeUp 0.3s ease both;}
+.feedback-score-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.feedback-delta{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:500;}
+.feedback-delta.pos{background:var(--good-dim);color:var(--good);border:1px solid rgba(126,200,80,0.25);}
+.feedback-delta.neg{background:var(--bad-dim);color:var(--bad);border:1px solid rgba(224,80,64,0.25);}
+.feedback-delta.neu{background:var(--warn-dim);color:var(--warn);border:1px solid rgba(232,176,48,0.25);}
+.feedback-delta.variance{background:rgba(160,80,200,0.1);color:#c090e0;border:1px solid rgba(160,80,200,0.2);}
+.feedback-text{font-size:0.8rem;color:var(--muted2);line-height:1.65;margin-bottom:14px;}
+.feedback-tip{font-size:0.75rem;color:var(--parchment2);background:rgba(200,114,42,0.08);border-left:2px solid var(--copper);padding:8px 12px;border-radius:0 var(--rad) var(--rad) 0;line-height:1.55;}
+.next-btn{width:100%;background:linear-gradient(135deg,var(--copper),var(--copper2));border:none;border-radius:var(--rad);padding:14px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;color:var(--ink);cursor:pointer;letter-spacing:0.5px;transition:all 0.2s;box-shadow:0 4px 20px rgba(200,114,42,0.2);}
+.next-btn:active{transform:scale(0.98);}
+
+/* ── RESULT ── */
+.result-screen{flex:1;display:flex;flex-direction:column;padding:20px 0 40px;animation:fadeUp 0.4s ease both;}
+.result-glass-hero{display:flex;flex-direction:column;align-items:center;padding:20px 0 16px;position:relative;}
+.result-glass-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:50px;border-radius:50%;filter:blur(22px);opacity:0.6;}
+.result-grade{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;line-height:1;margin:10px 0 4px;background:linear-gradient(135deg,var(--amber),var(--copper2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.result-grade-label{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted2);margin-bottom:24px;}
+.score-breakdown{background:var(--ink2);border:1px solid rgba(255,255,255,0.07);border-radius:var(--rad2);padding:20px;margin-bottom:20px;}
+.score-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.score-row:last-child{margin-bottom:0;}
+.score-row-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2);width:72px;flex-shrink:0;}
+.score-row-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden;}
+.score-row-bar{height:100%;border-radius:4px;transition:width 0.8s cubic-bezier(0.34,1.2,0.64,1);}
+.score-row-val{font-family:'DM Mono',monospace;font-size:0.75rem;width:36px;text-align:right;}
+.tasting-notes{background:var(--ink2);border:1px solid rgba(200,114,42,0.15);border-radius:var(--rad2);padding:20px;margin-bottom:20px;}
+.tasting-title{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--copper);margin-bottom:14px;}
+.tasting-line{font-size:0.8rem;color:var(--muted2);line-height:1.7;margin-bottom:8px;}
+.tasting-line strong{color:var(--foam);}
+.curveball-log{margin-bottom:20px;}
+.curveball-log-title{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--bad);margin-bottom:10px;}
+.curveball-item{display:flex;gap:10px;padding:10px 14px;background:var(--bad-dim);border:1px solid rgba(224,80,64,0.2);border-radius:var(--rad);margin-bottom:8px;font-size:0.75rem;color:var(--muted2);line-height:1.5;}
+.result-actions{display:flex;flex-direction:column;gap:10px;}
+.result-btn{width:100%;padding:14px;border-radius:var(--rad);font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;}
+.result-btn.primary{background:linear-gradient(135deg,var(--copper),var(--copper2));border:none;color:var(--ink);box-shadow:0 4px 20px rgba(200,114,42,0.2);}
+.result-btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.12);color:var(--muted2);}
+.result-btn:active{transform:scale(0.98);}
+
+/* ── CELLAR ── */
+.progress-section{margin-bottom:28px;}
+.progress-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.progress-label span{color:var(--copper2);font-size:0.75rem;}
+.xp-bar-wrap{background:var(--ink3);border-radius:4px;height:8px;overflow:hidden;margin-bottom:4px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--copper),var(--amber));border-radius:4px;transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 0 10px var(--copper-glow);}
+.xp-caption{font-size:0.68rem;color:var(--muted);}
+.unlock-cards{display:flex;flex-direction:column;gap:10px;}
+.unlock-card{background:var(--ink2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--rad);padding:14px 16px;display:flex;align-items:center;gap:14px;}
+.unlock-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:var(--copper);}
+.unlock-text{flex:1;}
+.unlock-name{font-size:0.8rem;font-weight:500;color:var(--foam);margin-bottom:2px;}
+.unlock-desc{font-size:0.7rem;color:var(--muted2);}
+
+/* ── UTILS ── */
+.fade-in{animation:fadeUp 0.4s ease both;}
+.fade-in-d1{animation-delay:0.05s;}
+.fade-in-d2{animation-delay:0.10s;}
+.fade-in-d3{animation-delay:0.15s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--wood2);border-radius:2px;}
+
+/* ── SIM-from-Book launch button ── */
+.sim-launch-btn {
+  width:100%;
+  margin-top:16px;
+  background:var(--ink3);
+  border:1px solid rgba(200,114,42,0.3);
+  border-radius:var(--rad);
+  padding:13px;
+  font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;
+  color:var(--copper2);cursor:pointer;
+  letter-spacing:0.5px;transition:all 0.2s;
+}
+.sim-launch-btn:hover{background:rgba(200,114,42,0.1);}
+.sim-launch-btn:active{transform:scale(0.98);}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div class="screen active" id="screen-home">
+  <div class="app">
+    <nav class="topbar">
+      <div class="wordmark">The <em>Brew</em> Deck</div>
+      <div class="xp-badge"><div class="xp-dot"></div><span class="xp-val">0 XP</span></div>
+    </nav>
+    <div class="splash-hero">
+      <div class="hero-glass-wrap fade-in">
+        <svg width="110" height="150" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 18 L12 138 Q12 144 18 144 L92 144 Q98 144 98 138 L88 18 Z" fill="url(#hg-g)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+          <clipPath id="hg-c"><path d="M22 18 L12 138 Q12 144 18 144 L92 144 Q98 144 98 138 L88 18 Z"/></clipPath>
+          <rect x="10" y="48" width="90" height="100" fill="url(#hg-b)" clip-path="url(#hg-c)"/>
+          <ellipse cx="55" cy="48" rx="37" ry="12" fill="url(#hg-f)"/>
+          <ellipse cx="38" cy="44" rx="12" ry="8" fill="rgba(245,237,224,0.9)"/>
+          <ellipse cx="68" cy="43" rx="10" ry="7" fill="rgba(245,237,224,0.85)"/>
+          <ellipse cx="55" cy="40" rx="14" ry="9" fill="rgba(245,237,224,0.95)"/>
+          <circle cx="40" cy="110" r="2" fill="rgba(255,255,255,0.15)"><animate attributeName="cy" values="120;50" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.2;0" dur="2.5s" repeatCount="indefinite"/></circle>
+          <circle cx="55" cy="125" r="1.5" fill="rgba(255,255,255,0.12)"><animate attributeName="cy" values="130;55" dur="3s" repeatCount="indefinite" begin="0.8s"/><animate attributeName="opacity" values="0.2;0" dur="3s" repeatCount="indefinite" begin="0.8s"/></circle>
+          <path d="M26 28 L20 128" stroke="rgba(255,255,255,0.18)" stroke-width="3" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="hg-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(255,255,255,0.06)"/><stop offset="50%" stop-color="rgba(255,255,255,0.02)"/><stop offset="100%" stop-color="rgba(255,255,255,0.08)"/></linearGradient>
+            <linearGradient id="hg-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4880a" stop-opacity="0.9"/><stop offset="100%" stop-color="#7a3e08" stop-opacity="0.95"/></linearGradient>
+            <radialGradient id="hg-f" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(245,237,224,0.98)"/><stop offset="100%" stop-color="rgba(200,180,155,0.85)"/></radialGradient>
+          </defs>
+        </svg>
+        <div class="hero-glow"></div>
+      </div>
+      <h1 class="splash-title fade-in fade-in-d1">The<em>Brew Deck</em></h1>
+      <p class="splash-sub fade-in fade-in-d2">Homebrew Training System</p>
+      <div class="hop-divider fade-in fade-in-d2"><div class="hop-line"></div><div class="hop-icon">✿</div><div class="hop-line"></div></div>
+      <div class="mode-cards fade-in fade-in-d3">
+        <button class="mode-card" onclick="goTo('screen-book')"><span class="mode-card-icon">📖</span><div class="mode-card-title">Brew Book</div><div class="mode-card-desc">Browse styles, explore recipes, read the full brew guide for any beer.</div><div class="mode-card-arrow">→</div></button>
+        <button class="mode-card" onclick="goTo('screen-sim')"><span class="mode-card-icon">🧪</span><div class="mode-card-title">Brew Sim</div><div class="mode-card-desc">Pick a recipe and work through a full simulated brew day. Your choices shape the final pint.</div><div class="mode-card-arrow">→</div></button>
+        <button class="mode-card" onclick="goTo('screen-progress')"><span class="mode-card-icon">🏆</span><div class="mode-card-title">Your Cellar</div><div class="mode-card-desc">XP, unlocks, and the batches you've brewed so far.</div><div class="mode-card-arrow">→</div></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ BREW BOOK ═══════════════ -->
+<div class="screen" id="screen-book">
+  <div class="app">
+    <nav class="topbar">
+      <button class="back-btn" onclick="goTo('screen-home')">← Home</button>
+      <div class="wordmark">Brew <em>Book</em></div>
+      <div class="xp-badge"><div class="xp-dot"></div><span class="xp-val">0 XP</span></div>
+    </nav>
+    <h1 class="screen-title fade-in">Style <em>Guide</em></h1>
+    <p class="screen-subtitle fade-in fade-in-d1">Tap a card · flip for notes · open for the full recipe</p>
+    <div class="family-tabs fade-in fade-in-d2">
+      <button class="family-tab active" onclick="setFamily(this,'all')">All Styles</button>
+      <button class="family-tab" onclick="setFamily(this,'light')">🌾 Light &amp; Easy</button>
+      <button class="family-tab" onclick="setFamily(this,'hoppy')">🌿 Hoppy &amp; Bold</button>
+      <button class="family-tab" onclick="setFamily(this,'dark')">🌑 Dark &amp; Rich</button>
+      <button class="family-tab" onclick="setFamily(this,'specialty')">⭐ Specialty</button>
+    </div>
+    <div class="recipe-grid fade-in fade-in-d3" id="recipe-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ BREW SIM ═══════════════ -->
+<div class="screen" id="screen-sim">
+  <div class="app" id="sim-app"></div>
+</div>
+
+<!-- ═══════════════ CELLAR ═══════════════ -->
+<div class="screen" id="screen-progress">
+  <div class="app">
+    <nav class="topbar">
+      <button class="back-btn" onclick="goTo('screen-home')">← Home</button>
+      <div class="wordmark">Your <em>Cellar</em></div>
+      <div class="xp-badge"><div class="xp-dot"></div><span class="xp-val">0 XP</span></div>
+    </nav>
+    <h1 class="screen-title fade-in">Your <em>Cellar</em></h1>
+    <p class="screen-subtitle fade-in fade-in-d1">Progress · Unlocks · Brew history</p>
+    <div class="progress-section fade-in fade-in-d2">
+      <div class="progress-label">Brewer Level<span id="level-label">Apprentice</span></div>
+      <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+      <div class="xp-caption" id="xp-caption">0 / 200 XP to Journeyman</div>
+    </div>
+    <div class="progress-section fade-in fade-in-d3">
+      <div class="progress-label">Completed Runs</div>
+      <div id="run-history"><em style="font-size:0.78rem;color:var(--muted2)">No runs yet. Head to Brew Sim to start your first batch.</em></div>
+    </div>
+    <div class="progress-section">
+      <div class="progress-label">Recipe Unlocks</div>
+      <div class="unlock-cards">
+        <div class="unlock-card"><div class="unlock-dot"></div><div class="unlock-text"><div class="unlock-name">American Pale Ale</div><div class="unlock-desc">Starter · Always unlocked</div></div></div>
+        <div class="unlock-card"><div class="unlock-dot"></div><div class="unlock-text"><div class="unlock-name">Dry Irish Stout</div><div class="unlock-desc">Starter · Always unlocked</div></div></div>
+        <div class="unlock-card" id="unlock-ipa" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">West Coast IPA</div><div class="unlock-desc">Complete 2 Sim runs</div></div><div style="color:var(--muted)">🔒</div></div>
+        <div class="unlock-card" id="unlock-hefe" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">Hefeweizen</div><div class="unlock-desc">Earn 150 XP</div></div><div style="color:var(--muted)">🔒</div></div>
+        <div class="unlock-card" id="unlock-oat" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">Oatmeal Stout</div><div class="unlock-desc">Score 80+ on any Sim run</div></div><div style="color:var(--muted)">🔒</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ RECIPE MODAL ═══════════════ -->
+<div class="modal-overlay" id="recipe-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Recipe</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ BOTTOM NAV ═══════════════ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-home" onclick="goTo('screen-home')"><span class="nav-icon">🏠</span>Home</button>
+  <button class="nav-btn" id="nav-book" onclick="goTo('screen-book')"><span class="nav-icon">📖</span>Brew Book</button>
+  <button class="nav-btn" id="nav-sim" onclick="goTo('screen-sim')"><span class="nav-icon">🧪</span>Brew Sim</button>
+  <button class="nav-btn" id="nav-progress" onclick="goTo('screen-progress')"><span class="nav-icon">🏆</span>Cellar</button>
+</nav>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// SVG GLASS LIBRARY
+// ═══════════════════════════════════════════════════════════
+const GLASSES = {
+  pint_amber: (w=80,h=110) => `<svg width="${w}" height="${h}" viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pa-beer${w}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e89820"/><stop offset="100%" stop-color="#8b4a08"/></linearGradient><clipPath id="pa-clip${w}"><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z"/></clipPath></defs><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.13)" stroke-width="1.2"/><rect x="6" y="34" width="68" height="74" fill="url(#pa-beer${w})" clip-path="url(#pa-clip${w})"/><ellipse cx="40" cy="34" rx="26" ry="8" fill="rgba(245,235,210,0.92)"/><ellipse cx="28" cy="30" rx="9" ry="6" fill="rgba(250,242,225,0.88)"/><ellipse cx="50" cy="29" rx="8" ry="5.5" fill="rgba(248,238,218,0.85)"/><ellipse cx="40" cy="27" rx="11" ry="7" fill="rgba(252,244,228,0.95)"/><circle cx="28" cy="80" r="1.5" fill="rgba(255,255,255,0.18)"><animate attributeName="cy" values="90;36" dur="2.8s" repeatCount="indefinite" begin="0s"/><animate attributeName="opacity" values="0.25;0" dur="2.8s" repeatCount="indefinite" begin="0s"/></circle><circle cx="42" cy="95" r="1" fill="rgba(255,255,255,0.14)"><animate attributeName="cy" values="100;38" dur="3.2s" repeatCount="indefinite" begin="1s"/><animate attributeName="opacity" values="0.2;0" dur="3.2s" repeatCount="indefinite" begin="1s"/></circle><path d="M18 18 L12 96" stroke="rgba(255,255,255,0.20)" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+
+  pint_black: (w=80,h=110) => `<svg width="${w}" height="${h}" viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pb-beer${w}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a0a04"/><stop offset="100%" stop-color="#060200"/></linearGradient><clipPath id="pb-clip${w}"><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z"/></clipPath></defs><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)" stroke-width="1.2"/><rect x="6" y="36" width="68" height="74" fill="url(#pb-beer${w})" clip-path="url(#pb-clip${w})"/><ellipse cx="40" cy="36" rx="26" ry="6" fill="rgba(235,225,200,0.95)"/><ellipse cx="32" cy="33" rx="8" ry="4.5" fill="rgba(240,230,210,0.88)"/><ellipse cx="50" cy="32" rx="7" ry="4" fill="rgba(238,228,208,0.85)"/><ellipse cx="40" cy="30" rx="10" ry="5.5" fill="rgba(242,232,214,0.96)"/><path d="M18 18 L12 96" stroke="rgba(255,255,255,0.14)" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+
+  weizen: (w=70,h=130) => `<svg width="${w}" height="${h}" viewBox="0 0 70 130" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wz-beer${w}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8d060" stop-opacity="0.85"/><stop offset="100%" stop-color="#c09020" stop-opacity="0.9"/></linearGradient><clipPath id="wz-clip${w}"><path d="M28 8 Q22 40 18 70 Q15 85 14 100 Q13 112 16 118 Q19 124 24 124 L46 124 Q51 124 54 118 Q57 112 56 100 Q55 85 52 70 Q48 40 42 8 Z"/></clipPath></defs><path d="M28 8 Q22 40 18 70 Q15 85 14 100 Q13 112 16 118 Q19 124 24 124 L46 124 Q51 124 54 118 Q57 112 56 100 Q55 85 52 70 Q48 40 42 8 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/><rect x="12" y="38" width="46" height="90" fill="url(#wz-beer${w})" clip-path="url(#wz-clip${w})"/><ellipse cx="35" cy="38" rx="22" ry="9" fill="rgba(252,246,234,0.96)"/><ellipse cx="24" cy="32" rx="9" ry="6" fill="rgba(252,244,228,0.90)"/><ellipse cx="46" cy="31" rx="8" ry="5.5" fill="rgba(250,242,224,0.86)"/><ellipse cx="35" cy="27" rx="12" ry="8" fill="rgba(254,248,238,0.97)"/><circle cx="27" cy="95" r="1.5" fill="rgba(255,255,255,0.2)"><animate attributeName="cy" values="110;42" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.3;0" dur="3s" repeatCount="indefinite"/></circle><path d="M20 20 Q17 60 16 100" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linecap="round" fill="none"/></svg>`,
+};
+
+// ═══════════════════════════════════════════════════════════
+// BREW BOOK DATA
+// ═══════════════════════════════════════════════════════════
+const RECIPES = [
+  { id:'apa', name:'American Pale Ale', family:'light', subtitle:'The Beginner\'s Backbone', tags:['Beginner','Hoppy','5-Gal'], highlight:'ABV 4.5–5.5%', locked:false, glass:'pint_amber', glassW:80, glassH:110, bgColor:'#8b5010', flavorColor:'#e89820',
+    description:'Clean, crisp, and forgiving — the American Pale Ale is where most homebrewers start and where many stay. Citrus and pine hops balance a biscuity malt backbone. Brews fast, clarifies well, and teaches you most of the core skills you\'ll use in every recipe after this.',
+    flavor:{bitter:62,malt:55,sweet:35,aroma:70}, abv:'4.5–5.5%', ibu:'30–45', difficulty:'Beginner', time:'~4 weeks',
+    ingredients:[
+      {type:'malt',icon:'🌾',name:'Pale Malt Extract (DME)',amount:'6 lbs',role:'Fermentable base · body and color'},
+      {type:'malt',icon:'🌾',name:'Crystal 40L Specialty Grain',amount:'0.5 lbs',role:'Caramel sweetness · golden color'},
+      {type:'hops',icon:'🌿',name:'Cascade Hops (bittering)',amount:'1 oz',role:'60 min addition · bitterness backbone'},
+      {type:'hops',icon:'🌿',name:'Cascade Hops (aroma)',amount:'1 oz',role:'5 min addition · citrus/floral aroma'},
+      {type:'yeast',icon:'🔬',name:'US-05 American Ale Yeast',amount:'1 packet',role:'Clean fermentation · neutral profile'},
+      {type:'other',icon:'💧',name:'Water',amount:'5 gallons',role:'Filtered or spring — avoid softened water'},
+      {type:'other',icon:'🍬',name:'Priming Sugar',amount:'¾ cup',role:'Bottling carbonation only'},
+    ],
+    steps:[
+      {title:'Sanitize Everything',time:'30 min',body:'Mix Star San per instructions and sanitize your fermenter, airlock, auto-siphon, and all hoses. Everything that touches the beer after the boil must be sanitized. This is the single most important thing you will do today.',warning:'Contamination is the #1 reason homebrew fails. Don\'t rush this step.'},
+      {title:'Steep the Specialty Grain',time:'20 min',body:'Heat 2.5 gallons to 155°F. Steep Crystal 40L grain in a mesh bag for 20 minutes. Hold temperature between 150–160°F. Remove and let drain without squeezing.'},
+      {title:'Add Malt Extract & Bring to Boil',time:'15 min',body:'Remove from heat. Stir in all 6 lbs of DME until fully dissolved. Return to heat and bring to a rolling boil. Watch carefully — wort can boil over fast.'},
+      {title:'60-Minute Hop Addition',time:'60 min',body:'Add 1 oz Cascade at start of boil. Set timer. Maintain a rolling boil. Foam settles after a few minutes.',warning:'Don\'t add aroma hops here — they go in at 5 minutes remaining.'},
+      {title:'Aroma Hop Addition',time:'5 min',body:'With 5 minutes left, add remaining 1 oz Cascade. These drive citrus and floral aroma more than bitterness.'},
+      {title:'Cool the Wort',time:'30–45 min',body:'Cool to below 75°F before adding yeast. Use an ice bath or wort chiller. Do not add yeast to hot wort — it kills the yeast.'},
+      {title:'Transfer & Pitch Yeast',time:'15 min',body:'Pour cooled wort into sanitized fermenter. Top up with cool water to 5 gallons. Check temp: target 65–72°F. Sprinkle US-05 on top and seal with an airlock.'},
+      {title:'Fermentation',time:'10–14 days',body:'Store in dark, temperature-stable space at 65–72°F. Expect airlock activity within 12–48 hours. Let ferment until day 14 for a cleaner beer.'},
+      {title:'Bottle',time:'2 hrs',body:'Boil ¾ cup corn sugar in 1 cup water, cool, add to sanitized bottling bucket. Siphon beer gently on top. Fill 48 bottles, cap, condition at room temp 2 weeks.'},
+      {title:'Chill & Pour',time:'2 weeks conditioning',body:'Refrigerate at least 24 hours before opening. Your first batch is ready.'},
+    ],
+    tips:['Don\'t open the fermenter to check during active fermentation — every opening risks contamination.','US-05 is the most forgiving ale yeast. Temperature swings of a few degrees won\'t ruin it.','The beer will look murky for the first week. It will clear significantly by bottling day.','Write down your brew date and tasting notes for every batch — even simple ones.'],
+    simId:'apa',
+  },
+  { id:'stout', name:'Dry Irish Stout', family:'dark', subtitle:'The Dark Side of Easy', tags:['Beginner','Roasty','5-Gal'], highlight:'ABV 4.0–4.5%', locked:false, glass:'pint_black', glassW:80, glassH:110, bgColor:'#1a0804', flavorColor:'#6a4030',
+    description:'Nearly black, with a dense tan head, dry roasted finish, and hints of coffee and dark chocolate. Lower in alcohol than it looks. The bold roast flavors hide minor process errors that would ruin a paler beer — making this one of the most forgiving beginner styles.',
+    flavor:{bitter:45,malt:80,sweet:20,aroma:55}, abv:'4.0–4.5%', ibu:'25–40', difficulty:'Beginner', time:'~4 weeks',
+    ingredients:[
+      {type:'malt',icon:'🌾',name:'Pale Malt Extract (DME)',amount:'5.5 lbs',role:'Fermentable base · main body'},
+      {type:'malt',icon:'🌾',name:'Roasted Barley (unmalted)',amount:'0.75 lbs',role:'Deep black color · dry roast / coffee character'},
+      {type:'malt',icon:'🌾',name:'Flaked Barley',amount:'0.5 lbs',role:'Creamy mouthfeel · dense head retention'},
+      {type:'hops',icon:'🌿',name:'East Kent Goldings',amount:'1.25 oz',role:'60 min addition · earthy bitterness'},
+      {type:'yeast',icon:'🔬',name:'Wyeast 1084 Irish Ale Yeast',amount:'1 smack pack',role:'Slight fruitiness · clean dry finish'},
+      {type:'other',icon:'💧',name:'Water',amount:'5 gallons',role:'Soft water preferred — Dublin-style'},
+      {type:'other',icon:'🍬',name:'Priming Sugar',amount:'½ cup',role:'Low carbonation — style-appropriate'},
+    ],
+    steps:[
+      {title:'Prep & Sanitize',time:'30 min',body:'Sanitize all equipment. For Irish stout, pay special attention to the fermenter airlock — this beer ferments vigorously and can push yeast into the airlock.'},
+      {title:'Steep Roasted Barley & Flaked Barley',time:'30 min',body:'Heat 2.5 gallons to 155°F. Steep both grains in a bag for 30 minutes — longer than most specialty steeps. The water turns almost black. That is correct.',warning:'Don\'t exceed 170°F — it extracts harsh tannins from the grain husks.'},
+      {title:'Add DME & Boil',time:'15 min',body:'Remove grain bag. Off heat, stir in 5.5 lbs DME until dissolved. Return to heat and bring to a full rolling boil.'},
+      {title:'60-Minute Hop Addition',time:'60 min',body:'Add 1.25 oz East Kent Goldings at boil start. No late additions for this style — the aroma is all about malt, not hops.'},
+      {title:'Cool & Pitch',time:'30–45 min',body:'Cool to below 68°F. Irish Ale yeast performs best at 62–72°F. Warmer produces more fruity esters than the style calls for.'},
+      {title:'Ferment',time:'12–14 days',body:'Activate WY1084 smack pack 3 hours before brew day. Pitch to cooled wort, seal, airlock. Ferment at 65–68°F. Activity typically begins within 8 hours.'},
+      {title:'Bottle with Low Carbonation',time:'2 hrs',body:'Use only ½ cup priming sugar — not ¾. Too much CO2 lifts the head off the beer instead of letting it settle into that signature creamy cascade.'},
+      {title:'Pour Properly',time:'2 min',body:'45° angle until ¾ full. Rest 90 seconds — watch the cascade. Top up until the head domes above the rim. Drink the same day for best flavor.'},
+    ],
+    tips:['The cascade effect comes from low carbonation — don\'t skip the reduced priming sugar.','If the beer tastes astringent, steep temperature ran too hot. Use a thermometer next batch.','Roasted barley (unmalted) = dry finish like Guinness. Roasted malt (malted) = sweeter. Use unmalted for this recipe.','This style is forgiving of fermentation temps up to 72°F without major off-flavors.'],
+    simId:'stout',
+  },
+  { id:'hefe', name:'Hefeweizen', family:'light', subtitle:'Banana, Clove & Summer', tags:['Beginner','Wheat','5-Gal'], highlight:'ABV 4.9–5.6%', locked:false, glass:'weizen', glassW:70, glassH:130, bgColor:'#8a6010', flavorColor:'#d4b040',
+    description:'Cloudy gold, towering white head, and a yeast-driven profile of banana and clove. The secret is entirely in the yeast — the same grain bill with a different yeast makes a completely different beer. Fermentation temperature is the key variable you\'ll learn to control.',
+    flavor:{bitter:15,malt:60,sweet:65,aroma:85}, abv:'4.9–5.6%', ibu:'10–15', difficulty:'Beginner', time:'~4 weeks',
+    ingredients:[
+      {type:'malt',icon:'🌾',name:'Wheat Malt Extract (liquid)',amount:'6 lbs',role:'50%+ wheat for haze and soft body'},
+      {type:'malt',icon:'🌾',name:'Pale DME',amount:'0.5 lbs',role:'Rounds out body · light color'},
+      {type:'hops',icon:'🌿',name:'Hallertau Hops (bittering)',amount:'1 oz',role:'60 min · low bitterness, no aroma addition'},
+      {type:'yeast',icon:'🔬',name:'WY3068 Weihenstephan Weizen',amount:'1 smack pack',role:'THE hefeweizen yeast · produces banana + clove'},
+      {type:'other',icon:'💧',name:'Water',amount:'5 gallons',role:'Soft, low-mineral water preferred'},
+      {type:'other',icon:'🍬',name:'Priming Sugar',amount:'¾ cup',role:'High carbonation — authentic style'},
+    ],
+    steps:[
+      {title:'Activate Yeast Pack Early',time:'3–6 hrs before',body:'Smack WY3068 pack 3–6 hours before you brew. This specific strain is used by the oldest operating brewery in the world.',warning:'Above 68°F leans banana. Below 62°F leans clove. Target 64–66°F for balance.'},
+      {title:'Steep & Add Extract',time:'15 min',body:'Heat 2.5 gallons to 160°F. Off heat, stir in 6 lbs liquid wheat extract and 0.5 lbs pale DME. Add in batches — liquid extract is thick.'},
+      {title:'Boil & Single Hop Addition',time:'60 min',body:'Bring to boil. Add 1 oz Hallertau at 60 minutes. That\'s the only hop addition. Hefeweizens are not about hops. Resist the urge to add more.'},
+      {title:'Cool to Lower Temp',time:'30–45 min',body:'Cool wort to 62–66°F before pitching — lower than you would for a pale ale. Pitching temperature sets the direction of fermentation.'},
+      {title:'Ferment with Temperature Discipline',time:'10–12 days',body:'Keep fermentation between 62–68°F. This is the most critical variable in the whole batch. A few degrees warmer = banana bomb. A few cooler = spice and clove.'},
+      {title:'Bottle with Higher Carbonation',time:'2 hrs',body:'Use the full ¾ cup of priming sugar. Hefeweizen is meant to be highly carbonated — it lifts the yeast into the pour and builds that iconic tall white head.'},
+      {title:'Pour the German Way',time:'1 min',body:'Rinse glass with cold water. Pour ⅔ at 45°, then tilt upright for the rest. Roll the last inch to rouse yeast sediment, pour it on top. The haze is the style.'},
+    ],
+    tips:['WY3068 ferments violently. Use a blow-off tube instead of an airlock for the first 48 hours.','Banana = warm fermentation. Clove = cool. The ratio of these two makes a great hefeweizen.','Don\'t filter this beer. The cloudiness is authentic — it\'s yeast in suspension and it\'s part of the flavor.','Best consumed within 6 weeks of bottling. The banana character fades with age.'],
+    simId:null,
+  },
+];
+
+// ═══════════════════════════════════════════════════════════
+// SIM DATA
+// ═══════════════════════════════════════════════════════════
+const SIM_RECIPES = {
+  apa: {
+    name:'American Pale Ale', glassColor:'#d4880a',
+    scenarios:[
+      {id:'s1',step:'Sanitizing',type:'normal',context:'Before brew day starts you need to sanitize. You have Star San but you\'re short on time — your spouse just texted asking if you\'ll be done before dinner.',question:'How do you approach sanitizing today?',choices:[
+        {text:'Full sanitize — fermenter, airlock, auto-siphon, hoses, everything that touches post-boil wort.',scores:{quality:+12,technique:+8,knowledge:+4},outcome:'good',feedback:'Right call. Contamination ruins more batches than any other mistake, and it\'s invisible until week two when a pellicle forms and you pour 5 gallons down the drain.',tip:'Star San is no-rinse. "Don\'t fear the foam." A thin coating in your fermenter is harmless and helps.'},
+        {text:'Quick sanitize — just the fermenter and airlock. The siphon barely touches the beer anyway.',scores:{quality:-8,technique:-5,knowledge:-3},outcome:'bad',feedback:'The auto-siphon and hoses contact the beer for minutes. Any wild yeast in a crevice will have a full warm ferment to colonize. This batch might be fine. It might also taste like a barnyard.',tip:'Star San takes 30 seconds. The cost of skipping it is a 4-week batch.'},
+        {text:'Sanitize everything, then text back and negotiate dinner timing. This is non-negotiable.',scores:{quality:+12,technique:+8,knowledge:+6},outcome:'good',feedback:'Correct on both counts. Homebrewing rewards patience and penalizes shortcuts.',tip:'Block the whole brew day. You can finish early. You can never compress a 4-hour process into 2.'},
+      ]},
+      {id:'s2',step:'Steeping the Grain',type:'normal',context:'You\'re steeping Crystal 40L at what looks like the right temperature. Your thermometer reads 165°F, but it\'s an old dial type you\'re not fully confident in.',question:'Do you trust the thermometer reading?',choices:[
+        {text:'Trust it. 165°F is close enough — steeping is more forgiving than mashing.',scores:{quality:-6,technique:-4,knowledge:-2},outcome:'bad',feedback:'165°F is the tannin extraction threshold. Even a few degrees over starts pulling harsh compounds from the grain husks.',tip:'Target steep temperature is 150–158°F. Above 170°F and you\'re actively extracting tannins.'},
+        {text:'Pull the kettle off heat, let it drop for 5 minutes, then continue steeping.',scores:{quality:+8,technique:+6,knowledge:+4},outcome:'good',feedback:'Smart adjustment. Letting the temperature fall protects the grain character. Dial thermometers typically read 3–5°F high as they age.',tip:'Invest in a digital probe thermometer ($15–20). The precision pays off on your first batch where you nail the temperature.'},
+        {text:'End the steep immediately — 15 minutes is close enough.',scores:{quality:+2,technique:+2,knowledge:+2},outcome:'mid',feedback:'Conservative but reasonable. Slightly thinner extraction, but you avoided tannin risk.',tip:'Crystal malts need the full 20 minutes. Cutting short trades tannin risk for thin-beer risk.'},
+      ]},
+      {id:'cb1',step:'The Boil',type:'curveball',context:'You\'ve just added your DME and turned the heat back up. You walk to the fridge to grab a water. You hear it before you see it — a hissing, frothing sound. The wort is boiling over the side of the kettle.',question:'You have about 10 seconds. What do you do?',choices:[
+        {text:'Kill the heat immediately, then blow across the surface to reduce foam.',scores:{quality:+6,technique:+8,knowledge:+6},outcome:'good',feedback:'Textbook. Removing heat drops the foam almost instantly. Blowing breaks the protein bubbles. You lose maybe a cup of wort.',tip:'The "hot break" happens in the first 5 minutes after hitting a boil. Stay close.'},
+        {text:'Grab the kettle lid and cover it to smother the foam.',scores:{quality:-10,technique:-8,knowledge:-4},outcome:'bad',feedback:'Covering a boiling kettle turns a boilover into a pressure event. The foam has nowhere to go and forces back as hot liquid. Steam burn risk. Never cover boiling wort.',tip:'Boilover foam answer: remove heat, stir gently, or blow across the surface.'},
+        {text:'Stir vigorously and reduce heat to medium.',scores:{quality:+4,technique:+5,knowledge:+4},outcome:'mid',feedback:'Stirring a near-boilover can spray hot liquid in the first second. Reducing heat is right. Vigorous stirring less so.',tip:'Safe sequence: (1) kill heat, (2) wait 10 seconds, (3) gentle stir. In that order.'},
+      ]},
+      {id:'s3',step:'Hop Additions',type:'normal',context:'At the 30-minute mark you realize you have 1.5 oz of Cascade, not 1 oz. The recipe calls for 1 oz at 60 min and 1 oz at 5 min. You\'ve already added 1 oz at 60.',question:'You have an extra 0.5 oz of Cascade. What do you do with it?',choices:[
+        {text:'Add the extra 0.5 oz now at the 30-minute mark.',scores:{quality:+4,technique:+5,knowledge:+6},outcome:'mid',feedback:'A 30-minute addition is legitimate — it adds some bitterness and a little aroma. Your beer will be slightly more bitter than planned.',tip:'60 min = bitterness. 30 min = balance. 10–15 min = flavor. 5 min and under = aroma.'},
+        {text:'Save it for the 5-minute addition — add 1.5 oz total at flameout for a bigger aroma burst.',scores:{quality:+8,technique:+7,knowledge:+8},outcome:'good',feedback:'Smart. Late hop additions drive aroma. A Pale Ale with big citrus nose is more impressive than a slightly more bitter one.',tip:'Experienced homebrewers often shift hop weight to late additions for more aroma. You just stumbled into a real technique.'},
+        {text:'Discard the extra 0.5 oz — don\'t deviate from the recipe on a first batch.',scores:{quality:0,technique:+2,knowledge:+4},outcome:'mid',feedback:'Disciplined and not wrong. Brewing to recipe on a first batch gives you a baseline.',tip:'The brewer\'s journal principle: brew it once as written, then adjust.'},
+      ]},
+      {id:'s4',step:'Cooling the Wort',type:'normal',context:'60-minute boil is done. You\'re using an ice bath in the sink. After 25 minutes you\'re at 82°F. Your ice is running out. Yeast packet says 65–72°F.',question:'What do you do?',choices:[
+        {text:'Get more ice from a neighbor or corner store. Wait until you hit target range.',scores:{quality:+10,technique:+8,knowledge:+6},outcome:'good',feedback:'Right answer. Pitching at 82°F stresses yeast and causes fusel alcohols — hot, harsh, headache-inducing flavor.',tip:'A wort chiller can drop 5 gallons from boiling to pitch temp in 15 minutes. Best single equipment upgrade.'},
+        {text:'Top up with cold tap water to reach 5 gallons — the cold water will drop your temp.',scores:{quality:+6,technique:+5,knowledge:+5},outcome:'mid',feedback:'Clever and practical. Cold tap water can drop 5–10°F. This works. Risk is chlorine and potential bacteria from tap water.',tip:'This technique is called "top-up cooling." Use the coldest water available.'},
+        {text:'Pitch the yeast at 82°F — yeast can handle a little warmth.',scores:{quality:-12,technique:-8,knowledge:-4},outcome:'bad',feedback:'One of the most common beginner mistakes. Hot-pitched yeast produces fusel alcohols and sulfur. The beer may finish but will taste hot and rough.',tip:'Rule of thumb: if the fermenter feels warm to the touch before pitching, keep cooling.'},
+      ]},
+      {id:'s5',step:'Fermentation',type:'normal',context:'Day 3 of fermentation. Your airlock has barely moved. You tap the fermenter and see a thin layer of foam on top of the beer.',question:'You\'re worried fermentation isn\'t happening. What do you do?',choices:[
+        {text:'Do nothing. The foam layer means fermentation happened. Airlock activity isn\'t the only sign.',scores:{quality:+10,technique:+6,knowledge:+10},outcome:'good',feedback:'Correct. Airlock bubbling is unreliable — if the lid isn\'t perfectly sealed, CO2 escapes without moving the airlock. The foam (krausen) is proof the yeast is alive and working.',tip:'The only reliable way to confirm fermentation is complete: two hydrometer readings 48 hours apart. Same number = done.'},
+        {text:'Open the fermenter to check and smell.',scores:{quality:-8,technique:-6,knowledge:-4},outcome:'bad',feedback:'Every time you open a fermenter mid-fermentation, you introduce oxygen and contamination risk. The foam is your answer. Trust it.',tip:'If you must check: sanitize everything, take a small sample with a sanitized turkey baster, close immediately.'},
+        {text:'Swirl the fermenter gently to rouse the yeast.',scores:{quality:-4,technique:-3,knowledge:-2},outcome:'mid',feedback:'Swirling introduces oxygen, which can cause oxidation flavors. The yeast is already working. Don\'t disturb it.',tip:'The homebrewer\'s mantra: "Relax. Don\'t worry. Have a homebrew." — Charlie Papazian.'},
+      ]},
+      {id:'ci1',step:'The Wait',type:'checkin',context:'Day 10. Fermentation has been done for days. The beer looks clear. You want to drink it.',question:'Your bottling calculator says wait 4 more days before bottling. Do you?',choices:[
+        {text:'Yes. Four days is nothing after 10 already.',scores:{quality:+6,technique:+4,knowledge:+4},outcome:'good',feedback:'Right instinct. Extra days let remaining yeast settle out, giving you a clearer, cleaner beer.',tip:'Patience is the cheapest ingredient in homebrewing.'},
+        {text:'Bottle now — it looks done and the beer can condition in the bottle.',scores:{quality:-6,technique:-4,knowledge:-3},outcome:'bad',feedback:'Conditioning in the bottle assumes fermentation is complete. If gravity hasn\'t stabilized and you add priming sugar, you get bottle bombs.',tip:'Always take a gravity reading before bottling. Two identical readings 48 hours apart confirms fermentation is done.'},
+        {text:'Sample it first with a hydrometer and see where gravity sits.',scores:{quality:+8,technique:+8,knowledge:+8},outcome:'good',feedback:'Best answer. A hydrometer reading tells you exactly where you stand. This is brewing by the numbers.',tip:'Taste the sample! The hydrometer reading is data. The taste is your first preview of the beer. Both matter.'},
+      ]},
+    ],
+  },
+  stout: {
+    name:'Dry Irish Stout', glassColor:'#0d0503',
+    scenarios:[
+      {id:'st1',step:'Grain Steep',type:'normal',context:'You\'re steeping roasted barley and flaked barley together. At the 20-minute mark the water is deep black and smells incredible. The recipe says 30 minutes total.',question:'It already looks and smells perfect. Do you pull the grain early?',choices:[
+        {text:'Pull it now — it already looks and smells like a stout. More time might mean more tannins.',scores:{quality:-5,technique:-4,knowledge:-3},outcome:'bad',feedback:'Color and aroma develop quickly, but full malt character takes longer. Flaked barley needs the full time to release the beta-glucans that give Irish stout its signature creamy body.',tip:'Roasted barley gives color and roast flavor fast. Flaked barley gives mouthfeel slowly. Both need the full steep.'},
+        {text:'Stay the course — 30 minutes, hold temperature at 155°F.',scores:{quality:+10,technique:+8,knowledge:+6},outcome:'good',feedback:'Correct. The early extraction is color and volatile aromatics. Mouthfeel compounds take the full time. Trust the recipe.',tip:'Color develops in the first 5 minutes. Body develops in the last 10.'},
+        {text:'Pull it at 25 minutes as a compromise.',scores:{quality:+2,technique:+2,knowledge:+2},outcome:'mid',feedback:'Reasonable compromise. You\'ll get most of the character and avoid over-extraction. Not optimal but defensible.',tip:'When in doubt on a first batch, follow the recipe exactly. Save adjustments for batch two.'},
+      ]},
+      {id:'st2',step:'Carbonation Level',type:'normal',context:'You\'re bottling. The recipe calls for ½ cup of priming sugar — significantly less than the ¾ cup you\'d use for most ales. You wonder if that\'s a typo.',question:'Do you use ½ cup as written, or bump it to ¾ cup for better carbonation?',choices:[
+        {text:'Use ¾ cup — a properly carbonated beer is always better.',scores:{quality:-10,technique:-8,knowledge:-6},outcome:'bad',feedback:'Low carbonation IS the proper carbonation for Irish dry stout. It\'s designed to be drunk at lower CO2 so the creamy malt body and dry finish come forward. Extra sugar makes it fizzy and sharp.',tip:'A stout should feel like velvet on the palate. Excessive carbonation destroys that.'},
+        {text:'Use ½ cup as written — trust the recipe.',scores:{quality:+10,technique:+8,knowledge:+8},outcome:'good',feedback:'Right call. The lower carbonation is a feature, not a bug. It\'s what separates a proper Irish stout from an overcarbonated homebrew that happens to be dark.',tip:'Carbonation levels vary by style: lagers high, stouts low, Belgians very high.'},
+        {text:'Use ⅔ cup — a middle ground.',scores:{quality:-2,technique:-1,knowledge:0},outcome:'mid',feedback:'Slightly more carbonation than the style calls for, but you won\'t ruin it. The beer will be a bit crisper than traditional.',tip:'The most important thing before a first batch of any style: drink the commercial example. Guinness Draught is the benchmark.'},
+      ]},
+      {id:'cb-stout',step:'Fermentation',type:'curveball',context:'Day 2 of fermentation. Your fermenter lid has blown off the bucket — the fermentation was so vigorous it pushed the airlock out and there\'s foam everywhere on the outside.',question:'Active fermentation has exposed the beer. What do you do?',choices:[
+        {text:'Clean the outside, re-seat the lid with a new sanitized airlock. Move on.',scores:{quality:+8,technique:+8,knowledge:+8},outcome:'good',feedback:'Exactly right. Active fermentation produces CO2 at such a rate it\'s protecting the beer — the outgassing pushes contaminants away. Re-seal, sanitize the exterior, let it run.',tip:'Irish Ale yeast (WY1084) is famous for violent fermentation. Always use a blow-off tube for the first 48 hours with this strain.'},
+        {text:'The beer is contaminated. Pour it out and start over.',scores:{quality:-5,technique:0,knowledge:-8},outcome:'bad',feedback:'Over-reaction. Active fermentation protects itself. The CO2 creates a blanket keeping oxygen and contaminants out. This is solvable.',tip:'The most expensive mistakes in homebrewing come from dumping beer prematurely. Give the beer a chance.'},
+        {text:'Add a blow-off tube to the fermenter and let it vent into a jar of sanitizer.',scores:{quality:+10,technique:+10,knowledge:+10},outcome:'good',feedback:'Perfect. This is exactly what a blow-off tube is for. You\'ve turned an emergency into a learning moment AND improved your setup mid-brew. That\'s how good brewers think.',tip:'A blow-off tube is just 1-inch tubing over the fermenter opening, dropping into Star San. Costs nothing. Saves batches.'},
+      ]},
+    ],
+  },
+};
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+const state = {
+  xp: 0,
+  runs: [],
+  flippedCards: new Set(),
+  currentFamily: 'all',
+  sim: null,
+};
+try {
+  const s = JSON.parse(localStorage.getItem('brewdeck-v1d') || '{}');
+  state.xp = s.xp || 0;
+  state.runs = s.runs || [];
+} catch(e){}
+
+function save() {
+  try { localStorage.setItem('brewdeck-v1d', JSON.stringify({xp:state.xp, runs:state.runs})); } catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════
+const NAV_MAP = {'screen-home':'nav-home','screen-book':'nav-book','screen-sim':'nav-sim','screen-progress':'nav-progress'};
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const t = document.getElementById(id);
+  if(t) {
+    t.classList.add('active');
+    t.querySelectorAll('.fade-in').forEach(el => { el.style.animation='none'; el.offsetHeight; el.style.animation=''; });
+  }
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const nb = document.getElementById(NAV_MAP[id]);
+  if(nb) nb.classList.add('active');
+  if(id === 'screen-book') renderRecipeGrid();
+  if(id === 'screen-sim') renderSimScreen();
+  if(id === 'screen-progress') renderCellar();
+  updateXP();
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════════════════════
+// BREW BOOK
+// ═══════════════════════════════════════════════════════════
+function flavorBar(label, value, color) {
+  return `<div class="flavor-item"><div class="flavor-label">${label}</div><div class="flavor-bar-wrap"><div class="flavor-bar-fill" style="width:${value}%;background:${color}"></div></div><div class="flavor-value">${value}</div></div>`;
+}
+function hexToRgb(hex) {
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+function setFamily(el, family) {
+  document.querySelectorAll('.family-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  state.currentFamily = family;
+  renderRecipeGrid();
+}
+function renderRecipeGrid() {
+  const grid = document.getElementById('recipe-grid');
+  if(!grid) return;
+  const filtered = state.currentFamily === 'all' ? RECIPES : RECIPES.filter(r => r.family === state.currentFamily);
+  if(!filtered.length) { grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);font-size:0.8rem;">No styles in this family yet.</div>`; return; }
+  grid.innerHTML = filtered.map(r => buildCardHTML(r)).join('');
+}
+function buildCardHTML(r) {
+  const glassHTML = GLASSES[r.glass] ? GLASSES[r.glass](r.glassW, r.glassH) : '';
+  const tagsHTML = r.tags.map((t,i) => `<span class="card-tag${i===0?' highlight':''}">${t}</span>`).join('');
+  const isFlipped = state.flippedCards.has(r.id) ? 'flipped' : '';
+  const hasSim = !!r.simId && !!SIM_RECIPES[r.simId];
+  // Pre-compute onclick strings — use single quotes inside so they don't break the outer HTML double-quote attribute
+  const cardOnclick = r.locked ? '' : "flipCard('" + r.id + "')";
+  const modalOnclick = "openModal('" + r.id + "')";
+  const simOnclick = hasSim ? "launchSimFromBook('" + r.simId + "')" : '';
+  const simBtn = hasSim
+    ? '<button class="sim-launch-btn" onclick="' + simOnclick + '">🧪 Start Brew Sim for This Recipe</button>'
+    : '';
+  return `
+  <div class="flip-card-outer ${isFlipped} ${r.locked?'locked':''}" id="card-${r.id}" onclick="${cardOnclick}">
+    <div class="flip-card-inner">
+      <div class="card-face card-front" style="background:linear-gradient(135deg,var(--ink2) 0%,rgba(${hexToRgb(r.bgColor)},0.25) 100%);">
+        <div class="card-glass-panel">${glassHTML}</div>
+        <div class="card-info">
+          <div>
+            <div class="card-style-name">${r.name}</div>
+            <div class="card-style-sub">${r.subtitle}</div>
+            <div class="card-tags">${tagsHTML}<span class="card-tag">${r.highlight}</span></div>
+          </div>
+          <div class="card-hint">${r.locked ? '🔒 Locked' : '↩ tap to flip · see flavor notes'}</div>
+        </div>
+        ${r.locked ? '<div class="locked-overlay">🔒 Locked</div>' : ''}
+      </div>
+      <div class="card-face card-back">
+        <div class="card-back-inner">
+          <div class="card-back-header"><div class="card-back-name">${r.name}</div><div class="card-back-close">tap to flip back</div></div>
+          <div class="flavor-row">
+            ${flavorBar('Bitter',r.flavor.bitter,'#80b840')}
+            ${flavorBar('Malt',r.flavor.malt,'#c8882a')}
+            ${flavorBar('Sweet',r.flavor.sweet,'#d8a040')}
+            ${flavorBar('Aroma',r.flavor.aroma,'#9060c8')}
+          </div>
+          <div class="card-desc">${r.description.substring(0,130)}…</div>
+          <button class="brew-btn" onclick="${modalOnclick}">📖 Full Recipe &amp; Brew Guide</button>
+          ${simBtn}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function flipCard(id) {
+  const card = document.getElementById('card-'+id);
+  if(!card) return;
+  if(state.flippedCards.has(id)) { state.flippedCards.delete(id); card.classList.remove('flipped'); }
+  else { state.flippedCards.add(id); card.classList.add('flipped'); }
+}
+function launchSimFromBook(simId) {
+  state.flippedCards.clear();
+  goTo('screen-sim');
+  startSim(simId);
+}
+
+// ── MODAL ──
+function openModal(id) {
+  const recipe = RECIPES.find(r => r.id === id);
+  if(!recipe) return;
+  document.getElementById('modal-title').textContent = recipe.name;
+  const glassHTML = GLASSES[recipe.glass] ? GLASSES[recipe.glass](recipe.glassW * 1.4, recipe.glassH * 1.4) : '';
+  const ingredientsHTML = recipe.ingredients.map(ing => `
+    <div class="ingredient-row ${ing.type}">
+      <span class="ingredient-icon">${ing.icon}</span>
+      <div><div class="ingredient-name">${ing.name}</div><div class="ingredient-role">${ing.role}</div></div>
+      <div class="ingredient-amount">${ing.amount}</div>
+    </div>`).join('');
+  const stepsHTML = recipe.steps.map((step, i) => `
+    <div class="step-item">
+      <div class="step-num-wrap">
+        <div class="step-num">${i+1}</div>
+        ${i < recipe.steps.length-1 ? '<div class="step-line"></div>' : ''}
+      </div>
+      <div class="step-content">
+        <div class="step-title">${step.title}</div>
+        <div class="step-body">${step.body}</div>
+        ${step.time ? `<div class="step-time">⏱ ${step.time}</div>` : ''}
+        ${step.warning ? `<div class="step-warning">⚠️ ${step.warning}</div>` : ''}
+      </div>
+    </div>`).join('');
+  const tipsHTML = recipe.tips.map(t => `<li>${t}</li>`).join('');
+  const hasSim = !!recipe.simId && !!SIM_RECIPES[recipe.simId];
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-glass-hero">
+      ${glassHTML}
+      <div class="modal-glass-glow" style="background:radial-gradient(ellipse,${recipe.flavorColor} 0%,transparent 70%)"></div>
+      <div class="modal-style-label">${recipe.subtitle}</div>
+      <div class="modal-abv-row">
+        <div class="abv-chip">ABV ${recipe.abv}</div>
+        <div class="abv-chip">IBU ${recipe.ibu}</div>
+        <div class="abv-chip">${recipe.difficulty}</div>
+        <div class="abv-chip">⏱ ${recipe.time}</div>
+      </div>
+      ${hasSim ? '<button class="sim-launch-btn" style="margin-top:16px;max-width:300px;" onclick="closeModal(); launchSimFromBook(\'' + recipe.simId + '\')">🧪 Start Brew Sim for This Recipe</button>' : ''}
+    </div>
+    <div class="recipe-section"><div class="recipe-section-title">About This Style</div><p style="font-size:0.78rem;color:var(--muted2);line-height:1.7;">${recipe.description}</p></div>
+    <div class="recipe-section"><div class="recipe-section-title">Ingredients · 5-Gallon Batch</div><div class="ingredient-list">${ingredientsHTML}</div></div>
+    <div class="recipe-section"><div class="recipe-section-title">Brew Day Steps</div><div class="step-list">${stepsHTML}</div></div>
+    <div class="recipe-section"><div class="recipe-section-title">Brewer's Tips</div><div class="tips-box"><ul>${tipsHTML}</ul></div></div>`;
+  document.getElementById('recipe-modal').classList.add('open');
+  document.getElementById('recipe-modal').scrollTop = 0;
+}
+function closeModal() { document.getElementById('recipe-modal').classList.remove('open'); }
+document.getElementById('recipe-modal').addEventListener('click', function(e){ if(e.target === this) closeModal(); });
+
+// ═══════════════════════════════════════════════════════════
+// BREW SIM ENGINE
+// ═══════════════════════════════════════════════════════════
+function renderSimScreen() {
+  if(!state.sim || state.sim.phase === 'pick') renderSimPick();
+  else if(state.sim.phase === 'running') renderSimCard();
+  else if(state.sim.phase === 'result') renderSimResult();
+}
+function renderSimPick() {
+  state.sim = {phase:'pick'};
+  const app = document.getElementById('sim-app');
+  const runsCount = state.runs.length;
+  const hefeUnlocked = state.xp >= 150;
+  app.innerHTML = `
+    <nav class="topbar">
+      <button class="back-btn" onclick="goTo('screen-home')">← Home</button>
+      <div class="wordmark">Brew <em>Sim</em></div>
+      <div class="xp-badge"><div class="xp-dot"></div><span class="xp-val">${state.xp} XP</span></div>
+    </nav>
+    <h1 class="sim-pick-title fade-in">Choose Your <em>Recipe</em></h1>
+    <p class="sim-pick-sub fade-in fade-in-d1">Pick a beer · work a full brew day · score your batch</p>
+    <div class="sim-recipe-cards fade-in fade-in-d2">
+      <button class="sim-recipe-btn" onclick="startSim('apa')">
+        <div class="sim-recipe-icon">🌾</div>
+        <div class="sim-recipe-info"><div class="sim-recipe-name">American Pale Ale</div><div class="sim-recipe-meta">7 decisions · 1 curveball · Beginner</div></div>
+        <div class="sim-recipe-arrow">→</div>
+      </button>
+      <button class="sim-recipe-btn" onclick="startSim('stout')">
+        <div class="sim-recipe-icon">🌑</div>
+        <div class="sim-recipe-info"><div class="sim-recipe-name">Dry Irish Stout</div><div class="sim-recipe-meta">3 decisions · 1 curveball · Beginner</div></div>
+        <div class="sim-recipe-arrow">→</div>
+      </button>
+      <button class="sim-recipe-btn ${runsCount < 2 ? 'locked' : ''}" ${runsCount < 2 ? '' : 'onclick="alert(\'Coming soon\')"'}>
+        <div class="sim-recipe-icon">${runsCount < 2 ? '🔒' : '🌿'}</div>
+        <div class="sim-recipe-info"><div class="sim-recipe-name">West Coast IPA</div><div class="sim-recipe-meta">${runsCount < 2 ? 'Complete 2 runs to unlock · ' + runsCount + '/2 done' : 'Coming in next build'}</div></div>
+      </button>
+      <button class="sim-recipe-btn ${!hefeUnlocked ? 'locked' : ''}" ${!hefeUnlocked ? '' : 'onclick="alert(\'Coming soon\')"'}>
+        <div class="sim-recipe-icon">${!hefeUnlocked ? '🔒' : '🍺'}</div>
+        <div class="sim-recipe-info"><div class="sim-recipe-name">Hefeweizen</div><div class="sim-recipe-meta">${!hefeUnlocked ? 'Earn 150 XP to unlock · ' + state.xp + '/150 XP' : 'Coming in next build'}</div></div>
+      </button>
+    </div>`;
+}
+function startSim(recipeId) {
+  const recipe = SIM_RECIPES[recipeId];
+  if(!recipe) return;
+  state.sim = {
+    phase:'running', recipeId, recipe,
+    scenarios:[...recipe.scenarios],
+    currentIdx:0,
+    scores:{quality:50,technique:50,knowledge:50},
+    curveballsHit:[], choiceLog:[],
+    answered:false,
+  };
+  renderSimCard();
+  window.scrollTo(0,0);
+}
+function renderSimCard() {
+  const sim = state.sim;
+  const scenario = sim.scenarios[sim.currentIdx];
+  const app = document.getElementById('sim-app');
+  const progress = (sim.currentIdx / sim.scenarios.length) * 100;
+  const qv = qClass(sim.scores);
+  app.innerHTML = `
+    <nav class="topbar">
+      <button class="back-btn" onclick="abandonSim()">✕ Abandon</button>
+      <div class="wordmark">Brew <em>Sim</em></div>
+      <div class="xp-badge"><div class="xp-dot"></div><span>${state.xp} XP</span></div>
+    </nav>
+    <div class="sim-header">
+      <div class="sim-recipe-label">${sim.recipe.name}</div>
+      <div class="sim-step-name">${scenario.step}</div>
+    </div>
+    <div class="sim-progress-wrap">
+      <div class="sim-progress-track"><div class="sim-progress-fill" style="width:${progress}%"></div></div>
+      <div class="sim-progress-label">${sim.currentIdx + 1} / ${sim.scenarios.length}</div>
+    </div>
+    <div class="quality-meters">
+      <div class="quality-meter"><div class="quality-meter-label">Quality</div><div class="quality-meter-val ${qv.quality}" id="qm-quality">${Math.round(sim.scores.quality)}</div></div>
+      <div class="quality-meter"><div class="quality-meter-label">Technique</div><div class="quality-meter-val ${qv.technique}" id="qm-technique">${Math.round(sim.scores.technique)}</div></div>
+      <div class="quality-meter"><div class="quality-meter-label">Knowledge</div><div class="quality-meter-val ${qv.knowledge}" id="qm-knowledge">${Math.round(sim.scores.knowledge)}</div></div>
+    </div>
+    <div class="sim-card ${scenario.type === 'curveball' ? 'curveball' : ''}">
+      <div class="sim-card-type ${scenario.type}">${scenario.type === 'curveball' ? '⚡ CURVEBALL' : scenario.type === 'checkin' ? '◆ CHECK-IN' : '◉ BREW DECISION'}</div>
+      <div class="sim-card-context">${scenario.context}</div>
+      <div class="sim-card-question">${scenario.question}</div>
+    </div>
+    <div class="sim-choices" id="sim-choices">
+      ${scenario.choices.map((c,i) => `<button class="sim-choice" id="choice-${i}" onclick="selectChoice(${i})">${c.text}</button>`).join('')}
+    </div>
+    <div id="feedback-area"></div>`;
+}
+function qClass(scores) {
+  const c = v => v >= 70 ? 'high' : v >= 45 ? 'mid' : 'low';
+  return {quality:c(scores.quality),technique:c(scores.technique),knowledge:c(scores.knowledge)};
+}
+function selectChoice(idx) {
+  const sim = state.sim;
+  if(sim.answered) return;
+  sim.answered = true;
+  const scenario = sim.scenarios[sim.currentIdx];
+  const choice = scenario.choices[idx];
+  const varied = applyVariance({...choice.scores});
+  const deltas = {};
+  Object.keys(varied).forEach(k => {
+    const before = sim.scores[k];
+    sim.scores[k] = Math.max(0, Math.min(100, (sim.scores[k]||50) + varied[k]));
+    deltas[k] = sim.scores[k] - before;
+  });
+  sim.choiceLog.push({scenarioId:scenario.id,choiceIdx:idx,outcome:choice.outcome,deltas});
+  if(scenario.type === 'curveball' && choice.outcome === 'bad') sim.curveballsHit.push(scenario.step);
+  const btn = document.getElementById('choice-'+idx);
+  if(btn) btn.classList.add('selected-' + (choice.outcome === 'good' ? 'good' : choice.outcome === 'bad' ? 'bad' : 'mid'));
+  document.querySelectorAll('.sim-choice').forEach((b,i) => { if(i !== idx) b.disabled = true; });
+  const qv = qClass(sim.scores);
+  ['quality','technique','knowledge'].forEach(k => {
+    const el = document.getElementById('qm-'+k);
+    if(el) { el.textContent = Math.round(sim.scores[k]); el.className = 'quality-meter-val ' + qv[k]; }
+  });
+  const feedbackArea = document.getElementById('feedback-area');
+  if(feedbackArea) {
+    const wasVaried = Object.keys(deltas).some(k => Math.abs(deltas[k] - (choice.scores[k]||0)) > 1);
+    const deltaChips = Object.entries(deltas).map(([k,v]) => {
+      const sign = v > 0 ? '+' : '';
+      const cls = v > 2 ? 'pos' : v < -2 ? 'neg' : 'neu';
+      return `<div class="feedback-delta ${cls}">${k.charAt(0).toUpperCase()+k.slice(1)} ${sign}${Math.round(v)}</div>`;
+    }).join('');
+    feedbackArea.innerHTML = `
+      <div class="sim-feedback">
+        <div class="feedback-score-row">${deltaChips}${wasVaried ? '<div class="feedback-delta variance">⚡ Variance</div>' : ''}</div>
+        <div class="feedback-text">${choice.feedback}</div>
+        ${choice.tip ? `<div class="feedback-tip">💡 ${choice.tip}</div>` : ''}
+      </div>
+      <button class="next-btn" onclick="nextCard()">${sim.currentIdx + 1 < sim.scenarios.length ? 'Next Decision →' : 'See Your Results →'}</button>`;
+  }
+  window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+function applyVariance(scores) {
+  const modified = {...scores};
+  const roll = Math.random();
+  const keys = Object.keys(modified);
+  const primary = keys[0];
+  const secondary = keys[1];
+  if(roll < 0.15 && modified[primary] > 4) { modified[primary] = Math.round(modified[primary] * 0.35); }
+  else if(roll < 0.28 && modified[primary] < -2 && secondary) { modified[secondary] = Math.abs(modified[secondary]||0) + 2; }
+  else if(roll < 0.40) { const pick = keys[Math.floor(Math.random()*keys.length)]; if(Math.abs(modified[pick]) > 2) modified[pick] = -Math.round(modified[pick]*0.5); }
+  else if(roll < 0.50) { const pick = keys[Math.floor(Math.random()*keys.length)]; modified[pick] = (modified[pick]||0) + (Math.random() > 0.5 ? 3 : -3); }
+  return modified;
+}
+function nextCard() {
+  state.sim.currentIdx++;
+  state.sim.answered = false;
+  if(state.sim.currentIdx >= state.sim.scenarios.length) finishSim();
+  else { renderSimCard(); window.scrollTo(0,0); }
+}
+function finishSim() {
+  const sim = state.sim;
+  const finalScore = Math.round((sim.scores.quality + sim.scores.technique + sim.scores.knowledge) / 3);
+  const xpEarned = Math.round(finalScore * 0.6) + 20;
+  state.xp += xpEarned;
+  state.runs.push({recipeId:sim.recipeId,recipeName:sim.recipe.name,finalScore,xpEarned,scores:{...sim.scores},curveballsHit:sim.curveballsHit,date:new Date().toLocaleDateString()});
+  save();
+  sim.phase = 'result';
+  sim.finalScore = finalScore;
+  sim.xpEarned = xpEarned;
+  renderSimResult();
+  window.scrollTo(0,0);
+}
+function renderSimResult() {
+  const sim = state.sim;
+  const score = sim.finalScore;
+  const app = document.getElementById('sim-app');
+  const grade = score >= 85 ? 'A' : score >= 75 ? 'B' : score >= 65 ? 'C' : score >= 50 ? 'D' : 'F';
+  const gradeLabel = score >= 85 ? 'Master Batch' : score >= 75 ? 'Solid Pour' : score >= 65 ? 'Drinkable' : score >= 50 ? 'Rough Around the Edges' : 'Down the Drain';
+  const tasting = getTastingNotes(sim.recipeId, sim.scores, sim.choiceLog);
+  app.innerHTML = `
+    <nav class="topbar">
+      <div class="wordmark">Brew <em>Result</em></div>
+      <div class="xp-badge"><div class="xp-dot"></div><span>${state.xp} XP</span></div>
+    </nav>
+    <div class="result-screen">
+      <div class="result-glass-hero">
+        ${buildResultGlass(sim.recipeId, score)}
+        <div class="result-glass-glow" style="background:radial-gradient(ellipse,${sim.recipe.glassColor} 0%,transparent 70%)"></div>
+        <div class="result-grade">${grade}</div>
+        <div class="result-grade-label">${gradeLabel} · +${sim.xpEarned} XP</div>
+      </div>
+      <div class="score-breakdown">
+        ${scoreRow('Quality',sim.scores.quality,'#7ec850')}
+        ${scoreRow('Technique',sim.scores.technique,'#c8882a')}
+        ${scoreRow('Knowledge',sim.scores.knowledge,'#6080c8')}
+      </div>
+      <div class="tasting-notes">
+        <div class="tasting-title">Your Batch · Tasting Notes</div>
+        ${tasting.map(n => `<div class="tasting-line">${n}</div>`).join('')}
+      </div>
+      ${sim.curveballsHit.length ? `<div class="curveball-log"><div class="curveball-log-title">⚡ Curveballs That Hit</div>${sim.curveballsHit.map(cb => `<div class="curveball-item"><div>⚡</div><div>You took a hit during <strong>${cb}</strong>. Every brewer gets one.</div></div>`).join('')}</div>` : ''}
+      <div class="result-actions">
+        <button class="result-btn primary" onclick="startSim('${sim.recipeId}')">🔄 Brew Again</button>
+        <button class="result-btn secondary" onclick="renderSimPick(); document.getElementById('sim-app').scrollTop=0;">← Back to Recipe Select</button>
+        <button class="result-btn secondary" onclick="goTo('screen-progress')">🏆 View Cellar</button>
+      </div>
+    </div>`;
+}
+function scoreRow(label, value, color) {
+  const textColor = value >= 70 ? 'var(--good)' : value >= 50 ? 'var(--amber)' : 'var(--bad)';
+  return `<div class="score-row"><div class="score-row-label">${label}</div><div class="score-row-bar-wrap"><div class="score-row-bar" style="width:${value}%;background:${color}"></div></div><div class="score-row-val" style="color:${textColor}">${Math.round(value)}</div></div>`;
+}
+function getTastingNotes(recipeId, scores, log) {
+  const notes = [];
+  const q = scores.quality, t = scores.technique, k = scores.knowledge;
+  if(recipeId === 'apa') {
+    notes.push(q >= 75 ? `<strong>Aroma:</strong> Clean citrus and pine — the Cascade hops came through.` : `<strong>Aroma:</strong> Slightly muted hop aroma. Process issues may have driven off volatiles early.`);
+    notes.push(t >= 70 ? `<strong>Body:</strong> Good mouthfeel — solid technique through the boil and fermentation.` : `<strong>Body:</strong> Thin or rough mouthfeel. One or more process steps introduced off-character.`);
+    notes.push(k >= 70 ? `<strong>Finish:</strong> Clean, dry finish. You understood what you were making.` : `<strong>Finish:</strong> Some lingering roughness. A few decisions would be worth revisiting next batch.`);
+  } else {
+    notes.push(q >= 75 ? `<strong>Appearance:</strong> Near-black with a dense tan-cream head. That cascade is real.` : `<strong>Appearance:</strong> Dark but slightly cloudy. Roasted grain character may be uneven.`);
+    notes.push(t >= 70 ? `<strong>Flavor:</strong> Coffee and dark chocolate with a dry finish. The roasted barley did its job.` : `<strong>Flavor:</strong> Slightly harsh on the finish. Steep temperature may have been too high.`);
+    notes.push(k >= 70 ? `<strong>Mouthfeel:</strong> Silky and smooth — the flaked barley extracted well.` : `<strong>Mouthfeel:</strong> Thinner than expected.`);
+  }
+  notes.push(q >= 80 && t >= 80 && k >= 80 ? `<strong>Overall:</strong> This one's worth sharing. Pour it properly.` : q >= 60 ? `<strong>Overall:</strong> Drinkable. Honest. You'll know what to fix next time.` : `<strong>Overall:</strong> Rough batch. But you learned more from this one than from a perfect run.`);
+  return notes;
+}
+function buildResultGlass(recipeId, score) {
+  const fill = 0.55 + (score/100)*0.4;
+  const foam = score >= 70 ? 14 : score >= 50 ? 8 : 4;
+  if(recipeId === 'stout') {
+    return `<svg width="90" height="120" viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rg-s" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a0a04" stop-opacity="${fill}"/><stop offset="100%" stop-color="#060200" stop-opacity="${fill}"/></linearGradient><clipPath id="rg-sc"><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z"/></clipPath></defs><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)" stroke-width="1.2"/><rect x="6" y="${36-(score/100)*10}" width="68" height="74" fill="url(#rg-s)" clip-path="url(#rg-sc)"/><ellipse cx="40" cy="${36-(score/100)*10}" rx="${Math.min(26,10+score*0.16)}" ry="${foam/2}" fill="rgba(220,210,190,0.9)"/><path d="M18 18 L12 96" stroke="rgba(255,255,255,0.14)" stroke-width="2" stroke-linecap="round"/></svg>`;
+  }
+  return `<svg width="90" height="120" viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rg-a" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e89820" stop-opacity="${fill}"/><stop offset="100%" stop-color="#8b4a08" stop-opacity="${fill}"/></linearGradient><clipPath id="rg-ac"><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z"/></clipPath></defs><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.13)" stroke-width="1.2"/><rect x="6" y="${38-(score/100)*12}" width="68" height="74" fill="url(#rg-a)" clip-path="url(#rg-ac)"/><ellipse cx="40" cy="${38-(score/100)*12}" rx="${Math.min(26,8+score*0.18)}" ry="${foam/2}" fill="rgba(245,235,210,0.92)"/><circle cx="30" cy="80" r="1.5" fill="rgba(255,255,255,0.15)"><animate attributeName="cy" values="95;42" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.25;0" dur="2.8s" repeatCount="indefinite"/></circle><path d="M18 18 L12 96" stroke="rgba(255,255,255,0.18)" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+}
+function abandonSim() {
+  if(confirm('Abandon this brew run? Progress will be lost.')) { state.sim = {phase:'pick'}; renderSimPick(); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// CELLAR
+// ═══════════════════════════════════════════════════════════
+function renderCellar() {
+  const bar = document.getElementById('xp-bar');
+  const caption = document.getElementById('xp-caption');
+  const levelLabel = document.getElementById('level-label');
+  const runHistory = document.getElementById('run-history');
+  if(bar) bar.style.width = Math.min((state.xp/200)*100,100) + '%';
+  if(caption) caption.textContent = state.xp >= 200 ? 'Journeyman unlocked!' : `${state.xp} / 200 XP to Journeyman`;
+  if(levelLabel) levelLabel.textContent = state.xp >= 200 ? 'Journeyman' : 'Apprentice';
+  const ipaCard = document.getElementById('unlock-ipa');
+  const hefeCard = document.getElementById('unlock-hefe');
+  const oatCard = document.getElementById('unlock-oat');
+  if(ipaCard && state.runs.length >= 2) { ipaCard.style.opacity='1'; ipaCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = ipaCard.querySelector('div:last-child'); if(lock) lock.textContent='✓'; }
+  if(hefeCard && state.xp >= 150) { hefeCard.style.opacity='1'; hefeCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = hefeCard.querySelector('div:last-child'); if(lock) lock.textContent='✓'; }
+  if(oatCard && state.runs.some(r => r.finalScore >= 80)) { oatCard.style.opacity='1'; oatCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = oatCard.querySelector('div:last-child'); if(lock) lock.textContent='✓'; }
+  if(runHistory) {
+    if(!state.runs.length) { runHistory.innerHTML = '<em style="font-size:0.78rem;color:var(--muted2)">No runs yet. Head to Brew Sim to start your first batch.</em>'; return; }
+    runHistory.innerHTML = state.runs.slice().reverse().map(r => `
+      <div style="background:var(--ink2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--rad);padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:0.8rem;font-weight:500;color:var(--foam);margin-bottom:2px;">${r.recipeName}</div>
+          <div style="font-size:0.68rem;color:var(--muted2);">${r.date} · +${r.xpEarned} XP</div>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:700;color:${r.finalScore>=75?'var(--good)':r.finalScore>=55?'var(--amber)':'var(--bad)'}">
+          ${r.finalScore}
+        </div>
+      </div>`).join('');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// XP
+// ═══════════════════════════════════════════════════════════
+function updateXP() {
+  document.querySelectorAll('.xp-val').forEach(el => el.textContent = state.xp + ' XP');
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+renderSimPick();
+updateXP();
+</script>
+</body>
+</html>
