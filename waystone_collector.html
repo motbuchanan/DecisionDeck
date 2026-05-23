@@ -384,6 +384,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
   .friend-wrap{flex-direction:row;text-align:left;max-width:720px;gap:36px;}
   .friend-info{flex:1;}
 }
+
+/* LOCATIONS */
+.loc-entry{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.09);
+  border-radius:16px;overflow:hidden;cursor:pointer;transition:background .15s;}
+.loc-entry:active{background:rgba(255,255,255,.1);}
+.loc-entry-art{height:110px;position:relative;overflow:hidden;flex-shrink:0;}
+.loc-entry-art svg{width:100%;height:100%;}
+.loc-entry-body{padding:12px 14px;}
+.loc-entry-name{font-family:'Fredoka One',cursive;font-size:20px;color:white;line-height:1.2;}
+.loc-entry-tier{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:5px;}
+.loc-entry-desc{font-family:'Lora',serif;font-size:13px;font-style:italic;
+  color:rgba(232,228,216,.65);line-height:1.6;}
+/* Tap link style (also set inline for encounters) */
+.tap-link{transition:opacity .1s;}
+.tap-link:active{opacity:.6;}
 </style>
 </head>
 <body>
@@ -534,7 +550,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
         <button class="btn-title-sec" id="btn-collection">&#x1F4D6; Collection</button>
         <button class="btn-title-sec" id="btn-inventory">&#x1F392; Inventory</button>
       </div>
-      <button class="btn-residents" id="btn-residents">&#x1F3D8; Island Residents</button>
+      <div class="title-btn-row">
+        <button class="btn-residents" id="btn-residents" style="flex:1;">&#x1F3D8; Residents</button>
+        <button class="btn-residents" id="btn-locations" style="flex:1;border-color:rgba(139,167,192,.3);color:#8ba7c0;background:linear-gradient(135deg,rgba(139,167,192,.18),rgba(139,167,192,.07));">&#x1F5FA; Island</button>
+      </div>
     </div>
   </div>
 </div>
@@ -563,6 +582,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
   <div class="explore-nav">
     <button class="nav-btn" id="btn-nav-coll">&#x1F4D6;</button>
     <button class="nav-btn" id="btn-nav-inv">&#x1F392;</button>
+    <button class="nav-btn" id="btn-nav-locs">&#x1F5FA;</button>
     <button class="nav-btn" id="btn-nav-home">&#x1F3E0;</button>
   </div>
   <div class="explore-left">
@@ -3292,8 +3312,8 @@ var RESIDENTS = [
   },
   {
     id:`traveler`,
-    name:`The Traveler`,
-    role:`Visitor from Far Away`,
+    name:`Sable`,
+    role:`Cartographer & Star-Reader`,
     color:`#8ba7c0`,
     svg:`<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="trav-skin" cx="45%" cy="35%" r="60%"><stop offset="0%" stop-color="#e0c8a8"/><stop offset="100%" stop-color="#b89870"/></radialGradient></defs>
@@ -3364,35 +3384,141 @@ var RESIDENTS = [
 </svg>`,
     lore:[
       {
-        tier:1, title:`You just arrived`,
+        tier:1, title:`You just met`,
         facts:[
-          `The Traveler arrived by ship. They're not from this island, or any island nearby.`,
-          `Always carrying a pack and a walking staff. Seems to be going somewhere or just came from somewhere.`,
-          `The Traveler is kind. Uncertain. Looking at everything very carefully, like they're deciding whether to stay.`
+          `Sable arrived on this island a while ago and decided to stay. They have maps spread across every flat surface they own.`,
+          `Always carrying a journal, a walking staff, and a brass instrument for reading stars.`,
+          `Sable asks questions about people with the same careful attention they give to coastlines and currents.`
         ]
       },
       {
         tier:2, title:`Getting to know each other`,
         facts:[
-          `The Traveler has been to many islands. This one is different, they say, but won't say how yet.`,
-          `They keep a journal that is almost full. Started in a place much colder than here.`,
-          `The Traveler doesn't sleep inside if they can help it. Old habit from long travel.`
+          `Sable has mapped eleven islands. This one, they say, is the hardest to get right — not because of the geography, but because it keeps changing.`,
+          `They sleep outside when the sky is clear. Not from habit — from preference. The stars here are different than anywhere else they've been.`,
+          `Sable's journal has two kinds of entries: places and people. The people section is longer.`
         ]
       },
       {
         tier:3, title:`Good friends`,
         facts:[
-          `The Traveler left somewhere they loved because something ended there. They don't say what. The packed bag suggests they thought they'd leave again quickly.`,
-          `They've been here longer than expected. The bag is still packed but they stopped checking if the ships come.`,
-          `The Traveler has started drawing maps of the island. Small ones, obsessively detailed.`
+          `Sable believes that maps of people are more important than maps of land. They've been quietly mapping everyone on the island — their patterns, their rhythms, what draws them out.`,
+          `They learned star navigation from someone they've never stopped trying to find. Every island they map is partly a search.`,
+          `Sable has given copies of the island map to Wellow, Pip, and the creatures who asked. Each copy has small notes in the margins about what each area feels like, not just what it looks like.`
         ]
       },
       {
         tier:4, title:`Close friends`,
         facts:[
-          `The Traveler is staying. They made this decision quietly, without announcement. Wellow noticed first and put a permanent place at the table.`,
-          `The journal has a new entry: a list of things this island has that no other place did. It's longer than any other list in the journal.`,
-          `The Traveler's real name is not what they gave at first. The island knows now. It doesn't matter. They belong here.`
+          `The brass instrument Sable carries was made for them by someone who said: wherever you go, you'll be able to find north. They've never been able to explain why north matters less than knowing where you are.`,
+          `Sable has added Garrett to the people-map. The entry says: arrives with curiosity, stays with kindness, leaves things better.`,
+          `There is one star Sable always finds first when the sky is clear. They haven't told anyone its name. It's the one they navigate by when they're not sure where they're going.`
+        ]
+      }
+    ]
+  },  {
+    id:`shopkeeper`,
+    name:`Mara`,
+    role:`Shopkeeper (Opening Soon)`,
+    color:`#f0c040`,
+    svg:`<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="mar-skin" cx="45%" cy="35%" r="60%"><stop offset="0%" stop-color="#fcd5a8"/><stop offset="100%" stop-color="#e0a870"/></radialGradient></defs>
+<ellipse cx="60" cy="113" rx="29" ry="10" fill="#1a1000" opacity="0.35"/>
+<!-- Apron - shop-owner style, a little dusty -->
+<path d="M34 72 Q30 112 32 128 L88 128 Q90 112 86 72 Z" fill="#c8a020"/>
+<path d="M36 74 Q32 112 34 126 L86 126 Q88 112 84 74 Z" fill="#e8c030"/>
+<!-- Apron pocket with stuff sticking out -->
+<rect x="50" y="96" width="22" height="18" rx="4" fill="#c8a020"/>
+<line x1="52" y1="94" x2="52" y2="112" stroke="#a88010" stroke-width="1" opacity="0.4"/>
+<!-- Things in pocket: pencil, key, small scroll -->
+<line x1="56" y1="94" x2="54" y2="86" stroke="#8a5820" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="54" cy="85" r="2.5" fill="#f0d040"/>
+<path d="M63 94 L63 86 Q65 84 67 86 L67 94" stroke="#a87040" stroke-width="1.5" fill="rgba(240,220,180,0.5)" stroke-linecap="round"/>
+<!-- Shirt underneath -->
+<rect x="40" y="62" width="40" height="20" rx="7" fill="#4a7a3a"/>
+<rect x="42" y="64" width="36" height="16" rx="5" fill="#5a8a48"/>
+<!-- Arms - one holding a small crate, one pointing/gesturing -->
+<ellipse cx="26" cy="84" rx="10" ry="7" fill="#e0a870" transform="rotate(-18,26,84)"/>
+<!-- Small wooden crate being carried -->
+<rect x="10" y="88" width="22" height="16" rx="3" fill="#8a5820"/>
+<rect x="12" y="90" width="18" height="12" rx="2" fill="#a06828"/>
+<line x1="10" y1="96" x2="32" y2="96" stroke="#7a4818" stroke-width="1.5"/>
+<line x1="21" y1="88" x2="21" y2="104" stroke="#7a4818" stroke-width="1.5"/>
+<!-- Right arm gesturing enthusiastically -->
+<ellipse cx="95" cy="76" rx="10" ry="7" fill="#e0a870" transform="rotate(30,95,76)"/>
+<!-- Legs -->
+<rect x="43" y="118" width="13" height="17" rx="5" fill="#3a5020"/>
+<rect x="64" y="118" width="13" height="17" rx="5" fill="#3a5020"/>
+<ellipse cx="49" cy="135" rx="11" ry="5" fill="#2a1808"/>
+<ellipse cx="70" cy="135" rx="11" ry="5" fill="#2a1808"/>
+<!-- Head - warm and round -->
+<circle cx="60" cy="46" r="23" fill="#e0a870"/>
+<circle cx="60" cy="44" r="20" fill="url(#mar-skin)"/>
+<!-- Curly hair pulled back with tools sticking out -->
+<path d="M38 42 Q36 22 52 18 Q60 15 68 18 Q84 22 82 42" fill="#3a1808"/>
+<path d="M38 42 Q34 34 36 26 Q40 16 50 14" stroke="#2a1008" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M82 42 Q86 34 84 26 Q80 16 70 14" stroke="#2a1008" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Hair bun/messy updo -->
+<ellipse cx="60" cy="18" rx="16" ry="10" fill="#3a1808"/>
+<ellipse cx="60" cy="16" rx="12" ry="8" fill="#4a2010"/>
+<!-- Pencil stuck in hair -->
+<line x1="70" y1="10" x2="74" y2="26" stroke="#8a5820" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="70" cy="9" r="2.5" fill="#f0d040"/>
+<!-- Ruler/measuring stick also in hair -->
+<rect x="52" y="8" width="4" height="18" rx="1" fill="#c8a040" transform="rotate(-15,54,17)"/>
+<!-- Energetic wide eyes -->
+<circle cx="50" cy="45" r="8" fill="white"/>
+<circle cx="70" cy="45" r="8" fill="white"/>
+<circle cx="51" cy="46" r="5" fill="#2a1000"/>
+<circle cx="71" cy="46" r="5" fill="#2a1000"/>
+<circle cx="52" cy="45" r="2" fill="white"/>
+<circle cx="72" cy="45" r="2" fill="white"/>
+<!-- Excited slightly raised eyebrows -->
+<path d="M44 37 Q50 34 56 37" stroke="#2a1000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M64 37 Q70 34 76 37" stroke="#2a1000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Wide excited smile - slightly crooked, genuine -->
+<path d="M46 58 Q60 70 74 58" stroke="#2a1000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Flour/dust smudge on cheek -->
+<ellipse cx="42" cy="52" rx="6" ry="4" fill="white" opacity="0.28" transform="rotate(-10,42,52)"/>
+<!-- Ears -->
+<circle cx="37" cy="46" r="7" fill="#e0a870"/>
+<circle cx="83" cy="46" r="7" fill="#e0a870"/>
+<!-- Small "OPEN SOON" sign hanging from crate -->
+<rect x="8" y="106" width="26" height="10" rx="2" fill="#f0e8c0"/>
+<line x1="14" y1="104" x2="14" y2="107" stroke="#8a5820" stroke-width="1"/>
+<line x1="28" y1="104" x2="28" y2="107" stroke="#8a5820" stroke-width="1"/>
+</svg>`,
+    lore:[
+      {
+        tier:1, title:`You just met`,
+        facts:[
+          `Mara is setting up a shop near the market. It's not open yet. There are boxes everywhere.`,
+          `Extremely enthusiastic. Has a pencil and a ruler stuck in her hair. Both are actually useful there.`,
+          `The sign outside the shop says OPEN SOON in large confident letters.`
+        ]
+      },
+      {
+        tier:2, title:`Getting to know each other`,
+        facts:[
+          `Mara came to the island specifically because she heard creatures here were interesting customers.`,
+          `She's been running a shop somewhere else for years and decided to start fresh somewhere new.`,
+          `The crates she's still unpacking contain things she collected from many places. Some of it she won't sell.`
+        ]
+      },
+      {
+        tier:3, title:`Good friends`,
+        facts:[
+          `Mara has a very specific philosophy about shops: they should feel like someone's home that you're allowed to visit.`,
+          `She keeps a list of things each creature on the island might want someday. She hasn't told anyone she's doing this.`,
+          `Mara trades in favors as naturally as she trades in objects. She considers them the same kind of currency.`
+        ]
+      },
+      {
+        tier:4, title:`Close friends`,
+        facts:[
+          `The thing she won't sell is a small box with no markings. She keeps it on the highest shelf. It was given to her by someone who said: when you find the right island, this will tell you.`,
+          `The box hasn't made any noise yet. Mara checks it every morning.`,
+          `Mara has been quietly stocking things she thinks Garrett specifically will want. She hasn't opened yet partly because she wants it to be ready when it matters.`
         ]
       }
     ]
@@ -3401,6 +3527,7 @@ var RESIDENTS = [
 
 // Track resident encounter counts
 var residentEncounters = {};
+var locationVisits = {beach:0,forest:0,market:0,lighthouse:0,bridge:0};
 
 function initResidents() {
   RESIDENTS.forEach(function(r) {
@@ -3534,6 +3661,333 @@ function spawnTitleStars() {
       '--del:' + (Math.random() * 5) + 's;';
     container.appendChild(s);
   }
+}
+
+
+var LOCATION_GLOSSARY = {
+  beach:{
+    id:`beach`, name:`The Beach`, icon:`🌊`, color:`#5ec4b0`,
+    tiers:[
+      {
+        tier:1, title:`The Shore`,
+        desc:`A long stretch of dark sand where the water comes in cold and clear. The island curves here, making it the widest open space in any direction. You can see far from the beach. It feels like the edge of something.`,
+        details:[
+          `The tide comes in twice a day. The second tide is always quieter than the first.`,
+          `Flat stones collect near the southern end — good for skipping. Pip knows which ones are best.`,
+          `The water here is cold even in summer. Something about the current.`
+        ]
+      },
+      {
+        tier:2, title:`The Shore`,
+        desc:`A long stretch of dark sand where the water comes in cold and clear. The island curves here, making it the widest open space in any direction.`,
+        details:[
+          `The Lumen appears here more than anywhere else. Usually at dusk, when the light on the water changes.`,
+          `There's a ring of stones just below the waterline at low tide. Nobody built it. It was already there.`,
+          `Coss keeps a set of drum marks on a flat rock near the south end. He's been adding to it for years.`
+        ]
+      },
+      {
+        tier:3, title:`The Shore`,
+        desc:`A long stretch of dark sand where the water comes in cold and clear. The island curves here, making it the widest open space in any direction.`,
+        details:[
+          `The stone ring below the waterline has symbols on it that don't match anything in Sable's maps.`,
+          `At certain tides, the sand makes a sound like breathing. Creatures who've heard it describe it differently every time.`,
+          `Something left a trail in the sand one night that went from the water's edge all the way to the forest line. Nobody saw what made it. It hasn't happened again.`
+        ]
+      }
+    ]
+  },
+  forest:{
+    id:`forest`, name:`The Forest`, icon:`🌲`, color:`#68b828`,
+    tiers:[
+      {
+        tier:1, title:`The Deep Woods`,
+        desc:`Old trees so close together the canopy blocks out most of the sky. It's darker than it should be for the time of day, and the sounds from the rest of the island fade quickly once you're inside. It doesn't feel unfriendly. Just private.`,
+        details:[
+          `Brin's workshop is somewhere in here. She knows the paths well enough to move through quickly. Nobody else does.`,
+          `Mosse lives in a clearing that gets a specific stripe of afternoon light. The clearing is easy to find if you're looking for it.`,
+          `Things grow here that don't grow anywhere else on the island.`
+        ]
+      },
+      {
+        tier:2, title:`The Deep Woods`,
+        desc:`Old trees so close together the canopy blocks out most of the sky. It's darker than it should be for the time of day, and the sounds from the rest of the island fade quickly once you're inside.`,
+        details:[
+          `Deeproot's above-ground presence is a small stem near the eastern path. Most of Deeproot is beneath you when you walk here.`,
+          `Oldstone occupies a space where the trees make a natural circle. The trees are older than the rest of the forest. They grew around Oldstone.`,
+          `There are paths in the forest that weren't made by any creature anyone knows. They appear to lead somewhere but nobody has followed one all the way.`
+        ]
+      },
+      {
+        tier:3, title:`The Deep Woods`,
+        desc:`Old trees so close together the canopy blocks out most of the sky. The forest holds things — sounds, light, secrets — in a way that feels deliberate.`,
+        details:[
+          `The trees in Oldstone's circle have markings carved into them at a height no creature on the island can reach. Sable has made a rubbing of all of them.`,
+          `On certain nights, the fireflies in the forest move in a coordinated pattern. Scribb has been drawing it. The pattern hasn't repeated yet.`,
+          `Brin's workshop contains a drawing she made with her eyes closed. She doesn't know when she made it. It depicts something that hasn't happened yet.`
+        ]
+      }
+    ]
+  },
+  market:{
+    id:`market`, name:`The Market`, icon:`🏮`, color:`#f0c040`,
+    tiers:[
+      {
+        tier:1, title:`The Market`,
+        desc:`A loose collection of stalls and gathering spots near the center of the island. Lanterns hang between posts and stay lit through the night. It's the loudest place on the island and the easiest place to find almost anything — or anyone.`,
+        details:[
+          `Mara's shop is here, still setting up. The OPEN SOON sign has been up for a while.`,
+          `The honey stall has been operated by the same family for longer than anyone can remember.`,
+          `Drawing competitions happen at the north railing. The prizes are always the same: three smooth colored stones.`
+        ]
+      },
+      {
+        tier:2, title:`The Market`,
+        desc:`A loose collection of stalls and gathering spots near the center of the island. Lanterns hang between posts and stay lit through the night.`,
+        details:[
+          `Mara's shop is the newest building. She built the shelves herself, which explains why some of them are slightly different heights.`,
+          `There is a stall that only appears on certain days, run by a creature nobody has been able to describe consistently. It sells things that are exactly what you needed.`,
+          `The north railing where art gets displayed is older than the rest of the market structure. It was there before the market grew around it.`
+        ]
+      },
+      {
+        tier:3, title:`The Market`,
+        desc:`A loose collection of stalls and gathering spots at the center of the island, where most things happen and most creatures eventually pass through.`,
+        details:[
+          `The occasional stall has appeared three times. Each appearance lasted exactly one afternoon. The items sold have later turned out to be important to whoever bought them.`,
+          `Mara's shop door has a small mark on the inside of the frame. She didn't put it there. She's been researching what it means.`,
+          `The honey stall family knows something about the island that they only share with people who've bought from them more than ten times.`
+        ]
+      }
+    ]
+  },
+  lighthouse:{
+    id:`lighthouse`, name:`The Lighthouse`, icon:`🗼`, color:`#f0c040`,
+    tiers:[
+      {
+        tier:1, title:`The Lighthouse`,
+        desc:`The tallest structure on the island. The light at the top has never gone out. Wellow keeps it. The kitchen at the base always smells good and the door is always open — though it's understood that arriving at mealtimes is acceptable and arriving outside mealtimes is even better.`,
+        details:[
+          `The light has been burning continuously for longer than any record on the island goes back.`,
+          `The kitchen table seats more people than the kitchen should be able to hold. Nobody has measured it.`,
+          `Wellow keeps a book of names of everyone who has ever eaten at the table.`
+        ]
+      },
+      {
+        tier:2, title:`The Lighthouse`,
+        desc:`The tallest structure on the island, and in some ways the center of it. The light at the top has never gone out. Wellow keeps it and keeps the kitchen that wraps around its base.`,
+        details:[
+          `The lighthouse was built in three attempts. The first two foundations didn't hold. The third attempt used a different kind of stone — the same stone Murrock is made of.`,
+          `There are stairs that go up past the lamp room to a small platform. Nobody goes up there. The door to those stairs is always unlocked.`,
+          `The previous lighthouse keeper left behind a lantern that Wellow keeps on the highest shelf. It's never been lit.`
+        ]
+      },
+      {
+        tier:3, title:`The Lighthouse`,
+        desc:`The tallest structure on the island, and its oldest building. The light at the top has never gone out. Something about that is more than habit.`,
+        details:[
+          `The lantern from the previous keeper reacts to Embrix. It warms when Embrix is near. Wellow has not asked Embrix about this.`,
+          `The small platform above the lamp room looks directly at the star Sable navigates by. This may not be a coincidence.`,
+          `The lighthouse keeper's book goes back further than the lighthouse itself. The early entries are in a handwriting nobody on the island uses.`
+        ]
+      }
+    ]
+  },
+  bridge:{
+    id:`bridge`, name:`The Bridge`, icon:`🌉`, color:`#8ba7c0`,
+    tiers:[
+      {
+        tier:1, title:`The Bridge`,
+        desc:`A long wooden bridge crossing the fog-filled channel between the island's two main landmasses. It's always slightly damp, often foggy, and built well enough that crossing it in the dark is only a little alarming. The planks creak differently depending on the weather.`,
+        details:[
+          `Pip can tell the next three days' weather from how the bridge creaks. Has never been wrong.`,
+          `Coss keeps a set of tuned stones hidden somewhere on the bridge. He plays them when no one is watching.`,
+          `The lanterns at the two bridge towers were installed by the same person who built the market railing.`
+        ]
+      },
+      {
+        tier:2, title:`The Bridge`,
+        desc:`A long wooden bridge crossing the fog-filled channel between the island's two landmasses. Older than it looks and built by someone who understood both wood and water.`,
+        details:[
+          `The bridge was rebuilt after a storm, using the original plans found under a loose plank. The plans are signed with a symbol nobody has identified.`,
+          `At low tide, the fog around the bridge clears enough to see the channel floor. There is something down there. It has not moved in any recorded observation.`,
+          `There is a mark carved into the fourth plank from the east end. Sable's maps note it but list no explanation.`
+        ]
+      },
+      {
+        tier:3, title:`The Bridge`,
+        desc:`A long wooden bridge across the fog channel, and one of the island's oldest crossings. It has seen more than it has shown.`,
+        details:[
+          `The thing on the channel floor, when the tide allows a clear view, appears to be a door. It is not attached to anything visible.`,
+          `Coss's second set of drum marks — the ones he keeps clean — are on the west railing post. They're a duet. Only one half has been played in a long time.`,
+          `The bridge makes no sound at all on the anniversary of the previous lighthouse keeper's departure. Not even creak. Wellow has counted eleven such silences.`
+        ]
+      }
+    ]
+  }
+};
+
+// How many times each location has been visited (encounter loc matches)
+var locationVisits = {beach:0, forest:0, market:0, lighthouse:0, bridge:0};
+
+function getLocationTier(locId) {
+  var v = locationVisits[locId] || 0;
+  if (v >= 12) return 3;
+  if (v >= 5) return 2;
+  return 1;
+}
+
+// All tappable names — chars + locations — for inline linking
+var GLOSSARY_NAMES = {
+  // Characters (map display name to resident id or special key)
+  'Pip':       {type:'resident', id:'pip'},
+  'Brin':      {type:'resident', id:'brin'},
+  'Wellow':    {type:'resident', id:'wellow'},
+  'Coss':      {type:'resident', id:'coss'},
+  'Lumen':     {type:'resident', id:'lumen'},
+  'Sable':     {type:'resident', id:'traveler'},
+  'Mara':      {type:'resident', id:'shopkeeper'},
+  // Locations
+  'beach':     {type:'location', id:'beach'},
+  'Beach':     {type:'location', id:'beach'},
+  'forest':    {type:'location', id:'forest'},
+  'Forest':    {type:'location', id:'forest'},
+  'market':    {type:'location', id:'market'},
+  'Market':    {type:'location', id:'market'},
+  'lighthouse':{type:'location', id:'lighthouse'},
+  'Lighthouse':{type:'location', id:'lighthouse'},
+  'bridge':    {type:'location', id:'bridge'},
+  'Bridge':    {type:'location', id:'bridge'},
+};
+
+// Where to return after glossary tap from encounter
+var glossaryReturn = null;
+
+function linkifyText(html) {
+  var names = Object.keys(GLOSSARY_NAMES).sort(function(a,b){return b.length-a.length;});
+  // Split on HTML tags, only process text nodes
+  var parts = html.split(/(<[^>]+>)/);
+  for (var p = 0; p < parts.length; p++) {
+    if (parts[p].charAt(0) === '<') continue;
+    var seg = parts[p];
+    if (!seg) continue;
+    names.forEach(function(name) {
+      if (seg.indexOf(name) === -1) return;
+      var entry = GLOSSARY_NAMES[name];
+      var color = '#f0c040';
+      try {
+        if (entry.type === 'location' && LOCATION_GLOSSARY[entry.id]) {
+          color = LOCATION_GLOSSARY[entry.id].color;
+        } else {
+          for (var ri = 0; ri < RESIDENTS.length; ri++) {
+            if (RESIDENTS[ri].id === entry.id) { color = RESIDENTS[ri].color; break; }
+          }
+        }
+        var esc = name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+        var re = new RegExp('(^|[\\s,.\'"!?;:()])(' + esc + ')([\\s,.\'"!?;:()]|$)', 'g');
+        seg = seg.replace(re, function(m, pre, word, post) {
+          return pre + '<span class="tap-link" style="color:' + color +
+            ';border-bottom:1px dotted ' + color + ';cursor:pointer;" ' +
+            'onclick="openGlossaryEntry(\'' + entry.type + '\',\'' + entry.id + '\')">' +
+            word + '</span>' + post;
+        });
+      } catch(ex) {}
+    });
+    parts[p] = seg;
+  }
+  return parts.join('');
+}
+
+function openGlossaryEntry(type, id) {
+  // Remember where we were
+  var current = document.querySelector('.screen.active');
+  glossaryReturn = current ? current.id : 's-explore';
+  if (type === 'location') {
+    showLocationDetail(id);
+  } else {
+    showResidentDetail(id);
+    // Patch the back button for in-run return
+    document.getElementById('btn-rdet-back').onclick = function() {
+      show(glossaryReturn);
+      // Restore btn-rdet-back to normal after
+      document.getElementById('btn-rdet-back').onclick = showResidents;
+    };
+  }
+}
+
+function showLocationDetail(locId) {
+  var loc = LOCATION_GLOSSARY[locId];
+  if (!loc) return;
+  var tier = getLocationTier(locId);
+  var tierData = loc.tiers[tier - 1];
+
+  var nameEl = document.getElementById('locdet-name');
+  var bodyEl = document.getElementById('locdet-body');
+  if (nameEl) nameEl.innerHTML = loc.icon + ' ' + loc.name;
+  if (bodyEl) {
+    // Description
+    var html = '<div style="font-family:Lora,serif;font-size:15px;font-style:italic;' +
+      'color:rgba(232,228,216,.85);line-height:1.8;margin-bottom:14px;">' + tierData.desc + '</div>';
+    // Unlocked details
+    html += '<div class="fact-group" style="margin-bottom:10px;">';
+    html += '<div class="fact-group-title" style="color:' + loc.color + ';">' + tierData.title + ' — Known Details</div>';
+    tierData.details.forEach(function(d) {
+      html += '<div class="fact-item">' + d + '</div>';
+    });
+    html += '</div>';
+    // Locked tiers
+    var visitThresholds = [0,5,12];
+    for (var t = tier; t < 3; t++) {
+      var needed = visitThresholds[t];
+      var visits = locationVisits[locId] || 0;
+      html += '<div class="fact-group" style="opacity:0.45;margin-bottom:8px;">';
+      html += '<div class="fact-group-title">&#x1F512; ' + loc.tiers[t].title + ' — Hidden</div>';
+      html += '<div class="fact-locked">Spend more time at ' + loc.name + ' to uncover more.<br>' +
+        (visits < needed ? (needed - visits) + ' more visit' + (needed - visits === 1 ? '' : 's') + ' needed.' : '') + '</div>';
+      html += '</div>';
+    }
+    bodyEl.innerHTML = html;
+  }
+
+  // Update back button
+  var backBtn = document.getElementById('btn-locdet-back');
+  if (backBtn) backBtn.onclick = function() {
+    show(glossaryReturn || 's-title');
+    glossaryReturn = null;
+    document.getElementById('btn-rdet-back').onclick = showResidents;
+  };
+
+  show('s-location-detail');
+}
+
+function showLocations() {
+  var list = document.getElementById('locations-list');
+  list.innerHTML = '';
+  var locKeys = ['beach','forest','market','lighthouse','bridge'];
+  locKeys.forEach(function(key) {
+    var loc = LOCATION_GLOSSARY[key];
+    if (!loc) return;
+    var tier = getLocationTier(key);
+    var tierData = loc.tiers[tier-1];
+    var visits = locationVisits[key] || 0;
+    var locArtData = LOCATIONS[key];
+    var card = document.createElement('div');
+    card.className = 'loc-entry';
+    card.style.borderColor = 'rgba(' + hexToRgb(loc.color) + ',.25)';
+    card.innerHTML =
+      '<div class="loc-entry-art">' + (locArtData ? locArtData.art : '') + '</div>' +
+      '<div class="loc-entry-body">' +
+        '<div class="loc-entry-tier" style="color:' + loc.color + ';">' + loc.icon + ' ' + loc.name +
+          ' &nbsp;&middot;&nbsp; ' + visits + ' visit' + (visits===1?'':'s') + '</div>' +
+        '<div class="loc-entry-desc">' + tierData.desc.slice(0, 120) + '…</div>' +
+      '</div>';
+    (function(k) { card.onclick = function() {
+      glossaryReturn = 's-locations';
+      showLocationDetail(k);
+    }; })(key);
+    list.appendChild(card);
+  });
+  show('s-locations');
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -3674,6 +4128,7 @@ var RUN_LEN = 6;
 var seenIds = new Set();
 var pendingDisc = null;
 var residentEncounters = {};
+var locationVisits = {beach:0,forest:0,market:0,lighthouse:0,bridge:0};
 var pendingFriendship = [];
 var detailId = null;
 var currentFam = `all`;
@@ -3693,6 +4148,7 @@ function loadState() {
       run_count = s.run_count || 0;
       seenIds = new Set(s.seenIds || []);
       residentEncounters = s.residentEncounters || {};
+      locationVisits = s.locationVisits || {beach:0,forest:0,market:0,lighthouse:0,bridge:0};
     }
   } catch(e) {}
   CREATURES.forEach(function(c) {
@@ -3706,7 +4162,8 @@ function saveState() {
     localStorage.setItem(`waystone_v3`, JSON.stringify({
       collection:collection, inventory:inventory,
       lucky_sparks:lucky_sparks, run_count:run_count,
-      seenIds:[...seenIds], residentEncounters:residentEncounters
+      seenIds:[...seenIds], residentEncounters:residentEncounters,
+      locationVisits:locationVisits
     }));
   } catch(e) {}
 }
@@ -3817,7 +4274,9 @@ function renderEncounter() {
   document.getElementById(`loc-label`).textContent = loc.label;
   document.getElementById(`explore-bg`).style.background = loc.bg;
   document.getElementById(`loc-art`).innerHTML = loc.art;
-  document.getElementById(`enc-text`).innerHTML = enc.text;
+  document.getElementById(`enc-text`).innerHTML = linkifyText(enc.text);
+  // Track location visit
+  if (locKey && locationVisits[locKey] !== undefined) locationVisits[locKey]++;
   document.getElementById(`enc-q`).textContent = enc.q;
   var cc = document.getElementById(`choices`);
   cc.innerHTML = ``;
@@ -3865,7 +4324,7 @@ function makeChoice(idx) {
   document.getElementById(`choices`).style.pointerEvents = `none`;
 
   // Feedback
-  document.getElementById(`fb-story`).innerHTML = c.s;
+  document.getElementById(`fb-story`).innerHTML = linkifyText(c.s);
   var pool = AX_POOLS[c.ax];
   var note = pool[Math.floor(Math.random() * pool.length)];
   var icons = {flame:`🔥`,thread:`🧵`,stone:`🪨`,spark:`⚡`,root:`🌿`};
@@ -4294,37 +4753,45 @@ function renderInventory() {
 // WIRE BUTTONS
 // ═══════════════════════════════════════════════════════════════
 window.onload = function() {
-  loadState();
-
-  spawnTitleStars();
-  initResidents();
-  document.getElementById(`btn-explore`).onclick = startExplore;
-  document.getElementById(`btn-collection`).onclick = showCompendium;
-  document.getElementById(`btn-inventory`).onclick = showInventory;
-  document.getElementById('btn-residents').onclick = showResidents;
-  document.getElementById('btn-res-back').onclick = function(){ show('s-title'); };
-  document.getElementById('btn-rdet-back').onclick = showResidents;
-  document.getElementById(`btn-nav-coll`).onclick = showCompendium;
-  document.getElementById(`btn-nav-inv`).onclick = showInventory;
-  document.getElementById(`btn-nav-home`).onclick = function() { show(`s-title`); };
-  document.getElementById(`btn-next`).onclick = nextEncounter;
-  document.getElementById(`btn-save-disc`).onclick = saveDiscovery;
-  document.getElementById('btn-disc-skip').onclick = skipDiscovery;
-  document.getElementById(`btn-comp-back`).onclick = function() { show(`s-title`); };
-  document.getElementById(`btn-nick-save`).onclick = saveNick;
-  document.getElementById(`btn-detail-back`).onclick = showCompendium;
-  document.getElementById(`btn-inv-back`).onclick = function() { show(`s-title`); };
-  document.getElementById('btn-friend-ok').onclick = nextAfterFriendship;
-  document.getElementById(`btn-again`).onclick = startExplore;
-  document.getElementById(`btn-runend-coll`).onclick = showCompendium;
+  try { loadState(); } catch(e) { console.error('loadState:', e); }
+  try { spawnTitleStars(); } catch(e) { console.error('spawnTitleStars:', e); }
+  try { initResidents(); } catch(e) { console.error('initResidents:', e); }
+  function wire(id, fn) {
+    var el = document.getElementById(id);
+    if (el) el.onclick = fn;
+  }
+  wire('btn-explore', startExplore);
+  wire('btn-collection', showCompendium);
+  wire('btn-inventory', showInventory);
+  wire('btn-residents', showResidents);
+  wire('btn-locations', showLocations);
+  wire('btn-locs-back', function(){ show('s-title'); });
+  wire('btn-res-back', function(){ show('s-title'); });
+  wire('btn-rdet-back', showResidents);
+  wire('btn-nav-coll', showCompendium);
+  wire('btn-nav-inv', showInventory);
+  wire('btn-nav-home', function(){ show('s-title'); });
+  wire('btn-nav-locs', function(){ glossaryReturn='s-explore'; showLocations(); });
+  wire('btn-next', nextEncounter);
+  wire('btn-save-disc', saveDiscovery);
+  wire('btn-disc-skip', skipDiscovery);
+  wire('btn-comp-back', function(){ show('s-title'); });
+  wire('btn-nick-save', saveNick);
+  wire('btn-detail-back', showCompendium);
+  wire('btn-inv-back', function(){ show('s-title'); });
+  wire('btn-friend-ok', nextAfterFriendship);
+  wire('btn-again', startExplore);
+  wire('btn-runend-coll', showCompendium);
 
   // Compendium family tabs
-  var tabs = document.querySelectorAll(`.comp-tab`);
-  for (var i = 0; i < tabs.length; i++) {
-    (function(tab) {
-      tab.onclick = function() { renderCompendium(tab.dataset.fam); };
-    })(tabs[i]);
-  }
+  try {
+    var tabs = document.querySelectorAll('.comp-tab');
+    for (var i = 0; i < tabs.length; i++) {
+      (function(tab) {
+        tab.onclick = function() { renderCompendium(tab.dataset.fam); };
+      })(tabs[i]);
+    }
+  } catch(e) { console.error('tabs:', e); }
 };
 </script>
 
@@ -4344,6 +4811,24 @@ window.onload = function() {
       </div>
     </div>
   </div>
+</div>
+
+<!-- ══ LOCATION DETAIL ══ -->
+<div class="screen" id="s-location-detail">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;">
+    <div style="font-family:'Fredoka One',cursive;font-size:22px;color:white;" id="locdet-name"></div>
+    <button class="btn-outline" style="padding:6px 14px;font-size:12px;" id="btn-locdet-back">&#x2190; Back</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;" id="locdet-body"></div>
+</div>
+
+<!-- ══ LOCATIONS LIST ══ -->
+<div class="screen" id="s-locations">
+  <div class="comp-hdr">
+    <div class="comp-title">&#x1F5FA; The Island</div>
+    <button class="btn-outline" style="padding:6px 14px;font-size:12px;" id="btn-locs-back">&#x2190; Back</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;" id="locations-list"></div>
 </div>
 </body>
 </html>
