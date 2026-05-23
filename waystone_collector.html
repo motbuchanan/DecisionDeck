@@ -260,6 +260,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 /* Ceremony flash overlay */
 .ceremony-flash{position:fixed;inset:0;background:white;z-index:200;
   pointer-events:none;animation:flash-white .28s ease-out forwards;}
+
+/* FRIENDSHIP SYSTEM */
+.friend-hearts{display:flex;gap:2px;justify-content:center;margin-top:2px;}
+.fheart{font-size:11px;line-height:1;}
+.comp-card.bestfriend.found{border-color:rgba(240,192,64,.5)!important;box-shadow:0 0 20px rgba(240,192,64,.15)!important;}
+#s-friendship{align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 50%,rgba(240,192,64,.08) 0%,transparent 55%);}
+.friend-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:28px;max-width:460px;width:100%;text-align:center;}
+.friend-art{width:180px;height:180px;flex-shrink:0;}
+.friend-art svg{width:100%;height:100%;}
+.friend-heart-big{font-size:42px;display:block;animation:pulse-glow 1.5s ease-in-out infinite;}
+.friend-label{font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#f0c040;}
+.friend-name{font-family:'Fredoka One',cursive;font-size:38px;color:white;line-height:1.1;}
+.friend-msg{font-family:'Lora',serif;font-size:15px;font-style:italic;color:rgba(232,228,216,.85);line-height:1.75;}
+@media (orientation:landscape) and (min-width:700px){
+  .friend-wrap{flex-direction:row;text-align:left;max-width:720px;gap:36px;}
+  .friend-info{flex:1;}
+}
 </style>
 </head>
 <body>
@@ -408,7 +425,7 @@ const CREATURES = [
     hobby:`Practicing speeches for occasions that haven't happened yet.`,
     food:`Cinnamon — the kind that makes your mouth feel warm already.`,
     quirk:`The flame on its head goes out during sleep. Cinder finds this deeply embarrassing and will deny it forever.`,
-    threshold:{"flame": 60},
+    threshold:{"flame": 65},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <radialGradient id="ci-b" cx="38%" cy="30%" r="65%"><stop offset="0%" stop-color="#ffaa60"/><stop offset="55%" stop-color="#e85520"/><stop offset="100%" stop-color="#b02800"/></radialGradient>
@@ -445,7 +462,7 @@ const CREATURES = [
     hobby:`Stomping practice. Yes, this is a real hobby.`,
     food:`Hard tack biscuits. The thicker the better. Must crunch loudly.`,
     quirk:`Has a very soft spot for small creatures and will carry them silently while maintaining a completely stern expression.`,
-    threshold:{"flame": 55},
+    threshold:{"flame": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="bo-b" cx="38%" cy="28%" r="68%"><stop offset="0%" stop-color="#f05030"/><stop offset="60%" stop-color="#cc2010"/><stop offset="100%" stop-color="#8a0800"/></radialGradient></defs>
 <g style="animation:rumble 0.42s ease-in-out infinite;">
@@ -483,7 +500,7 @@ const CREATURES = [
     hobby:`Racing the wind. Flicka always wins.`,
     food:`Sparks and the warmth off sun-heated stones.`,
     quirk:`Slows down when sad — visible for up to three whole seconds, which is considered an event.`,
-    threshold:{"flame": 68},
+    threshold:{"flame": 72},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <linearGradient id="fl-b" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#cc3800"/><stop offset="45%" stop-color="#ff7020"/><stop offset="100%" stop-color="#ffbb50"/></linearGradient>
@@ -521,7 +538,7 @@ const CREATURES = [
     hobby:`Debating. Announcing things. Startling larger creatures awake for sport.`,
     food:`Hot peppers. The hotter the better. Experiences heat as warmth rather than pain.`,
     quirk:`When genuinely pleased, makes a tiny chime sound instead of a roar. Extremely embarrassed about this.`,
-    threshold:{"flame": 52, "thread": 50},
+    threshold:{"flame": 62, "thread": 60},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="ro-b" cx="35%" cy="28%" r="68%"><stop offset="0%" stop-color="#ff6040"/><stop offset="65%" stop-color="#cc2010"/><stop offset="100%" stop-color="#900800"/></radialGradient></defs>
 <g style="animation:pulse-glow 1s ease-in-out infinite;">
@@ -563,7 +580,7 @@ const CREATURES = [
     hobby:`Observation. Memory. Answering questions before they're asked.`,
     food:`Time itself. Feeds on the passage of moments.`,
     quirk:`The cracks glow brighter when it laughs. This doesn't happen often, but when it does, it lights up a wide area.`,
-    threshold:{"flame": 75, "stone": 70},
+    threshold:{"flame": 78, "stone": 74},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <radialGradient id="em-c" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff9040"/><stop offset="40%" stop-color="#dd2800"/><stop offset="100%" stop-color="#550000"/></radialGradient>
@@ -606,7 +623,7 @@ const CREATURES = [
     hobby:`Watching other creatures from a safe distance and feeling warmly about them.`,
     food:`Chamomile tea with too much honey, consumed when certain no one is looking.`,
     quirk:`When fully comfortable with someone, follows them everywhere — exactly four steps behind. This is its maximum expression of affection.`,
-    threshold:{"thread": 60},
+    threshold:{"thread": 74},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <radialGradient id="wi-b" cx="38%" cy="32%" r="62%"><stop offset="0%" stop-color="#c898e8"/><stop offset="58%" stop-color="#8848b8"/><stop offset="100%" stop-color="#502888"/></radialGradient>
@@ -649,7 +666,7 @@ const CREATURES = [
     hobby:`Knot theory. Genuinely helping creatures reconnect lost things.`,
     food:`Anything wrapped in string, so it can help unwrap it and feel briefly useful.`,
     quirk:`There is always at least one small thing attached to Tangle that doesn't belong to it.`,
-    threshold:{"thread": 55},
+    threshold:{"thread": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="ta-b" cx="38%" cy="32%" r="62%"><stop offset="0%" stop-color="#68b895"/><stop offset="58%" stop-color="#3a8068"/><stop offset="100%" stop-color="#1a5040"/></radialGradient></defs>
 <g style="animation:wobble 4.2s ease-in-out infinite;transform-origin:22px 52px;" opacity="0.72">
@@ -697,7 +714,7 @@ const CREATURES = [
     hobby:`Foraging for small perfect things to give away. Growing additional moss.`,
     food:`The heel of fresh bread — the part most creatures don't want.`,
     quirk:`Each creature near Mosswhir reports a completely different scent. No one has been able to explain this.`,
-    threshold:{"thread": 65},
+    threshold:{"thread": 74},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <radialGradient id="mo-b" cx="38%" cy="32%" r="62%"><stop offset="0%" stop-color="#62a830"/><stop offset="58%" stop-color="#3a7018"/><stop offset="100%" stop-color="#1e4808"/></radialGradient>
@@ -740,7 +757,7 @@ const CREATURES = [
     hobby:`Sitting with things. Watching the same sunsets many times. Radiating warmth at a perfectly consistent temperature.`,
     food:`Warm porridge. Plain. Always the same. Reliable.`,
     quirk:`Lumble's warmth is measurably higher on the side facing whichever creature needs it most. Three researchers have confirmed this. None can explain it.`,
-    threshold:{"thread": 70},
+    threshold:{"thread": 74},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <radialGradient id="lu-b" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#f2cc62"/><stop offset="48%" stop-color="#d49a28"/><stop offset="100%" stop-color="#a07018"/></radialGradient>
@@ -779,7 +796,7 @@ const CREATURES = [
     hobby:`Weaving. Connecting things that don't know they're connected yet.`,
     food:`Moonlight. Drinks it slowly and stores it in the translucent parts of the body.`,
     quirk:`Animals and very small children can see Silkwynn clearly at all times. Everyone else catches it at the corner of vision.`,
-    threshold:{"thread": 75, "flame": 70},
+    threshold:{"thread": 78, "flame": 74},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="si-b" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="rgba(235,230,255,0.62)"/><stop offset="58%" stop-color="rgba(180,168,228,0.38)"/><stop offset="100%" stop-color="rgba(130,118,200,0.15)"/></radialGradient></defs>
 <g style="animation:fade-in-out 5.5s ease-in-out infinite;">
@@ -827,14 +844,208 @@ const CREATURES = [
 <ellipse rx="2.5" ry="1.8" fill="rgba(200,196,255,0.62)" style="animation:orbit 5s linear infinite 3.5s;transform-origin:100px 103px;"/>
 </svg>`
   },
+,
   {
+    id:`pin`, name:`Pin-curchin`, type:`thread`, rare:false,
+    personality:`Covered in pins and spines but incredibly gentle. Has never once accidentally stuck anyone who was paying attention. A little prickly on the outside, warm in the middle.`,
+    bio:`Born from a pincushion that had been used so lovingly for so long that it grew feelings. Has been collecting needles and pins ever since — not to keep them, just because they feel like home.`,
+    hobby:`Organizing things by size. Helping creatures find lost needles. Sitting very still so no one gets poked.`,
+    food:`Strawberries — specifically the little strawberry-shaped pincushion kind, which Pin-curchin finds deeply relatable.`,
+    quirk:`When Pin is happy, the spines glow faintly at the tips. Different colors for different feelings. Pin-curchin doesn't know it does this.`,
+    threshold:{"thread": 67},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="pin-body" cx="40%" cy="35%" r="60%">
+<stop offset="0%" stop-color="#c87890"/><stop offset="55%" stop-color="#a05068"/><stop offset="100%" stop-color="#703040"/>
+</radialGradient>
+<radialGradient id="pin-belly" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#e890a8" stop-opacity="0.4"/><stop offset="100%" stop-color="#e890a8" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<!-- Ground shadow -->
+<ellipse cx="100" cy="172" rx="42" ry="9" fill="#5a2030" opacity="0.4"/>
+<!-- Main pincushion body - round and plump -->
+<g style="animation:breathe 3s ease-in-out infinite;transform-origin:100px 122px;">
+<!-- Body base - slightly flattened sphere -->
+<ellipse cx="100" cy="125" rx="46" ry="40" fill="#703040"/>
+<ellipse cx="100" cy="122" rx="42" ry="37" fill="#884858"/>
+<ellipse cx="100" cy="119" rx="38" ry="33" fill="url(#pin-body)"/>
+<!-- Belly highlight -->
+<ellipse cx="100" cy="122" rx="28" ry="22" fill="url(#pin-belly)"/>
+<!-- Cushion seam lines - like a real pincushion -->
+<path d="M100 86 Q88 104 86 122 Q88 140 100 158" stroke="#883050" stroke-width="1.5" fill="none" opacity="0.5"/>
+<path d="M100 86 Q112 104 114 122 Q112 140 100 158" stroke="#883050" stroke-width="1.5" fill="none" opacity="0.5"/>
+<path d="M64 108 Q82 118 86 122 Q82 126 64 136" stroke="#883050" stroke-width="1.2" fill="none" opacity="0.4"/>
+<path d="M136 108 Q118 118 114 122 Q118 126 136 136" stroke="#883050" stroke-width="1.2" fill="none" opacity="0.4"/>
+<!-- Eyes - gentle and round -->
+<circle cx="88" cy="114" r="9" fill="white"/>
+<circle cx="112" cy="114" r="9" fill="white"/>
+<circle cx="89" cy="115" r="5.5" fill="#2a1018"/>
+<circle cx="113" cy="115" r="5.5" fill="#2a1018"/>
+<circle cx="90" cy="114" r="2" fill="white"/>
+<circle cx="114" cy="114" r="2" fill="white"/>
+<!-- Soft smile -->
+<path d="M89 130 Q100 138 111 130" stroke="#703040" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Tiny arms -->
+<ellipse cx="60" cy="120" rx="12" ry="8" fill="#884858" transform="rotate(-10,60,120)"/>
+<ellipse cx="140" cy="120" rx="12" ry="8" fill="#884858" transform="rotate(10,140,120)"/>
+</g>
+<!-- PINS AND SPINES sticking out all over - sea urchin style -->
+<!-- Top cluster -->
+<g style="animation:breathe 3s ease-in-out infinite;transform-origin:100px 122px;">
+<line x1="100" y1="86" x2="100" y2="62" stroke="#d4d4e8" stroke-width="1.8" stroke-linecap="round"/>
+<circle cx="100" cy="62" r="3.5" fill="#ff6060" style="animation:flicker 2s ease-in-out infinite;"/>
+<line x1="88" y1="88" x2="80" y2="66" stroke="#d4d4e8" stroke-width="1.8" stroke-linecap="round"/>
+<circle cx="80" cy="66" r="3.5" fill="#60b0ff" style="animation:flicker 2.5s ease-in-out infinite 0.4s;"/>
+<line x1="112" y1="88" x2="120" y2="66" stroke="#d4d4e8" stroke-width="1.8" stroke-linecap="round"/>
+<circle cx="120" cy="66" r="3.5" fill="#80e080" style="animation:flicker 3s ease-in-out infinite 0.8s;"/>
+<!-- Upper sides -->
+<line x1="74" y1="98" x2="56" y2="80" stroke="#c0c0d8" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="56" cy="80" r="3" fill="#f0c040" style="animation:flicker 2.2s ease-in-out infinite 0.2s;"/>
+<line x1="126" y1="98" x2="144" y2="80" stroke="#c0c0d8" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="144" cy="80" r="3" fill="#e080d0" style="animation:flicker 2.8s ease-in-out infinite 1s;"/>
+<!-- Mid sides -->
+<line x1="64" y1="112" x2="42" y2="106" stroke="#c0c0d8" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="42" cy="106" r="3" fill="#ff9040" style="animation:flicker 3.2s ease-in-out infinite 0.6s;"/>
+<line x1="136" y1="112" x2="158" y2="106" stroke="#c0c0d8" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="158" cy="106" r="3" fill="#80d0ff" style="animation:flicker 2s ease-in-out infinite 1.4s;"/>
+<!-- Lower sides -->
+<line x1="68" y1="136" x2="50" y2="148" stroke="#c0c0d8" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="50" cy="148" r="3" fill="#c0a0ff" style="animation:flicker 2.6s ease-in-out infinite 0.3s;"/>
+<line x1="132" y1="136" x2="150" y2="148" stroke="#c0c0d8" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="150" cy="148" r="3" fill="#ff8080" style="animation:flicker 3s ease-in-out infinite 0.9s;"/>
+<!-- Bottom pins -->
+<line x1="86" y1="155" x2="80" y2="172" stroke="#c0c0d8" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="80" cy="172" r="3" fill="#80e0c0" style="animation:flicker 2.4s ease-in-out infinite 0.5s;"/>
+<line x1="114" y1="155" x2="120" y2="172" stroke="#c0c0d8" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="120" cy="172" r="3" fill="#f0e040" style="animation:flicker 2.8s ease-in-out infinite 1.2s;"/>
+</g>
+</svg>`
+  },
+  {
+    id:`bobbin`, name:`Bobbin`, type:`thread`, rare:false,
+    personality:`Made entirely of buttons. Not wearing buttons — made of them. Each button is a different color and size and came from something that was loved. Bobbin collects the ones that got lost.`,
+    bio:`Assembled itself one button at a time over many years, drawn to buttons that had fallen off beloved things. Each button on Bobbin's body has a story. Bobbin knows all of them.`,
+    hobby:`Finding lost buttons. Listening to the stories attached to things. Clicking pleasantly when it moves.`,
+    food:`Thread — specifically the kind that has been well-used. Old thread tastes better than new.`,
+    quirk:`When Bobbin meets someone new, one of its buttons glows in that creature's favorite color. Bobbin doesn't choose which one. It just happens.`,
+    threshold:{"thread": 62},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="bob-glow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#88aaff" stop-opacity="0.2"/><stop offset="100%" stop-color="#88aaff" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<!-- Soft glow -->
+<circle cx="100" cy="115" r="62" fill="url(#bob-glow)" style="animation:breathe 3.5s ease-in-out infinite;"/>
+<!-- Ground shadow -->
+<ellipse cx="100" cy="172" rx="44" ry="9" fill="#1a2038" opacity="0.45"/>
+<g style="animation:breathe 3.5s ease-in-out infinite;transform-origin:100px 118px;">
+<!-- Main body - rounded, assembled from button shapes -->
+<circle cx="100" cy="118" r="50" fill="#1a2238"/>
+<circle cx="100" cy="115" r="46" fill="#242a42"/>
+<circle cx="100" cy="112" r="42" fill="#2e3650"/>
+<!-- BUTTONS covering the whole body - varied sizes and colors -->
+<!-- Center large button - the face area -->
+<circle cx="100" cy="108" r="18" fill="#3a5888"/>
+<circle cx="100" cy="108" r="14" fill="#4a6898"/>
+<circle cx="95" cy="104" r="2.5" fill="#8aaccc" opacity="0.8"/>
+<circle cx="105" cy="104" r="2.5" fill="#8aaccc" opacity="0.8"/>
+<circle cx="95" cy="112" r="2.5" fill="#8aaccc" opacity="0.8"/>
+<circle cx="105" cy="112" r="2.5" fill="#8aaccc" opacity="0.8"/>
+<!-- Eyes as button holes in the face button -->
+<circle cx="92" cy="107" r="7" fill="#1a2840"/>
+<circle cx="108" cy="107" r="7" fill="#1a2840"/>
+<circle cx="93" cy="108" r="4.5" fill="#6a9ac8"/>
+<circle cx="109" cy="108" r="4.5" fill="#6a9ac8"/>
+<circle cx="94" cy="107" r="1.8" fill="white"/>
+<circle cx="110" cy="107" r="1.8" fill="white"/>
+<!-- Smile -->
+<path d="M90 120 Q100 128 110 120" stroke="#3a5888" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<!-- Surrounding buttons - all different colors and sizes -->
+<!-- Top cluster -->
+<circle cx="100" cy="72" r="10" fill="#c84040"/>
+<circle cx="100" cy="72" r="7" fill="#d85050"/>
+<circle cx="97" cy="69" r="2" fill="#e87070" opacity="0.8"/>
+<circle cx="103" cy="69" r="2" fill="#e87070" opacity="0.8"/>
+<circle cx="97" cy="75" r="2" fill="#e87070" opacity="0.8"/>
+<circle cx="103" cy="75" r="2" fill="#e87070" opacity="0.8"/>
+<!-- Upper left -->
+<circle cx="74" cy="84" r="9" fill="#40a848"/>
+<circle cx="74" cy="84" r="6.5" fill="#50b858"/>
+<circle cx="72" cy="82" r="1.8" fill="#70d878" opacity="0.8"/>
+<circle cx="76" cy="82" r="1.8" fill="#70d878" opacity="0.8"/>
+<circle cx="72" cy="86" r="1.8" fill="#70d878" opacity="0.8"/>
+<circle cx="76" cy="86" r="1.8" fill="#70d878" opacity="0.8"/>
+<!-- Upper right -->
+<circle cx="126" cy="84" r="9" fill="#d4a020"/>
+<circle cx="126" cy="84" r="6.5" fill="#e4b030"/>
+<circle cx="124" cy="82" r="1.8" fill="#f4c040" opacity="0.8"/>
+<circle cx="128" cy="82" r="1.8" fill="#f4c040" opacity="0.8"/>
+<circle cx="124" cy="86" r="1.8" fill="#f4c040" opacity="0.8"/>
+<circle cx="128" cy="86" r="1.8" fill="#f4c040" opacity="0.8"/>
+<!-- Left side -->
+<circle cx="62" cy="108" r="11" fill="#8040c8"/>
+<circle cx="62" cy="108" r="8" fill="#9050d8"/>
+<circle cx="59" cy="105" r="2.2" fill="#b070f8" opacity="0.8"/>
+<circle cx="65" cy="105" r="2.2" fill="#b070f8" opacity="0.8"/>
+<circle cx="59" cy="111" r="2.2" fill="#b070f8" opacity="0.8"/>
+<circle cx="65" cy="111" r="2.2" fill="#b070f8" opacity="0.8"/>
+<!-- Right side -->
+<circle cx="138" cy="108" r="11" fill="#c84880"/>
+<circle cx="138" cy="108" r="8" fill="#d85890"/>
+<circle cx="135" cy="105" r="2.2" fill="#f878b0" opacity="0.8"/>
+<circle cx="141" cy="105" r="2.2" fill="#f878b0" opacity="0.8"/>
+<circle cx="135" cy="111" r="2.2" fill="#f878b0" opacity="0.8"/>
+<circle cx="141" cy="111" r="2.2" fill="#f878b0" opacity="0.8"/>
+<!-- Lower left -->
+<circle cx="72" cy="142" r="9" fill="#40a0c0"/>
+<circle cx="72" cy="142" r="6.5" fill="#50b0d0"/>
+<circle cx="70" cy="140" r="1.8" fill="#70d0f0" opacity="0.8"/>
+<circle cx="74" cy="140" r="1.8" fill="#70d0f0" opacity="0.8"/>
+<circle cx="70" cy="144" r="1.8" fill="#70d0f0" opacity="0.8"/>
+<circle cx="74" cy="144" r="1.8" fill="#70d0f0" opacity="0.8"/>
+<!-- Lower right -->
+<circle cx="128" cy="142" r="9" fill="#d06020"/>
+<circle cx="128" cy="142" r="6.5" fill="#e07030"/>
+<circle cx="126" cy="140" r="1.8" fill="#f09040" opacity="0.8"/>
+<circle cx="130" cy="140" r="1.8" fill="#f09040" opacity="0.8"/>
+<circle cx="126" cy="144" r="1.8" fill="#f09040" opacity="0.8"/>
+<circle cx="130" cy="144" r="1.8" fill="#f09040" opacity="0.8"/>
+<!-- Bottom center -->
+<circle cx="100" cy="155" r="10" fill="#a04040"/>
+<circle cx="100" cy="155" r="7" fill="#b05050"/>
+<circle cx="97" cy="153" r="2" fill="#d07070" opacity="0.8"/>
+<circle cx="103" cy="153" r="2" fill="#d07070" opacity="0.8"/>
+<circle cx="97" cy="157" r="2" fill="#d07070" opacity="0.8"/>
+<circle cx="103" cy="157" r="2" fill="#d07070" opacity="0.8"/>
+<!-- Small gap buttons between main ones -->
+<circle cx="82" cy="95" r="6" fill="#606080"/>
+<circle cx="82" cy="95" r="4" fill="#707090"/>
+<circle cx="81" cy="94" r="1.2" fill="#9090b0" opacity="0.8"/>
+<circle cx="83" cy="96" r="1.2" fill="#9090b0" opacity="0.8"/>
+<circle cx="118" cy="95" r="6" fill="#608060"/>
+<circle cx="118" cy="95" r="4" fill="#709070"/>
+<circle cx="117" cy="94" r="1.2" fill="#90b090" opacity="0.8"/>
+<circle cx="119" cy="96" r="1.2" fill="#90b090" opacity="0.8"/>
+<!-- One special glowing button - changes color based on mood -->
+<circle cx="100" cy="135" r="8" fill="#5060a0" style="animation:pulse-glow 2.5s ease-in-out infinite;"/>
+<circle cx="100" cy="135" r="5.5" fill="#7080c0"/>
+<circle cx="98" cy="133" r="1.8" fill="#a0b0e0" opacity="0.9"/>
+<circle cx="102" cy="133" r="1.8" fill="#a0b0e0" opacity="0.9"/>
+<circle cx="98" cy="137" r="1.8" fill="#a0b0e0" opacity="0.9"/>
+<circle cx="102" cy="137" r="1.8" fill="#a0b0e0" opacity="0.9"/>
+</g>
+</svg>`
+  },
+    {
     id:`grumble`, name:`Grumble`, type:`stone`, rare:false,
     personality:`Sounds grumpy. Completely isn't. Once it decides you're worth being near, it follows you to the end of the island and back, grumbling the entire way.`,
     bio:`Came from the quarry on the island's east side. The quarry workers decided a creature that sound was more useful as a friend.`,
     hobby:`Patrolling. Being mistaken for a decorative boulder. Watching over sleeping creatures with an expression of deep disapproval that means nothing.`,
     food:`River mushrooms. The earthy ones near wet stone. Eaten slowly and without comment.`,
     quirk:`Grumble purrs. Like a very distant cart on cobblestones. It happens when happy and Grumble suppresses it in company, which takes visible effort.`,
-    threshold:{"stone": 58},
+    threshold:{"stone": 65},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="gr-b" cx="38%" cy="28%" r="66%"><stop offset="0%" stop-color="#8898a8"/><stop offset="58%" stop-color="#606878"/><stop offset="100%" stop-color="#383e48"/></radialGradient></defs>
 <ellipse cx="100" cy="176" rx="58" ry="11" fill="#282e38" opacity="0.55"/>
@@ -883,7 +1094,7 @@ const CREATURES = [
     hobby:`Being carried. Occasionally telling a story that starts impossibly far back in time.`,
     food:`Salt water. Mineral deposits. Specific stones it recognizes from previous locations.`,
     quirk:`Says things that turn out to be exactly relevant to something that happens three days later. Unaware of this. Would call it coincidence.`,
-    threshold:{"stone": 52},
+    threshold:{"stone": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="pe-b" cx="36%" cy="30%" r="64%"><stop offset="0%" stop-color="#8ea0b8"/><stop offset="48%" stop-color="#607080"/><stop offset="100%" stop-color="#384858"/></radialGradient></defs>
 <g style="animation:spin-slow 11s linear infinite;transform-origin:100px 112px;opacity:0.38;">
@@ -921,7 +1132,7 @@ const CREATURES = [
     hobby:`Being where it is. Occasionally deciding to be somewhere entirely different, which it executes with great commitment.`,
     food:`Flat bread specifically. Stonk is flat and finds this cosmically appropriate.`,
     quirk:`The single eye blinks on a schedule that has no pattern anyone has ever found. Researchers have been trying for generations.`,
-    threshold:{"stone": 63},
+    threshold:{"stone": 70},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="st-b" cx="50%" cy="28%" r="62%"><stop offset="0%" stop-color="#8e9aa4"/><stop offset="65%" stop-color="#626e78"/><stop offset="100%" stop-color="#424c56"/></radialGradient></defs>
 <ellipse cx="100" cy="182" rx="76" ry="12" fill="#303840" opacity="0.55"/>
@@ -955,7 +1166,7 @@ const CREATURES = [
     hobby:`Vibrating meaning into the ground. Feeling the deep structure of the island through its feet.`,
     food:`Iron ore, specific grades. Has very particular taste in minerals.`,
     quirk:`The vibration varies by time of day. Researchers have been transcribing it for generations. It appears to be a very long and complicated story.`,
-    threshold:{"stone": 72},
+    threshold:{"stone": 74},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="mu-b" cx="44%" cy="33%" r="62%"><stop offset="0%" stop-color="#4c5668"/><stop offset="58%" stop-color="#303844"/><stop offset="100%" stop-color="#1c2430"/></radialGradient></defs>
 <g style="animation:pulse-glow 2.8s ease-in-out infinite;">
@@ -1001,7 +1212,7 @@ const CREATURES = [
     hobby:`Being where quiet is. Watching the quality of light over a long period.`,
     food:`Stillness itself. The specific texture of time when it has stopped rushing.`,
     quirk:`Does not remember names. Only what each creature was worried about when they found it, and whether it resolved.`,
-    threshold:{"stone": 78, "thread": 72},
+    threshold:{"stone": 80, "thread": 75},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="ve-b" cx="50%" cy="45%" r="52%"><stop offset="0%" stop-color="rgba(200,218,238,0.38)"/><stop offset="58%" stop-color="rgba(158,178,202,0.18)"/><stop offset="100%" stop-color="rgba(118,140,170,0.08)"/></radialGradient></defs>
 <g style="animation:fade-in-out 6.5s ease-in-out infinite;">
@@ -1037,7 +1248,7 @@ const CREATURES = [
     hobby:`Drawing. Redesigning things that work fine to see if they could work differently.`,
     food:`Anything that leaves a mark — blueberries eaten with hands, squid ink pasta which it found once and has been seeking ever since.`,
     quirk:`Scribb's drawings occasionally predict small events. It denies this is intentional but has never stopped drawing.`,
-    threshold:{"spark": 55},
+    threshold:{"spark": 72},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="sc-b" cx="36%" cy="30%" r="64%"><stop offset="0%" stop-color="#f8eea0"/><stop offset="55%" stop-color="#d4c060"/><stop offset="100%" stop-color="#a89030"/></radialGradient></defs>
 <g style="animation:bob 3.5s ease-in-out infinite;transform-origin:148px 80px;">
@@ -1085,7 +1296,7 @@ const CREATURES = [
     hobby:`Disassembly. Reassembly. Improving things whether or not they asked to be improved.`,
     food:`Whatever sparks when bitten. Lemons are a particular favorite.`,
     quirk:`Occasionally produces a small unplanned explosion during great excitement. Always small. Always harmless. Always followed by resuming whatever it was doing with no comment.`,
-    threshold:{"spark": 60},
+    threshold:{"spark": 68},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="bu-b" cx="38%" cy="30%" r="64%"><stop offset="0%" stop-color="#e8c070"/><stop offset="55%" stop-color="#c09040"/><stop offset="100%" stop-color="#8a6018"/></radialGradient></defs>
 <g style="animation:orbit 4.5s linear infinite;transform-origin:100px 110px;">
@@ -1136,7 +1347,7 @@ const CREATURES = [
     hobby:`Light-watching. Distinguishing between types of light by taste. Slow contented floating.`,
     food:`Sunrise light specifically. Will be awake early for this regardless of how late the previous evening was.`,
     quirk:`The belly glow changes color based on what kind of light was eaten: golden after sunset, pale blue after moonlight, peachy after sunrise.`,
-    threshold:{"spark": 65},
+    threshold:{"spark": 72},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <radialGradient id="gl-o" cx="50%" cy="48%" r="52%"><stop offset="0%" stop-color="#1a1828"/><stop offset="100%" stop-color="#080814"/></radialGradient>
@@ -1170,7 +1381,7 @@ const CREATURES = [
     hobby:`Being interested in things. Spinning. Mapping the island's best air currents.`,
     food:`Things that pop when bitten — popcorn, sugar candy, honeycomb bubbles.`,
     quirk:`Can hover, but only while spinning. Landing happens immediately upon calming down, which is infrequent enough that it's rarely a problem.`,
-    threshold:{"spark": 70},
+    threshold:{"spark": 74},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><linearGradient id="wh-b" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f8e030"/><stop offset="50%" stop-color="#e8a820"/><stop offset="100%" stop-color="#c07808"/></linearGradient></defs>
 <g style="animation:spin-slow 1.5s linear infinite;transform-origin:100px 110px;">
@@ -1209,7 +1420,7 @@ const CREATURES = [
     hobby:`Working on something vast and long-term that no one fully understands.`,
     food:`Complexity. Consumes problems the way other creatures consume meals — chewing through them thoroughly.`,
     quirk:`Mutters partial equations in a language that predates the island. If you write down what you hear and work on it for a long time, it turns out to be correct.`,
-    threshold:{"spark": 78, "flame": 70},
+    threshold:{"spark": 80, "flame": 76},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="ae-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f0c840" stop-opacity="0.35"/><stop offset="100%" stop-color="#f0c840" stop-opacity="0"/></radialGradient></defs>
 <circle cx="100" cy="105" r="52" fill="url(#ae-g)" style="animation:breathe 4s ease-in-out infinite;"/>
@@ -1260,7 +1471,7 @@ const CREATURES = [
     hobby:`Growing things. Watching the light move across the same ground over a full day. Being visited.`,
     food:`Rain. Literally absorbs nutrients from rainfall and considers a good rainstorm a fine meal.`,
     quirk:`Knows the names of every creature that has ever visited its location. Considers all of them friends, including the ones who didn't notice it.`,
-    threshold:{"root": 50},
+    threshold:{"root": 70},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="ms-b" cx="48%" cy="38%" r="58%"><stop offset="0%" stop-color="#5a9830"/><stop offset="55%" stop-color="#387018"/><stop offset="100%" stop-color="#1e4808"/></radialGradient></defs>
 <g style="animation:breathe 6s ease-in-out infinite;transform-origin:100px 118px;">
@@ -1304,7 +1515,7 @@ const CREATURES = [
     hobby:`Growing. Processing. Sending nutrients through the root system to other plants without announcement.`,
     food:`Deep mineral water from the water table, which tastes of old stone and time.`,
     quirk:`Occasionally all the plants on the island lean slightly in the same direction for a moment. This is Deeproot sending a message. No one has decoded it.`,
-    threshold:{"root": 55},
+    threshold:{"root": 65},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="dr-s" cx="50%" cy="20%" r="80%"><stop offset="0%" stop-color="#3a8428" stop-opacity="0.45"/><stop offset="100%" stop-color="#3a8428" stop-opacity="0"/></radialGradient></defs>
 <path d="M86 148 Q68 152 54 162 Q44 172 38 184" stroke="#2a5010" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.65"/>
@@ -1347,7 +1558,7 @@ const CREATURES = [
     hobby:`Being still. Listening at frequencies most ears aren't tuned to. Collecting silence.`,
     food:`Things that have no taste — plain water, plain rice, the neutral flavor of things that don't impose themselves.`,
     quirk:`Leaves a residue of quiet that persists for some time after it leaves an area. Researchers call it the Hushling Echo.`,
-    threshold:{"root": 62},
+    threshold:{"root": 70},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="hu-b" cx="42%" cy="35%" r="60%"><stop offset="0%" stop-color="#f0eae2"/><stop offset="55%" stop-color="#c8c0b8"/><stop offset="100%" stop-color="#9890a0"/></radialGradient></defs>
 <g style="animation:pulse-glow 3.5s ease-in-out infinite;">
@@ -1380,7 +1591,7 @@ const CREATURES = [
     hobby:`Remembering. Considering. Occasionally shifting position — over several months, this amounts to genuine movement.`,
     food:`Nothing. Processes slow chemical changes in its own stone body as sustenance. This is working very well so far.`,
     quirk:`The lichen on its surface is a complete record of the island's climate going back further than any written record. Oldstone allows researchers to study it and is mildly interested in their interpretations.`,
-    threshold:{"root": 68, "stone": 55},
+    threshold:{"root": 74, "stone": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="os-b" cx="44%" cy="35%" r="60%"><stop offset="0%" stop-color="#6a7068"/><stop offset="55%" stop-color="#484e46"/><stop offset="100%" stop-color="#2c302a"/></radialGradient></defs>
 <path d="M40 158 Q36 148 40 140 Q44 132 44 140" stroke="#388020" stroke-width="2" fill="none" opacity="0.72"/>
@@ -1422,7 +1633,7 @@ const CREATURES = [
     hobby:`Blooming. Each bloom takes a season. Each bloom is different. No flower has ever repeated exactly.`,
     food:`Time and sunlight in the specific combination that produces growth.`,
     quirk:`Verdynn's petals contain seeds. New plants have been appearing on the island since its formation. This is why.`,
-    threshold:{"root": 78, "stone": 72},
+    threshold:{"root": 80, "stone": 76},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <radialGradient id="vd-t" cx="45%" cy="35%" r="58%"><stop offset="0%" stop-color="#5a4018"/><stop offset="100%" stop-color="#2a1e08"/></radialGradient>
@@ -1483,7 +1694,7 @@ const CREATURES = [
     hobby:`Bridging. Holding two things in mind at once until they find their relationship.`,
     food:`The moment of understanding — that specific flash.`,
     quirk:`Wherever Lumenwing has recently been, creatures find it easier to understand each other.`,
-    threshold:{"spark": 80, "thread": 80},
+    threshold:{"spark": 84, "thread": 84},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <linearGradient id="lw-s" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f8f0a0"/><stop offset="50%" stop-color="#ffffff"/><stop offset="100%" stop-color="#a0f0f0"/></linearGradient>
@@ -1525,7 +1736,7 @@ const CREATURES = [
     hobby:`Being the ground. Being the thing that everything else rests on.`,
     food:`Nothing. Subsists on the accumulated patience of the island.`,
     quirk:`Creatures who have found Stoneheart report feeling afterward that they know where they stand. Not geographically. Just in general.`,
-    threshold:{"root": 80, "stone": 80},
+    threshold:{"root": 84, "stone": 84},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <linearGradient id="sh-s" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#1a1e18"/><stop offset="35%" stop-color="#2e3228"/><stop offset="70%" stop-color="#404840"/><stop offset="100%" stop-color="#545c50"/></linearGradient>
@@ -1579,7 +1790,7 @@ const CREATURES = [
     hobby:`Moving. Leaving marks. Trying to stop leaving marks and failing immediately.`,
     food:`Stories told aloud — specifically the parts where something changes.`,
     quirk:`If you follow Inkfall's trail carefully it tells the story of that day in complete emotional accuracy.`,
-    threshold:{"spark": 62, "thread": 58},
+    threshold:{"spark": 68, "thread": 65},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><radialGradient id="ik-b" cx="40%" cy="32%" r="62%"><stop offset="0%" stop-color="#2a2848"/><stop offset="100%" stop-color="#0c0a18"/></radialGradient></defs>
 <g opacity="0.68">
@@ -1623,7 +1834,7 @@ const CREATURES = [
     hobby:`Listening to the wind. Relaying messages between distant island locations.`,
     food:`Air that has traveled a long distance and carries the memory of where it came from.`,
     quirk:`Fernwhist's fronds indicate the weather three days in advance with complete accuracy. The island's fishers and farmers have always known to watch.`,
-    threshold:{"root": 60, "spark": 52},
+    threshold:{"root": 68, "spark": 62},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs><linearGradient id="fw-s" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#6a4a18"/><stop offset="100%" stop-color="#5a8828"/></linearGradient></defs>
 <g style="animation:wobble 2.2s ease-in-out infinite;transform-origin:100px 105px;">
@@ -1671,7 +1882,7 @@ const CREATURES = [
     hobby:`Being near things that need calm. Breathing slowly.`,
     food:`The specific flavor of the moment after something hard has passed.`,
     quirk:`If you look for it, it isn't there. If you need it, it is.`,
-    threshold:{"root": 56, "stone": 56},
+    threshold:{"root": 65, "stone": 65},
     svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <linearGradient id="ca-b" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3a7820"/><stop offset="49%" stop-color="#2a5c28"/><stop offset="51%" stop-color="#4a5860"/><stop offset="100%" stop-color="#384858"/></linearGradient>
@@ -2435,6 +2646,41 @@ var ITEMS = {
 
 // Which encounter choices yield items
 // Format: {cat, loc_keyword, choice_idx, item_id}
+var FRIENDSHIP_MESSAGES = {
+  cinder:`You keep going even when things are scary. I noticed that right away. Most creatures wait until they feel ready. You don't wait. That's the kind of brave I respect.`,
+  boldur:`You showed up. Every time. Loud or quiet, you showed up and did the thing. I noticed. That counts for a lot around here.`,
+  flicka:`I don't slow down for much. But I slow down when you're around. You pay attention in a way that makes the island worth stopping to look at.`,
+  roarette:`You are BRAVER than you think! I have been watching and I am TELLING you! You do hard things! On PURPOSE! That is EXTREMELY impressive and I will not stop saying so!`,
+  embrix:`I have seen many travelers on this island. Few leave the kind of marks you leave. Not damage. The other kind. The kind that lasts.`,
+  wibble:`I don't come out for just anyone. But you were patient and kind even when you didn't have to be. That's why I came out. That's why I'll keep coming out.`,
+  tangle:`I make a mess of things sometimes. You never made me feel bad about it. You just helped. I'm really glad you're here.`,
+  mosswhir:`Here. This one is for you. I've been saving it. I always know what to give, and this time what to give is: I'm glad you exist.`,
+  lumble:`I don't say much. But I want you to know. You make the island warmer just by being here. Just by being you.`,
+  silkwynn:`The threads know. They always know. The threads that connect things here are stronger because you walked through. I've been watching those threads. They're good ones.`,
+  pin:`I'm a little prickly on the outside. I know that. But you were careful and kind anyway. The pins only glow for creatures I trust.`,
+  bobbin:`One of my buttons just turned your favorite color. I didn't choose it. It just happened. That means something. I think it means you're someone I was looking for.`,
+  grumble:`I don't say this to everyone. Actually I don't say this to anyone. But. You can stay. As long as you want. That's the whole thing I wanted to say.`,
+  pebb:`I have been a lot of places and met a lot of creatures. I keep a list in my memory of the ones worth knowing. You're on it now.`,
+  stonk:`...`,
+  murrock:`You felt it. The vibration I send when something matters. Most creatures walk past. You stopped. You listened with more than your ears. I remember everyone who does that.`,
+  veilstone:`I only appear in stillness. You found enough stillness to see me. That says something very specific about who you are. I thought you should know.`,
+  scribb:`I drew you. Not on purpose. It just came out. It's one of the best things I've ever drawn. That's not a coincidence.`,
+  buzzwing:`You figured out how things work. Not just the mechanisms. The other things too. The ones that are harder to take apart. I noticed. That's rare.`,
+  glintmaw:`The light you carry is a specific kind. Warm and steady. I've tasted a lot of light on this island. Yours is one of the good ones.`,
+  whirlix:`You are INTERESTING and interesting things make me spin and I have been spinning a lot lately because of you and that is a COMPLIMENT!`,
+  aethon:`I have been building something for a very long time. I don't always know who it's for. I'm starting to think some of it might be for you.`,
+  mosse:`You came back. More than once. I noticed every time. I notice everything from here. I wanted you to know that your visits matter to me.`,
+  deeproot:`The roots know you now. They've been passing your name along underground all the way across the island. The island knows you. That's not nothing.`,
+  hushling:`You made the island quieter just by being calm in it. I felt it from far away. It's the same thing I do. I think we're a little bit alike.`,
+  oldstone:`You have patience. Real patience. The kind that trusts, not just the kind that waits. I've been here long enough to know the difference. You have the real kind.`,
+  verdynn:`You gave things time to grow. That's rarer than you think. The seeds I carry go to the right places. I think some of them were always meant for you.`,
+  lumenwing:`I build bridges between things that don't know they belong together. You help things connect too. I can see it in the shape of what you do.`,
+  stoneheart:`Everything the island has weathered is in me. And I recognize what you carry. The same steadiness. The same quiet endurance. You belong here.`,
+  inkfall:`I've been following your trail. Your story is interesting. I want to see how it ends.`,
+  fernwhist:`The wind told me about you first. It had good things to say. Now that I've seen for myself, I think the wind was right.`,
+  calmyr:`I'm only here when something difficult is happening. I've been nearby a lot lately. That means you're doing hard things and getting through them. I've noticed.`,
+};
+
 var ITEM_TRIGGERS = [
   {cat:`freeze`,loc_kw:`lighthouse`,choice_idx:0,item:`lantern`},
   {cat:`tangle`,loc_kw:`forest`,choice_idx:1,item:`silver_thread`},
@@ -2454,13 +2700,13 @@ var ITEM_TRIGGERS = [
 // ═══════════════════════════════════════════════════════════════
 var LOCATIONS = {
   beach:{label:`The Beach`,bg:`#0a1a2e`,
-    art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sky-b" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#060e1a"/><stop offset="100%" stop-color="#0d2a4a"/></linearGradient></defs><rect width="240" height="240" fill="url(#sky-b)"/><circle cx="185" cy="45" r="18" fill="#f8f0d0" opacity=".7"/><circle cx="192" cy="40" r="15" fill="#0a1828"/><circle cx="40" cy="30" r="1.5" fill="white" opacity=".8" style="animation:flicker 2s ease-in-out infinite;"/><circle cx="80" cy="18" r="1" fill="white" opacity=".6" style="animation:flicker 3s ease-in-out infinite .5s;"/><circle cx="130" cy="25" r="1.5" fill="white" opacity=".7" style="animation:flicker 2.5s ease-in-out infinite 1s;"/><rect x="0" y="140" width="240" height="100" fill="#0d3a6a" opacity=".9"/><g style="animation:wave-drift 6s ease-in-out infinite;"><path d="M-20 155 Q20 148 60 155 Q100 162 140 155 Q180 148 220 155 Q260 162 280 155" stroke="#1a5a8a" stroke-width="3" fill="none" opacity=".5"/></g><g style="animation:wave-drift2 8s ease-in-out infinite;"><path d="M-20 168 Q30 161 70 168 Q110 175 150 168 Q190 161 230 168 Q270 175 280 168" stroke="#1a6a9a" stroke-width="2.5" fill="none" opacity=".4"/></g><path d="M0 190 Q60 182 120 186 Q180 190 240 184 L240 240 L0 240 Z" fill="#1a1000" opacity=".9"/><path d="M0 196 Q60 188 120 192 Q180 196 240 190 L240 210 L0 210 Z" fill="#c8a850" opacity=".7"/><rect x="110" y="100" width="12" height="45" fill="#0a1020" opacity=".6"/><circle cx="116" cy="99" r="4" fill="#f0c040" opacity=".5" style="animation:flicker 1.5s ease-in-out infinite;"/><rect x="28" y="160" width="5" height="35" fill="#1a0a00" opacity=".7"/><ellipse cx="30" cy="158" rx="18" ry="12" fill="#1a2a08" opacity=".6" transform="rotate(-15,30,158)"/><circle cx="55" cy="168" r="2" fill="white" opacity=".3" style="animation:flicker 2s ease-in-out infinite;"/><circle cx="140" cy="162" r="1.5" fill="white" opacity=".25" style="animation:flicker 3s ease-in-out infinite .8s;"/></svg>`},
+    art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sky-b" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#060e1a"/><stop offset="100%" stop-color="#0d2a4a"/></linearGradient></defs><rect width="240" height="240" fill="url(#sky-b)"/><circle cx="185" cy="45" r="18" fill="#f8f0d0" opacity=".7"/><circle cx="192" cy="40" r="15" fill="#0a1828"/><circle cx="40" cy="30" r="1.5" fill="white" opacity=".8" style="animation:flicker 2s ease-in-out infinite;"/><circle cx="80" cy="18" r="1" fill="white" opacity=".6" style="animation:flicker 3s ease-in-out infinite .5s;"/><circle cx="130" cy="25" r="1.5" fill="white" opacity=".7" style="animation:flicker 2.5s ease-in-out infinite 1s;"/><rect x="0" y="140" width="240" height="100" fill="#0d3a6a" opacity=".9"/><g style="animation:wave-drift 6s ease-in-out infinite;"><path d="M-20 155 Q20 148 60 155 Q100 162 140 155 Q180 148 220 155 Q260 162 280 155" stroke="#1a5a8a" stroke-width="3" fill="none" opacity=".5"/></g><g style="animation:wave-drift2 8s ease-in-out infinite;"><path d="M-20 168 Q30 161 70 168 Q110 175 150 168 Q190 161 230 168 Q270 175 280 168" stroke="#1a6a9a" stroke-width="2.5" fill="none" opacity=".4"/></g><path d="M0 190 Q60 182 120 186 Q180 190 240 184 L240 240 L0 240 Z" fill="#1a1000" opacity=".9"/><path d="M0 196 Q60 188 120 192 Q180 196 240 190 L240 210 L0 210 Z" fill="#c8a850" opacity=".7"/><rect x="28" y="160" width="5" height="35" fill="#1a0a00" opacity=".7"/><ellipse cx="30" cy="158" rx="18" ry="12" fill="#1a2a08" opacity=".6" transform="rotate(-15,30,158)"/><circle cx="55" cy="168" r="2" fill="white" opacity=".3" style="animation:flicker 2s ease-in-out infinite;"/><circle cx="140" cy="162" r="1.5" fill="white" opacity=".25" style="animation:flicker 3s ease-in-out infinite .8s;"/></svg>`},
   forest:{label:`The Forest`,bg:`#020c04`,
     art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="for-sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#020804"/><stop offset="100%" stop-color="#071408"/></linearGradient></defs><rect width="240" height="240" fill="url(#for-sky)"/><ellipse cx="120" cy="80" rx="110" ry="70" fill="#0a1e0a" opacity=".8"/><ellipse cx="120" cy="70" rx="100" ry="60" fill="#0e2810" opacity=".9"/><rect x="108" y="140" width="24" height="100" fill="#1a0a00"/><ellipse cx="120" cy="100" rx="55" ry="65" fill="#1a4a10"/><ellipse cx="120" cy="90" rx="48" ry="55" fill="#255a18"/><ellipse cx="120" cy="80" rx="40" ry="44" fill="#306828"/><rect x="38" y="165" width="14" height="55" fill="#1a0a00"/><ellipse cx="45" cy="130" rx="30" ry="38" fill="#1a4010"/><ellipse cx="45" cy="120" rx="25" ry="30" fill="#255018"/><rect x="185" y="162" width="14" height="55" fill="#1a0a00"/><ellipse cx="192" cy="128" rx="28" ry="36" fill="#1a4010"/><ellipse cx="192" cy="118" rx="22" ry="28" fill="#255018"/><ellipse cx="120" cy="220" rx="100" ry="20" fill="#1a4a10" opacity=".3"/><circle cx="45" cy="175" r="2.5" fill="#a0e060" opacity=".6" style="animation:flicker 2s ease-in-out infinite;"/><circle cx="85" cy="188" r="2" fill="#80d040" opacity=".5" style="animation:flicker 3s ease-in-out infinite .7s;"/><circle cx="155" cy="178" r="2.5" fill="#a0e060" opacity=".6" style="animation:flicker 2.5s ease-in-out infinite 1.4s;"/><circle cx="195" cy="190" r="2" fill="#60c030" opacity=".4" style="animation:flicker 3.5s ease-in-out infinite .3s;"/><g style="animation:wave-drift 12s ease-in-out infinite;"><ellipse cx="60" cy="210" rx="50" ry="8" fill="white" opacity=".04"/><ellipse cx="180" cy="215" rx="45" ry="7" fill="white" opacity=".03"/></g></svg>`},
   market:{label:`The Market`,bg:`#0e0818`,
     art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="mkt-sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#0a0414"/><stop offset="100%" stop-color="#180828"/></linearGradient></defs><rect width="240" height="240" fill="url(#mkt-sky)"/><rect x="10" y="130" width="90" height="110" fill="#18101e" rx="3"/><rect x="120" y="140" width="110" height="100" fill="#18101e" rx="3"/><path d="M5 136 L55 96 L105 136 Z" fill="#6a2040" opacity=".8"/><path d="M115 146 L170 104 L225 146 Z" fill="#2a3a6a" opacity=".8"/><line x1="5" y1="96" x2="235" y2="104" stroke="#5a4a30" stroke-width="1" opacity=".6"/><circle cx="35" cy="102" r="5" fill="#f0c040" opacity=".8" style="animation:flicker 1.8s ease-in-out infinite;"/><circle cx="35" cy="102" r="10" fill="#f0c040" opacity=".15" style="animation:flicker 1.8s ease-in-out infinite;"/><circle cx="85" cy="106" r="5" fill="#f08040" opacity=".8" style="animation:flicker 2.3s ease-in-out infinite .4s;"/><circle cx="85" cy="106" r="10" fill="#f08040" opacity=".15" style="animation:flicker 2.3s ease-in-out infinite .4s;"/><circle cx="140" cy="109" r="5" fill="#40b0f0" opacity=".8" style="animation:flicker 2.8s ease-in-out infinite .8s;"/><circle cx="140" cy="109" r="10" fill="#40b0f0" opacity=".15" style="animation:flicker 2.8s ease-in-out infinite .8s;"/><circle cx="195" cy="106" r="5" fill="#c040f0" opacity=".8" style="animation:flicker 2s ease-in-out infinite 1.2s;"/><circle cx="195" cy="106" r="10" fill="#c040f0" opacity=".15" style="animation:flicker 2s ease-in-out infinite 1.2s;"/><rect x="25" y="148" width="28" height="22" rx="2" fill="#f0c040" opacity=".15"/><rect x="130" y="158" width="28" height="20" rx="2" fill="#40b0f0" opacity=".12"/><rect x="0" y="210" width="240" height="30" fill="#100a18" opacity=".8"/><circle cx="160" cy="30" r="1.5" fill="white" opacity=".6" style="animation:flicker 3s ease-in-out infinite;"/><circle cx="50" cy="45" r="1" fill="white" opacity=".5" style="animation:flicker 2.5s ease-in-out infinite .6s;"/></svg>`},
   lighthouse:{label:`The Lighthouse`,bg:`#060a14`,
-    art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lh-sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#040810"/><stop offset="100%" stop-color="#0a1628"/></linearGradient><radialGradient id="beam-g" cx="50%" cy="30%" r="70%"><stop offset="0%" stop-color="#f0c040" stop-opacity="0.25"/><stop offset="100%" stop-color="#f0c040" stop-opacity="0"/></radialGradient></defs><rect width="240" height="240" fill="url(#lh-sky)"/><g style="animation:spin-slow 5s linear infinite;transform-origin:120px 62px;"><path d="M120 62 L220 0 L200 30 Z" fill="rgba(240,192,64,.18)"/><path d="M120 62 L180 0 L165 35 Z" fill="rgba(240,192,64,.12)"/></g><ellipse cx="120" cy="120" rx="90" ry="60" fill="url(#beam-g)" style="animation:spin-slow 5s linear infinite;transform-origin:120px 62px;"/><rect x="105" y="62" width="30" height="178" fill="#1a2840" rx="2"/><rect x="108" y="40" width="24" height="28" fill="#243450" rx="2"/><rect x="104" y="33" width="32" height="10" fill="#2a3a5a" rx="2"/><rect x="100" y="27" width="40" height="9" fill="#364870" rx="2"/><circle cx="120" cy="30" r="10" fill="#f0c040" opacity=".9" style="animation:flicker 1s ease-in-out infinite;"/><circle cx="120" cy="30" r="16" fill="#f0c040" opacity=".2" style="animation:flicker 1s ease-in-out infinite;"/><rect x="113" y="90" width="14" height="20" rx="7" fill="#304060" opacity=".7"/><rect x="113" y="130" width="14" height="20" rx="7" fill="#304060" opacity=".7"/><rect x="113" y="170" width="14" height="20" rx="7" fill="#f0c040" opacity=".2" style="animation:flicker 3s ease-in-out infinite;"/><ellipse cx="120" cy="230" rx="80" ry="20" fill="#121e2a" opacity=".9"/><circle cx="30" cy="40" r="1.5" fill="white" opacity=".7" style="animation:flicker 2s ease-in-out infinite;"/><circle cx="200" cy="35" r="1.5" fill="white" opacity=".6" style="animation:flicker 2.5s ease-in-out infinite 1s;"/></svg>`},
+    art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lh-sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#040810"/><stop offset="100%" stop-color="#0a1628"/></linearGradient><radialGradient id="beam-g" cx="50%" cy="30%" r="70%"><stop offset="0%" stop-color="#f0c040" stop-opacity="0.25"/><stop offset="100%" stop-color="#f0c040" stop-opacity="0"/></radialGradient></defs><rect width="240" height="240" fill="url(#lh-sky)"/><g style="animation:spin-slow 5s linear infinite;transform-origin:120px 38px;"><path d="M120 38 L230 -10 L210 28 Z" fill="rgba(240,192,64,.2)"/><path d="M120 38 L185 -5 L170 30 Z" fill="rgba(240,192,64,.14)"/></g><rect x="105" y="62" width="30" height="178" fill="#1a2840" rx="2"/><rect x="108" y="40" width="24" height="28" fill="#243450" rx="2"/><rect x="104" y="33" width="32" height="10" fill="#2a3a5a" rx="2"/><rect x="100" y="27" width="40" height="9" fill="#364870" rx="2"/><circle cx="120" cy="30" r="10" fill="#f0c040" opacity=".9" style="animation:flicker 1s ease-in-out infinite;"/><circle cx="120" cy="30" r="16" fill="#f0c040" opacity=".2" style="animation:flicker 1s ease-in-out infinite;"/><rect x="113" y="90" width="14" height="20" rx="7" fill="#304060" opacity=".7"/><rect x="113" y="130" width="14" height="20" rx="7" fill="#304060" opacity=".7"/><rect x="113" y="170" width="14" height="20" rx="7" fill="#f0c040" opacity=".2" style="animation:flicker 3s ease-in-out infinite;"/><ellipse cx="120" cy="230" rx="80" ry="20" fill="#121e2a" opacity=".9"/><circle cx="30" cy="40" r="1.5" fill="white" opacity=".7" style="animation:flicker 2s ease-in-out infinite;"/><circle cx="200" cy="35" r="1.5" fill="white" opacity=".6" style="animation:flicker 2.5s ease-in-out infinite 1s;"/></svg>`},
   bridge:{label:`The Bridge`,bg:`#070a12`,
     art:`<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="br-sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#050810"/><stop offset="100%" stop-color="#0c1428"/></linearGradient><linearGradient id="mist-g" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#a0b8d0" stop-opacity="0.08"/><stop offset="50%" stop-color="#a0b8d0" stop-opacity="0.14"/><stop offset="100%" stop-color="#a0b8d0" stop-opacity="0.08"/></linearGradient></defs><rect width="240" height="240" fill="url(#br-sky)"/><circle cx="25" cy="25" r="1.5" fill="white" opacity=".6" style="animation:flicker 2.5s ease-in-out infinite;"/><circle cx="80" cy="15" r="1" fill="white" opacity=".5" style="animation:flicker 3s ease-in-out infinite .4s;"/><circle cx="160" cy="22" r="1.5" fill="white" opacity=".6" style="animation:flicker 2s ease-in-out infinite .9s;"/><circle cx="210" cy="40" r="1" fill="white" opacity=".4" style="animation:flicker 3.5s ease-in-out infinite 1.3s;"/><circle cx="120" cy="38" r="12" fill="#d8d0b0" opacity=".4"/><rect x="0" y="175" width="240" height="65" fill="#080e1a" opacity=".9"/><path d="M0 178 Q30 174 60 178 Q90 182 120 178 Q150 174 180 178 Q210 182 240 178" stroke="#1a3050" stroke-width="2" fill="none" opacity=".5"/><g style="animation:wave-drift 18s ease-in-out infinite;"><rect x="-40" y="140" width="320" height="30" fill="url(#mist-g)" rx="15"/></g><g style="animation:wave-drift2 22s ease-in-out infinite 3s;"><rect x="-40" y="155" width="320" height="25" fill="url(#mist-g)" rx="12"/></g><path d="M0 160 Q60 130 120 125 Q180 130 240 160" stroke="#2a3848" stroke-width="4" fill="none"/><rect x="0" y="158" width="240" height="18" fill="#1e2838" rx="2"/><rect x="6" y="148" width="14" height="92" fill="#1a2232" rx="2"/><rect x="82" y="130" width="14" height="110" fill="#1a2232" rx="2"/><rect x="144" y="130" width="14" height="110" fill="#1a2232" rx="2"/><rect x="220" y="148" width="14" height="92" fill="#1a2232" rx="2"/><line x1="13" y1="150" x2="89" y2="133" stroke="#2e3a4e" stroke-width="1.5"/><line x1="89" y1="133" x2="151" y2="133" stroke="#2e3a4e" stroke-width="1.5"/><line x1="151" y1="133" x2="227" y2="150" stroke="#2e3a4e" stroke-width="1.5"/><circle cx="89" cy="126" r="4" fill="#f0d080" opacity=".7" style="animation:flicker 2s ease-in-out infinite;"/><circle cx="89" cy="126" r="8" fill="#f0d080" opacity=".1" style="animation:flicker 2s ease-in-out infinite;"/><circle cx="151" cy="126" r="4" fill="#f0d080" opacity=".7" style="animation:flicker 2.8s ease-in-out infinite .6s;"/><circle cx="151" cy="126" r="8" fill="#f0d080" opacity=".1" style="animation:flicker 2.8s ease-in-out infinite .6s;"/></svg>`}
 };
@@ -2479,16 +2725,17 @@ var AX_POOLS = {
 // ═══════════════════════════════════════════════════════════════
 // GAME STATE
 // ═══════════════════════════════════════════════════════════════
-var axes = {flame:50,thread:50,stone:50,spark:50,root:50};
+var axes = {flame:30,thread:30,stone:30,spark:30,root:30};
 var collection = {};    // id -> {found,nick}
 var inventory = {};     // item_id -> true
 var lucky_sparks = 0;
 var run_count = 0;
 var runEncounters = [];
 var runIdx = 0;
-var RUN_LEN = 9;
+var RUN_LEN = 6;
 var seenIds = new Set();
 var pendingDisc = null;
+var pendingFriendship = [];
 var detailId = null;
 var currentFam = `all`;
 var CARRY = 0.6;        // 60% axis carry-forward between runs
@@ -2551,8 +2798,8 @@ function buildRun() {
   // Carry 60% of current axes into new run
   var keys = [`flame`,`thread`,`stone`,`spark`,`root`];
   keys.forEach(function(k) {
-    axes[k] = Math.round(50 + (axes[k] - 50) * CARRY);
-    axes[k] = Math.max(20, Math.min(80, axes[k]));
+    axes[k] = Math.round(30 + (axes[k] - 30) * CARRY);
+    axes[k] = Math.max(15, Math.min(85, axes[k]));
   });
 
   // Pick 9 encounters: 1 mirror guaranteed, 1 per other cat, fill remainder
@@ -2561,7 +2808,7 @@ function buildRun() {
   var mirror = pickUnseen(mirrorPool);
   var shuffledCats = shuffle(cats);
   var others = [];
-  for (var i = 0; i < 8; i++) {
+  for (var i = 0; i < 5; i++) {
     var pool = ENCOUNTERS.filter(function(e) { return e.cat === shuffledCats[i]; });
     others.push(pickUnseen(pool));
   }
@@ -2733,9 +2980,13 @@ function endRun() {
     return bScore - aScore;
   });
 
+  saveState();
   if (unlockable.length > 0) {
-    // Pick ONE — highest priority
-    showDiscovery(unlockable[0]);
+    var toReveal = unlockable.slice(0, 3);
+    pendingDisc = toReveal.slice(1);
+    showDiscovery(toReveal[0]);
+  } else if (pendingFriendship.length > 0) {
+    showFriendship(pendingFriendship.shift());
   } else {
     showRunEnd(false);
   }
@@ -2744,6 +2995,26 @@ function endRun() {
 // ═══════════════════════════════════════════════════════════════
 // DISCOVERY CEREMONY
 // ═══════════════════════════════════════════════════════════════
+
+function showFriendship(creature) {
+  document.getElementById('friend-art').innerHTML = creature.svg;
+  document.getElementById('friend-name').textContent = creature.name;
+  var tl = {flame:'&#x1F525; Flame Type',thread:'&#x1F9F5; Thread Type',stone:'&#x1FAA8; Stone Type',spark:'&#x26A1; Spark Type',root:'&#x1F33F; Root Type',rare:'&#x2728; Rare Creature'};
+  var ftEl = document.getElementById('friend-type');
+  ftEl.innerHTML = tl[creature.type] || creature.type;
+  ftEl.className = 'detail-type ' + creature.type;
+  var msg = FRIENDSHIP_MESSAGES[creature.id] || creature.name + ' has noticed your kindness.';
+  document.getElementById('friend-msg').textContent = msg;
+  show('s-friendship');
+}
+
+function nextAfterFriendship() {
+  if (pendingFriendship && pendingFriendship.length > 0) {
+    showFriendship(pendingFriendship.shift());
+  } else {
+    showRunEnd(false);
+  }
+}
 function showDiscovery(creature) {
   var typeColors = {flame:`#ff6b35`,thread:`#5ec4b0`,stone:`#8ba7c0`,spark:`#f0c040`,root:`#68b828`,rare:`#d4a0ff`};
   var col = typeColors[creature.type] || `#f0c040`;
@@ -2836,13 +3107,18 @@ function saveDiscovery() {
   var id = input.dataset.id;
   collection[id].found = true;
   collection[id].nick = input.value.trim();
-  // Award lucky spark if rare
   var creature = CREATURES.find(function(c) { return c.id === id; });
   if (creature && creature.rare) {
     lucky_sparks++;
   }
   saveState();
-  showRunEnd(true, creature ? creature.name : ``);
+  if (pendingDisc && pendingDisc.length > 0) {
+    showDiscovery(pendingDisc.shift());
+  } else if (pendingFriendship && pendingFriendship.length > 0) {
+    showFriendship(pendingFriendship.shift());
+  } else {
+    showRunEnd(true, creature ? creature.name : ``);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2867,11 +3143,12 @@ function showRunEnd(found, cname) {
   });
 
   if (found) {
+    var total = CREATURES.filter(function(c){return collection[c.id].found;}).length;
     document.getElementById(`runend-msg`).textContent =
-      `${cname} has joined your collection! ${count} of 30 creatures found. The island carries your choices forward.`;
+      total + ` of 32 creatures in your collection. The island carries your choices forward.`;
   } else {
     document.getElementById(`runend-msg`).textContent =
-      `${count} of 30 creatures in your collection. Your axes carry forward — the island remembers.`;
+      `${count} of 32 creatures in your collection. Your axes carry forward — the island remembers.`;
   }
 
   var stirs = [
@@ -2905,7 +3182,7 @@ function renderCompendium(fam) {
   }
 
   var found = CREATURES.filter(function(c) { return collection[c.id].found; }).length;
-  document.getElementById(`comp-count`).textContent = `${found} / 30 found`;
+  document.getElementById(`comp-count`).textContent = `${found} / 32 found`;
 
   // Filter creatures
   var toShow = CREATURES;
@@ -2920,16 +3197,28 @@ function renderCompendium(fam) {
   var grid = document.getElementById(`comp-grid`);
   grid.innerHTML = ``;
   toShow.forEach(function(c) {
-    var isFound = collection[c.id].found;
-    var nick = collection[c.id].nick;
+    var col = collection[c.id];
+    var isFound = col.found;
+    var nick = col.nick;
+    var friendLvl = col.friendship || 0;
     var card = document.createElement(`div`);
-    card.className = `comp-card` + (isFound ? ` found` : ``) + (c.rare ? ` rare` : ``);
+    var bfClass = (isFound && friendLvl >= 3) ? ` bestfriend` : ``;
+    card.className = `comp-card` + (isFound ? ` found` : ``) + (c.rare ? ` rare` : ``) + bfClass;
 
     if (isFound) {
+      var heartHtml = ``;
+      if (friendLvl >= 3) {
+        heartHtml = `<div class="friend-hearts"><span class="fheart">&#x1F49B;</span><span class="fheart">&#x1F49B;</span><span class="fheart">&#x1F49B;</span></div>`;
+      } else if (friendLvl === 2) {
+        heartHtml = `<div class="friend-hearts"><span class="fheart">&#x1F90D;</span><span class="fheart">&#x1F90D;</span></div>`;
+      } else if (friendLvl === 1) {
+        heartHtml = `<div class="friend-hearts"><span class="fheart">&#x1F90D;</span></div>`;
+      }
       card.innerHTML = `<div class="comp-creature">${c.svg}</div>` +
         `<div class="comp-cname">${c.name}</div>` +
         `<div class="type-dot ${c.rare ? `rare` : c.type}"></div>` +
-        (nick ? `<div class="comp-nick">"${nick}"</div>` : ``);
+        (nick ? `<div class="comp-nick">"${nick}"</div>` : ``) +
+        heartHtml;
       (function(id) { card.onclick = function() { showDetail(id); }; })(c.id);
     } else {
       // Silhouette with breathing
@@ -2969,7 +3258,10 @@ function showDetail(id) {
   document.getElementById(`detail-type`).innerHTML = tl[c.type] || c.type;
   document.getElementById(`detail-type`).className = `detail-type ` + c.type;
   document.getElementById(`detail-pers`).textContent = c.personality;
+  var dfl = collection[id].friendship || 0;
+  var dHearts = dfl >= 3 ? `&#x1F49B;&#x1F49B;&#x1F49B; Best Friend` : dfl === 2 ? `&#x1F90D;&#x1F90D; Good Friends` : dfl === 1 ? `&#x1F90D; Becoming Friends` : ``;
   document.getElementById(`detail-lore`).innerHTML =
+    (dfl > 0 ? `<div class="detail-lore-item" style="color:#f0c040;font-weight:800;">${dHearts}</div>` : ``) +
     `<div class="detail-lore-item"><strong>Loves:</strong> ${c.hobby}</div>` +
     `<div class="detail-lore-item"><strong>Eats:</strong> ${c.food}</div>` +
     `<div class="detail-lore-item"><strong>Secret:</strong> ${c.quirk}</div>`;
@@ -3043,6 +3335,7 @@ window.onload = function() {
   document.getElementById(`btn-nick-save`).onclick = saveNick;
   document.getElementById(`btn-detail-back`).onclick = showCompendium;
   document.getElementById(`btn-inv-back`).onclick = function() { show(`s-title`); };
+  document.getElementById('btn-friend-ok').onclick = nextAfterFriendship;
   document.getElementById(`btn-again`).onclick = startExplore;
   document.getElementById(`btn-runend-coll`).onclick = showCompendium;
 
@@ -3055,5 +3348,23 @@ window.onload = function() {
   }
 };
 </script>
+
+<div class="screen" id="s-friendship">
+  <div class="friend-wrap">
+    <div>
+      <div class="friend-art" id="friend-art"></div>
+      <span class="friend-heart-big">&#x1F49B;</span>
+    </div>
+    <div class="friend-info">
+      <div class="friend-label">BEST FRIEND</div>
+      <div class="friend-name" id="friend-name"></div>
+      <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;" id="friend-type"></div>
+      <div class="friend-msg" id="friend-msg"></div>
+      <div style="margin-top:18px;">
+        <button class="btn-gold" id="btn-friend-ok">Continue &#x2192;</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
