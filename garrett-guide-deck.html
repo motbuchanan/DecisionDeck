@@ -1073,6 +1073,14 @@ const SITUATIONS = [
     desc: 'Someone visits who loves him. He\'s not always sure what to do with that.',
     color: 'calm',
     scenarios: ['s-nana-1','s-nana-2','s-nana-3']
+  },
+  {
+    id: 'incident',
+    icon: '🌋',
+    title: 'He knew the rule and broke it',
+    desc: 'The correction was calm. The flood came anyway. And something happened after.',
+    color: 'warm',
+    scenarios: ['s-rule-knew-1','s-redirect-1','s-shame-home-1']
   }
 ];
 
@@ -2137,7 +2145,131 @@ const SCENARIOS = {
         warning: null
       }
     ]
+  },
+
+  // ── TODAY\'S INCIDENT SCENARIOS ──
+  // These three scenarios came directly from a real event:
+  // Garrett was corrected for sneaking YouTube. The correction was gentle.
+  // He flooded, hit Nana, and was brought home. All three stages are here.
+
+  's-rule-knew-1': {
+    type: 'warm',
+    category: 'Full Meltdown',
+    context: 'He broke a rule — something about screens, or leaving the house, or staying up — that he knew. Not a misunderstanding. He knew and did it anyway and got caught. The correction was calm and not harsh. Just: no. That\'s not allowed. And now he\'s flooding.',
+    question: 'The correction was reasonable and he\'s melting down anyway. What do you do with that?',
+    choices: [
+      {
+        icon: '🪨',
+        text: 'Hold the limit without adding to it',
+        sub: 'The no stays. Don\'t explain it again. Don\'t argue it.',
+        color: 'calm',
+        scores: { presence: 9, timing: 10, bridge: 6 },
+        feedback: 'He doesn\'t need another explanation of why the rule exists — he knew the rule. The meltdown isn\'t about not understanding. It\'s about the limit landing on a nervous system that was already loaded, or one that genuinely struggles with transitions and denied wants. Your job now is to stay calm and let the limit stand without defending it. The more you explain, the longer the flood runs.',
+        key_moves: ['Say the no once, calmly. Then stop talking about it.', 'Don\'t justify the rule. He knows it.', 'Your calm is the intervention — not your words.'],
+        warning: null
+      },
+      {
+        icon: '💬',
+        text: 'Explain why the rule exists — maybe understanding will help',
+        sub: 'He\'s smarter than most kids. He can hear the reason.',
+        color: 'warm',
+        scores: { presence: 4, timing: -3, bridge: 3 },
+        feedback: 'He knew the rule already. This meltdown is not a comprehension problem. Explaining the rule during flooding adds words to a brain that cannot process them right now — and it can register as an argument invitation, which extends the loop. He is smart enough to use your explanation as material to push back on. Hold the limit. Save the explanation for the calm window if at all.',
+        key_moves: ['One sentence: "You knew the rule. The answer is no."', 'Then silence. Not cold — just finished.', 'If you want to explain, save it for calm time. It will land differently.'],
+        warning: 'Explaining a rule during flooding often becomes a negotiation. That\'s the opposite of what you want.'
+      },
+      {
+        icon: '🚪',
+        text: 'Give him space to feel it — the limit still stands',
+        sub: 'Room to flood. No escalation from you.',
+        color: 'anchor',
+        scores: { presence: 7, timing: 9, bridge: 7 },
+        feedback: 'Moving him toward his room (or stepping back from the conflict zone) while the limit remains clear is often the cleanest move. He gets to have the feeling without an audience fueling it. The rule doesn\'t change. You don\'t argue. He floods in a contained space. This is often faster than staying engaged.',
+        key_moves: ['"You can feel as upset as you need. The answer is still no."', 'Move him to a safe space or step back yourself.', 'Check in when the storm passes — not before.'],
+        warning: null
+      }
+    ]
+  },
+
+  's-redirect-1': {
+    type: 'warm',
+    category: 'Full Meltdown',
+    context: 'He\'s upset about something he can\'t have or can\'t do — a specific video, a game, going somewhere. You offered a reasonable alternative: "You can\'t watch those, but you can watch these other ones." The offer seemed generous. His reaction got worse, not better.',
+    question: 'Your alternative offer made things worse. What happened, and what do you do now?',
+    choices: [
+      {
+        icon: '🛑',
+        text: 'Drop the alternative — the offer is now off the table',
+        sub: 'The redirect didn\'t land. Stop trying to solve it.',
+        color: 'calm',
+        scores: { presence: 8, timing: 9, bridge: 6 },
+        feedback: 'When an alternative offer escalates the situation, it\'s because the offer itself hit like a second version of the limit. He wasn\'t ready to accept a replacement. Pressing it — rephrasing it, offering different alternatives, explaining why the alternative is good — keeps the limit front and center. Pull back entirely. Let the feeling run. The alternatives can be available later when he\'s regulated enough to see them.',
+        key_moves: ['Stop offering alternatives entirely for now.', 'Let the feeling exist without a solution attached.', 'When he\'s calm: "The other options are still there whenever you want them."'],
+        warning: null
+      },
+      {
+        icon: '🔄',
+        text: 'Offer a different alternative — maybe this one will land better',
+        sub: 'There has to be something he\'ll accept.',
+        color: 'warm',
+        scores: { presence: 3, timing: -4, bridge: 2 },
+        feedback: 'Each new alternative is, in his experience, another version of the limit being restated. You are not solving the problem — you are adding to the wall of "no" by surrounding it with "buts." The alternatives are good. He cannot receive them right now. Offer them in the calm window and they will land completely differently.',
+        key_moves: ['Stop the alternative loop entirely.', 'One sentence: "The other options are there whenever you\'re ready."', 'Then go quiet. The alternatives don\'t disappear — you just stop pointing at them.'],
+        warning: 'Continuing to offer alternatives during flooding teaches him that the path to negotiation is through escalation.'
+      },
+      {
+        icon: '🧘',
+        text: 'Acknowledge that losing the specific thing is genuinely hard',
+        sub: 'Don\'t sell the alternative. Sit with the loss first.',
+        color: 'anchor',
+        scores: { presence: 9, timing: 8, bridge: 8 },
+        feedback: 'He wanted the specific thing. The alternative, however good, is not that thing. Acknowledging the loss first — before even mentioning the alternative — changes the dynamic. "You really wanted that specific one and you can\'t have it. That\'s frustrating." Now you\'re on the same side of the problem. From there, the alternative has a chance.',
+        key_moves: ['"You really wanted that one specifically. I get it."', 'Let that land. Don\'t follow it immediately with the alternative.', 'When he\'s less flooded: "The others are still there if you want them."'],
+        warning: null
+      }
+    ]
+  },
+
+  's-shame-home-1': {
+    type: 'calm',
+    category: 'After the Storm',
+    context: 'He had a big incident away from home — at a grandparent\'s, a relative\'s, a friend\'s house. He hit someone, or said something serious, or had to be brought home early. He\'s home now. In his room. The storm has passed. He knows what he did. You haven\'t talked yet.',
+    question: 'He\'s in the shame window after a serious incident somewhere else. What\'s your first move?',
+    choices: [
+      {
+        icon: '⏳',
+        text: 'Give it time before you go in — let him come down fully',
+        sub: 'The shame window needs to settle before the conversation.',
+        color: 'calm',
+        scores: { presence: 8, timing: 10, bridge: 7 },
+        feedback: 'The shame window is already doing work. He knows what happened. He knows it was serious. Going in too soon — even with warmth — can reopen the flooding if he\'s not fully down. Twenty to thirty minutes of real quiet is the minimum. When you do go in, keep it short. This isn\'t the moment for the full conversation. That comes later.',
+        key_moves: ['Wait until the storm is genuinely over — 20-30 minutes minimum.', 'A light knock and a quiet check-in first: "Hey. You doing okay?"', 'Read his response before deciding what comes next.'],
+        warning: 'Going in too soon, even kindly, can restart the flood if the shame window hasn\'t closed.'
+      },
+      {
+        icon: '💛',
+        text: 'Go in and let him know he\'s still loved — that comes first',
+        sub: 'He needs to know the relationship is intact before anything else.',
+        color: 'anchor',
+        scores: { presence: 10, timing: 8, bridge: 10 },
+        feedback: 'When he\'s genuinely calm, the first message needs to be that the relationship is not broken. Not "it\'s okay" — it isn\'t fully okay, and he knows that. But: "I love you and I\'m not going anywhere." That\'s the foundation everything else sits on. The consequence and the repair both land better after the relationship has been confirmed.',
+        key_moves: ['"I love you. That doesn\'t change."', 'Don\'t attach a but. Just let it land.', 'The consequence and the repair conversation can come after — not in the same sentence.'],
+        warning: null
+      },
+      {
+        icon: '📋',
+        text: 'Have the consequence conversation now — he needs to know what happens',
+        sub: 'Get it done while it\'s still connected to the event.',
+        color: 'warm',
+        scores: { presence: 3, timing: 2, bridge: 3 },
+        feedback: 'The consequence is real and it needs to happen. But placed directly on a shame window, it can collapse him further or push him into a second flood. The connection between the incident and the consequence is clearest when his nervous system is genuinely recovered — not still hot. Waiting an hour doesn\'t erase the connection. It just means the conversation actually lands.',
+        key_moves: ['Relationship first. Consequence second — with a gap between them.', '"We\'re going to talk about what happened and what comes next. Just not right this second."', 'Keep that promise. The conversation needs to happen today.'],
+        warning: 'Consequence delivered inside the shame window often lands as punishment, not accountability. It changes how he processes it.'
+      }
+    ]
   }
+
+
 };
 
 // ═══════════ STATE ═══════════
