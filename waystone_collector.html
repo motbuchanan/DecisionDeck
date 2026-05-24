@@ -12,6 +12,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 
 /* ── SCREENS ── */
 .screen{display:none;width:100%;height:100%;flex-direction:column;overflow:hidden;position:absolute;top:0;left:0;}
+#s-timepick{background:#060c1e;}
 .screen.active{display:flex;}
 
 
@@ -52,10 +53,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 .title-logo-wrap{position:relative;display:inline-flex;flex-direction:column;align-items:center;}
 .title-eyebrow{font-size:10px;font-weight:800;letter-spacing:5px;text-transform:uppercase;
   color:rgba(240,192,64,.55);margin-bottom:4px;}
-.title-logo{font-family:'Fredoka One',cursive;font-size:clamp(48px,12vw,72px);color:white;
-  letter-spacing:-1px;line-height:1;
+.title-logo{font-family:'Fredoka One',cursive;font-size:clamp(54px,14vw,82px);color:white;
+  letter-spacing:0;line-height:1;
   text-shadow:0 0 60px rgba(240,192,64,.35),0 0 20px rgba(240,192,64,.2),0 4px 0 rgba(0,0,0,.4);}
-.title-logo span{color:#f0c040;}
+.title-logo span{color:#ffd040;text-shadow:0 0 50px rgba(255,208,64,.65),0 3px 0 rgba(0,0,0,.4);}
 /* Friendship edition badge */
 .title-edition{display:inline-flex;align-items:center;gap:6px;
   background:linear-gradient(135deg,rgba(240,192,64,.18),rgba(212,160,255,.12));
@@ -75,21 +76,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 /* Buttons */
 .title-btns-new{display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:10px;width:100%;max-width:320px;}
 .title-btn-row{display:flex;gap:8px;width:100%;}
-.btn-title-main{background:linear-gradient(135deg,#f0c040,#c89820);color:#1a1000;
-  border:none;border-radius:50px;font-family:'Nunito',sans-serif;
-  font-size:17px;font-weight:900;padding:15px 0;cursor:pointer;
-  box-shadow:0 6px 28px rgba(240,192,64,.35),0 2px 0 rgba(0,0,0,.2);
-  width:100%;letter-spacing:.3px;transition:transform .15s,box-shadow .15s;}
-.btn-title-main:active{transform:scale(.97);box-shadow:0 3px 14px rgba(240,192,64,.3);}
-.btn-title-sec{flex:1;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.14);
-  border-radius:50px;color:#e8e4d8;font-family:'Nunito',sans-serif;
-  font-size:13px;font-weight:800;padding:12px 0;cursor:pointer;transition:background .15s;}
-.btn-title-sec:active{background:rgba(255,255,255,.15);}
+.btn-title-main{background:linear-gradient(160deg,#ffd84d 0%,#f0a000 100%);color:#1a0e00;
+  border:none;border-radius:18px;font-family:'Fredoka One',cursive;
+  font-size:22px;letter-spacing:.5px;padding:17px 0;cursor:pointer;
+  box-shadow:0 8px 32px rgba(240,160,0,.4),0 2px 0 rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.3);
+  width:100%;transition:transform .13s,box-shadow .13s;}
+.btn-title-main:active{transform:scale(.96);box-shadow:0 4px 16px rgba(240,160,0,.3);}
+.btn-title-sec{flex:1;background:rgba(6,12,32,.75);border:1.5px solid rgba(255,255,255,.22);
+  border-radius:16px;color:#e8e8f0;font-family:'Fredoka One',cursive;
+  font-size:16px;padding:13px 0;cursor:pointer;
+  transition:background .15s;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.btn-title-sec:active{background:rgba(255,255,255,.18);}
 .btn-residents{background:linear-gradient(135deg,rgba(94,196,176,.2),rgba(94,196,176,.08));
-  border:1.5px solid rgba(94,196,176,.3);border-radius:50px;color:#5ec4b0;
-  font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;
-  padding:12px 0;cursor:pointer;width:100%;transition:background .15s;}
-.btn-residents:active{background:rgba(94,196,176,.15);}
+  border:1.5px solid rgba(94,196,176,.3);border-radius:16px;color:#ccdde8;
+  font-family:'Fredoka One',cursive;font-size:16px;
+  padding:13px 0;cursor:pointer;width:100%;transition:background .15s;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.btn-residents:active{background:rgba(255,255,255,.16);}
 
 /* RESIDENTS SCREENS */
 .res-card{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.09);
@@ -401,15 +404,178 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 .tap-link{transition:opacity .1s;}
 .tap-link:active{opacity:.6;}
 
-/* Title sun glow */
-.title-sun-glow<!-- ══ TITLE ══ -->
+<!-- ══ TITLE ══ -->
+
+/* TIME PICKER */
+.tp-btn{display:flex;align-items:center;gap:14px;
+  background:rgba(6,12,32,.9) !important;
+  border:1.5px solid rgba(255,255,255,.15) !important;
+  border-radius:16px;padding:14px 18px;
+  cursor:pointer;width:100%;text-align:left;
+  transition:background .15s;
+  -webkit-appearance:none;appearance:none;
+  color:white !important;}
+.tp-btn:active{background:rgba(255,255,255,.1);}
+.tp-btn.current{
+  border-color:rgba(240,192,64,.6);
+  background:rgba(240,192,64,.1);
+  box-shadow:0 0 0 1px rgba(240,192,64,.2);}
+.tp-icon{font-size:28px;flex-shrink:0;line-height:1;}
+.tp-info{flex:1;}
+.tp-label{font-family:'Fredoka One',cursive;font-size:18px;color:white;line-height:1.1;}
+.tp-desc{font-size:11px;color:rgba(255,255,255,.45);font-family:'Lora',serif;
+  font-style:italic;line-height:1.4;margin-top:2px;}
+.tp-badge{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:#f0c040;background:rgba(240,192,64,.15);border-radius:8px;padding:2px 7px;}
+
+/* INVENTORY V2 */
+.inv-cats{display:flex;gap:6px;padding:0 16px 10px;flex-shrink:0;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid rgba(255,255,255,.06);}
+.inv-cat-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;color:rgba(232,228,216,.5);font-family:'Nunito',sans-serif;
+  font-size:11px;font-weight:800;padding:5px 13px;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.inv-cat-btn.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#e8e4d8;}
+.inv-v2-grid{flex:1;overflow-y:auto;padding:14px 16px;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.inv-v2-card{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:14px 12px;display:flex;flex-direction:column;gap:6px;
+  cursor:pointer;transition:background .15s;}
+.inv-v2-card.owned{border-color:rgba(240,192,64,.25);background:rgba(240,192,64,.05);}
+.inv-v2-card.locked{opacity:0.4;}
+.inv-v2-card:active{background:rgba(255,255,255,.1);}
+.inv-v2-icon{font-size:28px;line-height:1;}
+.inv-v2-name{font-family:'Fredoka One',cursive;font-size:13px;color:#e8e4d8;line-height:1.2;}
+.inv-v2-name.empty{color:#383e4a;}
+.inv-v2-cat{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#6a7890;}
+.inv-v2-clue{font-size:10px;color:#4a5468;font-family:'Lora',serif;font-style:italic;line-height:1.4;}
+.inv-v2-desc{font-size:11px;color:#8898a8;font-family:'Lora',serif;font-style:italic;line-height:1.4;}
+.inv-v2-lore{font-size:11px;color:#f0c040;font-family:'Lora',serif;font-style:italic;
+  line-height:1.4;border-top:1px solid rgba(255,255,255,.06);padding-top:6px;margin-top:2px;}
+.inv-v2-qty{font-size:10px;font-weight:800;color:#f0c040;}
+/* Favor counter */
+.favor-bar{display:flex;align-items:center;gap:8px;padding:8px 16px;
+  border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;}
+.favor-icon{font-size:16px;}
+.favor-label{font-size:11px;font-weight:800;color:#6a7890;text-transform:uppercase;letter-spacing:1px;}
+.favor-val{font-family:'Fredoka One',cursive;font-size:18px;color:#f0c040;}
+.favor-hint{font-size:10px;color:#4a5468;font-family:'Lora',serif;font-style:italic;margin-left:auto;}
+
+/* ══ ISLAND MAP SCREEN ══ */
+#s-map{flex-direction:column;overflow:hidden;}
+.map-hdr{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;
+  background:rgba(6,10,20,.8);}
+.map-title{font-family:'Fredoka One',cursive;font-size:22px;color:#f0c040;}
+.map-time-badge{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:4px 12px;
+  font-size:11px;font-weight:800;color:#e8e4d8;}
+.map-canvas-wrap{flex:1;position:relative;overflow:hidden;}
+.map-canvas{width:100%;height:100%;position:relative;}
+
+/* Location zones - positioned on map */
+.map-zone{position:absolute;display:flex;flex-direction:column;align-items:center;
+  cursor:pointer;transform:translate(-50%,-50%);}
+.map-zone-bubble{border-radius:50%;display:flex;align-items:center;justify-content:center;
+  transition:transform .2s,box-shadow .2s;position:relative;}
+.map-zone:active .map-zone-bubble{transform:scale(.93);}
+.map-zone-bubble.active{box-shadow:0 0 28px var(--zone-color,#f0c040),0 0 8px var(--zone-color,#f0c040);}
+.map-zone-icon{font-size:22px;line-height:1;}
+.map-zone-label{font-family:'Fredoka One',cursive;font-size:14px;color:white;
+  text-align:center;margin-top:6px;
+  text-shadow:0 2px 8px rgba(0,0,0,.95),0 0 20px rgba(0,0,0,.8);
+  white-space:nowrap;letter-spacing:.3px;}
+.map-zone-label.fog{color:rgba(255,255,255,.3);}
+
+/* Resident presence dots */
+.map-residents{display:flex;gap:3px;margin-top:3px;justify-content:center;flex-wrap:wrap;max-width:60px;}
+.map-res-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(0,0,0,.4);}
+
+/* Fog zones — future locations */
+.map-zone-bubble.fog{
+  background:rgba(255,255,255,.05);
+  border:1.5px dashed rgba(255,255,255,.15);
+  backdrop-filter:blur(2px);}
+.fog-icon{font-size:18px;opacity:0.4;}
+.fog-hint{font-size:9px;color:rgba(255,255,255,.25);font-family:'Lora',serif;
+  font-style:italic;text-align:center;margin-top:3px;max-width:70px;line-height:1.3;}
+
+/* Map path lines between locations */
+.map-svg-paths{position:absolute;inset:0;pointer-events:none;}
+
+/* Location detail panel (slides up from bottom) */
+.map-detail-panel{position:absolute;bottom:0;left:0;right:0;
+  background:rgba(8,12,24,.96);border-top:1.5px solid rgba(255,255,255,.1);
+  border-radius:20px 20px 0 0;padding:16px 18px 24px;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  z-index:20;max-height:60%;}
+.map-detail-panel.open{transform:translateY(0);}
+.map-panel-drag{width:36px;height:4px;border-radius:2px;
+  background:rgba(255,255,255,.2);margin:0 auto 12px;}
+.map-panel-name{font-family:'Fredoka One',cursive;font-size:24px;color:white;line-height:1;}
+.map-panel-time{font-size:11px;color:rgba(255,255,255,.4);font-family:'Lora',serif;
+  font-style:italic;margin-bottom:8px;}
+.map-panel-desc{font-family:'Lora',serif;font-size:13px;font-style:italic;
+  color:rgba(232,228,216,.75);line-height:1.7;margin-bottom:10px;}
+.map-panel-residents{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.map-panel-res{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:4px 10px;
+  font-size:11px;font-weight:700;color:#e8e4d8;}
+.map-panel-res-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.map-panel-btns{display:flex;gap:8px;}
+.btn-map-explore{flex:1;background:linear-gradient(160deg,#ffd84d,#f0a000);color:#1a0e00;
+  border:none;border-radius:14px;font-family:'Fredoka One',cursive;
+  font-size:16px;padding:13px 12px;cursor:pointer;}
+.btn-map-info{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);
+  border-radius:14px;color:#e8e4d8;font-family:'Fredoka One',cursive;
+  font-size:14px;padding:13px 14px;cursor:pointer;}
+
+/* Map background art */
+.map-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse at 35% 55%,rgba(26,74,20,.6) 0%,transparent 55%),
+  radial-gradient(ellipse at 65% 40%,rgba(26,56,100,.5) 0%,transparent 45%),
+  radial-gradient(ellipse at 50% 80%,rgba(26,56,80,.4) 0%,transparent 40%),
+  linear-gradient(180deg,#060c18 0%,#0a1428 100%);}
+.map-bg-sea{position:absolute;bottom:0;left:0;right:0;height:30%;
+  background:linear-gradient(180deg,transparent,rgba(10,40,70,.6));
+  pointer-events:none;}
+
+/* GOLDEN SEASON SIGN */
+.title-season-sign{
+  position:relative;display:inline-flex;flex-direction:column;align-items:center;
+  gap:0;margin:10px 0 6px;}
+.sign-plank{
+  background:linear-gradient(180deg,#c8922a 0%,#a06818 40%,#b87a28 100%);
+  border:3px solid #7a4810;border-radius:6px;
+  padding:8px 22px 10px;position:relative;
+  box-shadow:0 4px 16px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,220,120,.3),inset 0 -2px 0 rgba(0,0,0,.2);}
+.sign-plank::before{
+  content:'';position:absolute;top:3px;left:6px;right:6px;bottom:3px;
+  border:1px solid rgba(255,200,80,.2);border-radius:3px;pointer-events:none;}
+/* Wood grain lines */
+.sign-grain{
+  position:absolute;inset:0;border-radius:4px;overflow:hidden;pointer-events:none;}
+.sign-text{
+  font-family:'Fredoka One',cursive;font-size:18px;color:#fff8e0;
+  letter-spacing:2px;text-transform:uppercase;
+  text-shadow:0 2px 4px rgba(0,0,0,.5),0 0 20px rgba(255,200,80,.3);
+  position:relative;z-index:1;}
+.sign-sun{font-size:20px;margin-right:8px;}
+/* Rope holders on sign */
+.sign-ropes{display:flex;justify-content:space-between;width:calc(100% - 20px);
+  margin-top:-4px;pointer-events:none;}
+.sign-rope{width:2px;height:8px;background:linear-gradient(180deg,#8a6020,#c89040);
+  border-radius:1px;}
+/* Weekly event tag below sign */
+.sign-event{
+  background:rgba(255,240,180,.12);border:1px solid rgba(255,220,100,.25);
+  border-radius:20px;padding:4px 14px;
+  font-family:'Fredoka One',cursive;font-size:12px;color:rgba(255,230,140,.75);
+  letter-spacing:.5px;margin-top:6px;}
 </style>
 <div class="screen active" id="s-title">
   <!-- Sky layers -->
   <div class="title-sky"></div>
   <div class="title-stars" id="title-stars"></div>
-  <!-- Sun glow -->
-  <div class="title-sun-glow"></div>
   <!-- Cloud layers -->
   <div class="title-clouds" id="title-clouds"></div>
   <!-- Aurora / light rays in warm gold -->
@@ -429,7 +595,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
           <stop offset="0%" stop-color="#1a3a6a" stop-opacity="0"/>
           <stop offset="100%" stop-color="#0a1828" stop-opacity="0.3"/>
         </linearGradient>
-        <radialGradient id="sun-grad" cx="75%" cy="18%" r="25%">
+        <radialGradient id="sun-grad" cx="15%" cy="16%" r="22%">
           <stop offset="0%" stop-color="#fff8c0" stop-opacity="0.9"/>
           <stop offset="30%" stop-color="#ffd060" stop-opacity="0.5"/>
           <stop offset="100%" stop-color="#ff9020" stop-opacity="0"/>
@@ -439,22 +605,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
           <stop offset="100%" stop-color="#0a2840"/>
         </linearGradient>
       </defs>
-      <!-- Sun and rays -->
-      <circle cx="450" cy="48" r="28" fill="#fff4a0" opacity="0.85"/>
-      <circle cx="450" cy="48" r="22" fill="#fff8d0" opacity="0.95"/>
+      <!-- Sun and rays - moved to left so it stays in island scene -->
+      <circle cx="90" cy="44" r="26" fill="#fff4a0" opacity="0.85"/>
+      <circle cx="90" cy="44" r="20" fill="#fff8d0" opacity="0.95"/>
       <!-- Sun rays -->
-      <g style="animation:spin-slow 18s linear infinite;transform-origin:450px 48px;" opacity="0.4">
-        <line x1="450" y1="10" x2="450" y2="2" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
-        <line x1="450" y1="86" x2="450" y2="94" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
-        <line x1="412" y1="48" x2="404" y2="48" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
-        <line x1="488" y1="48" x2="496" y2="48" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
-        <line x1="423" y1="21" x2="417" y2="15" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="477" y1="75" x2="483" y2="81" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="477" y1="21" x2="483" y2="15" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="423" y1="75" x2="417" y2="81" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
+      <g style="animation:spin-slow 18s linear infinite;transform-origin:90px 44px;" opacity="0.4">
+        <line x1="90" y1="10" x2="90" y2="2" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
+        <line x1="90" y1="78" x2="90" y2="86" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
+        <line x1="52" y1="44" x2="44" y2="44" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
+        <line x1="128" y1="44" x2="136" y2="44" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
+        <line x1="63" y1="17" x2="57" y2="11" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="117" y1="71" x2="123" y2="77" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="117" y1="17" x2="123" y2="11" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="63" y1="71" x2="57" y2="77" stroke="#ffd060" stroke-width="2.5" stroke-linecap="round"/>
       </g>
       <!-- Sun halo glow -->
-      <circle cx="450" cy="48" r="55" fill="url(#sun-grad)"/>
+      <circle cx="90" cy="44" r="50" fill="url(#sun-grad)"/>
       <!-- Distant hills warm greens -->
       <ellipse cx="80" cy="190" rx="150" ry="50" fill="#1a3810"/>
       <ellipse cx="520" cy="195" rx="130" ry="45" fill="#1a3810"/>
@@ -476,9 +642,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
       <path d="M0 220 Q150 210 300 215 Q450 220 600 210 L600 280 L0 280 Z" fill="url(#water-grad)"/>
       <!-- Sun reflection on water - shimmering -->
       <g style="animation:wave-drift 4s ease-in-out infinite;" opacity="0.6">
-        <ellipse cx="450" cy="235" rx="60" ry="5" fill="#ffd060"/>
-        <ellipse cx="450" cy="242" rx="40" ry="3" fill="#ffd060" opacity="0.7"/>
-        <ellipse cx="450" cy="248" rx="25" ry="2" fill="#ffd060" opacity="0.5"/>
+        <ellipse cx="90" cy="235" rx="55" ry="5" fill="#ffd060"/>
+        <ellipse cx="90" cy="242" rx="36" ry="3" fill="#ffd060" opacity="0.7"/>
+        <ellipse cx="90" cy="248" rx="22" ry="2" fill="#ffd060" opacity="0.5"/>
       </g>
       <!-- Warm wave lines -->
       <g style="animation:wave-drift 7s ease-in-out infinite;">
@@ -609,7 +775,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
     <div class="title-logo-wrap">
       <div class="title-eyebrow">Island Adventure</div>
       <div class="title-logo">Way<span>stone</span></div>
-      <div class="title-edition">&#x2600;&#xFE0F; Golden Season Edition</div>
+      <div class="title-season-sign">
+        <div class="sign-ropes"><div class="sign-rope"></div><div class="sign-rope"></div></div>
+        <div class="sign-plank">
+          <div class="sign-grain"></div>
+          <div class="sign-text"><span class="sign-sun">&#x2600;&#xFE0F;</span>Golden Season Edition</div>
+        </div>
+        <div class="sign-event">&#x1F393; Last week of school &#x2022; Summer starts soon</div>
+      </div>
       <div class="title-subtitle">Creature Collector</div>
     </div>
     <div class="title-btns-new">
@@ -620,14 +793,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
       </div>
       <div class="title-btn-row">
         <button class="btn-residents" id="btn-residents" style="flex:1;">&#x1F3D8; Residents</button>
-        <button class="btn-residents" id="btn-locations" style="flex:1;border-color:rgba(139,167,192,.3);color:#8ba7c0;background:linear-gradient(135deg,rgba(139,167,192,.18),rgba(139,167,192,.07));">&#x1F5FA; Island</button>
+        <button class="btn-residents" id="btn-map" style="flex:1;border-color:rgba(139,167,192,.4);color:#c8dde8;background:rgba(139,167,192,.18);">&#x1F5FA; Map</button>
+      </div>
+      <div class="title-btn-row">
+        <button class="btn-residents" id="btn-locations" style="width:100%;font-size:16px;">&#x1F4D6; Locations Guide</button>
       </div>
     </div>
   </div>
-</div>
-    <button class="btn-outline" style="padding:6px 14px;font-size:12px;" id="btn-rdet-back">&#x2190; Back</button>
-  </div>
-  <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:16px;" id="rdet-body"></div>
 </div>
 
 
@@ -636,7 +808,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
   <div class="explore-nav">
     <button class="nav-btn" id="btn-nav-coll">&#x1F4D6;</button>
     <button class="nav-btn" id="btn-nav-inv">&#x1F392;</button>
-    <button class="nav-btn" id="btn-nav-locs">&#x1F5FA;</button>
+    <button class="nav-btn" id="btn-nav-map">&#x1F5FA;</button>
     <button class="nav-btn" id="btn-nav-home">&#x1F3E0;</button>
   </div>
   <div class="explore-left">
@@ -733,7 +905,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
     <div class="inv-title">&#x1F392; Inventory</div>
     <button class="btn-outline" style="padding:6px 14px;font-size:12px;" id="btn-inv-back">&#x2190; Back</button>
   </div>
-  <div class="inv-grid" id="inv-grid"></div>
+  <div class="favor-bar">
+    <span class="favor-icon">🤝</span>
+    <span class="favor-label">Favors</span>
+    <span class="favor-val" id="inv-favor-val">0</span>
+    <span class="favor-hint">The island's currency. Earned through kindness.</span>
+  </div>
+  <div class="inv-cats">
+    <button class="inv-cat-btn active" data-cat="all">All</button>
+    <button class="inv-cat-btn" data-cat="tool">🔧 Tools</button>
+    <button class="inv-cat-btn" data-cat="artifact">✨ Artifacts</button>
+    <button class="inv-cat-btn" data-cat="material">🪨 Materials</button>
+    <button class="inv-cat-btn" data-cat="story">📜 Story</button>
+    <button class="inv-cat-btn" data-cat="trophy">⭐ Trophies</button>
+  </div>
+  <div class="inv-v2-grid" id="inv-v2-grid"></div>
 </div>
 
 <!-- ══ RUN END ══ -->
@@ -1182,7 +1368,6 @@ const CREATURES = [
 <ellipse rx="2.5" ry="1.8" fill="rgba(200,196,255,0.62)" style="animation:orbit 5s linear infinite 3.5s;transform-origin:100px 103px;"/>
 </svg>`
   },
-,
   {
     id:`pin`, name:`Pin-curchin`, type:`thread`, rare:false,
     personality:`Covered in pins and spines but incredibly gentle. Has never once accidentally stuck anyone who was paying attention. A little prickly on the outside, warm in the middle.`,
@@ -3581,6 +3766,12 @@ var RESIDENTS = [
 
 // Track resident encounter counts
 var residentEncounters = {};
+var pendingIntros = [];
+var mapFocusLoc = null;
+var subroomVisits = {};
+var favors = 0;
+var artifactLore = {};
+var currentInvCat = 'all';
 var locationVisits = {beach:0,forest:0,market:0,lighthouse:0,bridge:0};
 
 function initResidents() {
@@ -3599,17 +3790,44 @@ function getResidentTier(id) {
 }
 
 function countResidentMentions(encText) {
-  // Count how many residents appear in encounter text
-  var map = {pip:'pip', brin:'brin', wellow:'wellow', coss:'coss', lumen:'lumen', traveler:'traveler'};
+  var map = {pip:'pip', brin:'brin', wellow:'wellow', coss:'coss', lumen:'lumen', sable:'traveler', mara:'shopkeeper'};
   Object.keys(map).forEach(function(name) {
     var re = new RegExp(name, 'gi');
     if (re.test(encText)) {
-      if (!residentEncounters[map[name]]) residentEncounters[map[name]] = 0;
-      residentEncounters[map[name]]++;
+      var rid = map[name];
+      if (!residentEncounters[rid]) residentEncounters[rid] = 0;
+      var wasZero = residentEncounters[rid] === 0;
+      residentEncounters[rid]++;
+      // Queue first-meeting intro if this is the very first mention
+      if (wasZero) {
+        var resident = null;
+        for (var i = 0; i < RESIDENTS.length; i++) {
+          if (RESIDENTS[i].id === rid) { resident = RESIDENTS[i]; break; }
+        }
+        if (resident) pendingIntros.push(resident);
+      }
     }
   });
 }
 
+
+var introPending = null;  // what to show after intro
+
+function showResidentIntro(resident, afterFn) {
+  introPending = afterFn;
+  var portEl = document.getElementById('intro-portrait');
+  var nameEl = document.getElementById('intro-name');
+  var roleEl = document.getElementById('intro-role');
+  var lineEl = document.getElementById('intro-line');
+  if (portEl) portEl.innerHTML = resident.svg;
+  if (nameEl) nameEl.textContent = resident.name;
+  if (roleEl) {
+    roleEl.textContent = resident.role;
+    roleEl.style.color = resident.color;
+  }
+  if (lineEl) lineEl.textContent = RESIDENT_INTRO_LINES[resident.id] || '';
+  show('s-resident-intro');
+}
 function showResidents() {
   var list = document.getElementById('residents-list');
   list.innerHTML = '';
@@ -3953,11 +4171,13 @@ var glossaryReturn = null;
 function linkifyText(html) {
   var names = Object.keys(GLOSSARY_NAMES).sort(function(a,b){return b.length-a.length;});
   var parts = html.split(/(<[^>]+>)/);
+  var linked = {};   // track first-mention per name per call
   for (var p = 0; p < parts.length; p++) {
     if (parts[p].charAt(0) === '<') continue;
     var seg = parts[p];
     if (!seg) continue;
     names.forEach(function(name) {
+      if (linked[name]) return;  // already linked this name in this text
       if (seg.indexOf(name) === -1) return;
       var entry = GLOSSARY_NAMES[name];
       var color = '#a0b8d0';
@@ -3969,12 +4189,12 @@ function linkifyText(html) {
             if (RESIDENTS[ri].id === entry.id) { color = RESIDENTS[ri].color; break; }
           }
         }
-        // Build boundary pattern that handles hyphens and spaces in names
         var esc = name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-        // Use start/end of string or non-word chars as boundaries
         var boundary = '[^a-zA-Z0-9]';
-        var re2 = new RegExp('(^|' + boundary + ')(' + esc + ')($|' + boundary + ')', 'g');
+        var re2 = new RegExp('(^|' + boundary + ')(' + esc + ')($|' + boundary + ')', '');
+        // Only replace FIRST occurrence
         seg = seg.replace(re2, function(m, pre, word, post) {
+          linked[name] = true;  // mark as linked
           return pre + '<span class="tap-link" style="color:' + color +
             ';border-bottom:1px dotted ' + color + ';" ' +
             'data-gl-type="' + entry.type + '" data-gl-id="' + entry.id + '">' +
@@ -3991,7 +4211,7 @@ function openGlossaryEntry(type, id) {
   var current = document.querySelector('.screen.active');
   glossaryReturn = current ? current.id : 's-explore';
   if (type === 'location') {
-    showLocationDetail(id);
+    showLocationDetailFull(id);
   } else if (type === 'creature') {
     openCreatureGlossary(id);
   } else {
@@ -4176,6 +4396,244 @@ function showLocations() {
   show('s-locations');
 }
 
+
+// ═══════════════════════════════════════════════════════════════
+// TIME OF DAY SYSTEM
+// ═══════════════════════════════════════════════════════════════
+var TIME_PERIODS = {
+  morning:   {id:'morning',   label:'Morning',   hours:[5,6,7,8,9,10],   icon:'🌅', color:'#f0c040', sky:'#1a3a6a', desc:'The island wakes slowly. Dew on the stones. Pip is already at the water.'},
+  midday:    {id:'midday',    label:'Midday',     hours:[11,12,13,14],    icon:'☀️',  color:'#ffd060', sky:'#1a4a8a', desc:'Full sun. The market is at its loudest. Good weather for crossing the bridge.'},
+  afternoon: {id:'afternoon', label:'Afternoon',  hours:[15,16,17],       icon:'🌤️', color:'#f0a030', sky:'#0d3060', desc:'The light goes gold. The forest hums. Brin is usually making something.'},
+  evening:   {id:'evening',   label:'Evening',    hours:[18,19,20],       icon:'🌇', color:'#e06820', sky:'#0a1e3a', desc:'Warm and still. The Lumen appears at the beach. The lighthouse lamp brightens.'},
+  night:     {id:'night',     label:'Night',      hours:[21,22,23,0,1,2], icon:'🌙', color:'#8ba7c0', sky:'#060e1a', desc:'The island quiets. Stars out. Sable reads the sky from the cliff path.'},
+  predawn:   {id:'predawn',   label:'Before Dawn',hours:[3,4],            icon:'✨', color:'#d4a0ff', sky:'#030810', desc:'The rarest hour. Very few creatures are active. Something always happens here.'}
+};
+
+// Resident schedules — where each resident is by time of day
+var RESIDENT_SCHEDULE = {
+  pip:         {morning:'bridge',    midday:'beach',     afternoon:'beach',  evening:'bridge',   night:'home',    predawn:'bridge'},
+  brin:        {morning:'forest',    midday:'market',    afternoon:'forest', evening:'forest',   night:'home',    predawn:'forest'},
+  wellow:      {morning:'lighthouse',midday:'lighthouse',afternoon:'market', evening:'lighthouse',night:'lighthouse',predawn:'lighthouse'},
+  coss:        {morning:'beach',     midday:'market',    afternoon:'bridge', evening:'beach',    night:'market',  predawn:'bridge'},
+  lumen:       {morning:'forest',    midday:'forest',    afternoon:'beach',  evening:'beach',    night:'beach',   predawn:'forest'},
+  traveler:    {morning:'lighthouse',midday:'bridge',    afternoon:'market', evening:'beach',    night:'forest',  predawn:'forest'},
+  shopkeeper:  {morning:'market',    midday:'market',    afternoon:'market', evening:'market',   night:'home',    predawn:'market'}
+};
+
+var currentTimePeriod = 'morning';  // set on run start
+var playerChoseTime = false;        // true if player overrode clock
+
+function getTimePeriodFromClock() {
+  var h = new Date().getHours();
+  var periods = Object.values(TIME_PERIODS);
+  for (var i = 0; i < periods.length; i++) {
+    if (periods[i].hours.indexOf(h) !== -1) return periods[i].id;
+  }
+  return 'morning';
+}
+
+function setTimePeriod(periodId) {
+  currentTimePeriod = periodId || getTimePeriodFromClock();
+  playerChoseTime = !!periodId;
+}
+
+function getTimeContext() {
+  return TIME_PERIODS[currentTimePeriod] || TIME_PERIODS.morning;
+}
+
+function getResidentLocation(residentId) {
+  var sched = RESIDENT_SCHEDULE[residentId];
+  if (!sched) return null;
+  return sched[currentTimePeriod] || null;
+}
+
+function getResidentsAt(locationId) {
+  var here = [];
+  Object.keys(RESIDENT_SCHEDULE).forEach(function(rid) {
+    if (RESIDENT_SCHEDULE[rid][currentTimePeriod] === locationId) {
+      here.push(rid);
+    }
+  });
+  return here;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EXPANDED INVENTORY SYSTEM
+// ═══════════════════════════════════════════════════════════════
+
+// Item categories
+var ITEM_CATEGORIES = {
+  tool:     {id:'tool',     label:'Tools',     icon:'🔧', color:'#8ba7c0'},
+  artifact: {id:'artifact', label:'Artifacts', icon:'✨', color:'#d4a0ff'},
+  material: {id:'material', label:'Materials', icon:'🪨', color:'#68b828'},
+  story:    {id:'story',    label:'Story Items',icon:'📜', color:'#f0c040'},
+  trophy:   {id:'trophy',   label:'Trophies',  icon:'⭐', color:'#ffd060'}
+};
+
+// Extended item definitions with categories
+var ITEMS_V2 = {
+  // TOOLS
+  lantern:{id:'lantern', cat:'tool', name:'Lighthouse Keeper\'s Lantern', icon:'🏮',
+    desc:'A brass lantern whose flame has never gone out. Carried by those who walk into dark places anyway.',
+    clue:'Found by choosing courage alone at the Lighthouse.',
+    equipped:false, quantity:1,
+    unlocks:['embrix'],
+    lore_tiers:[
+      'A battered brass lantern. The flame inside never seems to need tending.',
+      'The glass is etched with a maker\'s mark that matches the one on the lighthouse foundation stone.',
+      'Wellow recognizes it immediately but says nothing. Their expression when they saw it was not nothing.'
+    ]},
+  still_water_stone:{id:'still_water_stone', cat:'tool', name:'Still Water Stone', icon:'💧',
+    desc:'A dark circular stone whose surface reflects like water even in dry air.',
+    clue:'Found by choosing complete stillness in a Mirror encounter.',
+    equipped:false, quantity:1,
+    unlocks:['veilstone','stoneheart'],
+    lore_tiers:[
+      'Smooth and cold regardless of the temperature around it.',
+      'Oldstone vibrates differently when this stone is nearby. A lower frequency than usual.',
+      'The reflection in its surface occasionally shows somewhere other than where you are.'
+    ]},
+  blueprint:{id:'blueprint', cat:'tool', name:'Blueprint Fragment', icon:'📐',
+    desc:'A torn piece of very old paper showing part of a diagram for something large and complex.',
+    clue:'Found by inventing a creative solution in a Freeze or Spark encounter.',
+    equipped:false, quantity:1,
+    unlocks:['aethon','lumenwing'],
+    lore_tiers:[
+      'The paper is old but the ink hasn\'t faded. Whatever it\'s made of, it\'s been preserved deliberately.',
+      'Buzzwing goes very still when they see it. Asks where you found it. Doesn\'t explain why.',
+      'There are three other pieces out there. This one is the upper-left corner of something enormous.'
+    ]},
+  silver_thread:{id:'silver_thread', cat:'tool', name:'Silver Thread', icon:'🧵',
+    desc:'A single thread that never tangles and cannot be cut. Older than any loom on the island.',
+    clue:'Found in a moment of genuine repair between two creatures.',
+    equipped:false, quantity:1,
+    unlocks:['silkwynn','lumenwing'],
+    lore_tiers:[
+      'It sits in your hand like it weighs nothing, then like it weighs exactly what it should.',
+      'Tangle recognizes it. Holds it reverently. Says: this came from before.',
+      'It glows faintly in the dark — not enough to light anything, just enough to find it.'
+    ]},
+  ancient_seed:{id:'ancient_seed', cat:'tool', name:'Ancient Seed', icon:'🌱',
+    desc:'A small dark seed that has never sprouted. It is waiting for exactly the right conditions.',
+    clue:'Found by choosing full patience in a Wait or Root encounter.',
+    equipped:false, quantity:1,
+    unlocks:['verdynn','stoneheart'],
+    lore_tiers:[
+      'It feels warmer than it should for its size.',
+      'Deeproot\'s roots move toward it when it\'s nearby. Slowly. Deliberately.',
+      'Verdynn has been waiting for this seed specifically. You can feel that this is true without being told.'
+    ]},
+
+  // ARTIFACTS
+  torn_map:{id:'torn_map', cat:'artifact', name:'Torn Map Piece', icon:'🗺️',
+    desc:'One of four pieces of a map showing the island as it once was — or perhaps as it will be.',
+    clue:'Found by helping a lost traveler.',
+    equipped:false, quantity:1,
+    unlocks:[],
+    lore_tiers:[
+      'The coastline on this piece doesn\'t quite match the island as you know it. Three locations are marked that don\'t exist yet.',
+      'Sable recognizes the cartographic style. Goes pale. Says this was made by someone who shouldn\'t have been able to make it.',
+      'Held near the other pieces, the edges align perfectly even though they came from different places.'
+    ]},
+  wellows_honey:{id:'wellows_honey', cat:'artifact', name:'Wellow\'s Honey', icon:'🍯',
+    desc:'A small jar of honey from Wellow\'s personal reserve. Said to taste like the last ten minutes before a good thing happens.',
+    clue:'Found by seeing a task all the way through at the Lighthouse.',
+    equipped:false, quantity:1,
+    unlocks:[],
+    lore_tiers:[
+      'Wellow doesn\'t give this to many people. The jar is warm even when the kitchen isn\'t.',
+      'The honey doesn\'t run out at the usual rate. You\'ve had it for weeks and the level looks the same.',
+      'It tastes different depending on what you need it to taste like. Not what you want — what you need.'
+    ]},
+  handmade_feather:{id:'handmade_feather', cat:'artifact', name:'Handmade Feather', icon:'🪶',
+    desc:'A feather made from wire and paper by Brin. Changes color in different light.',
+    clue:'Found by making something together with full commitment.',
+    equipped:false, quantity:1,
+    unlocks:[],
+    lore_tiers:[
+      'Brin made this for a specific moment she saw coming. She\'s been carrying it for months.',
+      'The color it shows in firelight is not a color that has a name.',
+      'It\'s lighter than paper should be. Scribb drew it once. The drawing was heavier than the feather.'
+    ]},
+  thankyou_stone:{id:'thankyou_stone', cat:'artifact', name:'Thankyou Stone', icon:'🪨',
+    desc:'A smooth gray stone that appears in your pocket after a genuine act of giving.',
+    clue:'Found by giving something up for someone else at the Market.',
+    equipped:false, quantity:1,
+    unlocks:[],
+    lore_tiers:[
+      'You didn\'t put it in your pocket. It was just there afterward.',
+      'Grumble has one too. So does Pip. They don\'t talk about it but they know.',
+      'When you hold it, you know exactly how many genuine things you\'ve done for other people. The number is always higher than you expected.'
+    ]},
+
+  // TROPHIES
+  lucky_spark:{id:'lucky_spark', cat:'trophy', name:'Lucky Sparks', icon:'⭐',
+    desc:'Sparks captured in a form that doesn\'t burn and doesn\'t go out. One awarded each time a rare creature is found.',
+    clue:'Awarded each time you find a rare creature.',
+    equipped:false, quantity:0,
+    unlocks:[],
+    lore_tiers:[
+      'Five rare creatures swim somewhere in this island. Each one leaves a spark behind when it decides to trust you.',
+      'They orbit each other when grouped. The pattern changes based on how many you have.',
+      'With all five: something on the island changes. What it is depends on when you\'re there.'
+    ]},
+
+  // FUTURE ITEMS (locked, shown as coming soon)
+  cave_torch:{id:'cave_torch', cat:'tool', name:'Cave Torch', icon:'🔦',
+    desc:'Required to enter the cave system beneath the quarry. Not yet available.',
+    clue:'The quarry path leads somewhere dark. You\'ll need light.',
+    equipped:false, quantity:0, locked:true,
+    unlocks:[], lore_tiers:['???']},
+  harbor_token:{id:'harbor_token', cat:'story', name:'Harbor Token', icon:'🪙',
+    desc:'A token from the harbor master. Opens access to incoming ships and travelers.',
+    clue:'The harbor has a keeper. You haven\'t met them yet.',
+    equipped:false, quantity:0, locked:true,
+    unlocks:[], lore_tiers:['???']},
+  star_chart:{id:'star_chart', cat:'artifact', name:'Star Chart', icon:'🌟',
+    desc:'A precise map of the night sky as seen from this island. Needed for the observatory.',
+    clue:'Sable is working on this. It isn\'t finished yet.',
+    equipped:false, quantity:0, locked:true,
+    unlocks:[], lore_tiers:['???']}
+};
+
+// Currency placeholder
+var favors = 0;  // the island's currency — deeds performed, not coins
+
+// Artifact lore tracking — which tier each artifact is at
+var artifactLore = {};  // item_id -> tier (0,1,2)
+
+function getItemLoreTier(itemId) {
+  return artifactLore[itemId] || 0;
+}
+
+function advanceItemLore(itemId) {
+  var item = ITEMS_V2[itemId];
+  if (!item || !item.lore_tiers) return;
+  var current = artifactLore[itemId] || 0;
+  if (current < item.lore_tiers.length - 1) {
+    artifactLore[itemId] = current + 1;
+  }
+}
+
+// Check if player has an item (owns at least 1)
+function hasItem(itemId) {
+  var item = ITEMS_V2[itemId];
+  if (!item) return false;
+  if (item.cat === 'trophy') return item.quantity > 0;
+  return !!inventory[itemId];
+}
+
+// Migrate old inventory format to new
+function migrateInventory() {
+  Object.keys(inventory).forEach(function(id) {
+    if (inventory[id] === true && ITEMS_V2[id]) {
+      ITEMS_V2[id].quantity = 1;
+    }
+  });
+  // Also sync lucky sparks
+  if (ITEMS_V2.lucky_spark) ITEMS_V2.lucky_spark.quantity = lucky_sparks;
+}
+
 // ═══════════════════════════════════════════════════════════════
 // ITEM DEFINITIONS
 // ═══════════════════════════════════════════════════════════════
@@ -4259,6 +4717,1064 @@ var FRIENDSHIP_MESSAGES = {
   calmyr:`I'm only here when something difficult is happening. I've been nearby a lot lately. That means you're doing hard things and getting through them. I've noticed.`,
 };
 
+var RESIDENT_INTRO_LINES = {
+  pip: 'Always near the water. Always whistling something.',
+  brin: 'There\'s paint on her hands. There always is.',
+  wellow: 'The lighthouse kitchen smells like something good. It always does.',
+  coss: 'You hear the drumming before you see him.',
+  lumen: 'It drifts close. Its light shifts, just slightly, when it notices you.',
+  traveler: 'Maps everywhere. A walking staff. Eyes that have seen a lot of coastlines.',
+  shopkeeper: 'The sign says OPEN SOON. She\'s still unpacking. She waves anyway.',
+};
+
+
+function showTimePicker() {
+  var clockPeriod = getTimePeriodFromClock();
+  var tp = TIME_PERIODS[clockPeriod];
+
+  // Show current time + destination if exploring from map
+  var el = document.getElementById('tp-clock-line');
+  if (el) {
+    var timeStr = 'It\'s ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + ' — ' + tp.label + ' on the island.';
+    if (mapFocusLoc) {
+      var locName = '';
+      MAP_LOCATIONS.forEach(function(l){ if (l.explore_loc === mapFocusLoc) locName = l.label; });
+      if (locName) timeStr += ' Heading to ' + locName + '.';
+    }
+    el.textContent = timeStr;
+  }
+
+  var container = document.getElementById('tp-options');
+  if (!container) return;
+  container.innerHTML = '';
+
+  Object.values(TIME_PERIODS).forEach(function(period) {
+    var btn = document.createElement('div');
+    btn.className = 'tp-btn' + (period.id === clockPeriod ? ' current' : '');
+    btn.setAttribute('role','button');
+    btn.setAttribute('tabindex','0');
+    btn.innerHTML =
+      '<span class="tp-icon">' + period.icon + '</span>' +
+      '<div class="tp-info">' +
+        '<div class="tp-label">' + period.label + (period.id === clockPeriod ? ' <span class="tp-badge">NOW</span>' : '') + '</div>' +
+        '<div class="tp-desc">' + period.desc + '</div>' +
+      '</div>';
+    (function(pid) {
+      btn.onclick = function() {
+        setTimePeriod(pid);
+        actuallyStartExplore();
+      };
+    })(period.id);
+    container.appendChild(btn);
+  });
+  show('s-timepick');
+}
+
+function actuallyStartExplore() {
+  buildRun(mapFocusLoc);
+  mapFocusLoc = null;
+  buildProgress();
+  show('s-explore');
+  renderEncounter();
+}
+
+var currentInvCat = 'all';
+
+function showInventory() {
+  migrateInventory();
+  if (ITEMS_V2.lucky_spark) ITEMS_V2.lucky_spark.quantity = lucky_sparks;
+  renderInventoryV2(currentInvCat);
+  show('s-inventory');
+}
+
+function renderInventoryV2(cat) {
+  currentInvCat = cat;
+
+  // Update category tabs
+  var tabs = document.querySelectorAll('.inv-cat-btn');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.toggle('active', tabs[i].dataset.cat === cat);
+  }
+
+  // Update favor display
+  var favEl = document.getElementById('inv-favor-val');
+  if (favEl) favEl.textContent = favors;
+
+  var grid = document.getElementById('inv-v2-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  var items = Object.values(ITEMS_V2).filter(function(item) {
+    if (cat === 'all') return true;
+    return item.cat === cat;
+  });
+
+  items.forEach(function(item) {
+    var owned = hasItem(item.id);
+    var loreTier = getItemLoreTier(item.id);
+    var card = document.createElement('div');
+    var classes = 'inv-v2-card';
+    if (owned) classes += ' owned';
+    if (item.locked) classes += ' locked';
+    card.className = classes;
+
+    var catData = ITEM_CATEGORIES[item.cat] || {};
+    var content = '<div class="inv-v2-icon">' + (owned ? item.icon : '❓') + '</div>';
+    content += '<div class="inv-v2-cat">' + catData.icon + ' ' + catData.label + '</div>';
+    content += '<div class="inv-v2-name' + (owned ? '' : ' empty') + '">' + (owned ? item.name : '???') + '</div>';
+
+    if (owned) {
+      if (item.quantity > 1) content += '<div class="inv-v2-qty">×' + item.quantity + '</div>';
+      content += '<div class="inv-v2-desc">' + item.desc + '</div>';
+      // Current lore tier
+      if (item.lore_tiers && item.lore_tiers[loreTier] && item.lore_tiers[loreTier] !== '???') {
+        content += '<div class="inv-v2-lore">✦ ' + item.lore_tiers[loreTier] + '</div>';
+      }
+    } else {
+      content += '<div class="inv-v2-clue">' + (item.locked ? '🔒 Not yet available on the island.' : item.clue) + '</div>';
+    }
+
+    card.innerHTML = content;
+    grid.appendChild(card);
+  });
+}
+
+
+
+// ═══════════════════════════════════════════════════════════════
+// ISLAND MAP DATA
+// ═══════════════════════════════════════════════════════════════
+
+// Current locations — position as % of map canvas (x, y)
+var MAP_LOCATIONS = [
+  {
+    id:'lighthouse', label:'The Lighthouse', icon:'🗼', color:'#f0c040',
+    x:50, y:26,
+    size:80, fog:false,
+    hint:null,
+    explore_loc:'lighthouse',
+    time_desc:{
+      morning:'Wellow is up. The kitchen smells good.',
+      midday:'The lamp dims in full sun but never goes out.',
+      afternoon:'Quiet hour. Wellow sometimes walks the garden.',
+      evening:'The lamp brightens as the light fades.',
+      night:'The light sweeps. The kitchen is always open.',
+      predawn:'The loneliest and most reliable hour.'
+    }
+  },
+  {
+    id:'market', label:'The Market', icon:'🏮', color:'#e07030',
+    x:26, y:52,
+    size:74, fog:false,
+    hint:null,
+    explore_loc:'market',
+    time_desc:{
+      morning:'Opening up. Quieter than it gets.',
+      midday:'Busiest hour. Everything available.',
+      afternoon:'Steady trade. Mara is unpacking something.',
+      evening:'Winding down. Good deals at the end of the day.',
+      night:'A few stalls stay lit. Something is always there.',
+      predawn:'Only the lanterns and the occasional early riser.'
+    }
+  },
+  {
+    id:'beach', label:'The Beach', icon:'🌊', color:'#5ec4b0',
+    x:72, y:66,
+    size:74, fog:false,
+    hint:null,
+    explore_loc:'beach',
+    time_desc:{
+      morning:'Pip is already here. Cold, clear, good.',
+      midday:'Full light on the water. The tide is out.',
+      afternoon:'The light goes gold. The Lumen stirs.',
+      evening:'The Lumen appears. The tide comes in.',
+      night:'Dark water. The Lumen is most visible now.',
+      predawn:'Empty except for what came up with the tide.'
+    }
+  },
+  {
+    id:'forest', label:'The Forest', icon:'🌲', color:'#68b828',
+    x:20, y:32,
+    size:74, fog:false,
+    hint:null,
+    explore_loc:'forest',
+    time_desc:{
+      morning:'Dew on everything. Very quiet.',
+      midday:'Dark inside even now. Brin is working.',
+      afternoon:'The light comes through in stripes.',
+      evening:'Fireflies beginning. The old paths are clearest.',
+      night:'Scribb\'s firefly pattern is visible from here.',
+      predawn:'The oldest hour in the oldest part of the island.'
+    }
+  },
+  {
+    id:'bridge', label:'The Bridge', icon:'🌉', color:'#8ba7c0',
+    x:62, y:48,
+    size:72, fog:false,
+    hint:null,
+    explore_loc:'bridge',
+    time_desc:{
+      morning:'Fog on the channel. Pip crosses early.',
+      midday:'Clearest visibility all day.',
+      afternoon:'Coss is here. You can hear it.',
+      evening:'The lanterns light. Good crossing hour.',
+      night:'Fog returns. The door is visible at low tide.',
+      predawn:'No one crosses before dawn. Almost no one.'
+    }
+  }
+];
+
+// Future/fog locations — visible as outlines, not yet accessible
+var MAP_FOG_LOCATIONS = [
+  {
+    id:'cliff', label:'The Cliff', icon:'🏔️',
+    x:86, y:24, size:52,
+    hint:'The wind is strongest at the eastern edge.'
+  },
+  {
+    id:'quarry', label:'The Quarry', icon:'⛏️',
+    x:40, y:74, size:50,
+    hint:'South path. Cut stone. Older than the market.'
+  },
+  {
+    id:'tide_pools', label:'Tide Pools', icon:'🦀',
+    x:84, y:74, size:48,
+    hint:'Only reachable at low tide.'
+  },
+  {
+    id:'old_garden', label:'Old Garden', icon:'🌸',
+    x:67, y:16, size:48,
+    hint:'Behind the lighthouse. Half-wild now.'
+  },
+  {
+    id:'harbor', label:'The Harbor', icon:'⚓',
+    x:8, y:80, size:50,
+    hint:'Where travelers arrive. You haven\'t been.'
+  },
+  {
+    id:'settlement', label:'Settlement', icon:'🏘️',
+    x:18, y:64, size:46,
+    hint:'Someone is building something here.'
+  }
+];
+
+// Resident color map for dots
+var RESIDENT_COLORS = {
+  pip:'#5ec4b0', brin:'#d4a0ff', wellow:'#f0c040',
+  coss:'#ff6b35', lumen:'#a0d8f0', traveler:'#8ba7c0', shopkeeper:'#e0a870'
+};
+
+var RESIDENT_NAMES = {
+  pip:'Pip', brin:'Brin', wellow:'Wellow',
+  coss:'Coss', lumen:'Lumen', traveler:'Sable', shopkeeper:'Mara'
+};
+
+var selectedMapLoc = null;
+
+function showMap() {
+  renderMap();
+  show('s-map');
+}
+
+function renderMap() {
+  var canvas = document.getElementById('map-canvas');
+  if (!canvas) return;
+  canvas.innerHTML = '';
+
+  var tp = getTimeContext();
+
+  // SVG path lines between connected locations
+  var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','map-svg-paths');
+  svg.setAttribute('viewBox','0 0 100 100');
+  svg.setAttribute('preserveAspectRatio','none');
+
+  // Draw paths between key locations
+  var paths = [
+    ['lighthouse','bridge'],
+    ['bridge','beach'],
+    ['bridge','market'],
+    ['market','forest'],
+    ['lighthouse','market'],
+  ];
+  var locMap = {};
+  MAP_LOCATIONS.forEach(function(l){ locMap[l.id] = l; });
+
+  paths.forEach(function(pair) {
+    var a = locMap[pair[0]], b = locMap[pair[1]];
+    if (!a || !b) return;
+    var line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', a.x); line.setAttribute('y1', a.y);
+    line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
+    line.setAttribute('stroke','rgba(255,255,255,.07)');
+    line.setAttribute('stroke-width','0.8');
+    line.setAttribute('stroke-dasharray','2,2');
+    svg.appendChild(line);
+  });
+  canvas.appendChild(svg);
+
+  // Render fog locations first (behind active ones)
+  MAP_FOG_LOCATIONS.forEach(function(loc) {
+    var zone = document.createElement('div');
+    zone.className = 'map-zone';
+    zone.style.cssText = 'left:' + loc.x + '%;top:' + loc.y + '%;';
+
+    var bubble = document.createElement('div');
+    bubble.className = 'map-zone-bubble fog';
+    bubble.style.cssText = 'width:' + loc.size + 'px;height:' + loc.size + 'px;';
+    bubble.innerHTML = '<span class="fog-icon">' + loc.icon + '</span>';
+    zone.appendChild(bubble);
+
+    var label = document.createElement('div');
+    label.className = 'map-zone-label fog';
+    label.textContent = loc.label;
+    zone.appendChild(label);
+
+    var hint = document.createElement('div');
+    hint.className = 'fog-hint';
+    hint.textContent = loc.hint;
+    zone.appendChild(hint);
+
+    canvas.appendChild(zone);
+  });
+
+  // Render active locations
+  MAP_LOCATIONS.forEach(function(loc) {
+    var visits = locationVisits[loc.id] || 0;
+    var residents = getResidentsAt(loc.explore_loc);
+
+    var zone = document.createElement('div');
+    zone.className = 'map-zone';
+    zone.style.cssText = 'left:' + loc.x + '%;top:' + loc.y + '%;';
+
+    var bubble = document.createElement('div');
+    bubble.className = 'map-zone-bubble active';
+    bubble.style.cssText = 'width:' + loc.size + 'px;height:' + loc.size + 'px;' +
+      'background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.12),rgba(0,0,0,.4));' +
+      'border:2px solid ' + loc.color + ';--zone-color:' + loc.color + ';' +
+      'box-shadow:0 0 20px ' + loc.color + '33,inset 0 1px 0 rgba(255,255,255,.12);';
+    bubble.innerHTML = '<span class="map-zone-icon">' + loc.icon + '</span>';
+    zone.appendChild(bubble);
+
+    var label = document.createElement('div');
+    label.className = 'map-zone-label';
+    label.style.color = loc.color;
+    label.textContent = loc.label;
+    zone.appendChild(label);
+
+    // Resident dots
+    if (residents.length > 0) {
+      var dots = document.createElement('div');
+      dots.className = 'map-residents';
+      residents.slice(0,4).forEach(function(rid) {
+        var dot = document.createElement('div');
+        dot.className = 'map-res-dot';
+        dot.style.background = RESIDENT_COLORS[rid] || '#888';
+        dot.title = RESIDENT_NAMES[rid] || rid;
+        dots.appendChild(dot);
+      });
+      zone.appendChild(dots);
+    }
+
+    // Tap handler
+    (function(l) {
+      zone.onclick = function(e) {
+        e.stopPropagation();
+        openMapPanel(l);
+      };
+    })(loc);
+
+    canvas.appendChild(zone);
+  });
+
+  // Time badge
+  var badge = document.getElementById('map-time-badge');
+  if (badge) badge.innerHTML = tp.icon + ' ' + tp.label;
+
+  // Close panel on canvas tap
+  canvas.onclick = function() { closeMapPanel(); };
+}
+
+function openMapPanel(loc) {
+  selectedMapLoc = loc;
+  var tp = getTimeContext();
+  var panel = document.getElementById('map-detail-panel');
+  if (!panel) return;
+
+  var residents = getResidentsAt(loc.explore_loc);
+  var timeDesc = loc.time_desc ? (loc.time_desc[currentTimePeriod] || '') : '';
+  var visits = locationVisits[loc.id] || 0;
+  var gloss = LOCATION_GLOSSARY[loc.id];
+  var tier = getLocationTier(loc.id);
+  var tierDesc = gloss ? gloss.tiers[tier-1].desc : '';
+
+  // Name + time
+  document.getElementById('map-panel-name').textContent = loc.label;
+  document.getElementById('map-panel-time').textContent = tp.icon + ' ' + tp.label + '  ·  ' + visits + ' visit' + (visits===1?'':'s');
+
+  // Description
+  document.getElementById('map-panel-desc').textContent = timeDesc || tierDesc.slice(0,120) + '…';
+
+  // Residents present
+  var resDiv = document.getElementById('map-panel-residents');
+  resDiv.innerHTML = '';
+  if (residents.length > 0) {
+    residents.forEach(function(rid) {
+      var chip = document.createElement('div');
+      chip.className = 'map-panel-res';
+      var dot = document.createElement('div');
+      dot.className = 'map-panel-res-dot';
+      dot.style.background = RESIDENT_COLORS[rid] || '#888';
+      chip.appendChild(dot);
+      chip.appendChild(document.createTextNode(RESIDENT_NAMES[rid] || rid));
+      resDiv.appendChild(chip);
+    });
+  } else {
+    resDiv.innerHTML = '<div style="font-size:11px;color:rgba(255,255,255,.3);font-style:italic;font-family:Lora,serif;">Nobody here right now.</div>';
+  }
+
+  panel.classList.add('open');
+}
+
+function closeMapPanel() {
+  var panel = document.getElementById('map-detail-panel');
+  if (panel) panel.classList.remove('open');
+  selectedMapLoc = null;
+}
+
+function exploreFromMap() {
+  if (!selectedMapLoc) return;
+  mapFocusLoc = selectedMapLoc.explore_loc;
+  closeMapPanel();
+  showTimePicker();
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// SUB-ROOM SYSTEM (MUD-style connected areas)
+// ═══════════════════════════════════════════════════════════════
+var SUB_ROOMS = {
+  beach:[
+    {
+      id:'beach_shore', name:'The Shore', parent:'beach',
+      desc:'Dark sand, cold water. The tide mark is fresh. Flat stones collect here.',
+      time_flavor:{
+        morning:'Pip is ankle-deep already. The water is clearest at this hour.',
+        midday:'Full light. The tide is out. Good stones exposed.',
+        afternoon:'The light on the water is going gold.',
+        evening:'The Lumen drifts just offshore. Barely visible.',
+        night:'Dark. The Lumen is bright out here.',
+        predawn:'Empty. Whatever the tide left, it left it here.'
+      },
+      look_objects:[
+        {id:'stone_ring', name:'the stone ring', visible_at:['midday','afternoon'],
+         desc:'A ring of stones just below the waterline, visible at low tide. Nobody built it — it was already here. The stones are carved with marks that don\'t match anything on the island.'},
+        {id:'flat_stones', name:'the flat stones',
+         desc:'A collection of particularly good skipping stones near the south end. Pip knows which ones go farthest. The best one is almost perfectly circular and slightly warm.'},
+        {id:'tide_mark', name:'the tide mark',
+         desc:'A line of dark sand and small shells where the last high tide ended. Something came up with the tide last night that left marks. They\'re almost footprints, but not quite.'}
+      ],
+      exits:{beach_dunes:'toward the dunes'}
+    },
+    {
+      id:'beach_dunes', name:'The Dunes', parent:'beach',
+      desc:'Low sandy hills behind the shore. Sea grass and a few buried things. Quieter than the water\'s edge.',
+      time_flavor:{
+        morning:'Cool and still. The dune grass doesn\'t move yet.',
+        midday:'Warm. Things buried here get warm too.',
+        afternoon:'The best place to sit and watch the water.',
+        evening:'Good view of the lighthouse beam from here.',
+        night:'The dunes block the wind. Quiet.',
+        predawn:'The coldest part of the beach. The stars are wide from here.'
+      },
+      look_objects:[
+        {id:'buried_thing', name:'something buried',
+         desc:'A corner of something sticking out of the sand. Old. You could dig it up but it feels like it\'s been here on purpose.'},
+        {id:'sea_grass', name:'the sea grass',
+         desc:'Dense and dry. Something small lives in it — you can hear it but you haven\'t seen it. Fernwhist says the grass here hums at certain tides.'}
+      ],
+      exits:{beach_shore:'back to the shore', beach_tide_pools:'toward the tide pools'}
+    },
+    {
+      id:'beach_tide_pools', name:'The Tide Pools',
+      parent:'beach',
+      conditional:'low_tide',
+      locked_msg:'The tide is too high. Come back at midday or morning.',
+      desc:'Only accessible at low tide. Small trapped worlds in the rock. Creatures here don\'t exist anywhere else.',
+      time_flavor:{
+        morning:'Perfectly accessible. The pools are full of morning light.',
+        midday:'Best time. Everything is visible.',
+        afternoon:'Starting to fill. You have an hour.',
+        evening:'Submerged. Come back tomorrow.',
+        night:'Underwater.',
+        predawn:'Borderline. Some pools are still exposed.'
+      },
+      look_objects:[
+        {id:'pool_creature', name:'the small creature in the corner pool',
+         desc:'It doesn\'t have a name yet. It looks back at you with complete calm. It has been in this pool for longer than the island has had a name.'},
+        {id:'carved_rock', name:'the carved rock',
+         desc:'One of the pool walls has something carved into it. Old enough that the sea has softened it. It might be a map. It might be something else.'}
+      ],
+      exits:{beach_dunes:'back up to the dunes'}
+    }
+  ],
+  forest:[
+    {
+      id:'forest_path', name:'The Forest Path', parent:'forest',
+      desc:'The main path in. Wide enough, worn smooth. Sound from outside fades by the third bend.',
+      time_flavor:{
+        morning:'Dew on every surface. Very quiet.',
+        midday:'Dark even at noon. Something drips.',
+        afternoon:'Light comes through in long stripes.',
+        evening:'The fireflies start here first.',
+        night:'Scribb\'s firefly pattern is visible from the path if you stop.',
+        predawn:'The oldest hour. The path feels longer before dawn.'
+      },
+      look_objects:[
+        {id:'path_marks', name:'the marks on the path',
+         desc:'Footprints that don\'t match any creature on the island. They go in but don\'t come back out. They\'re old — the moss has started to grow inside them.'},
+        {id:'unknown_plant', name:'the plant by the third bend',
+         desc:'Not in any record. Not in anything Sable has catalogued. It has three leaves arranged in a pattern that shouldn\'t work geometrically. It looks comfortable about this.'}
+      ],
+      exits:{forest_clearing:'deeper in', forest_workshop:'toward the sound of making'}
+    },
+    {
+      id:'forest_clearing', name:'Mosse\'s Clearing', parent:'forest',
+      desc:'A circle where the light comes straight down. Mosse has been here for three months without moving. The moss on Mosse\'s surface is a separate ecosystem.',
+      time_flavor:{
+        morning:'The morning light hits here before anywhere else in the forest.',
+        midday:'The only spot in the forest that gets direct noon sun.',
+        afternoon:'Golden. Mosse\'s flowers are brightest now.',
+        evening:'The fireflies visit Mosse first.',
+        night:'Deeproot\'s roots glow faintly here.',
+        predawn:'Mosse is most talkative before dawn. Relatively speaking.'
+      },
+      look_objects:[
+        {id:'mosse_moss', name:'the moss on Mosse',
+         desc:'The species here don\'t appear elsewhere on the island. A researcher studied them for three seasons. The results were classified as impossible and filed away.'},
+        {id:'deeproot_glow', name:'the faint glow under the roots', visible_at:['night','predawn'],
+         desc:'Deeproot\'s root network passes through here. At night you can see it. The glow isn\'t bioluminescence — it\'s something older than that word.'}
+      ],
+      exits:{forest_path:'back to the path', forest_deep:'further in'}
+    },
+    {
+      id:'forest_workshop', name:'Brin\'s Workshop', parent:'forest',
+      desc:'A structure that started as a shelter and became something else. There are drawings everywhere. Not all of them are on paper.',
+      time_flavor:{
+        morning:'Brin is here. Something is being started.',
+        midday:'Sometimes empty. Whatever was started is drying.',
+        afternoon:'Usually here. Most productive hour.',
+        evening:'Lantern lit. The bark drawings glow orange.',
+        night:'Dark, but the door is unlocked.',
+        predawn:'Brin sometimes works through the night. You\'d know.'
+      },
+      look_objects:[
+        {id:'drawing_that', name:'the drawing on the east wall',
+         desc:'Brin made this with her eyes closed. She doesn\'t know when. It shows something that hasn\'t happened yet. The details are very specific.'},
+        {id:'bark_marks', name:'the marks on the bark outside',
+         desc:'Brin carved into the tree over several years. It\'s a continuous image that wraps the whole tree. You\'d need to walk around it three times to see the whole thing.'}
+      ],
+      exits:{forest_path:'back to the path'}
+    },
+    {
+      id:'forest_deep', name:'The Deep Forest', parent:'forest',
+      desc:'The trees here are older. The path is less worn. Something about the air changes. Not threatening — just older.',
+      time_flavor:{
+        morning:'Oldest quiet.',
+        midday:'Still dark.',
+        afternoon:'Oldstone is here. Has been here.',
+        evening:'Don\'t lose the path.',
+        night:'The deep forest at night is its own kind of different.',
+        predawn:'This is where the forest goes to be itself.'
+      },
+      look_objects:[
+        {id:'oldstone_marks', name:'the markings on Oldstone\'s circle trees',
+         desc:'Carved at a height no creature on the island can reach. Sable has made rubbings of all of them. The analysis is ongoing. The markings appear to be a record of something that happened before there was anyone to witness it.'},
+        {id:'unknown_path', name:'the path that wasn\'t made',
+         desc:'A path that goes north-northeast into the trees. The ground is worn but nobody made it. It appears to lead somewhere. Nobody has followed it all the way.'}
+      ],
+      exits:{forest_clearing:'back to the clearing'}
+    }
+  ],
+  market:[
+    {
+      id:'market_main', name:'The Market', parent:'market',
+      desc:'The central stalls. Lanterns between posts. The loudest place on the island.',
+      time_flavor:{
+        morning:'Opening up. The honey stall is always first.',
+        midday:'Busiest. Hardest to move through.',
+        afternoon:'Settled. Good time to talk to stall keepers.',
+        evening:'Winding down. Good prices at the end of day.',
+        night:'A few stalls stay lit. One of them is always different than it was.',
+        predawn:'Empty except the lanterns.'
+      },
+      look_objects:[
+        {id:'notice_board', name:'the notice board', interactive:true,
+         desc:'A wooden board near the market entrance with announcements, notices, and sometimes things nobody admits to having posted.'},
+        {id:'odd_stall', name:'the stall in the north corner', visible_at:['night'],
+         desc:'It wasn\'t here yesterday. The items on its table are things you needed but didn\'t know you needed. The keeper doesn\'t respond to direct questions but seems to understand what you want.'},
+        {id:'north_railing', name:'the north railing',
+         desc:'Where drawings get displayed. Older than the rest of the market structure. Someone built the market around it. Three smooth colored stones on the ground below a piece means it was good.'}
+      ],
+      exits:{market_maras:'toward the new shop'}
+    },
+    {
+      id:'market_maras', name:'Mara\'s Shop', parent:'market',
+      desc:'The newest building. OPEN SOON in large letters. Boxes everywhere. The shelves are slightly different heights because Mara built them herself.',
+      time_flavor:{
+        morning:'Mara is unpacking something. She waves.',
+        midday:'The door is open. Mara is reorganizing.',
+        afternoon:'Usually here. Most productive hour.',
+        evening:'Closed but lights on. Mara is doing inventory.',
+        night:'Dark. Come back tomorrow.',
+        predawn:'Sometimes there\'s a light on. Mara doesn\'t sleep much.'
+      },
+      look_objects:[
+        {id:'high_shelf', name:'the unmarked box on the highest shelf',
+         desc:'Mara was given it with instructions: when you find the right island, this will tell you. She checks it every morning. It hasn\'t made any noise yet. You can feel that it\'s waiting.'},
+        {id:'open_soon_sign', name:'the OPEN SOON sign',
+         desc:'The letters are confident. Slightly crooked. The sign has been up long enough that something has built a small nest in the top-right corner. Mara hasn\'t moved it.'},
+        {id:'name_list', name:'the list on Mara\'s workbench',
+         desc:'A list of names with items next to them. Not for sale — more like: when this person comes in, they\'ll want this. Your name might be on it. You can\'t quite read it from here.'}
+      ],
+      exits:{market_main:'back to the market'}
+    }
+  ],
+  lighthouse:[
+    {
+      id:'lh_kitchen', name:'The Kitchen', parent:'lighthouse',
+      desc:'The base of the lighthouse. Wellow\'s domain. Always warm. Always smells good. The table seats more people than the room should hold.',
+      time_flavor:{
+        morning:'Breakfast is already happening. Wellow has been up since before it was morning.',
+        midday:'The midday meal. Expected but not required.',
+        afternoon:'Quiet hour. Wellow might be in the garden.',
+        evening:'The main meal. Come if you can.',
+        night:'Something is always available. The kitchen never fully closes.',
+        predawn:'Just Wellow and the lamp. The oldest quiet.'
+      },
+      look_objects:[
+        {id:'name_book', name:'the book of names',
+         desc:'Wellow keeps a record of everyone who has ever eaten at this table. The early entries are in a handwriting that doesn\'t match Wellow\'s. The book goes back further than the lighthouse.'},
+        {id:'high_shelf_lh', name:'the lantern on the high shelf',
+         desc:'The previous keeper\'s lantern. Never lit. Wellow keeps it clean. It reacts to Embrix — warms when Embrix is near. Wellow has not asked Embrix about this.'},
+        {id:'the_table', name:'the table',
+         desc:'Seats more people than it should be able to. Nobody has measured it. The measurements would probably be wrong anyway.'}
+      ],
+      exits:{lh_lamp:'up the stairs', lh_garden:'out to the garden'}
+    },
+    {
+      id:'lh_lamp', name:'The Lamp Room', parent:'lighthouse',
+      desc:'The top of the lighthouse. Glass on all sides. The light has never gone out.',
+      time_flavor:{
+        morning:'The lamp is quietest in full daylight but never stops.',
+        midday:'The glass makes everything bright.',
+        afternoon:'The beam begins to matter as the light fades.',
+        evening:'The lamp at its most purposeful.',
+        night:'From here you can see everything the beam touches.',
+        predawn:'The highest and most awake place on the island.'
+      },
+      look_objects:[
+        {id:'lamp_platform', name:'the door above the lamp room',
+         desc:'Stairs continue past the lamp room to a small platform above it. The door is always unlocked. Nobody goes up. From the platform, one star is directly overhead. Sable knows which one.'},
+        {id:'lamp_itself', name:'the light',
+         desc:'It has been burning continuously for longer than any record goes back. The lighthouse keeper\'s book predates the lighthouse. The earliest entry mentions maintaining the light as if it already existed.'}
+      ],
+      exits:{lh_kitchen:'back down'}
+    },
+    {
+      id:'lh_garden', name:'The Old Garden', parent:'lighthouse',
+      desc:'Behind the lighthouse. Something was cultivated here deliberately once. Now it grows on its own terms. Verdynn territory.',
+      time_flavor:{
+        morning:'Dew-heavy. The oldest plants here are Verdynn\'s.',
+        midday:'Full sun. Something blooming.',
+        afternoon:'Mosswhir forages here.',
+        evening:'The garden in evening is its own kind of beautiful.',
+        night:'The night flowers open.',
+        predawn:'The seeds move at predawn. Not much. But measurably.'
+      },
+      look_objects:[
+        {id:'verdynn_flower', name:'the flower that bloomed this season',
+         desc:'Verdynn\'s blooms take a season each and never repeat. This one is the only one of its kind that has ever existed. It will be gone by next month and there will never be another exactly like it.'},
+        {id:'old_planting', name:'the original planting pattern',
+         desc:'The arrangement of the oldest plants follows a pattern. Sable recognized it from the torn map piece — the same symbol system. Nobody planted this randomly.'}
+      ],
+      exits:{lh_kitchen:'back inside'}
+    }
+  ],
+  bridge:[
+    {
+      id:'bridge_west', name:'The West End', parent:'bridge',
+      desc:'The island side of the bridge. Stone approach, two lantern posts.',
+      time_flavor:{
+        morning:'Fog on the channel. The bridge disappears into it.',
+        midday:'Clear. The whole bridge visible.',
+        afternoon:'Coss is usually here. You can hear it before you see it.',
+        evening:'The lanterns light. Warm start to a foggy crossing.',
+        night:'Fog again. The door below is visible at the right moment.',
+        predawn:'No one. Almost no one.'
+      },
+      look_objects:[
+        {id:'west_post_marks', name:'the marks on the west post',
+         desc:'Coss keeps drum marks here. Two sets — a duet. Only one set is recent. The other is years old. Coss keeps both sets clean.'},
+        {id:'fourth_plank', name:'the fourth plank from the east end',
+         desc:'A mark carved into it. Sable\'s maps note it with no explanation. The symbol matches one corner of the torn map piece.'}
+      ],
+      exits:{bridge_mid:'out onto the bridge'}
+    },
+    {
+      id:'bridge_mid', name:'The Middle of the Bridge', parent:'bridge',
+      desc:'Fog on both sides. The island behind you. The other shore ahead. This is where things happen on the bridge.',
+      time_flavor:{
+        morning:'Dense fog. The bridge feels longer.',
+        midday:'Clearest all day. Both shores visible.',
+        afternoon:'A good crossing hour.',
+        evening:'The lanterns visible from here. Comforting.',
+        night:'Low tide tonight means the channel floor is visible.',
+        predawn:'Nobody crosses before dawn. The bridge is its own thing at this hour.'
+      },
+      look_objects:[
+        {id:'channel_door', name:'the door on the channel floor', visible_at:['night','midday'],
+         desc:'Visible at low tide. A door, flat against the channel floor. Not attached to anything visible. It has not moved in any recorded observation. It is clearly a door. Nobody has opened it.'},
+        {id:'coss_stones', name:'Coss\'s tuned stones', visible_at:['afternoon','evening'],
+         desc:'Hidden somewhere on the bridge — in a gap in the railing, padded with cloth. A set of stones tuned to specific notes. Coss plays them when alone. The sound carries further than it should.'}
+      ],
+      exits:{bridge_west:'back to the west end', bridge_east:'to the east shore'}
+    },
+    {
+      id:'bridge_east', name:'The East Shore', parent:'bridge',
+      desc:'The far side. Less traveled. The path here continues toward the cliff and the quarry.',
+      time_flavor:{
+        morning:'Quiet. Less visited than the west end.',
+        midday:'The cliff path starts here.',
+        afternoon:'Good light on the eastern rocks.',
+        evening:'The lighthouse beam reaches here.',
+        night:'The quarry path is dark from here.',
+        predawn:'The eastern edge of everything that\'s been mapped.'
+      },
+      look_objects:[
+        {id:'cliff_path', name:'the path toward the cliff',
+         desc:'Worn but less traveled. Goes northeast. The wind gets stronger. At the end of it — the cliff, and beyond that the sense that the island has an edge. Nobody lives past here. Yet.'},
+        {id:'quarry_sign', name:'the old sign at the quarry turnoff',
+         desc:'Faded. Grumble came from there. The quarry is south of here, past the tree line. The stone cut from it is the same stone used in the lighthouse foundation.'}
+      ],
+      exits:{bridge_mid:'back to the bridge'}
+    }
+  ]
+};
+
+// Track which sub-rooms have been visited
+var subroomVisits = {};
+
+function getSubRoom(subroomId) {
+  var all = [];
+  Object.values(SUB_ROOMS).forEach(function(rooms) { all = all.concat(rooms); });
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].id === subroomId) return all[i];
+  }
+  return null;
+}
+
+function getSubRoomsForLocation(locId) {
+  return SUB_ROOMS[locId] || [];
+}
+
+function isSubRoomAccessible(room) {
+  if (!room.conditional) return true;
+  if (room.conditional === 'low_tide') {
+    return currentTimePeriod === 'morning' || currentTimePeriod === 'midday';
+  }
+  return true;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LOOK SYSTEM — examine objects in the world
+// ═══════════════════════════════════════════════════════════════
+var lookOverlayOpen = false;
+
+function showLookOverlay(obj, room) {
+  // Remove any existing
+  var existing = document.getElementById('look-overlay');
+  if (existing) existing.parentNode.removeChild(existing);
+
+  // Check time visibility
+  if (obj.visible_at && obj.visible_at.indexOf(currentTimePeriod) === -1) {
+    showLookOverlay({
+      name: obj.name,
+      desc: 'You can\'t quite make it out right now. Come back at a different time.'
+    }, room);
+    return;
+  }
+
+  var overlay = document.createElement('div');
+  overlay.id = 'look-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:150;background:rgba(4,6,14,.88);' +
+    'display:flex;align-items:flex-end;justify-content:center;padding:20px;';
+
+  var box = document.createElement('div');
+  box.style.cssText = 'background:#0e1422;border:1.5px solid rgba(255,255,255,.12);' +
+    'border-radius:20px 20px 20px 20px;padding:22px 22px 26px;max-width:440px;width:100%;' +
+    'display:flex;flex-direction:column;gap:10px;';
+
+  var label = document.createElement('div');
+  label.style.cssText = 'font-size:10px;font-weight:800;letter-spacing:2px;' +
+    'text-transform:uppercase;color:rgba(255,255,255,.3);';
+  label.textContent = 'You look at ' + obj.name;
+
+  var desc = document.createElement('div');
+  desc.style.cssText = 'font-family:Lora,serif;font-size:15px;font-style:italic;' +
+    'color:rgba(232,228,216,.88);line-height:1.75;';
+  desc.textContent = obj.desc;
+
+  var closeBtn = document.createElement('button');
+  closeBtn.style.cssText = 'background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.12);' +
+    'border-radius:50px;color:#e8e4d8;font-family:Nunito,sans-serif;font-size:13px;font-weight:800;' +
+    'padding:10px 24px;cursor:pointer;margin-top:6px;align-self:flex-start;';
+  closeBtn.textContent = '← Back';
+  closeBtn.onclick = function() {
+    var ol = document.getElementById('look-overlay');
+    if (ol) ol.parentNode.removeChild(ol);
+    lookOverlayOpen = false;
+  };
+
+  // Special: notice board opens notice board screen
+  if (obj.interactive && obj.id === 'notice_board') {
+    var nbBtn = document.createElement('button');
+    nbBtn.style.cssText = 'background:linear-gradient(135deg,#f0c040,#c89820);color:#1a1000;' +
+      'border:none;border-radius:50px;font-family:Nunito,sans-serif;font-size:13px;font-weight:900;' +
+      'padding:10px 24px;cursor:pointer;align-self:flex-start;';
+    nbBtn.textContent = 'Read the board →';
+    nbBtn.onclick = function() {
+      var ol = document.getElementById('look-overlay');
+      if (ol) ol.parentNode.removeChild(ol);
+      showNoticeBoard();
+    };
+    box.appendChild(label);
+    box.appendChild(desc);
+    box.appendChild(nbBtn);
+    box.appendChild(closeBtn);
+  } else {
+    box.appendChild(label);
+    box.appendChild(desc);
+    box.appendChild(closeBtn);
+  }
+
+  overlay.appendChild(box);
+  overlay.onclick = function(e) {
+    if (e.target === overlay) {
+      overlay.parentNode.removeChild(overlay);
+      lookOverlayOpen = false;
+    }
+  };
+  document.body.appendChild(overlay);
+  lookOverlayOpen = true;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NOTICE BOARD — market bulletin board
+// ═══════════════════════════════════════════════════════════════
+var NOTICES = [
+  {
+    id:'n-welcome', permanent:true,
+    title:'Welcome to the Island',
+    from:'Posted by: Unknown',
+    text:'If you are reading this you have arrived. The island is glad you are here. The lighthouse is always lit. The kitchen is always open. Help yourself to the flat stones near the south shore — the good skipping ones are at the bottom of the pile.'
+  },
+  {
+    id:'n-mara', permanent:true,
+    title:'OPENING SOON',
+    from:'Posted by: Mara',
+    text:'New shop. All kinds of things. If you are looking for something specific, come by and ask — I\'m probably unpacking it right now. I accept favors. I give good ones back.'
+  },
+  {
+    id:'n-pip', permanent:true,
+    title:'Bridge Conditions',
+    from:'Posted by: Pip',
+    text:'The bridge is solid. The fog is normal. The thing on the channel floor has not moved. Come find me at the bridge or the shore if you want to talk about any of it. I\'ll be whistling.'
+  },
+  {
+    id:'n-school', permanent:true,
+    title:'Last Week of School',
+    from:'Posted by: Wellow',
+    text:'This is the last week of school on the mainland. Summer break starts next week. The lighthouse kitchen will have extra on the table. For returning travelers and new ones alike.'
+  },
+  {
+    id:'n-summer', permanent:true,
+    title:'Attention All Residents',
+    from:'Posted by: The Island (posted itself, somehow)',
+    text:'Summer break begins next week. New visitors are expected. All residents are encouraged to be findable and approachable. Wellow will have food ready. Mara\'s shop opening is being reconsidered with urgency.'
+  },
+  {
+    id:'n-torn-map', unlock_run:3,
+    title:'Has Anyone Seen This?',
+    from:'Posted by: Sable',
+    text:'A torn piece of a map. Very old. Shows this island with locations that don\'t exist yet — or don\'t exist anymore. I have one piece. There are three more. If you find one, please bring it to me. I am usually at the bridge midday or in the forest at night.'
+  },
+  {
+    id:'n-shop-opens', unlock_run:8,
+    title:'The Shop is Open',
+    from:'Posted by: Mara',
+    text:'I\'m open. Come by. The high shelf item is still waiting for the right moment. Everything else is available. Favors accepted. Stories about where things came from are especially welcome.'
+  }
+];
+
+// Which notices are currently visible based on run_count
+function getVisibleNotices() {
+  return NOTICES.filter(function(n) {
+    if (n.permanent) return true;
+    if (n.unlock_run && run_count >= n.unlock_run) return true;
+    return false;
+  });
+}
+
+function showNoticeBoard() {
+  var existing = document.getElementById('notice-board-overlay');
+  if (existing) existing.parentNode.removeChild(existing);
+
+  var overlay = document.createElement('div');
+  overlay.id = 'notice-board-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:160;background:rgba(4,6,14,.92);' +
+    'display:flex;flex-direction:column;overflow:hidden;';
+
+  var hdr = document.createElement('div');
+  hdr.style.cssText = 'display:flex;align-items:center;justify-content:space-between;' +
+    'padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0;';
+  hdr.innerHTML = '<div style="font-family:Fredoka One,cursive;font-size:22px;color:#f0c040;">📋 Notice Board</div>';
+
+  var closeBtn = document.createElement('button');
+  closeBtn.className = 'btn-outline';
+  closeBtn.style.cssText = 'padding:6px 14px;font-size:12px;';
+  closeBtn.textContent = '← Back';
+  closeBtn.onclick = function() {
+    var ol = document.getElementById('notice-board-overlay');
+    if (ol) ol.parentNode.removeChild(ol);
+  };
+  hdr.appendChild(closeBtn);
+
+  var list = document.createElement('div');
+  list.style.cssText = 'flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;';
+
+  var notices = getVisibleNotices();
+  notices.forEach(function(notice) {
+    var card = document.createElement('div');
+    card.style.cssText = 'background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);' +
+      'border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;';
+    card.innerHTML =
+      '<div style="font-family:Fredoka One,cursive;font-size:17px;color:white;">' + notice.title + '</div>' +
+      '<div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:1px;text-transform:uppercase;">' + notice.from + '</div>' +
+      '<div style="font-family:Lora,serif;font-size:13px;font-style:italic;color:rgba(232,228,216,.78);line-height:1.7;">' + notice.text + '</div>';
+    list.appendChild(card);
+  });
+
+  overlay.appendChild(hdr);
+  overlay.appendChild(list);
+  document.body.appendChild(overlay);
+}
+
+// Extend showLocationDetail to include sub-rooms
+function showLocationDetailFull(locId) {
+  var loc = LOCATION_GLOSSARY[locId];
+  if (!loc) return;
+  var tier = getLocationTier(locId);
+  var tierData = loc.tiers[tier - 1];
+  var subrooms = getSubRoomsForLocation(locId);
+
+  var nameEl = document.getElementById('locdet-name');
+  var bodyEl = document.getElementById('locdet-body');
+  if (nameEl) nameEl.innerHTML = loc.icon + ' ' + loc.name;
+  if (!bodyEl) return;
+
+  var html = '<div style="font-family:Lora,serif;font-size:15px;font-style:italic;' +
+    'color:rgba(232,228,216,.85);line-height:1.8;margin-bottom:14px;">' + tierData.desc + '</div>';
+
+  // Time flavor for current period
+  var tp = getTimeContext();
+  var mapLoc = null;
+  for (var i = 0; i < MAP_LOCATIONS.length; i++) {
+    if (MAP_LOCATIONS[i].id === locId) { mapLoc = MAP_LOCATIONS[i]; break; }
+  }
+  if (mapLoc && mapLoc.time_desc && mapLoc.time_desc[currentTimePeriod]) {
+    html += '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);' +
+      'border-radius:12px;padding:10px 14px;margin-bottom:10px;">' +
+      '<div style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;' +
+      'color:' + tp.color + ';margin-bottom:4px;">' + tp.icon + ' Right now</div>' +
+      '<div style="font-family:Lora,serif;font-size:13px;font-style:italic;color:rgba(232,228,216,.75);">' +
+      mapLoc.time_desc[currentTimePeriod] + '</div></div>';
+  }
+
+  // Known details
+  html += '<div class="fact-group" style="margin-bottom:10px;">';
+  html += '<div class="fact-group-title" style="color:' + loc.color + ';">' + tierData.title + ' — Known</div>';
+  tierData.details.forEach(function(d) {
+    html += '<div class="fact-item">' + d + '</div>';
+  });
+  html += '</div>';
+
+  // Sub-rooms
+  if (subrooms.length > 0) {
+    html += '<div class="fact-group" style="margin-bottom:10px;">';
+    html += '<div class="fact-group-title">Areas within ' + loc.name + '</div>';
+    subrooms.forEach(function(room) {
+      var accessible = isSubRoomAccessible(room);
+      html += '<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);">';
+      html += '<div style="font-weight:800;font-size:13px;color:' + (accessible ? 'white' : 'rgba(255,255,255,.3)') + ';">' +
+        room.name + (accessible ? '' : ' <span style=\"font-size:10px;color:#ff6b35;\">(' + (room.locked_msg || 'locked') + ')</span>') + '</div>';
+      var roomDesc = room.time_flavor && room.time_flavor[currentTimePeriod] ? room.time_flavor[currentTimePeriod] : room.desc;
+      html += '<div style="font-family:Lora,serif;font-size:12px;font-style:italic;color:rgba(232,228,216,.55);margin-top:2px;">' + roomDesc + '</div>';
+
+      // Look objects
+      if (room.look_objects && accessible) {
+        room.look_objects.forEach(function(obj) {
+          var vis = !obj.visible_at || obj.visible_at.indexOf(currentTimePeriod) !== -1;
+          html += '<div style="display:inline-flex;align-items:center;gap:5px;margin-top:4px;margin-right:6px;' +
+            'background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;' +
+            'padding:3px 10px;cursor:pointer;font-size:11px;color:' + (vis ? '#e8e4d8' : 'rgba(255,255,255,.25)') + ';" ' +
+            'data-look-room="' + room.id + '" data-look-obj="' + obj.id + '">👁 ' + obj.name + '</div>';
+        });
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Locked tiers
+  var visitThresholds = [0,5,12];
+  for (var t = tier; t < 3; t++) {
+    var needed = visitThresholds[t];
+    var visits = locationVisits[locId] || 0;
+    html += '<div class="fact-group" style="opacity:0.45;margin-bottom:8px;">';
+    html += '<div class="fact-group-title">🔒 ' + loc.tiers[t].title + ' — Hidden</div>';
+    html += '<div class="fact-locked">' + (needed - visits > 0 ? (needed - visits) + ' more visit' + (needed - visits === 1 ? '' : 's') + ' needed.' : 'Unlocking...') + '</div>';
+    html += '</div>';
+  }
+
+  bodyEl.innerHTML = html;
+
+  // Wire look object clicks via delegation
+  bodyEl.onclick = function(e) {
+    var el = e.target;
+    while (el && el !== bodyEl) {
+      if (el.dataset.lookRoom && el.dataset.lookObj) {
+        var room = getSubRoom(el.dataset.lookRoom);
+        if (room) {
+          var obj = room.look_objects.filter(function(o){ return o.id === el.dataset.lookObj; })[0];
+          if (obj) showLookOverlay(obj, room);
+        }
+        return;
+      }
+      el = el.parentElement;
+    }
+  };
+
+  // Back button wires to glossaryReturn
+  var backBtn = document.getElementById('btn-locdet-back');
+  if (backBtn) backBtn.onclick = function() {
+    show(glossaryReturn || 's-title');
+    glossaryReturn = null;
+  };
+
+  show('s-location-detail');
+}
+
 var ITEM_TRIGGERS = [
   {cat:`freeze`,loc_kw:`lighthouse`,choice_idx:0,item:`lantern`},
   {cat:`tangle`,loc_kw:`forest`,choice_idx:1,item:`silver_thread`},
@@ -4314,6 +5830,12 @@ var RUN_LEN = 6;
 var seenIds = new Set();
 var pendingDisc = null;
 var residentEncounters = {};
+var pendingIntros = [];
+var mapFocusLoc = null;
+var subroomVisits = {};
+var favors = 0;
+var artifactLore = {};
+var currentInvCat = 'all';
 var locationVisits = {beach:0,forest:0,market:0,lighthouse:0,bridge:0};
 var pendingFriendship = [];
 var detailId = null;
@@ -4335,6 +5857,9 @@ function loadState() {
       seenIds = new Set(s.seenIds || []);
       residentEncounters = s.residentEncounters || {};
       locationVisits = s.locationVisits || {beach:0,forest:0,market:0,lighthouse:0,bridge:0};
+      favors = s.favors || 0;
+      artifactLore = s.artifactLore || {};
+      subroomVisits = s.subroomVisits || {};
     }
   } catch(e) {}
   CREATURES.forEach(function(c) {
@@ -4349,7 +5874,7 @@ function saveState() {
       collection:collection, inventory:inventory,
       lucky_sparks:lucky_sparks, run_count:run_count,
       seenIds:[...seenIds], residentEncounters:residentEncounters,
-      locationVisits:locationVisits
+      locationVisits:locationVisits, favors:favors, artifactLore:artifactLore, subroomVisits:subroomVisits
     }));
   } catch(e) {}
 }
@@ -4381,7 +5906,7 @@ function shuffle(arr) {
 // ═══════════════════════════════════════════════════════════════
 // BUILD RUN — 9 encounters, carry-forward axes
 // ═══════════════════════════════════════════════════════════════
-function buildRun() {
+function buildRun(focusLoc) {
   // Carry 60% of current axes into new run
   var keys = [`flame`,`thread`,`stone`,`spark`,`root`];
   keys.forEach(function(k) {
@@ -4400,6 +5925,14 @@ function buildRun() {
     others.push(pickUnseen(pool));
   }
   runEncounters = shuffle([mirror].concat(others));
+  // If a focus location was set, bias: sort so that loc encounters come first
+  if (focusLoc) {
+    runEncounters.sort(function(a,b){
+      var aMatch = (a.loc === focusLoc) ? -1 : 0;
+      var bMatch = (b.loc === focusLoc) ? -1 : 0;
+      return aMatch - bMatch;
+    });
+  }
   runEncounters.forEach(function(e) { seenIds.add(e.text); });
   if (seenIds.size >= ENCOUNTERS.length) seenIds.clear();
   runIdx = 0;
@@ -4416,10 +5949,8 @@ function pickUnseen(pool) {
 // EXPLORE
 // ═══════════════════════════════════════════════════════════════
 function startExplore() {
-  buildRun();
-  buildProgress();
-  show(`s-explore`);
-  renderEncounter();
+  setTimePeriod(null);  // auto-set from clock
+  showTimePicker();     // let player confirm or change
 }
 
 function buildProgress() {
@@ -4539,6 +6070,12 @@ function makeChoice(idx) {
 }
 
 function nextEncounter() {
+  // Show any first-meeting intros before advancing
+  if (pendingIntros && pendingIntros.length > 0) {
+    var r = pendingIntros.shift();
+    showResidentIntro(r, function() { nextEncounter(); });
+    return;
+  }
   runIdx++;
   document.getElementById(`choices`).style.cssText = ``;
   document.getElementById(`feedback`).classList.remove(`show`);
@@ -4964,18 +6501,32 @@ window.onload = function() {
     var el = document.getElementById(id);
     if (el) el.onclick = fn;
   }
-  wire('btn-explore', startExplore);
+  wire('btn-explore', showTimePicker);
   wire('btn-collection', showCompendium);
   wire('btn-inventory', showInventory);
   wire('btn-residents', showResidents);
+  wire('btn-map', function(){ setTimePeriod(null); showMap(); });
+  wire('btn-map-back', function(){ show('s-title'); });
+  wire('btn-map-explore-here', exploreFromMap);
+  
   wire('btn-locations', showLocations);
-  wire('btn-locs-back', function(){ show('s-title'); });
-  wire('btn-res-back', function(){ show('s-title'); });
+    wire('btn-res-back', function(){ show('s-title'); });
   wire('btn-rdet-back', showResidents);
+  wire('btn-locdet-back', function(){
+    show(glossaryReturn || 's-locations');
+    glossaryReturn = null;
+  });
+  wire('btn-locs-back', function(){ show('s-title'); });
+      wire('btn-map-location-info', function(){
+    if (selectedMapLoc) {
+      glossaryReturn = 's-map';
+      showLocationDetailFull(selectedMapLoc.id);
+    }
+  });
   wire('btn-nav-coll', showCompendium);
   wire('btn-nav-inv', showInventory);
   wire('btn-nav-home', function(){ show('s-title'); });
-  wire('btn-nav-locs', function(){ glossaryReturn='s-explore'; showLocations(); });
+  wire('btn-nav-map', function(){ glossaryReturn='s-explore'; showMap(); });
   wire('btn-next', nextEncounter);
   wire('btn-save-disc', saveDiscovery);
   wire('btn-disc-skip', skipDiscovery);
@@ -4983,8 +6534,18 @@ window.onload = function() {
   wire('btn-nick-save', saveNick);
   wire('btn-detail-back', showCompendium);
   wire('btn-inv-back', function(){ show('s-title'); });
+  wire('btn-tp-back', function(){
+    mapFocusLoc = null;
+    show('s-map');
+  });
+  // Inventory category tabs
+  var invCatBtns = document.querySelectorAll('.inv-cat-btn');
+  for (var ici = 0; ici < invCatBtns.length; ici++) {
+    (function(btn){ btn.onclick = function(){ renderInventoryV2(btn.dataset.cat); }; })(invCatBtns[ici]);
+  }
   wire('btn-friend-ok', nextAfterFriendship);
   wire('btn-again', startExplore);
+  wire('btn-intro-continue', function(){ if(introPending){ var fn=introPending; introPending=null; fn(); } else { show('s-residents'); } });
   wire('btn-runend-coll', showCompendium);
 
   // Tap-link delegation — handles creature/location/resident links in encounter text
@@ -5044,5 +6605,85 @@ window.onload = function() {
   </div>
   <div style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;" id="locations-list"></div>
 </div>
+
+<!-- ══ RESIDENT INTRO ══ -->
+<div class="screen" id="s-resident-intro">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+    height:100%;padding:32px;gap:18px;text-align:center;
+    background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.04) 0%,transparent 65%);">
+    <div style="font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+      color:rgba(255,255,255,.35);">You meet for the first time</div>
+    <div id="intro-portrait" style="width:160px;height:188px;border-radius:18px;overflow:hidden;
+      background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);flex-shrink:0;"></div>
+    <div>
+      <div id="intro-name" style="font-family:'Fredoka One',cursive;font-size:38px;color:white;line-height:1.1;"></div>
+      <div id="intro-role" style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-top:4px;"></div>
+    </div>
+    <div id="intro-line" style="font-family:'Lora',serif;font-size:15px;font-style:italic;
+      color:rgba(232,228,216,.8);line-height:1.75;max-width:320px;"></div>
+    <button class="btn-gold" id="btn-intro-continue" style="margin-top:8px;">
+      Nice to meet you &#x2192;
+    </button>
+  </div>
+</div>
+
+<!-- ══ TIME PICKER ══ -->
+<div class="screen" id="s-timepick">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+    height:100%;padding:28px;gap:18px;max-width:420px;margin:0 auto;text-align:center;">
+    <div style="font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+      color:rgba(255,255,255,.35);">When are you heading out?</div>
+    <div id="tp-clock-line" style="font-family:'Lora',serif;font-size:13px;font-style:italic;
+      color:rgba(255,255,255,.45);"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;" id="tp-options"></div>
+    <div style="margin-top:6px;display:flex;gap:8px;width:100%;">
+      <button class="btn-outline" id="btn-tp-back" style="flex:1;font-size:13px;padding:11px;">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ISLAND MAP ══ -->
+<div class="screen" id="s-map">
+  <div class="map-hdr">
+    <div class="map-title">&#x1F5FA; The Island</div>
+    <div class="map-time-badge" id="map-time-badge">🌅 Morning</div>
+    <button class="btn-outline" style="padding:5px 12px;font-size:12px;" id="btn-map-back">← Back</button>
+  </div>
+  <div class="map-canvas-wrap">
+    <div class="map-bg"></div>
+    <div class="map-bg-sea"></div>
+    <div class="map-canvas" id="map-canvas"></div>
+    <!-- Location detail panel -->
+    <div class="map-detail-panel" id="map-detail-panel">
+      <div class="map-panel-drag"></div>
+      <div class="map-panel-name" id="map-panel-name"></div>
+      <div class="map-panel-time" id="map-panel-time"></div>
+      <div class="map-panel-desc" id="map-panel-desc"></div>
+      <div class="map-panel-residents" id="map-panel-residents"></div>
+      <div class="map-panel-btns">
+        <button class="btn-map-explore" id="btn-map-explore-here">Explore Here &#x2192;</button>
+        <button class="btn-map-info" id="btn-map-location-info">&#x1F4D6; Details</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESIDENTS LIST ══ -->
+<div class="screen" id="s-residents">
+  <div class="comp-hdr">
+    <div class="comp-title">&#x1F3D8; Island Residents</div>
+    <button class="btn-outline" style="padding:6px 14px;font-size:12px;" id="btn-res-back">&#x2190; Back</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px;" id="residents-list"></div>
+</div>
+<!-- ══ RESIDENT DETAIL ══ -->
+<div class="screen" id="s-resident-detail">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;">
+    <div style="font-family:'Fredoka One',cursive;font-size:22px;color:white;" id="rdet-name"></div>
+    <button class="btn-outline" id="btn-rdet-back" style="padding:6px 14px;font-size:12px;">&#x2190; Back</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;" id="rdet-body"></div>
+</div>
+
 </body>
 </html>
