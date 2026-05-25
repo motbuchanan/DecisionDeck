@@ -307,6 +307,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
 .detail-type{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
 .detail-type.flame{color:#ff6b35;}.detail-type.thread{color:#5ec4b0;}.detail-type.stone{color:#8ba7c0;}
 .detail-type.spark{color:#f0c040;}.detail-type.root{color:#68b828;}.detail-type.rare{color:#d4a0ff;}
+.detail-type.water{color:#80c8f0;}
 .detail-pers{font-family:'Lora',serif;font-size:16px;font-style:italic;
   color:rgba(232,228,216,.8);line-height:1.7;}
 .detail-lore-row{display:flex;flex-direction:column;gap:6px;}
@@ -629,16 +630,38 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
   border-radius:1px;box-shadow:0 1px 2px rgba(0,0,0,.5);}
 /* Weekly event tag below sign */
 .sign-event{
-  /* Painted brushstroke look */
   background:rgba(120,70,0,.55);
   border:none;border-radius:3px;
   padding:6px 18px;
   font-family:'Lora',serif;font-size:13px;font-style:italic;
   color:rgba(255,240,190,1);
-  letter-spacing:.4px;margin-top:6px;
+  letter-spacing:.4px;margin-top:4px;
   box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,200,80,.15);
   position:relative;
   text-shadow:0 1px 3px rgba(0,0,0,.8);}
+.sign-plank-sub{
+  font-family:'Lora',serif;font-size:10px;font-style:italic;
+  color:rgba(255,220,140,.4);letter-spacing:2px;text-align:center;
+  margin-top:2px;position:relative;z-index:1;}
+.sign-nailrow{
+  display:flex;justify-content:space-between;padding:0 8px;
+  font-size:6px;color:rgba(180,120,40,.35);margin-top:3px;position:relative;z-index:1;}
+.sign-mystery{
+  align-self:flex-end;
+  background:linear-gradient(135deg,rgba(80,20,120,.7),rgba(40,10,80,.8));
+  border:1px solid rgba(180,100,255,.3);border-radius:6px;
+  padding:4px 10px;margin-top:3px;margin-right:0;
+  font-family:'Fredoka One','Baloo 2','Nunito',sans-serif;
+  font-size:11px;letter-spacing:1px;
+  color:rgba(210,160,255,.9);
+  box-shadow:0 2px 8px rgba(80,20,120,.4),inset 0 1px 0 rgba(200,140,255,.15);
+  text-shadow:0 0 8px rgba(180,100,255,.6);
+  position:relative;}
+.sign-mystery::before{
+  content:'';position:absolute;inset:0;border-radius:6px;
+  background:linear-gradient(90deg,transparent,rgba(180,100,255,.08),transparent);
+  animation:shimmer 3s ease-in-out infinite;}
+@keyframes shimmer{0%,100%{opacity:0;}50%{opacity:1;}}
 .sign-event::before{
   content:'';position:absolute;inset:0;border-radius:2px;
   background:linear-gradient(90deg,transparent 0%,rgba(255,200,80,.05) 50%,transparent 100%);
@@ -866,9 +889,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
         <div class="sign-ropes"><div class="sign-rope"></div><div class="sign-rope"></div></div>
         <div class="sign-plank">
           <div class="sign-grain"></div>
-          <div class="sign-text"><span class="sign-sun">&#x2600;&#xFE0F;</span>Golden Season Edition</div>
+          <div class="sign-text"><span class="sign-sun">&#x2600;&#xFE0F;</span>Golden Season</div>
+          <div class="sign-plank-sub">on the</div>
+          <div class="sign-nailrow"><span>&#x2022;</span><span>&#x2022;</span><span>&#x2022;</span></div>
         </div>
-        <div class="sign-event">&#x1F393; Last week of school &#x2022; Summer starts soon</div>
+        <div class="sign-event">&#x1F393; Last week of school</div>
+        <div class="sign-mystery">&#x2728; Mystery Mode</div>
       </div>
       <div class="title-subtitle">Creature Collector</div>
     </div>
@@ -2520,6 +2546,111 @@ const CREATURES = [
 <path d="M90 126 Q100 122 110 126 Q114 130 110 134 Q100 136 90 134" stroke="#384838" stroke-width="1.5" fill="none" opacity="0.48"/>
 </g>
 </svg>`
+  },
+  {
+    id:`tidget`, name:`Tidget`, type:`water`, rare:false,
+    personality:`Always moving slightly even when standing still. Finds one spot on the shore every morning and watches the horizon for exactly one hour. Nobody has timed it. Everyone somehow knows.`,
+    bio:`Appeared one morning sitting on the south shore rocks like it had always been there. Nobody saw it arrive. It did not appear to find this unusual.`,
+    hobby:`Watching the horizon. Has been watching the same stretch of water for as long as anyone can remember.`,
+    food:`The specific cold of water from deep down.`,
+    quirk:`Moves constantly in tiny increments, like water in a glass that never fully settles. Has never been seen completely still.`,
+    threshold:{water:45},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="tg-b" cx="40%" cy="35%" r="60%"><stop offset="0%" stop-color="#8ab0b8"/><stop offset="100%" stop-color="#4a7880"/></radialGradient></defs><ellipse cx="100" cy="130" rx="30" ry="12" fill="#1a2838" opacity="0.3"/><circle cx="100" cy="108" r="44" fill="url(#tg-b)" style="animation:bob 3s ease-in-out infinite;"/><circle cx="100" cy="106" r="38" fill="#7aa8b0" opacity="0.6"/><circle cx="84" cy="98" r="8" fill="#1a3040" opacity="0.85"/><circle cx="116" cy="98" r="8" fill="#1a3040" opacity="0.85"/><circle cx="84" cy="97" r="5" fill="#2a5868"/><circle cx="116" cy="97" r="5" fill="#2a5868"/><circle cx="85" cy="96" r="2" fill="rgba(200,230,240,0.9)"/><circle cx="117" cy="96" r="2" fill="rgba(200,230,240,0.9)"/><path d="M88 118 Q100 124 112 118" stroke="#3a6878" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="78" cy="94" rx="8" ry="12" fill="#6898a0" opacity="0.7" transform="rotate(-10,78,94)"/><ellipse cx="122" cy="94" rx="8" ry="12" fill="#6898a0" opacity="0.7" transform="rotate(10,122,94)"/><ellipse cx="100" cy="148" rx="12" ry="7" fill="#5a8890" opacity="0.6"/><ellipse cx="100" cy="152" rx="10" ry="5" fill="#3a6878" opacity="0.5"/></svg>`
+  },
+  {
+    id:`brumble`, name:`Brumble`, type:`water`, rare:false,
+    personality:`Deeply interested in things that wash up on shore and catalogs everything in a language nobody else speaks. Has strong feelings about which direction the tide is going and shares them unprompted.`,
+    bio:`Made entirely of kelp that decided to have opinions. Has lived in the tidal zone so long that the tide works around its schedule now.`,
+    hobby:`Cataloging objects that wash up. The catalog is extensive and completely illegible to anyone else.`,
+    food:`Whatever came in on the last tide.`,
+    quirk:`Produces a low humming sound when examining something interesting. The more interesting the object, the higher the pitch.`,
+    threshold:{water:40,root:40},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="br-b" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#4a8040"/><stop offset="100%" stop-color="#2a5028"/></radialGradient></defs><ellipse cx="100" cy="140" rx="28" ry="10" fill="#1a2818" opacity="0.35"/><ellipse cx="100" cy="120" rx="38" ry="32" fill="url(#br-b)" style="animation:breathe 4s ease-in-out infinite;"/><path d="M68 110 Q60 95 65 82 Q70 70 78 78" stroke="#3a7030" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M132 108 Q142 92 136 80 Q130 68 122 76" stroke="#3a7030" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M75 130 Q65 140 60 152" stroke="#3a7030" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M125 130 Q135 140 140 152" stroke="#3a7030" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="88" cy="114" r="8" fill="#1a2818" opacity="0.9"/><circle cx="112" cy="114" r="8" fill="#1a2818" opacity="0.9"/><circle cx="88" cy="113" r="5" fill="#2a5828"/><circle cx="112" cy="113" r="5" fill="#2a5828"/><circle cx="89" cy="112" r="2" fill="rgba(180,220,160,0.8)"/><circle cx="113" cy="112" r="2" fill="rgba(180,220,160,0.8)"/><path d="M90 128 Q100 133 110 128" stroke="#1a3818" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="85" y="95" width="30" height="18" rx="3" fill="#8ab868" opacity="0.7"/><line x1="88" y1="100" x2="112" y2="100" stroke="#2a5828" stroke-width="1" opacity="0.6"/><line x1="88" y1="105" x2="112" y2="105" stroke="#2a5828" stroke-width="1" opacity="0.6"/><line x1="88" y1="110" x2="105" y2="110" stroke="#2a5828" stroke-width="1" opacity="0.6"/></svg>`
+  },
+  {
+    id:`slub`, name:`Slub`, type:`water`, rare:false,
+    personality:`Has never been in a hurry and finds the concept baffling. Produces a faint sound like distant rain when content. Produces the same sound when anxious, making it very hard to read.`,
+    bio:`Round, damp, and deeply comfortable with existing. Has been on the island in some form since before the market had a roof.`,
+    hobby:`Sitting in puddles. Not because it needs to. Just because it likes to.`,
+    food:`The smell before rain.`,
+    quirk:`Always slightly damp to the touch even in dry weather. Nobody has asked why. Slub has never brought it up.`,
+    threshold:{water:50},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sl-b" cx="38%" cy="32%" r="65%"><stop offset="0%" stop-color="#7ab0c8"/><stop offset="100%" stop-color="#3a6888"/></radialGradient></defs><ellipse cx="100" cy="148" rx="46" ry="16" fill="#1a2838" opacity="0.3"/><circle cx="100" cy="108" r="52" fill="url(#sl-b)" style="animation:breathe 5s ease-in-out infinite;"/><circle cx="100" cy="106" r="46" fill="#6aa0b8" opacity="0.55"/><circle cx="100" cy="104" r="40" fill="#7ab0c4" opacity="0.35"/><circle cx="84" cy="100" r="9" fill="#1a3040" opacity="0.85"/><circle cx="116" cy="100" r="9" fill="#1a3040" opacity="0.85"/><circle cx="84" cy="99" r="6" fill="#2a5878"/><circle cx="116" cy="99" r="6" fill="#2a5878"/><circle cx="85" cy="98" r="2.5" fill="rgba(200,230,245,0.9)"/><circle cx="117" cy="98" r="2.5" fill="rgba(200,230,245,0.9)"/><path d="M85 120 Q100 130 115 120" stroke="#2a5070" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/><ellipse cx="68" cy="130" rx="14" ry="10" fill="#5a90a8" opacity="0.6"/><ellipse cx="132" cy="130" rx="14" ry="10" fill="#5a90a8" opacity="0.6"/><ellipse cx="100" cy="155" rx="16" ry="10" fill="#5a90a8" opacity="0.55"/><circle cx="130" cy="76" r="5" fill="#a0c8d8" opacity="0.4" style="animation:bob 4s ease-in-out infinite;"/><circle cx="142" cy="88" r="3" fill="#a0c8d8" opacity="0.3" style="animation:bob 5s ease-in-out infinite 1s;"/></svg>`
+  },
+  {
+    id:`wettling`, name:`Wettling`, type:`water`, rare:false,
+    personality:`Extremely small. Extremely precise. Lives in the space between waves and has strong opinions about where exactly the waterline is. Will move things that seem out of place.`,
+    bio:`Pip considers Wettling a professional colleague. They have worked the same stretch of shore for years. Neither has formally acknowledged this.`,
+    hobby:`Maintaining the exact position of the waterline. Nobody else does this. Wettling finds this baffling.`,
+    food:`Precision. Also small crustaceans.`,
+    quirk:`Always slightly ahead of where the water will go. Somehow always right.`,
+    threshold:{water:42,thread:38},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="wt-b" cx="35%" cy="30%" r="60%"><stop offset="0%" stop-color="#a8d0e0"/><stop offset="100%" stop-color="#5888a0"/></radialGradient></defs><ellipse cx="100" cy="148" rx="20" ry="7" fill="#1a2838" opacity="0.3"/><ellipse cx="100" cy="116" rx="28" ry="36" fill="url(#wt-b)" style="animation:bob 2.5s ease-in-out infinite;"/><ellipse cx="100" cy="114" rx="24" ry="32" fill="#98c0d8" opacity="0.6"/><circle cx="91" cy="104" r="6" fill="#1a3040" opacity="0.9"/><circle cx="109" cy="104" r="6" fill="#1a3040" opacity="0.9"/><circle cx="91" cy="103" r="3.5" fill="#2a6080"/><circle cx="109" cy="103" r="3.5" fill="#2a6080"/><circle cx="92" cy="102" r="1.5" fill="rgba(210,235,245,0.9)"/><circle cx="110" cy="102" r="1.5" fill="rgba(210,235,245,0.9)"/><path d="M93 118 Q100 122 107 118" stroke="#2a5878" stroke-width="1.5" fill="none" stroke-linecap="round"/><line x1="72" y1="108" x2="84" y2="108" stroke="#78a8c0" stroke-width="2" stroke-linecap="round" opacity="0.7"/><line x1="116" y1="108" x2="128" y2="108" stroke="#78a8c0" stroke-width="2" stroke-linecap="round" opacity="0.7"/><ellipse cx="100" cy="146" rx="10" ry="6" fill="#78a8c0" opacity="0.6"/><ellipse cx="100" cy="150" rx="8" ry="4" fill="#5888a0" opacity="0.5"/></svg>`
+  },
+  {
+    id:`lorne`, name:`Lorne`, type:`water`, rare:false,
+    personality:`Looks like a piece of driftwood until it turns around. Then it looks like something that has been thinking for a very long time. Sits at the waterline at low tide and appears to be waiting.`,
+    bio:`Nobody knows how old Lorne is. Lorne does not volunteer the information. Has been at this particular spot on the shore longer than anyone currently on the island has been alive.`,
+    hobby:`Waiting. For what, specifically, is not known.`,
+    food:`Patience. Has never been observed eating anything else.`,
+    quirk:`If you approach from the front, it looks like driftwood. If you approach from behind, it is clearly a creature. This transition has never been directly observed.`,
+    threshold:{water:60,stone:55},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lo-b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8a7060"/><stop offset="50%" stop-color="#6a5040"/><stop offset="100%" stop-color="#7a6050"/></linearGradient></defs><ellipse cx="100" cy="155" rx="45" ry="12" fill="#1a1810" opacity="0.4"/><rect x="58" y="80" width="84" height="72" rx="18" fill="url(#lo-b)"/><rect x="62" y="84" width="76" height="64" rx="15" fill="#7a6858" opacity="0.5"/><line x1="65" y1="96" x2="135" y2="96" stroke="#4a3828" stroke-width="1.5" opacity="0.4"/><line x1="65" y1="108" x2="135" y2="108" stroke="#4a3828" stroke-width="1.5" opacity="0.35"/><line x1="65" y1="120" x2="135" y2="120" stroke="#4a3828" stroke-width="1.5" opacity="0.3"/><line x1="65" y1="132" x2="135" y2="132" stroke="#4a3828" stroke-width="1.5" opacity="0.25"/><circle cx="86" cy="102" r="8" fill="#2a1a10" opacity="0.9"/><circle cx="114" cy="102" r="8" fill="#2a1a10" opacity="0.9"/><circle cx="86" cy="101" r="5" fill="#3a5848"/><circle cx="114" cy="101" r="5" fill="#3a5848"/><circle cx="87" cy="100" r="2" fill="rgba(160,200,180,0.7)"/><circle cx="115" cy="100" r="2" fill="rgba(160,200,180,0.7)"/><path d="M88 118 Q100 124 112 118" stroke="#3a2818" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/><rect x="58" y="138" width="20" height="12" rx="4" fill="#6a5040" opacity="0.7"/><rect x="122" y="138" width="20" height="12" rx="4" fill="#6a5040" opacity="0.7"/><rect x="72" y="145" width="56" height="10" rx="4" fill="#6a5040" opacity="0.6"/></svg>`
+  },
+  {
+    id:`mirrik`, name:`Mirrik`, type:`water`, rare:false,
+    personality:`The color of water under overcast sky. Appears in reflections before appearing in person. Pip says it's just shy — the reflection comes first because it wants to check if it's safe.`,
+    bio:`Has startled several residents by appearing in still water before appearing in the room. Considers this perfectly normal behavior. Is genuinely confused that others find it unusual.`,
+    hobby:`Checking reflections. Considers this due diligence, not vanity.`,
+    food:`Reflections. Nobody is sure how.`,
+    quirk:`If you look at it directly, it seems slightly less solid than if you look near it. This is not a trick of the light. Mirrik is aware of this and finds it somewhat inconvenient.`,
+    threshold:{water:65,thread:50},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="mr-b" cx="45%" cy="38%" r="58%"><stop offset="0%" stop-color="#90a8b8" stop-opacity="0.9"/><stop offset="100%" stop-color="#5878a0" stop-opacity="0.7"/></radialGradient></defs><ellipse cx="100" cy="152" rx="36" ry="10" fill="#1a2838" opacity="0.25"/><circle cx="100" cy="110" r="46" fill="url(#mr-b)" opacity="0.82" style="animation:breathe 5s ease-in-out infinite;"/><circle cx="100" cy="108" r="40" fill="#8098b0" opacity="0.45"/><circle cx="86" cy="103" r="8" fill="#182830" opacity="0.8"/><circle cx="114" cy="103" r="8" fill="#182830" opacity="0.8"/><circle cx="86" cy="102" r="5" fill="#284868" opacity="0.9"/><circle cx="114" cy="102" r="5" fill="#284868" opacity="0.9"/><circle cx="87" cy="101" r="2" fill="rgba(190,215,235,0.85)"/><circle cx="115" cy="101" r="2" fill="rgba(190,215,235,0.85)"/><path d="M90 120 Q100 126 110 120" stroke="#284868" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.65"/><ellipse cx="72" cy="98" rx="10" ry="16" fill="#7898b0" opacity="0.5" transform="rotate(-8,72,98)"/><ellipse cx="128" cy="98" rx="10" ry="16" fill="#7898b0" opacity="0.5" transform="rotate(8,128,98)"/><ellipse cx="100" cy="155" rx="38" ry="8" fill="#6888a8" opacity="0.18" style="animation:breathe 5s ease-in-out infinite 0.5s;"/></svg>`
+  },
+  {
+    id:`deepling`, name:`Deepling`, type:`water`, rare:false,
+    personality:`Only visible from the bridge at night, and only when you're not looking directly at it. Has been confirmed to exist by six residents who each caught it in peripheral vision. Pip leaves fish on the dock rail.`,
+    bio:`The fish are always gone by morning. Nobody has seen Deepling take them. Pip considers this a working relationship.`,
+    hobby:`Being almost seen.`,
+    food:`Whatever Pip leaves out.`,
+    quirk:`If you look directly at the spot where you just saw it, there is nothing there. If you look slightly away, it is still there. This is consistent and repeatable.`,
+    threshold:{water:70,spark:45},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="dp-b" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#283848" stop-opacity="0.9"/><stop offset="100%" stop-color="#101820" stop-opacity="0.95"/></radialGradient></defs><ellipse cx="100" cy="155" rx="40" ry="10" fill="#080c14" opacity="0.4"/><ellipse cx="100" cy="112" rx="50" ry="40" fill="url(#dp-b)" opacity="0.75" style="animation:breathe 6s ease-in-out infinite;"/><ellipse cx="100" cy="110" rx="44" ry="35" fill="#1a2838" opacity="0.5"/><circle cx="82" cy="105" r="10" fill="#080c14" opacity="0.95"/><circle cx="118" cy="105" r="10" fill="#080c14" opacity="0.95"/><circle cx="82" cy="104" r="6" fill="#1a3858" opacity="0.9"/><circle cx="118" cy="104" r="6" fill="#1a3858" opacity="0.9"/><circle cx="83" cy="103" r="2.5" fill="rgba(140,190,220,0.6)"/><circle cx="119" cy="103" r="2.5" fill="rgba(140,190,220,0.6)"/><path d="M88 122 Q100 128 112 122" stroke="#1a2838" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/><path d="M55 112 Q62 100 70 112" stroke="#1a2838" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.4"/><path d="M130 112 Q138 100 145 112" stroke="#1a2838" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.4"/><ellipse cx="100" cy="148" rx="18" ry="8" fill="#1a2838" opacity="0.4"/><circle cx="62" cy="88" r="3" fill="#2a4060" opacity="0.35" style="animation:bob 7s ease-in-out infinite;"/><circle cx="138" cy="92" r="2" fill="#2a4060" opacity="0.25" style="animation:bob 8s ease-in-out infinite 2s;"/></svg>`
+  },
+  {
+    id:`vessel`, name:`Vessel`, type:`water`, rare:true,
+    personality:`Carries things. Not objects — moods, impressions, something left behind by someone who isn't there anymore. Creatures near Vessel feel things they cannot quite place. Nobody is frightened. It just makes everyone quiet.`,
+    bio:`Arrived without announcement. Has never left. Nobody asked it to stay. It stayed anyway, the way some feelings do.`,
+    hobby:`Being present. Quietly. Without demand.`,
+    food:`Unfinished feelings.`,
+    quirk:`The air near Vessel smells faintly like somewhere else. Everyone who notices it smells something different.`,
+    threshold:{water:75,thread:70},
+    rare:true,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="vs-b" cx="42%" cy="35%" r="62%"><stop offset="0%" stop-color="#8878a8"/><stop offset="100%" stop-color="#483858"/></radialGradient><radialGradient id="vs-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a898c8" stop-opacity="0.2"/><stop offset="100%" stop-color="#a898c8" stop-opacity="0"/></radialGradient></defs><circle cx="100" cy="110" r="70" fill="url(#vs-g)" style="animation:breathe 6s ease-in-out infinite;"/><ellipse cx="100" cy="152" rx="38" ry="10" fill="#180e28" opacity="0.3"/><ellipse cx="100" cy="118" rx="44" ry="36" fill="url(#vs-b)" style="animation:breathe 5.5s ease-in-out infinite;"/><ellipse cx="100" cy="116" rx="38" ry="30" fill="#786898" opacity="0.5"/><circle cx="86" cy="108" r="9" fill="#180e20" opacity="0.9"/><circle cx="114" cy="108" r="9" fill="#180e20" opacity="0.9"/><circle cx="86" cy="107" r="6" fill="#3a2858"/><circle cx="114" cy="107" r="6" fill="#3a2858"/><circle cx="87" cy="106" r="2.5" fill="rgba(210,195,235,0.85)"/><circle cx="115" cy="106" r="2.5" fill="rgba(210,195,235,0.85)"/><path d="M88 124 Q100 130 112 124" stroke="#3a2858" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/><ellipse cx="70" cy="102" rx="10" ry="16" fill="#685878" opacity="0.55" transform="rotate(-12,70,102)"/><ellipse cx="130" cy="102" rx="10" ry="16" fill="#685878" opacity="0.55" transform="rotate(12,130,102)"/><circle cx="100" cy="78" r="4" fill="#c8b8e0" opacity="0.35" style="animation:bob 5s ease-in-out infinite;"/><circle cx="84" cy="82" r="2.5" fill="#c8b8e0" opacity="0.25" style="animation:bob 6s ease-in-out infinite 1s;"/><circle cx="116" cy="80" r="3" fill="#c8b8e0" opacity="0.2" style="animation:bob 7s ease-in-out infinite 2s;"/></svg>`
+  },
+  {
+    id:`millpond`, name:`The Millpond`, type:`water`, rare:true,
+    personality:`Not clearly one creature. Looks like a section of perfectly still water that has learned to move. Has been in the inlet behind the lighthouse longer than the lighthouse has existed.`,
+    bio:`The lighthouse was built near it, not the other way around. The original lighthouse keeper noted it in the first log entry. The entry just says: something in the inlet. Watching. Not unkind.`,
+    hobby:`Being still. Occasionally being less still, for reasons of its own.`,
+    food:`Stillness. Light on water. Time.`,
+    quirk:`Animals are calm near the inlet where it lives. Nobody who has sat by that water has ever left in a worse mood than they arrived.`,
+    threshold:{water:80,stone:75},
+    rare:true,
+    item:`torn_map`,
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="mp-b" cx="50%" cy="50%" r="55%"><stop offset="0%" stop-color="#4888a8" stop-opacity="0.7"/><stop offset="60%" stop-color="#2a5878" stop-opacity="0.5"/><stop offset="100%" stop-color="#1a3858" stop-opacity="0.3"/></radialGradient><linearGradient id="mp-r" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#a8d0e8" stop-opacity="0.6"/><stop offset="100%" stop-color="#4878a0" stop-opacity="0.2"/></linearGradient></defs><ellipse cx="100" cy="130" rx="80" ry="30" fill="url(#mp-b)" style="animation:breathe 8s ease-in-out infinite;"/><ellipse cx="100" cy="126" rx="70" ry="24" fill="url(#mp-r)" opacity="0.6" style="animation:breathe 9s ease-in-out infinite 1s;"/><ellipse cx="100" cy="122" rx="58" ry="18" fill="#5898b8" opacity="0.3" style="animation:breathe 7s ease-in-out infinite 0.5s;"/><ellipse cx="100" cy="118" rx="44" ry="13" fill="#78b0c8" opacity="0.25"/><ellipse cx="100" cy="114" rx="30" ry="8" fill="#98c8d8" opacity="0.2"/><circle cx="72" cy="116" r="5" fill="#a8cce0" opacity="0.5" style="animation:bob 5s ease-in-out infinite;"/><circle cx="128" cy="118" r="4" fill="#a8cce0" opacity="0.4" style="animation:bob 6s ease-in-out infinite 1.5s;"/><circle cx="100" cy="108" r="3" fill="#c0d8e8" opacity="0.5" style="animation:bob 7s ease-in-out infinite 0.5s;"/><circle cx="85" cy="120" r="2" fill="#c0d8e8" opacity="0.35" style="animation:bob 4s ease-in-out infinite 2s;"/><circle cx="115" cy="112" r="2" fill="#c0d8e8" opacity="0.3" style="animation:bob 8s ease-in-out infinite 1s;"/><path d="M30 130 Q60 118 100 122 Q140 126 170 130" stroke="#a8cce0" stroke-width="1.5" fill="none" opacity="0.4"/><path d="M40 136 Q70 124 100 128 Q130 132 160 136" stroke="#a8cce0" stroke-width="1" fill="none" opacity="0.3"/></svg>`
+  }
+,
+  {
+    id:`fogdog`, name:`[unnamed]`, type:`water`, rare:true,
+    eggPuzzle:true,
+    personality:`Quiet in the way fog is quiet. Present everywhere, noticed slowly. Has lived at the lighthouse longer than most residents have known the island.`,
+    bio:`Pip found the egg on the lighthouse steps during a thick morning fog. It was warm. She kept it warm. That was enough.`,
+    hobby:`Sitting at the edge of the dock watching the water. Never falls in. Has never explained why.`,
+    food:`Salt air and stillness. Occasionally fish, if Pip shares.`,
+    quirk:`Leaves small wet pawprints on the lighthouse steps every morning even when it hasn't rained. Nobody has seen it walk up them.`,
+    threshold:{water:60},
+    svg:`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="fd-fog" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#d0e8f4" stop-opacity="0.9"/><stop offset="100%" stop-color="#8ab8cc" stop-opacity="0.4"/></radialGradient><radialGradient id="fd-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#c0ddf0" stop-opacity="0.3"/><stop offset="100%" stop-color="#c0ddf0" stop-opacity="0"/></radialGradient></defs><circle cx="100" cy="120" r="75" fill="url(#fd-glow)" style="animation:breathe 4s ease-in-out infinite;"/><ellipse cx="100" cy="130" rx="55" ry="28" fill="url(#fd-fog)" opacity="0.85" style="animation:breathe 4.5s ease-in-out infinite;"/><ellipse cx="100" cy="128" rx="48" ry="24" fill="#c8dce8" opacity="0.7"/><ellipse cx="72" cy="148" rx="9" ry="7" fill="#a8c8d8" opacity="0.6"/><ellipse cx="90" cy="152" rx="9" ry="7" fill="#a8c8d8" opacity="0.55"/><ellipse cx="110" cy="152" rx="9" ry="7" fill="#a8c8d8" opacity="0.55"/><ellipse cx="128" cy="148" rx="9" ry="7" fill="#a8c8d8" opacity="0.6"/><ellipse cx="72" cy="154" rx="10" ry="5" fill="#7898a8" opacity="0.5"/><ellipse cx="90" cy="158" rx="10" ry="5" fill="#7898a8" opacity="0.45"/><ellipse cx="110" cy="158" rx="10" ry="5" fill="#7898a8" opacity="0.45"/><ellipse cx="128" cy="154" rx="10" ry="5" fill="#7898a8" opacity="0.5"/><path d="M148 128 Q168 108 158 90 Q148 76 138 88" stroke="#a8c8dc" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.65"/><path d="M148 128 Q165 110 156 93 Q147 80 140 90" stroke="#c8dce8" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.5"/><circle cx="68" cy="106" r="32" fill="url(#fd-fog)" opacity="0.88" style="animation:breathe 4s ease-in-out infinite;"/><circle cx="68" cy="104" r="28" fill="#cce0ec" opacity="0.75"/><ellipse cx="50" cy="82" rx="10" ry="16" fill="#a0c4d8" opacity="0.6" transform="rotate(-15,50,82)"/><ellipse cx="86" cy="80" rx="10" ry="16" fill="#a0c4d8" opacity="0.6" transform="rotate(15,86,80)"/><ellipse cx="50" cy="82" rx="6" ry="12" fill="#c0dce8" opacity="0.4" transform="rotate(-15,50,82)"/><ellipse cx="86" cy="80" rx="6" ry="12" fill="#c0dce8" opacity="0.4" transform="rotate(15,86,80)"/><ellipse cx="52" cy="114" rx="14" ry="10" fill="#b8d0e0" opacity="0.7"/><ellipse cx="52" cy="112" rx="11" ry="8" fill="#c8e0ee" opacity="0.6"/><ellipse cx="46" cy="111" rx="5" ry="3.5" fill="#3a6878" opacity="0.8"/><circle cx="44" cy="110" r="1.5" fill="rgba(255,255,255,0.6)"/><circle cx="60" cy="98" r="7" fill="#1a3848" opacity="0.7"/><circle cx="78" cy="98" r="7" fill="#1a3848" opacity="0.7"/><circle cx="60" cy="97" r="4.5" fill="#2a6888"/><circle cx="78" cy="97" r="4.5" fill="#2a6888"/><circle cx="61" cy="96" r="1.8" fill="rgba(200,230,245,0.9)"/><circle cx="79" cy="96" r="1.8" fill="rgba(200,230,245,0.9)"/><ellipse cx="130" cy="115" rx="18" ry="8" fill="#d4eaf4" opacity="0.25" style="animation:breathe 6s ease-in-out infinite;"/><ellipse cx="38" cy="118" rx="15" ry="7" fill="#d4eaf4" opacity="0.22" style="animation:breathe 5.5s ease-in-out infinite;"/></svg>`
   }
 ];
 const ENCOUNTERS = [
@@ -5010,8 +5141,7 @@ var MAP_LOCATIONS = [
       evening:'The lanterns light. Good crossing hour.',
       night:'Fog returns. The door is visible at low tide.',
       predawn:'No one crosses before dawn. Almost no one.'
-    }
-  }
+    } }
 ];
 
 // Future/fog locations — visible as outlines, not yet accessible
@@ -5704,6 +5834,24 @@ var NOTICES = [
     title:'The Shop is Open',
     from:'Posted by: Mara',
     text:'I\'m open. Come by. The high shelf item is still waiting for the right moment. Everything else is available. Favors accepted. Stories about where things came from are especially welcome.'
+  },
+  {
+    id:'n-egg', unlock_run:2,
+    title:'Something on the Steps',
+    from:'Posted by: Pip',
+    text:'Found something this morning. Not sure what it is yet. If you know anything about pale grey-blue eggs roughly the size of a closed fist, come find me at the lighthouse. I am keeping it warm.'
+  },
+  {
+    id:'n-egg-2', unlock_quest:'egg_step2',
+    title:'Still Here',
+    from:'Posted by: Pip',
+    text:'Still here. Still warm. Getting warmer some nights. Going to keep calling it the egg until it tells me otherwise.'
+  },
+  {
+    id:'n-egg-3', unlock_quest:'egg_step3',
+    title:'(a small pencil drawing of a paw print)',
+    from:'Posted by: Pip',
+    text:'.'
   }
 ];
 
@@ -5712,6 +5860,7 @@ function getVisibleNotices() {
   return NOTICES.filter(function(n) {
     if (n.permanent) return true;
     if (n.unlock_run && run_count >= n.unlock_run) return true;
+    if (n.unlock_quest && questProgress && questProgress[n.unlock_quest]) return true;
     return false;
   });
 }
@@ -5909,7 +6058,9 @@ var AX_POOLS = {
 // ═══════════════════════════════════════════════════════════════
 // GAME STATE
 // ═══════════════════════════════════════════════════════════════
-var axes = {flame:35,thread:35,stone:35,spark:35,root:35};
+var axes = {flame:35,thread:35,stone:35,spark:35,root:35,water:35};
+var questProgress = {};
+var puzzleState = {};
 var collection = {};    // id -> {found,nick}
 var inventory = {};     // item_id -> true
 var lucky_sparks = 0;
@@ -6281,7 +6432,7 @@ function drainFriendshipQueue() {
 function showFriendship(creature) {
   document.getElementById('friend-art').innerHTML = creature.svg;
   document.getElementById('friend-name').textContent = creature.name;
-  var tl = {flame:'&#x1F525; Flame Type',thread:'&#x1F9F5; Thread Type',stone:'&#x1FAA8; Stone Type',spark:'&#x26A1; Spark Type',root:'&#x1F33F; Root Type',rare:'&#x2728; Rare Creature'};
+  var tl = {flame:'&#x1F525; Flame Type',thread:'&#x1F9F5; Thread Type',stone:'&#x1FAA8; Stone Type',spark:'&#x26A1; Spark Type',root:'&#x1F33F; Root Type',rare:'&#x2728; Rare Creature',water:'&#x1F30A; Water Type'};
   var ftEl = document.getElementById('friend-type');
   ftEl.innerHTML = tl[creature.type] || creature.type;
   ftEl.className = 'detail-type ' + creature.type;
@@ -6669,10 +6820,7 @@ window.onload = function() {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(code).then(function() {
         msg.textContent = 'Copied! Paste it somewhere safe.';
-      }).catch(function() {
-        // Fallback for browsers that block clipboard
-        selectAndCopy(code, msg);
-      });
+      }).catch(function() { selectAndCopy(code, msg); });
     } else {
       selectAndCopy(code, msg);
     }
@@ -6756,7 +6904,6 @@ window.onload = function() {
 // Minimal QR code encoder using the qrcode-generator approach via CDN script
 // We load it lazily when the screen opens to keep the file self-contained otherwise
 function buildSaveCode() {
-  // Compact format — short keys to stay small for clipboard transfer
   var cc = {};
   CREATURES.forEach(function(cr) {
     var col = collection[cr.id];
@@ -6781,7 +6928,6 @@ function restoreFromCode(code) {
   try {
     var state = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
     if (state.v === 3 && state.c !== undefined) {
-      // Current compact format
       Object.keys(state.c || {}).forEach(function(id) {
         if (!collection[id]) collection[id] = {found:false, nick:'', friendship:0};
         var entry = state.c[id];
@@ -6800,7 +6946,6 @@ function restoreFromCode(code) {
       if (state.q && typeof questProgress!=='undefined') questProgress = state.q;
       if (state.ps && typeof puzzleState!=='undefined') puzzleState = state.ps;
     } else if (!state.v && state.c) {
-      // Legacy format
       Object.keys(state.c || {}).forEach(function(id) {
         if (!collection[id]) collection[id] = {found:false, nick:'', friendship:0};
         collection[id].found = true;
@@ -6827,24 +6972,88 @@ function showSaveQR() {
   var found = CREATURES.filter(function(cr){return collection[cr.id] && collection[cr.id].found;}).length;
   var friends = CREATURES.filter(function(cr){return collection[cr.id] && collection[cr.id].friendship > 0;}).length;
   var bestFriends = CREATURES.filter(function(cr){return collection[cr.id] && collection[cr.id].friendship >= 3;}).length;
-  var itemCount = Object.keys(inventory||{}).filter(function(k){return inventory[k];}).length;
   document.getElementById('qr-stat').textContent =
     found + ' creatures · ' + friends + ' friendships · Run ' + run_count +
     (bestFriends > 0 ? ' · ' + bestFriends + ' best friend' + (bestFriends>1?'s':'') : '');
   document.getElementById('qr-restore-msg').textContent = '';
   document.getElementById('qr-import-text').value = '';
   document.getElementById('qr-copy-msg').textContent = '';
-
-  // Generate the save code and display it
-  var code = buildSaveCode();
-  document.getElementById('qr-code-display').textContent = code;
-
+  document.getElementById('qr-code-display').textContent = buildSaveCode();
   show('s-saveqr');
 }
 
 
+// ═══════════════════════════════════════════════════════════════
+// EGG PUZZLE — The Fog Dog
+// ═══════════════════════════════════════════════════════════════
+var EGG_STEPS = [
+  { step:1, key:'egg_step1', header:'PIP - LIGHTHOUSE',
+    trigger:function(){ return run_count>=2 && !questProgress.egg_step1; },
+    msg:"Pip is standing at the base of the lighthouse, looking at something on the steps. She waves you over. \"Found this this morning,\" she says. \"Right here on the bottom step. Still warm.\" It's an egg. Small. Pale grey-blue, like sea-glass. She's already made a nest for it in her coat pocket. \"Don't know what it is yet. But it was cold last night. Figured it needed looking after.\""
+  },
+  { step:2, key:'egg_step2', header:'PIP - LIGHTHOUSE',
+    trigger:function(){ return questProgress.egg_step1 && !questProgress.egg_step2 && run_count>=4; },
+    msg:"The egg is still in Pip's pocket. She takes it out to show you - it's a little larger now, and there's a faint pattern on it. Like the grain of water-worn wood. \"Still warm,\" she says. \"Gets warmer some nights.\" She puts it carefully back. \"Wellow says it might be a water creature. I don't know any that hatch from eggs.\" She pauses. \"But I know how to keep something warm.\""
+  },
+  { step:3, key:'egg_step3', header:'PIP - LIGHTHOUSE',
+    trigger:function(){ return questProgress.egg_step2 && !questProgress.egg_step3 && run_count>=7; },
+    msg:"The egg is moving. Not hatching - shifting. Pip has it cupped in both hands and she's watching it the way she watches the water. \"Started last night. Doesn't seem distressed. Just deciding.\" The surface catches the lighthouse beam. Whatever is inside is taking its time. Pip looks up. \"I've been thinking about names,\" she says. Then stops. \"I'll let it pick, probably.\""
+  },
+  { step:4, key:'egg_step4', header:'LIGHTHOUSE - SOMETHING ARRIVED',
+    trigger:function(){ return questProgress.egg_step3 && !questProgress.egg_step4 && run_count>=10 && (axes.water||0)>=60; },
+    msg:"The egg is gone. In its place on the lighthouse steps are small wet pawprints leading to the dock. Pip is already there - sitting, not fishing. Just sitting. There's something beside her. Pale and soft, the color of fog over water. It turns when you approach. Its eyes - pale blue, completely calm - look at you like it has been here the whole time and is only now allowing itself to be seen. Pip says, after a moment: \"It needs a name. I've been calling it 'you' for three days and I think it's starting to stick.\""
+  }
+];
+
+function checkEggPuzzle() {
+  if (!questProgress) return null;
+  for (var i=0; i<EGG_STEPS.length; i++) {
+    if (EGG_STEPS[i].trigger()) return EGG_STEPS[i];
+  }
+  return null;
+}
+
+function showEggStep(s) {
+  questProgress[s.key] = true;
+  saveState();
+  var isFinal = s.step===4;
+  var ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:300;background:rgba(4,8,20,.94);display:flex;align-items:center;justify-content:center;padding:24px;';
+  var card = document.createElement('div');
+  card.style.cssText = 'background:linear-gradient(160deg,#0a1828,#06101e);border:1px solid rgba(60,160,220,.3);border-radius:20px;padding:28px 24px;max-width:380px;width:100%;box-shadow:0 0 40px rgba(60,160,220,.12);';
+  var hc = isFinal ? 'rgba(128,200,240,.8)' : 'rgba(128,200,240,.45)';
+  var icon = isFinal ? '&#x1F30A;' : '&#x1F95A;';
+  card.innerHTML = '<div style="font-size:11px;font-weight:800;letter-spacing:3px;color:'+hc+';margin-bottom:14px;">'+icon+' '+s.header+'</div>'
+    + '<div style="font-family:Lora,serif;font-size:14px;line-height:1.8;color:rgba(210,232,245,.88);margin-bottom:20px;">'+s.msg+'</div>'
+    + '<div class="btn-gold" id="egg-ok" role="button" style="border-radius:12px;padding:12px;font-size:15px;cursor:pointer;text-align:center;">'+(isFinal?'Meet them &#x2192;':'Continue &#x2192;')+'</div>';
+  ov.appendChild(card);
+  document.body.appendChild(ov);
+  document.getElementById('egg-ok').onclick = function() {
+    ov.parentNode.removeChild(ov);
+    if (isFinal) {
+      if (!axes.water || axes.water < 60) axes.water = 60;
+      var fd = null;
+      for (var j=0; j<CREATURES.length; j++) { if (CREATURES[j].id==='fogdog') { fd=CREATURES[j]; break; } }
+      if (fd && !(collection.fogdog && collection.fogdog.found)) {
+        pendingDisc = [];
+        showDiscovery(fd);
+      }
+    }
+  };
+}
+
+(function(){
+  var _orig = typeof showLocationDetail==='function' ? showLocationDetail : null;
+  showLocationDetail = function(locId) {
+    if (_orig) _orig.call(this, locId);
+    if (locId==='lighthouse') {
+      var s = checkEggPuzzle();
+      if (s) setTimeout(function(){ showEggStep(s); }, 700);
+    }
+  };
+})();
+
 function selectAndCopy(text, msgEl) {
-  // Fallback copy: create temp textarea, select all, copy
   var ta = document.createElement('textarea');
   ta.value = text;
   ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
@@ -6989,13 +7198,10 @@ function selectAndCopy(text, msgEl) {
     <div class="qr-wrap">
       <div class="qr-sub">Your Save Code</div>
       <div class="qr-stat" id="qr-stat"></div>
-
-      <!-- Save code display box -->
       <div style="width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.12);
         border-radius:12px;padding:14px;word-break:break-all;font-family:monospace;
         font-size:11px;line-height:1.6;color:rgba(200,220,240,.8);
         min-height:80px;user-select:all;" id="qr-code-display"></div>
-
       <div class="btn-gold" id="btn-copy-code" role="button"
         style="border-radius:12px;padding:12px;font-size:16px;cursor:pointer;
         text-align:center;width:100%;box-sizing:border-box;">
@@ -7003,15 +7209,13 @@ function selectAndCopy(text, msgEl) {
       </div>
       <div id="qr-copy-msg" style="font-size:12px;color:rgba(180,220,140,.8);
         text-align:center;min-height:18px;font-family:'Lora',serif;font-style:italic;"></div>
-
       <div style="width:100%;border-top:1px solid rgba(255,255,255,.08);padding-top:16px;margin-top:8px;">
         <div class="qr-sub" style="margin-bottom:8px;">Restore from Code</div>
         <div style="font-family:'Lora',serif;font-size:12px;font-style:italic;
           color:rgba(200,220,240,.55);margin-bottom:10px;">
           Paste your save code below to restore your collection.
         </div>
-        <textarea class="qr-import-area" id="qr-import-text"
-          placeholder="Paste your save code here..."></textarea>
+        <textarea class="qr-import-area" id="qr-import-text" placeholder="Paste your save code here..."></textarea>
         <div style="margin-top:8px;">
           <div class="btn-gold" id="btn-qr-restore" role="button"
             style="border-radius:12px;padding:11px;font-size:15px;cursor:pointer;">
