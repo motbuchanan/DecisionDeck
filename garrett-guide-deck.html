@@ -497,12 +497,7 @@ body{
     </div>
     <div class="debrief-card">
       <div class="debrief-label">Debrief</div>
-      <div id="debrief-content">
-        <div class="debrief-loading">
-          <div class="debrief-dots"><div class="debrief-dot"></div><div class="debrief-dot"></div><div class="debrief-dot"></div></div>
-          <span>Reading your run…</span>
-        </div>
-      </div>
+      <div id="debrief-content"></div>
     </div>
     <div class="btn-row">
       <button class="btn-primary" onclick="showScreen('screen-pick')">New Run</button>
@@ -540,7 +535,7 @@ body{
       <h2 class="section-title">Before You Arrive</h2>
       <p class="section-sub">A quick read of his day. Takes 60 seconds. Changes everything.</p>
     </div>
-    <p class="checklist-intro">Check off anything that's already happened today. The more boxes checked, the less runway he has — adjust your expectations accordingly.</p>
+    <p class="checklist-intro">Check off anything that's already happened today. The more boxes checked, the less runway he has — adjust your expectations accordingly.<br><br><em>These aren't predictions. They're inputs. Knowing the load helps you carry less of it.</em></p>
 
     <div class="check-group">
       <div class="check-group-label">Sleep & morning</div>
@@ -2684,42 +2679,112 @@ function showSummary() {
 }
 
 // ═══════ AI DEBRIEF ═══════
-async function generateDebrief(history, avgs, cascadeCount) {
+function generateDebrief(history, avgs, cascadeCount) {
   const debriefEl = document.getElementById('debrief-content');
-  const runSummary = history.map((h,i) => {
-    const sc = SCENARIOS[h.scenarioId];
-    const choice = sc.choices[h.choiceIndex];
-    return `Scenario ${i+1} (${h.category}): chose "${h.text}" → ${h.outcome}${h.cascade?` [triggered cascade: ${h.cascade}]`:''}`;
-  }).join('\n');
 
-  const weakAxes = Object.entries(avgs).filter(([,v])=>v<5).map(([k])=>k);
+  const total = history.length;
+  const goodCount = history.filter(x=>x.outcome==='good').length;
+  const wrongCount = history.filter(x=>x.outcome==='wrong').length;
+  const riskyCount = history.filter(x=>x.outcome==='risky').length;
 
-  const prompt = `You are reading the results of a session with the Garrett Field Guide — a behavioral reference tool for navigating situations with a child named Garrett who is autistic and has ADHD.
+  // Find weakest and strongest axes
+  const axes = ['presence','timing','connection','control','regulation'];
+  const sorted = axes.slice().sort((a,b) => avgs[a]-avgs[b]);
+  const weakest = sorted[0];
+  const strongest = sorted[sorted.length-1];
+  const weakVal = avgs[weakest];
+  const strongVal = avgs[strongest];
 
-Here is what happened in this run:
-${runSummary}
+  // Categorize overall performance
+  const allGood = wrongCount === 0 && riskyCount === 0;
+  const allWrong = goodCount === 0;
+  const mostlyGood = goodCount >= total * 0.66;
+  const mostlyWrong = wrongCount >= total * 0.5;
+  const hasCascades = cascadeCount > 0;
 
-Axis averages (out of 10): ${Object.entries(avgs).map(([k,v])=>`${k}: ${v.toFixed(1)}`).join(', ')}
-Cascades triggered: ${cascadeCount}
+  // Which categories appeared in this run
+  const categories = [...new Set(history.map(h => h.category))];
+  const hadOutdoor = categories.some(c => c.includes('Zoo') || c.includes('Outing') || c.includes('Playground'));
+  const hadSocial = categories.some(c => c.includes('Social') || c.includes('Peer'));
+  const hadSummer = categories.some(c => c.includes('Summer'));
+  const hadMeltdown = categories.some(c => c.includes('Meltdown') || c.includes('Building'));
+  const hadRepair = categories.some(c => c.includes('Storm') || c.includes('Shutdown'));
+  const hadVisit = categories.some(c => c.includes('New Face') || c.includes('Exciting'));
 
-Write a single debrief paragraph (4-6 sentences) addressed to the person who just completed this run. Speak warmly and directly — like a knowledgeable person talking to you, not a clinical report. Reference Garrett by name. Note the strongest pattern in their choices, name any weak axes specifically and explain what that means in practice, and if cascades were triggered, connect them to the choices that caused them. End with one specific thing to watch for or remember. Do not use bullet points. Do not start with "In this run" or "Overall." Just start talking.`;
+  // Axis descriptions — what each axis means in plain language when low
+  const axisLow = {
+    presence: 'reading the moment accurately — picking up on what\'s actually happening before acting',
+    timing: 'acting at the right moment — the best response delivered too early or too late loses most of its value',
+    connection: 'keeping the relationship intact through the hard moment — he needs to feel the bond is safe even when things go sideways',
+    control: 'giving him the right amount of agency — too little and he digs in, too much and the situation drifts',
+    regulation: 'helping his nervous system settle — the choices that reduce load rather than add to it'
+  };
 
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:prompt}] })
-    });
-    const data = await response.json();
-    const text = data.content?.find(b=>b.type==='text')?.text||'';
-    if (text) {
-      debriefEl.innerHTML = `<p class="debrief-text">${text.replace(/\n/g,'<br>')}</p>`;
-    } else {
-      debriefEl.innerHTML = `<p class="debrief-text" style="color:var(--ink-soft)">Debrief unavailable — check connection.</p>`;
-    }
-  } catch(e) {
-    debriefEl.innerHTML = `<p class="debrief-text" style="color:var(--ink-soft)">Debrief unavailable — check your connection.</p>`;
+  const axisHigh = {
+    presence: 'reading him accurately',
+    timing: 'knowing when to act',
+    connection: 'keeping the relationship front and centre',
+    control: 'giving him real agency',
+    regulation: 'helping him settle'
+  };
+
+  // Cascade context
+  const cascadedChoices = history.filter(h => h.cascade);
+  const cascadeNote = hasCascades
+    ? ` The cascade${cascadeCount > 1 ? 's were' : ' was'} set off by ${cascadedChoices.map(h => `the choice in "${h.category}"`).join(' and ')} — those are the moments worth revisiting.`
+    : '';
+
+  // Build the debrief from parts
+  let opening, middle, closing;
+
+  // Opening — overall pattern
+  if (allGood) {
+    opening = `Solid run. Every choice you made kept things moving in the right direction, and Garrett's nervous system would have felt that — even if he didn't say so.`;
+  } else if (mostlyGood && !hasCascades) {
+    opening = `Mostly strong choices here. You read the situations well and the majority of your moves gave Garrett what he actually needed in those moments.`;
+  } else if (mostlyGood && hasCascades) {
+    opening = `Good instincts overall, but the run picked up some extra weight along the way.${cascadeNote}`;
+  } else if (mostlyWrong) {
+    opening = `This was a hard run — the kinds of situations where the instinctive response and the right response tend to point in different directions. That's exactly what this tool is for.${cascadeNote}`;
+  } else {
+    opening = `A mixed run, which is honest. Some moments you read well; others went sideways.${cascadeNote}`;
   }
+
+  // Middle — axis feedback
+  if (strongVal >= 8 && weakVal >= 7) {
+    middle = ` All five axes came in strong — ${axisHigh[strongest]} was the standout. There's not much to flag here.`;
+  } else if (weakVal < 5) {
+    middle = ` The axis that took the biggest hit was ${weakest} — meaning ${axisLow[weakest]}. When that axis drops, it tends to extend situations rather than resolve them. The strongest axis was ${strongest} at ${strongVal.toFixed(1)}, which means ${axisHigh[strongest]} is genuinely working.`;
+  } else if (weakVal < 7) {
+    middle = ` The area with the most room to grow is ${weakest} (${weakVal.toFixed(1)}) — that's about ${axisLow[weakest]}. Your strongest axis was ${strongest} (${strongVal.toFixed(1)}), so ${axisHigh[strongest]} is a real strength to lean on.`;
+  } else {
+    middle = ` ${strongest.charAt(0).toUpperCase() + strongest.slice(1)} was the clearest strength at ${strongVal.toFixed(1)} — you're good at ${axisHigh[strongest]}. Worth keeping an eye on ${weakest} (${weakVal.toFixed(1)}), which is about ${axisLow[weakest]}.`;
+  }
+
+  // Closing — context-specific or general
+  if (hadOutdoor) {
+    closing = ` One thing to carry into outdoor outings: his signal to leave is almost always earlier than it feels. The good visit is the one that ends before the tank is empty.`;
+  } else if (hadSocial) {
+    closing = ` With social situations, the decompression after matters as much as the event itself. Build in recovery time after any group or peer interaction — it's not optional for him.`;
+  } else if (hadSummer) {
+    closing = ` Summer works best when the day has a loose shape — not a schedule, just anchors. A consistent morning rhythm takes pressure off everything else.`;
+  } else if (hadMeltdown) {
+    closing = ` In flooding situations, the single most useful thing is the hardest: doing less. Silence and presence almost always outperform words and explanations.`;
+  } else if (hadRepair) {
+    closing = ` The repair window is one of the most important moments in the whole cycle. He came back to you — or he will. Receiving that without conditions is the whole job.`;
+  } else if (hadVisit) {
+    closing = ` For visiting family and new faces: the first 15 minutes set the tone for everything. Low demands, no big entrance, let him find you — that investment pays off for the whole visit.`;
+  } else if (weakest === 'timing') {
+    closing = ` Timing is the hardest axis to develop because the right move at the wrong moment looks a lot like the wrong move. When in doubt, wait one beat longer than feels comfortable.`;
+  } else if (weakest === 'control') {
+    closing = ` When he's resisting, the fastest path through is almost always a genuine micro-choice — not negotiating the task, just the when or how. It costs almost nothing and changes the dynamic completely.`;
+  } else if (weakest === 'connection') {
+    closing = ` Connection isn't lost in the hard moments — it's just harder to see. A warm re-entry after the storm, with no reference to what happened, repairs more than any conversation would.`;
+  } else {
+    closing = ` The patterns in this guide are consistent — the same moves that work in one situation tend to work across all of them. Less input, more space, genuine choices. Those three things cover most of it.`;
+  }
+
+  debriefEl.innerHTML = `<p class="debrief-text">${opening}${middle}${closing}</p>`;
 }
 
 // ═══════ QUICK REF ═══════
@@ -2731,12 +2796,20 @@ const REF_DATA = [
     {b:'anchor',t:'<strong>Post-storm 🌱</strong> — Quiet after flooding, sometimes extra sweet, hovering close. Repair window, not processing window. Receive him warmly. No debrief.'},
     {b:'curveball',t:'<strong>Shutdown vs. calm:</strong> Genuine calm is soft and available. Shutdown calm is still and tight. When in doubt, treat it as shutdown.'},
   ]},
+  { icon:'🌡️', name:'His sensory world — what loads him', color:'warm', items:[
+    {b:'warm',t:'<strong>Noise</strong> is often the first thing that loads him. He may tolerate it for a surprisingly long time before hitting a threshold — then tolerance drops suddenly. The signal is usually irritability and shorter answers, not complaints about the noise itself.'},
+    {b:'warm',t:'<strong>Touch on his terms only.</strong> Hugs are fine when he initiates them. Unexpected physical contact when he\'s already loaded is a different situation entirely — even if it\'s affectionate.'},
+    {b:'warm',t:'<strong>Smell and texture</strong> can make food genuinely impossible — not preference, but physical barrier. He may not be able to explain why a food is wrong. He doesn\'t need to.'},
+    {b:'warm',t:'<strong>Visual clutter and unexpected movement</strong> in an unfamiliar environment can run as background load even when he doesn\'t mention it. It shows up later as reduced tolerance for everything else.'},
+    {b:'curveball',t:'<strong>The cumulative load rule:</strong> any two of the above stacking means his tolerance for emotional or social load is already reduced — before any behavior has even started. The environment is doing work on him that you can\'t see.'},
+  ]},
   { icon:'🌋', name:'When he\'s flooding — meltdown in progress', color:'warm', items:[
     {b:'warm',t:'<strong>Words don\'t land right now.</strong> Logic, explanations, "why did you do that" — his brain can\'t process them. Save it for later.'},
+    {b:'warm',t:'<strong>He is verbal enough to argue while flooded.</strong> The sentences may be coherent. The logic may feel like logic. He is still not reachable. Don\'t respond to the content of the argument — respond to the state. Engaging with his reasoning during a flood rewards the flood and extends it.'},
     {b:'warm',t:'<strong>Lower your voice, slow your body.</strong> His nervous system is mirroring yours. Calm outside helps calm inside.'},
     {b:'warm',t:'<strong>If he\'s circular-arguing:</strong> <em>"I can see we\'re both stuck. I\'m going to give us some space."</em> Then actually leave.'},
     {b:'warm',t:'<strong>The last trigger is rarely the real cause.</strong> What happened before this? The stack is the issue.'},
-    {b:'warm',t:'<strong>Big language (death, hate, terrible mom) = enormous feelings with no better words.</strong> Don\'t argue the content. Validate the size.'},
+    {b:'warm',t:'<strong>Big language (I hate you, you\'re the worst) = enormous feelings with no better words.</strong> He is not providing information about you. He is providing information about how full the system is. Don\'t argue the content. Validate the size.'},
   ]},
   { icon:'🧊', name:'After it passes — repair time', color:'calm', items:[
     {b:'calm',t:'<strong>Wait until he\'s fully calm — genuinely calm.</strong> Not "quiet because he\'s still activated."'},
@@ -2763,11 +2836,14 @@ const REF_DATA = [
   ]},
   { icon:'🍽️', name:'Food & mealtime rules', color:'warm', items:[
     {b:'warm',t:'<strong>Sensory refusal is real.</strong> A texture or smell can make food genuinely impossible. Always have a reliable alternative ready. No negotiation required.'},
+    {b:'warm',t:'<strong>He may not be able to explain it in a way that makes sense to you — and he shouldn\'t have to.</strong> "It looks wrong" or "it smells like it touched the other food" are complete and valid reasons. Pressing for a better explanation will not produce one. It will produce resistance.'},
+    {b:'warm',t:'<strong>Always have a known reliable fallback food available.</strong> Not as a reward for trying the other thing — simply because eating matters more than the lesson the situation seems to be offering.'},
     {b:'warm',t:'<strong>Don\'t make food a power struggle.</strong> Mealtime battles never produce compliance — they just make food a stressful category.'},
     {b:'warm',t:'<strong>Family meals with multiple people</strong> are high sensory load. A plate at the counter with less noise and stimulation is a valid option.'},
     {b:'warm',t:'<strong>He came back hungry later? Just feed him.</strong> Hunger as a lesson produces dysregulation, not learning.'},
   ]},
   { icon:'🌙', name:'Bedtime approach', color:'anchor', items:[
+    {b:'anchor',t:'<strong>He\'s not choosing not to sleep.</strong> The transition out of an absorbed state is genuinely hard for his brain. He may not be tired in the way that word makes sense to you. The goal isn\'t to make him tired — it\'s to give his nervous system a different track to follow. Everything below is about that.'},
     {b:'anchor',t:'<strong>Build a ramp, not a cliff.</strong> A wind-down bridge — audiobook, quiet game — makes it a deceleration, not a hard stop.'},
     {b:'anchor',t:'<strong>Give him the sequencing.</strong> Same steps every night, but he chooses the order. The steps happen; the path is his.'},
     {b:'anchor',t:'<strong>"My brain won\'t stop"</strong> is real. Something to listen to gives the brain a track to follow. Let him fall asleep to it.'},
@@ -2798,6 +2874,8 @@ const REF_DATA = [
     {b:'calm',t:'<strong>Ask about his worlds with genuine curiosity.</strong> Ask him what he\'s been building or working on. Ask him to show you something. He will light up and talk for as long as you\'ll listen.'},
     {b:'calm',t:'<strong>He has toys and things that matter deeply to him.</strong> Don\'t tease them. Ask about them if he mentions them. Take them seriously.'},
     {b:'calm',t:'<strong>If he melts down during your visit, it is not your fault.</strong> Follow his parents\' lead. You being calm is the best help you can give.'},
+    {b:'calm',t:'<strong>If he melts down and won\'t come back out:</strong> don\'t invite him back. Don\'t send someone to check on him. Resume normal, low-volume activity as if nothing has changed. He is monitoring from wherever he is. When he hears the space is safe and the relationship is intact, he will re-enter on his own timeline. One person doing something quiet is better than a waiting group.'},
+    {b:'calm',t:'<strong>When he does re-enter after a hard moment:</strong> receive him as if the meltdown never happened. One specific warm thing, maximum. Then follow his lead entirely.'},
     {b:'calm',t:'<strong>When you leave:</strong> say one specific true thing from this visit — something he showed you or told you today. Then: "I love you. See you soon."'},
   ]},
 
