@@ -6752,24 +6752,27 @@ function loadQRLib(cb) {
 }
 
 function buildSaveCode() {
-  // Full mirror of saveState — whatever localStorage holds, the QR holds
+  // Compact format — short keys to stay within QR code size limits
+  // c: {id: [friendship, nick]} — only found creatures
+  // i: array of held item keys
+  // s: array of seenIds
+  // lv: [beach, forest, market, lighthouse, bridge] counts
+  var cc = {};
+  CREATURES.forEach(function(cr) {
+    var col = collection[cr.id];
+    if (col && col.found) cc[cr.id] = [(col.friendship||0), (col.nick||'')];
+  });
+  var ii = Object.keys(inventory||{}).filter(function(k){return inventory[k];});
+  var ss = seenIds ? Array.from(seenIds) : [];
+  var lv = locationVisits || {};
   var payload = {
-    v: 3,  // version tag for future migration
-    collection: collection,
-    inventory: inventory,
-    lucky_sparks: lucky_sparks,
-    run_count: run_count,
-    seenIds: [...seenIds],
-    residentEncounters: residentEncounters,
-    locationVisits: locationVisits,
-    favors: favors,
-    artifactLore: artifactLore,
-    subroomVisits: subroomVisits,
-    // Future slots — add new state vars here as they're introduced:
-    questProgress: typeof questProgress !== 'undefined' ? questProgress : {},
-    puzzleState: typeof puzzleState !== 'undefined' ? puzzleState : {},
-    residentTrust: typeof residentTrust !== 'undefined' ? residentTrust : {},
-    collectedAt: typeof collectedAt !== 'undefined' ? collectedAt : {}
+    v:3,
+    c:cc, i:ii, s:ss, rc:run_count||0, ls:lucky_sparks||0,
+    re:residentEncounters||{},
+    lv:[lv.beach||0,lv.forest||0,lv.market||0,lv.lighthouse||0,lv.bridge||0],
+    fav:favors||0,
+    q:typeof questProgress!=='undefined'?questProgress:{},
+    ps:typeof puzzleState!=='undefined'?puzzleState:{}
   };
   return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
 }
@@ -6777,9 +6780,31 @@ function buildSaveCode() {
 function restoreFromCode(code) {
   try {
     var state = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
-    // Support both old compact format (v undefined) and new full format (v:3)
-    if (!state.v) {
-      // Legacy compact format
+    if (state.v === 3 && state.c !== undefined) {
+      // Current compact format
+      // Restore collection: c = {id: [friendship, nick]}
+      Object.keys(state.c || {}).forEach(function(id) {
+        if (!collection[id]) collection[id] = {found:false, nick:'', friendship:0};
+        var entry = state.c[id];
+        collection[id].found = true;
+        collection[id].friendship = Array.isArray(entry) ? (entry[0]||0) : (entry.fr||0);
+        collection[id].nick = Array.isArray(entry) ? (entry[1]||'') : (entry.n||'');
+      });
+      // Restore inventory: i = array of held item keys
+      (state.i || []).forEach(function(k) { inventory[k] = true; });
+      // seenIds: s = array
+      if (state.s) seenIds = new Set(state.s);
+      run_count = state.rc || 0;
+      lucky_sparks = state.ls || 0;
+      residentEncounters = state.re || {};
+      // lv = [beach, forest, market, lighthouse, bridge]
+      var lv = state.lv || [0,0,0,0,0];
+      locationVisits = {beach:lv[0]||0, forest:lv[1]||0, market:lv[2]||0, lighthouse:lv[3]||0, bridge:lv[4]||0};
+      favors = state.fav || 0;
+      if (state.q && typeof questProgress !== 'undefined') questProgress = state.q;
+      if (state.ps && typeof puzzleState !== 'undefined') puzzleState = state.ps;
+    } else if (!state.v && state.c) {
+      // Old legacy format (very early saves)
       Object.keys(state.c || {}).forEach(function(id) {
         if (!collection[id]) collection[id] = {found:false, nick:'', friendship:0};
         collection[id].found = true;
@@ -6792,25 +6817,8 @@ function restoreFromCode(code) {
       residentEncounters = state.re || {};
       locationVisits = state.lv || {beach:0,forest:0,market:0,lighthouse:0,bridge:0};
       favors = state.fav || 0;
-    } else {
-      // Full format — restore everything
-      collection = state.collection || {};
-      inventory = state.inventory || {};
-      lucky_sparks = state.lucky_sparks || 0;
-      run_count = state.run_count || 0;
-      seenIds = new Set(state.seenIds || []);
-      residentEncounters = state.residentEncounters || {};
-      locationVisits = state.locationVisits || {beach:0,forest:0,market:0,lighthouse:0,bridge:0};
-      favors = state.favors || 0;
-      artifactLore = state.artifactLore || {};
-      subroomVisits = state.subroomVisits || {};
-      // Future slots restore safely — undefined if not present in old codes
-      if (state.questProgress && typeof questProgress !== 'undefined') questProgress = state.questProgress;
-      if (state.puzzleState && typeof puzzleState !== 'undefined') puzzleState = state.puzzleState;
-      if (state.residentTrust && typeof residentTrust !== 'undefined') residentTrust = state.residentTrust;
-      if (state.collectedAt && typeof collectedAt !== 'undefined') collectedAt = state.collectedAt;
     }
-    // Ensure all creatures have a collection entry
+    // Ensure all creatures have a valid collection entry
     CREATURES.forEach(function(cr) {
       if (!collection[cr.id]) collection[cr.id] = {found:false, nick:'', friendship:0};
       if (collection[cr.id].friendship === undefined) collection[cr.id].friendship = 0;
@@ -6853,7 +6861,7 @@ function showSaveQR() {
           text: code,
           width: 220, height: 220,
           colorDark: '#000000', colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.M
+          correctLevel: QRCode.CorrectLevel.L
         });
       } catch(e) {
         wrap.innerHTML = '<div style="color:rgba(255,255,255,.4);font-size:12px;padding:20px;">Could not generate QR.</div>';
