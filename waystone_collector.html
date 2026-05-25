@@ -696,7 +696,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080d18;color:#e8e4d
       <circle cx="90" cy="44" r="26" fill="#fff4a0" opacity="0.85"/>
       <circle cx="90" cy="44" r="20" fill="#fff8d0" opacity="0.95"/>
       <!-- Sun rays -->
-      <g style="animation:spin-slow 18s linear infinite;transform-origin:90px 44px;" opacity="0.4">
+      <g style="animation:spin-slow 18s linear infinite;transform-origin:90px 44px;transform-box:fill-box;" opacity="0.4">
         <line x1="90" y1="10" x2="90" y2="2" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
         <line x1="90" y1="78" x2="90" y2="86" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
         <line x1="52" y1="44" x2="44" y2="44" stroke="#ffd060" stroke-width="3" stroke-linecap="round"/>
@@ -6753,14 +6753,10 @@ function loadQRLib(cb) {
 
 function buildSaveCode() {
   // Compact format — short keys to stay within QR code size limits
-  // c: {id: [friendship, nick]} — only found creatures
-  // i: array of held item keys
-  // s: array of seenIds
-  // lv: [beach, forest, market, lighthouse, bridge] counts
   var cc = {};
   CREATURES.forEach(function(cr) {
     var col = collection[cr.id];
-    if (col && col.found) cc[cr.id] = [(col.friendship||0), (col.nick||'')];
+    if (col && col.found) cc[cr.id] = [(col.friendship||0),(col.nick||'')];
   });
   var ii = Object.keys(inventory||{}).filter(function(k){return inventory[k];});
   var ss = seenIds ? Array.from(seenIds) : [];
@@ -6781,8 +6777,7 @@ function restoreFromCode(code) {
   try {
     var state = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
     if (state.v === 3 && state.c !== undefined) {
-      // Current compact format
-      // Restore collection: c = {id: [friendship, nick]}
+      // Current compact format: c={id:[friendship,nick]}, i=[items], lv=[counts]
       Object.keys(state.c || {}).forEach(function(id) {
         if (!collection[id]) collection[id] = {found:false, nick:'', friendship:0};
         var entry = state.c[id];
@@ -6790,21 +6785,18 @@ function restoreFromCode(code) {
         collection[id].friendship = Array.isArray(entry) ? (entry[0]||0) : (entry.fr||0);
         collection[id].nick = Array.isArray(entry) ? (entry[1]||'') : (entry.n||'');
       });
-      // Restore inventory: i = array of held item keys
       (state.i || []).forEach(function(k) { inventory[k] = true; });
-      // seenIds: s = array
       if (state.s) seenIds = new Set(state.s);
       run_count = state.rc || 0;
       lucky_sparks = state.ls || 0;
       residentEncounters = state.re || {};
-      // lv = [beach, forest, market, lighthouse, bridge]
       var lv = state.lv || [0,0,0,0,0];
-      locationVisits = {beach:lv[0]||0, forest:lv[1]||0, market:lv[2]||0, lighthouse:lv[3]||0, bridge:lv[4]||0};
+      locationVisits = {beach:lv[0]||0,forest:lv[1]||0,market:lv[2]||0,lighthouse:lv[3]||0,bridge:lv[4]||0};
       favors = state.fav || 0;
       if (state.q && typeof questProgress !== 'undefined') questProgress = state.q;
       if (state.ps && typeof puzzleState !== 'undefined') puzzleState = state.ps;
     } else if (!state.v && state.c) {
-      // Old legacy format (very early saves)
+      // Legacy format
       Object.keys(state.c || {}).forEach(function(id) {
         if (!collection[id]) collection[id] = {found:false, nick:'', friendship:0};
         collection[id].found = true;
@@ -6818,7 +6810,6 @@ function restoreFromCode(code) {
       locationVisits = state.lv || {beach:0,forest:0,market:0,lighthouse:0,bridge:0};
       favors = state.fav || 0;
     }
-    // Ensure all creatures have a valid collection entry
     CREATURES.forEach(function(cr) {
       if (!collection[cr.id]) collection[cr.id] = {found:false, nick:'', friendship:0};
       if (collection[cr.id].friendship === undefined) collection[cr.id].friendship = 0;
