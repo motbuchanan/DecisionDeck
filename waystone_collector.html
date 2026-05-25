@@ -2666,6 +2666,7 @@ choices:[
 {t:`Pick up the brush and make one tiny mark — just a dot — to show her that starting is possible.`,s:`The dot sits there. Brin stares at it. <em>"Oh,"</em> she says. <em>"That's the nose."</em> Her hand picks up the brush and starts moving.`,ax:`stone`,d:9},
 {t:`Ask Brin to tell you what she's picturing, and then you draw the very first line for her.`,s:`Brin describes a creature with seven legs and a crown of leaves. You draw the first wobbly line. She laughs and grabs the brush to fix it.`,ax:`thread`,d:9},
 {t:`Sit down next to her without saying anything. Just stay there with her.`,s:`A whole minute goes by. Then Brin picks up the brush herself. <em>"I just needed someone to not leave,"</em> she says.`,ax:`flame`,d:8},
+{t:`Sit down on the forest floor and just be there for a moment. Not doing anything.`,s:`The forest is quiet in the way only morning fog makes it quiet. Something moves in the mist nearby. It doesn't come close, but it doesn't leave either. You sit there until you feel like yourself again.`,ax:`water`,d:8},
 ]},
 
 {cat:`freeze`,loc:`lighthouse`,
@@ -2675,6 +2676,7 @@ choices:[
 {t:`Put your hands in and push. Don't wait until you feel ready.`,s:`The dough is warmer than you thought. Your hands start figuring it out on their own. Push and fold. Push and fold. You're doing it.`,ax:`flame`,d:9},
 {t:`Ask Wellow to put their hands over yours, just for the first push.`,s:`Wellow helps you start. <em>"There. You already knew how."</em> Wellow steps back and you keep going by yourself.`,ax:`thread`,d:8},
 {t:`Tell Wellow your hands feel frozen and you don't know why.`,s:`Wellow nods like this makes complete sense. <em>"Starting is the hardest part. That doesn't mean you can't do it."</em> You believe them.`,ax:`stone`,d:9},
+{t:`Go outside and sit on the lighthouse steps. Just watch the water for a while.`,s:`The channel moves the way it always does. No hurry. No opinion about you. You sit there until something loosens a little. Pip finds you later. Doesn't say anything. Just sits down next to you.`,ax:`water`,d:9},
 ]},
 
 {cat:`freeze`,loc:`market`,
@@ -2684,6 +2686,7 @@ choices:[
 {t:`Put it up before you can talk yourself out of it.`,s:`You hang it up and look away. An hour later there are three colored stones on the ground below it. That's how the market says something was good.`,ax:`flame`,d:10},
 {t:`Ask Brin to stand right next to you while you hang it up.`,s:`<span class="cn">Brin</span> holds your hand the whole time. <em>"It's up,"</em> she says. The drawing looks right on the board.`,ax:`thread`,d:8},
 {t:`Keep it in your pocket and tell yourself you'll put it up next time.`,s:`You keep it. On the walk home you look at it again. It's actually really good. <em>Next time,</em> you think. And you mean it.`,ax:`stone`,d:7},
+{t:`Walk to the edge of the market where you can see the channel. Watch it for a minute.`,s:`The market noise fades a little from here. The channel doesn't care about any of it. It just moves. You watch until your shoulders come down. Then you go back.`,ax:`water`,d:8},
 ]},
 
 {cat:`freeze`,loc:`bridge`,
@@ -2693,6 +2696,7 @@ choices:[
 {t:`Take one step forward. Just one. Onto the first plank.`,s:`The wood is cold and solid under your foot. Real. The second step is easier. The third is easier than that. You make it across.`,ax:`flame`,d:10},
 {t:`Count the planks you can see, out loud. Then walk to those planks and count the next ones.`,s:`Twelve planks. You walk those. Then twelve more. Then the other side appears before you expected it.`,ax:`stone`,d:9},
 {t:`Hum or whistle something while you walk across.`,s:`Your voice bounces back from the fog. Hearing yourself helps. The bridge feels smaller and easier to cross.`,ax:`spark`,d:8},
+{t:`Stand still in the fog. Let it be fog. It can't hurt you.`,s:`You stop trying to see through it. The fog is just fog. Cold and quiet and not actually dangerous. You stand in it for a moment. Then you walk through it like it was always just weather.`,ax:`water`,d:10},
 ]},
 
 {cat:`freeze`,loc:`forest`,
@@ -2711,6 +2715,7 @@ choices:[
 {t:`Wait for a wave to come to you. Let it wash over your feet without moving.`,s:`Cold. Then you let another wave come. Then you take one step forward. Your feet got there without you having to decide all at once.`,ax:`stone`,d:9},
 {t:`Tell Pip out loud: "I'm nervous, and I'm going to do it anyway."`,s:`Pip nods. <em>"That's the best kind of brave,"</em> Pip says. Saying it out loud made it a little smaller. You walk in.`,ax:`flame`,d:10},
 {t:`Ask Pip to walk in with you, one step at a time, together.`,s:`Pip matches every step. You reach the right depth at the same time. <em>"See?"</em> Pip says. <em>"Still here."</em>`,ax:`thread`,d:9},
+{t:`Sit down at the waterline and watch the tide come in. Don't decide yet.`,s:`The tide doesn't ask you to do anything. It just comes in and goes out. You watch it for a while. By the time you notice, your feet are already wet. You didn't decide. You just stopped deciding not to.`,ax:`water`,d:10},
 ]},
 
 {cat:`freeze`,loc:`market`,
@@ -6615,10 +6620,10 @@ function showRunEnd(found, cname) {
   if (found) {
     var total = CREATURES.filter(function(c){return collection[c.id].found;}).length;
     document.getElementById(`runend-msg`).textContent =
-      total + ` of 32 creatures in your collection. The island carries your choices forward.`;
+      total + ` of ` + CREATURES.length + ` creatures in your collection. The island carries your choices forward.`;
   } else {
     document.getElementById(`runend-msg`).textContent =
-      `${count} of 32 creatures in your collection. Your axes carry forward — the island remembers.`;
+      `${count} of ${CREATURES.length} creatures in your collection. Your axes carry forward — the island remembers.`;
   }
 
   var stirs = [
@@ -6652,7 +6657,7 @@ function renderCompendium(fam) {
   }
 
   var found = CREATURES.filter(function(c) { return collection[c.id].found; }).length;
-  document.getElementById(`comp-count`).textContent = `${found} / 32 found`;
+  document.getElementById(`comp-count`).textContent = `${found} / ${CREATURES.length} found`;
 
   // Filter creatures
   var toShow = CREATURES;
@@ -6973,7 +6978,7 @@ function showSaveQR() {
   var friends = CREATURES.filter(function(cr){return collection[cr.id] && collection[cr.id].friendship > 0;}).length;
   var bestFriends = CREATURES.filter(function(cr){return collection[cr.id] && collection[cr.id].friendship >= 3;}).length;
   document.getElementById('qr-stat').textContent =
-    found + ' creatures · ' + friends + ' friendships · Run ' + run_count +
+    found + ' of ' + CREATURES.length + ' · ' + friends + ' friendships · Run ' + run_count +
     (bestFriends > 0 ? ' · ' + bestFriends + ' best friend' + (bestFriends>1?'s':'') : '');
   document.getElementById('qr-restore-msg').textContent = '';
   document.getElementById('qr-import-text').value = '';
