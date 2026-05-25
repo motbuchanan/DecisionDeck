@@ -789,6 +789,10 @@ const SITUATIONS = [
   { id:'peer',      icon:'👦', title:'Peer / cousin conflict',             desc:'Another kid is in the space. There\'s friction.',                         color:'curveball', scenarios:['s-peer-1','s-peer-2','s-peer-3'] },
   { id:'bored',     icon:'😶', title:'"I\'m bored" spiral',               desc:'Every suggestion rejected. Something else is running underneath.',         color:'calm',      scenarios:['s-bored-1','s-bored-2','s-bored-3'] },
   { id:'correct',   icon:'🔄', title:'Being corrected or redirected',      desc:'You gave him a note. He heard a verdict.',                                color:'warm',      scenarios:['s-correct-1','s-correct-2','s-correct-3'] },
+  { id:'summer',    icon:'☀️', title:'Summer transition — no structure',   desc:'School\'s out. The day has no shape. Free time that doesn\'t feel free.',   color:'curveball', scenarios:['s-summer-1','s-summer-2','s-summer-3'] },
+  { id:'outing',    icon:'🏞️', title:'Zoo, park, or nature outing',        desc:'Big environment, lots of stimulation, no clear role or endpoint.',          color:'warm',      scenarios:['s-outing-1','s-outing-2','s-outing-3'] },
+  { id:'playground',icon:'🛝', title:'Playground — other kids present',    desc:'Unscripted peer interaction in a space he doesn\'t control.',               color:'curveball', scenarios:['s-playground-1','s-playground-2','s-playground-3'] },
+  { id:'group',     icon:'👥', title:'Social group or program',            desc:'He\'s supposed to participate with unfamiliar kids in something organized.', color:'anchor',    scenarios:['s-group-1','s-group-2','s-group-3'] },
 ];
 
 const SCENARIOS = {
@@ -978,7 +982,7 @@ const SCENARIOS = {
       key_moves:['One check-in. Then genuine space.','Let him set the timeline for re-entry.'],
       warning:'Repeated check-ins during shutdown extend it.',
       consequence:'He retreats further. The shutdown deepens because the space isn\'t feeling like space.',
-      cascade_inject:null },
+      cascade_inject:'s-flood-1' },
     { icon:'🔑', text:'Find out what happened — address the cause directly', sub:'If you know what triggered it, you can fix it.',
       outcome:'risky', scores:{presence:5,timing:3,connection:4,control:3,regulation:3},
       feedback:'Understanding the cause is useful — but not as a first move during shutdown. Find out later, in the calm window.',
@@ -1005,7 +1009,7 @@ const SCENARIOS = {
       key_moves:['Receive the "fine."','Exit the conversation cleanly.'],
       warning:'Pressing past a stated exit is a control move even when it comes from care.',
       consequence:'He escalates — sharper tone, visible withdrawal, or a snap.',
-      cascade_inject:null },
+      cascade_inject:'s-shutdown-1' },
     { icon:'🌉', text:'Name what you\'re seeing without requiring a response', sub:'"You seem like something\'s sitting on you. I\'m not going to push."',
       outcome:'risky', scores:{presence:7,timing:6,connection:7,control:7,regulation:6},
       feedback:'This can work beautifully if the delivery is genuinely non-demanding. One sentence that names the observation and clearly releases him from having to respond.',
@@ -1031,7 +1035,7 @@ const SCENARIOS = {
       key_moves:['Let the morning be the morning.','Don\'t use the good moments as contrast to the hard ones.'],
       warning:'Positive mirroring during a crash can destabilize an already fragile baseline.',
       consequence:'He hears it as an accusation. The crash deepens and the good morning is now contaminated.',
-      cascade_inject:null },
+      cascade_inject:'s-flood-1' },
     { icon:'🌱', text:'Name the pattern gently — help him understand what happened', sub:'"Sometimes really good mornings make the hard parts harder."',
       outcome:'risky', scores:{presence:6,timing:4,connection:6,control:5,regulation:4},
       feedback:'This insight is true and worth sharing — but in the calm window, not in the crash. Save it.',
@@ -1477,7 +1481,9 @@ const SCENARIOS = {
       outcome:'risky', scores:{presence:5,timing:3,connection:5,control:3,regulation:4},
       feedback:'Asking him to identify and explain while still activated adds demand he can\'t meet.',
       key_moves:['Let it settle first.','Ask gently in a calm window much later.'],
-      warning:null, consequence:null, cascade_inject:null },
+      warning:null,
+      consequence:'He can\'t answer and the demand adds to the shutdown. The visit closes on a harder note.',
+      cascade_inject:'s-shutdown-2' },
     { icon:'🔄', text:'Pivot to something fun — move past it', sub:'Change the subject.',
       outcome:'risky', scores:{presence:4,timing:5,connection:4,control:4,regulation:4},
       feedback:'A pivot can work if it\'s genuine. Real pause first, then offer something from interest, not repair.',
@@ -1493,19 +1499,19 @@ const SCENARIOS = {
   choices:[
     { icon:'💛', text:'Say something warm and specific — not about the meltdown', sub:'Find one real thing from the visit to name.',
       outcome:'good', scores:{presence:10,timing:9,connection:10,control:7,regulation:9},
-      feedback:'One specific true thing. "You told me about the Temper Temple and how the hot chocolate is always rising." Then go.',
-      key_moves:['"I\'m so glad I got to hear about [specific thing]."','One true recent thing. Said simply.','Then: "I love you. See you soon."'],
+      feedback:'One specific true thing from this visit — something he showed you, told you, or made. Then go.',
+      key_moves:['"I\'m so glad I got to hear about [specific thing from today]."','One true recent thing. Said simply.','Then: "I love you. See you soon."'],
       warning:null, consequence:null, cascade_inject:null },
     { icon:'💬', text:'Address the hard moment before you leave', sub:'A little acknowledgment.',
       outcome:'wrong', scores:{presence:3,timing:1,connection:3,control:2,regulation:-2},
       feedback:'In the shame window, bringing up the hard moment — even gently — can reopen it.',
       key_moves:['Let the hard moment live in the past.','Your job at the door is warmth, not closure.'],
       warning:'Leaving on a note that references the difficulty gives the difficulty the last word.',
-      consequence:'He carries the parting conversation as the last thing of the visit. The meltdown got the final word.',
-      cascade_inject:null },
+      consequence:'He carries the parting conversation as the last thing of the visit. The hard moment got the final word.',
+      cascade_inject:'s-shutdown-2' },
     { icon:'🌱', text:'Tell him you can\'t wait to come back', sub:'End on something to look forward to.',
       outcome:'good', scores:{presence:8,timing:8,connection:9,control:7,regulation:8},
-      feedback:'"Next time I want to hear more about the Outer Rings" — specific, genuine, forward-facing.',
+      feedback:'"Next time I want to hear more about [whatever he showed you today]" — specific, genuine, forward-facing.',
       key_moves:['"Next time I want to hear more about [specific thing]."','Make it genuine.'],
       warning:null, consequence:null, cascade_inject:null }
   ]
@@ -2117,7 +2123,328 @@ const SCENARIOS = {
       warning:'Investigating standard sulk extends it.',
       consequence:null, cascade_inject:null }
   ]
-}
+},
+
+
+// ════════════════════════════════
+// SUMMER TRANSITION
+// ════════════════════════════════
+'s-summer-1': {
+  type:'curveball', category:'Summer Transition',
+  context:'It\'s the first week of summer. School is done. The day has no shape — no schedule, no assignments, no built-in structure. He doesn\'t know what to do with himself and it\'s coming out as restlessness and irritability.',
+  question:'The structure is gone and he\'s unmoored. How do you help him find footing in an unstructured day?',
+  choices:[
+    { icon:'🗓️', text:'Build a loose daily rhythm together — not a schedule, a shape', sub:'Give the day a beginning, middle, and end.',
+      outcome:'good', scores:{presence:9,timing:9,connection:8,control:9,regulation:9},
+      feedback:'He doesn\'t need a minute-by-minute schedule — he needs anchors. A consistent morning thing, an afternoon thing, an evening thing. The shape of the day gives his brain something to hold without locking him into something rigid.',
+      key_moves:['Talk it through with him: "What should mornings feel like this summer?"','Let him have real input on what fills each part.','The rhythm doesn\'t have to be perfect — just consistent enough to feel like a track.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🎉', text:'Celebrate — summer is freedom, help him enjoy the open time', sub:'No structure is the point. Let him decompress.',
+      outcome:'risky', scores:{presence:5,timing:4,connection:6,control:3,regulation:4},
+      feedback:'The instinct to celebrate summer as freedom is right for some kids. For Garrett, completely unstructured time is genuinely dysregulating — not a relief. He may want to decompress, but "anything goes" isn\'t the same as rest for him.',
+      key_moves:['Let him decompress from school demands — but keep some shape to the day.','A low-stakes rhythm is not the same as pressure.'],
+      warning:'Total freedom without structure reads as chaos to a brain that runs on predictability.',
+      consequence:'Day three of no structure: he\'s irritable by 10am, can\'t settle into anything, and nothing sounds good. The open day has become its own source of dysregulation.',
+      cascade_inject:'s-bored-1' },
+    { icon:'📋', text:'Recreate the school schedule — keep the same routine', sub:'What worked before will work now.',
+      outcome:'wrong', scores:{presence:2,timing:-3,connection:2,control:-2,regulation:-3},
+      feedback:'Forcing a school schedule onto summer ignores the very real relief of having less pressure. The goal is structure, not school — a gentler version that gives the day a shape without the demands of academic work.',
+      key_moves:['Same anchors, fewer demands.','Morning routine can stay. Assignments don\'t.'],
+      warning:'Recreating school in summer causes resentment without providing the regulation benefits of actual school structure.',
+      consequence:'He pushes back hard. The schedule becomes a battle before the first week is out.',
+      cascade_inject:'s-demand-1' }
+  ]
+},
+
+'s-summer-2': {
+  type:'curveball', category:'Summer Transition',
+  context:'It\'s mid-morning. He\'s been awake for two hours. He\'s already gone through three things — started a game, abandoned it, watched something, got bored, tried to build something, stopped. He\'s circling. Nothing is landing.',
+  question:'The circling has been going on for two hours and nothing is sticking. What\'s actually happening and what do you do?',
+  choices:[
+    { icon:'🔍', text:'Name it: his brain is looking for the structure that isn\'t there', sub:'The circling is the symptom. Name the cause.',
+      outcome:'good', scores:{presence:10,timing:9,connection:9,control:7,regulation:9},
+      feedback:'The circling isn\'t boredom — it\'s a brain scanning for a track and not finding one. Naming that directly, without making it a problem, gives him a frame for the feeling and makes it less confusing. "Your brain is used to knowing what comes next. Summer doesn\'t have that built in yet."',
+      key_moves:['"Your brain is used to having a shape to the day. It\'s scanning for that right now."','Then: "Let\'s pick one thing and do it all the way through."','The commitment to one thing matters more than which thing.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🎮', text:'Offer Kirby or his absorbing game — something reliable', sub:'Reset with something he knows works.',
+      outcome:'good', scores:{presence:8,timing:8,connection:6,control:7,regulation:8},
+      feedback:'A known reliable absorbing activity is a genuine regulation move. Sometimes the answer to a circling brain is just to give it a strong enough track. If he engages fully, that\'s the reset.',
+      key_moves:['Offer it without pressure.','If he says no and keeps circling: that\'s information. Something deeper is going on — go back to naming it.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📝', text:'Give him a list of options and let him choose', sub:'Choice and agency will help.',
+      outcome:'risky', scores:{presence:5,timing:4,connection:4,control:5,regulation:4},
+      feedback:'A list of options adds decision load to a brain that\'s already struggling to land. Too many choices is part of the problem, not the solution. If you offer options, two at most — and both should be genuinely available.',
+      key_moves:['Two options maximum.','Both specific, both actually available right now.','If he can\'t choose: pick one for him and start it together.'],
+      warning:'A long list of options adds load to a brain already stuck in choice paralysis.',
+      consequence:'He rejects every option on the list and the circling intensifies. Now you\'re both stuck.',
+      cascade_inject:'s-bored-1' }
+  ]
+},
+
+'s-summer-3': {
+  type:'curveball', category:'Summer Transition',
+  context:'You\'ve tried to introduce something new this summer — a project, a skill, a routine. He was interested for two days. Now he\'s dropped it completely and says he doesn\'t want to do it anymore.',
+  question:'The new summer thing has been abandoned after two days. How do you handle it?',
+  choices:[
+    { icon:'🌱', text:'Let it rest — dropping things is part of finding what sticks', sub:'Two days isn\'t a failure. It\'s data.',
+      outcome:'good', scores:{presence:8,timing:9,connection:7,control:8,regulation:8},
+      feedback:'Summer is genuinely a good time to try things and discover that some of them don\'t fit. Dropping something after two days isn\'t failure — it\'s calibration. The goal isn\'t to complete every project; it\'s to find what actually engages him.',
+      key_moves:['No guilt, no "but you were so excited about it."','File it away as something that didn\'t land.','Let him lead toward whatever does.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔄', text:'Try to re-engage him — figure out what put him off', sub:'There might be a fixable obstacle.',
+      outcome:'risky', scores:{presence:7,timing:6,connection:7,control:7,regulation:6},
+      feedback:'Sometimes there is a fixable obstacle — it was too hard, the materials weren\'t right, one part frustrated him. Worth one gentle inquiry. But receive the answer honestly: if the answer is "I just don\'t want to," that\'s a complete answer.',
+      key_moves:['"Was there something about it that got frustrating, or did it just not feel right?"','If there\'s a fixable thing: fix it and offer once.','If not: let it go.'],
+      warning:'Pushing re-engagement on something he\'s dropped teaches him that his no isn\'t final.',
+      consequence:null, cascade_inject:null },
+    { icon:'📌', text:'Hold him to it — commitment matters and summer needs structure', sub:'He said he wanted to do it. Follow through.',
+      outcome:'wrong', scores:{presence:2,timing:-3,connection:2,control:-3,regulation:-3},
+      feedback:'Holding him to something he\'s genuinely done with turns a neutral discovery (this doesn\'t fit me) into a daily battle with no upside. The structure argument doesn\'t hold — forced compliance on a creative or skill activity produces resentment, not habit.',
+      key_moves:['Let it go.','Structure comes from the shape of the day, not from forcing specific activities.'],
+      warning:'Mandatory creative projects are oxymorons. The compliance kills the point.',
+      consequence:'The project becomes a chore. He completes it resentfully or fights it daily. Either way the summer has a new source of friction that didn\'t need to exist.',
+      cascade_inject:'s-demand-1' }
+  ]
+},
+
+// ════════════════════════════════
+// ZOO / PARK / NATURE OUTING
+// ════════════════════════════════
+'s-outing-1': {
+  type:'warm', category:'Zoo / Park / Outing',
+  context:'You\'re at the zoo. It\'s been 45 minutes. He was engaged at first — had a clear favorite exhibit. Now the crowd is bigger, it\'s louder, and he\'s starting to pull toward exits and say he wants to go home.',
+  question:'He was engaged and now he\'s done. You haven\'t seen half the zoo yet. What\'s your call?',
+  choices:[
+    { icon:'🚶', text:'Head toward the exit — read that he\'s done and honor it', sub:'The zoo was worth coming for. This is the stopping point.',
+      outcome:'good', scores:{presence:10,timing:10,connection:8,control:8,regulation:9},
+      feedback:'When he says he wants to go home after genuinely engaging, believe him. He got something out of the visit — the first 45 minutes were real. Pushing past his signal costs him the positive memory and teaches him that his exit signals don\'t work.',
+      key_moves:['Start moving toward the exit without drama.','Name what was good on the way out: "The otters were great."','Don\'t reference how much is left unseen.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🎯', text:'Offer one more specific thing — then the exit', sub:'"One more exhibit, you pick, then we go."',
+      outcome:'risky', scores:{presence:7,timing:6,connection:6,control:8,regulation:6},
+      feedback:'A defined one-more works if it\'s genuinely one and if you follow through on the exit commitment immediately after. The risk is "one more" becoming two more becoming "we\'re already here."',
+      key_moves:['He picks it. Not you.','When it\'s done: you go. No extensions.','If he says no to one more: honor that too.'],
+      warning:'"One more" only works if you actually leave after.',
+      consequence:'One more becomes two more. By the time you\'re leaving he\'s been past his limit for 30 minutes. The exit is now a meltdown instead of a natural end.',
+      cascade_inject:'s-public-2' },
+    { icon:'💪', text:'Keep going — you drove here, there\'s more to see', sub:'He\'ll get a second wind.',
+      outcome:'wrong', scores:{presence:1,timing:-5,connection:1,control:-3,regulation:-5},
+      feedback:'There is no second wind. When he says he\'s done in a high-stimulation environment, the tank is empty. Continuing guarantees a meltdown in the middle of the zoo — which is a much worse ending than leaving early.',
+      key_moves:['Leave when he signals he\'s done.','A good 45-minute visit beats a two-hour disaster.'],
+      warning:'Pushing past the exit signal in a public environment always ends worse than leaving.',
+      consequence:'Twenty minutes later he\'s melting down in the reptile house. The exit that would have been clean is now a crisis.',
+      cascade_inject:'s-public-2' }
+  ]
+},
+
+'s-outing-2': {
+  type:'warm', category:'Zoo / Park / Outing',
+  context:'You\'re at a park or nature trail. There\'s no clear endpoint — no "last exhibit." He doesn\'t know how long this is going to take and you haven\'t told him. He\'s starting to ask every few minutes how much longer.',
+  question:'The undefined nature of the outing is loading him. How do you fix it?',
+  choices:[
+    { icon:'🗺️', text:'Give him a concrete endpoint right now', sub:'"We\'re going to the bench at the top, then we turn around."',
+      outcome:'good', scores:{presence:9,timing:9,connection:7,control:8,regulation:9},
+      feedback:'A visible, concrete endpoint converts an infinite walk into a defined task. He can hold "the bench at the top" in his brain in a way he cannot hold "until I decide we\'re done." Pick something you can actually see or commit to, and honor it.',
+      key_moves:['Something specific and visible if possible.','State it once clearly.','When you reach it: you turn around. No extensions.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'⏱️', text:'Give him a time — "45 more minutes, then we head back"', sub:'A clock endpoint is better than nothing.',
+      outcome:'good', scores:{presence:8,timing:8,connection:6,control:7,regulation:7},
+      feedback:'A time endpoint works if he can track it. A phone timer he can see is much better than a verbal promise. Set it in front of him.',
+      key_moves:['Set the timer visibly.','When it goes off: you go. No "just a little further."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🌿', text:'Tell him to enjoy it — nature doesn\'t have an endpoint', sub:'Part of the lesson is learning to be present.',
+      outcome:'wrong', scores:{presence:1,timing:-4,connection:2,control:-3,regulation:-4},
+      feedback:'"Be present" is a skill that requires regulation — and he can\'t access regulation when his brain is scanning for an endpoint and not finding one. This isn\'t a mindfulness failure; it\'s a predictability need.',
+      key_moves:['Give him the endpoint first.','Presence is possible once the uncertainty is resolved.'],
+      warning:'Asking him to sit with undefined time is asking him to regulate without giving him the tool to do it.',
+      consequence:'The questions come faster, the frustration builds, and the walk that was supposed to be restorative becomes a countdown to a meltdown.',
+      cascade_inject:'s-buildup-2' }
+  ]
+},
+
+'s-outing-3': {
+  type:'warm', category:'Zoo / Park / Outing',
+  context:'The outing is over and it went well — he engaged, he explored, he was present. Now you\'re in the car heading home and he\'s crashed: quiet, flat, won\'t talk.',
+  question:'The outing was good but the crash on the way home is real. How do you handle the car ride back?',
+  choices:[
+    { icon:'🌊', text:'Let the quiet be — he\'s decompressing, not upset', sub:'This is recovery, not shutdown.',
+      outcome:'good', scores:{presence:9,timing:10,connection:7,control:8,regulation:10},
+      feedback:'Post-outing flatness after a genuinely good experience is normal and healthy. His system spent a lot — sensory processing, social navigation, environmental adjustment. The quiet is recovery. Don\'t fill it.',
+      key_moves:['Comfortable silence.','Music if he wants it.','Don\'t ask "did you have fun?" right now — let him arrive home before processing.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'💬', text:'Debrief the trip — talk through the highlights while it\'s fresh', sub:'The car is a good place for conversation.',
+      outcome:'risky', scores:{presence:5,timing:3,connection:5,control:4,regulation:4},
+      feedback:'The instinct to debrief while it\'s fresh is natural but the timing is off. He\'s depleted. If he opens the conversation, follow his lead. If not: wait.',
+      key_moves:['Don\'t initiate the debrief in the car.','If he brings something up: engage lightly.','Full conversation can happen at home, 20-30 minutes after arrival.'],
+      warning:'Debriefing during decompression asks for output from an empty tank.',
+      consequence:'He goes flat and unresponsive. The car ride becomes tense and the good outing ends on an awkward note.',
+      cascade_inject:'s-shutdown-2' },
+    { icon:'🎉', text:'Tell him how great he did — positive reinforcement lands well here', sub:'He handled a big environment well.',
+      outcome:'risky', scores:{presence:4,timing:3,connection:5,control:4,regulation:3},
+      feedback:'Positive affirmation during a decompression crash can actually land as pressure — it requires him to receive it, respond to it, and perform gratitude for the trip. Save it. When he\'s recovered and relaxed, a specific true thing lands much better.',
+      key_moves:['Save the affirmation for when he\'s genuinely back online.','Then: one specific thing, said quietly.'],
+      warning:'Affirmation during crash requires performance he doesn\'t have.',
+      consequence:null, cascade_inject:null }
+  ]
+},
+
+// ════════════════════════════════
+// PLAYGROUND — OTHER KIDS
+// ════════════════════════════════
+'s-playground-1': {
+  type:'curveball', category:'Playground',
+  context:'You\'re at the playground. Other kids are there. He doesn\'t know them. He\'s hanging back, watching, not engaging — but also not playing independently. He\'s stuck in the middle.',
+  question:'He\'s hovering at the edge, not joining and not moving away. What do you do?',
+  choices:[
+    { icon:'🪑', text:'Sit nearby and let him calibrate at his own pace', sub:'He\'s reading the environment. Let him.',
+      outcome:'good', scores:{presence:9,timing:10,connection:7,control:9,regulation:9},
+      feedback:'The hovering is active social processing — he\'s reading the rules of this specific group before deciding whether and how to engage. Interrupting that process with encouragement or direction resets the read. Your job is to be a calm anchor nearby while he works it out.',
+      key_moves:['Sit somewhere visible to him but not right beside him.','Don\'t coach from the sideline.','Give him 10-15 minutes of pure observation time before anything else.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🤝', text:'Encourage him to go introduce himself', sub:'A little push helps.',
+      outcome:'wrong', scores:{presence:2,timing:-4,connection:2,control:-3,regulation:-3},
+      feedback:'A direct push to introduce himself to unknown kids in an unscripted environment is one of the highest-demand social moves available. If he had the tools to do that right now, he would already be doing it. The encouragement lands as pressure.',
+      key_moves:['Don\'t push.','Let him find his entry point on his own terms.','If he never engages with the other kids: that\'s okay too.'],
+      warning:'Pushing social initiation when he\'s still reading the room adds pressure to an already complex process.',
+      consequence:'He feels exposed and pushed. He retreats from the playground entirely or clings to you for the rest of the visit.',
+      cascade_inject:'s-shutdown-1' },
+    { icon:'🎮', text:'Give him something to do independently — his own activity at the playground', sub:'Parallel play is legitimate play.',
+      outcome:'good', scores:{presence:8,timing:8,connection:6,control:9,regulation:8},
+      feedback:'Parallel presence — being at the playground with his own thing — is a legitimate and often effective entry strategy. He\'s in the environment, observing the social landscape, and sometimes the independent activity attracts organic interest from other kids without the pressure of initiation.',
+      key_moves:['Bring something he enjoys that can be done outside.','Don\'t frame it as a consolation — frame it as a plan.','Let organic interaction happen without engineering it.'],
+      warning:null, consequence:null, cascade_inject:null }
+  ]
+},
+
+'s-playground-2': {
+  type:'curveball', category:'Playground',
+  context:'He\'s been playing fine. Then another kid changes the game — new rules, new direction, different than what Garrett was doing. He\'s getting tense and the situation is building.',
+  question:'The game just changed on him. He didn\'t choose this. What\'s your move?',
+  choices:[
+    { icon:'🧭', text:'Step in early — redirect or restructure before it breaks', sub:'Catch it while intervention is still gentle.',
+      outcome:'good', scores:{presence:9,timing:9,connection:7,control:7,regulation:8},
+      feedback:'Early intervention in playground conflicts is far cheaper than late intervention. A light touch — suggesting a new shared activity, reframing the game, briefly joining and reshaping the dynamic — costs almost nothing compared to managing the aftermath of a full escalation.',
+      key_moves:['Join the play briefly and shift the structure naturally.','Or suggest a new activity that both kids can do.','Keep it casual — you\'re playing, not mediating.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🗣️', text:'Coach him from the sideline — tell him how to handle it', sub:'Give him the words or the move.',
+      outcome:'risky', scores:{presence:5,timing:4,connection:4,control:4,regulation:4},
+      feedback:'Sideline coaching adds a second thing to manage — the social situation AND the coaching — and it can be visible and embarrassing to him in front of the other kid. If coaching is needed, do it quietly and briefly, or come alongside him physically rather than calling across.',
+      key_moves:['If you coach: do it privately, crouched next to him, not called across the playground.','Keep it one short sentence.'],
+      warning:'Visible sideline coaching in front of other kids can embarrass him and complicate the social situation.',
+      consequence:null, cascade_inject:null },
+    { icon:'🌊', text:'Let it play out — he needs to navigate this himself', sub:'Social friction is how kids learn.',
+      outcome:'risky', scores:{presence:6,timing:5,connection:5,control:7,regulation:5},
+      feedback:'Letting him navigate is sometimes right — but read the temperature first. If it\'s mild friction he\'s managing: stay out. If he\'s visibly tensing and heading toward escalation: step in before it breaks. The learning opportunity disappears when it becomes a meltdown.',
+      key_moves:['Watch closely.','Have a clear threshold: if X, you\'re going in.','Don\'t wait until it\'s already a crisis.'],
+      warning:'Staying out past the point of no return costs more than a gentle early intervention.',
+      consequence:'It escalates past the point of smooth intervention. Now it\'s a full conflict that requires significant involvement.',
+      cascade_inject:'s-peer-2' }
+  ]
+},
+
+'s-playground-3': {
+  type:'curveball', category:'Playground',
+  context:'It\'s time to leave the playground. He doesn\'t want to go. The transition is becoming a standoff and other families are nearby.',
+  question:'Playground exit, public standoff. How do you move him without making it a scene?',
+  choices:[
+    { icon:'⏱️', text:'Give a 5-minute warning with something to look forward to after', sub:'Ease the transition with a known endpoint.',
+      outcome:'good', scores:{presence:8,timing:9,connection:7,control:8,regulation:8},
+      feedback:'A warning plus a next thing converts the departure from a loss into a transition. The next thing doesn\'t have to be big — it just has to be real and specific.',
+      key_moves:['"Five minutes, then we\'re going — and then we\'re going to [specific thing]."','State it once.','At five minutes: follow through calmly and immediately.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔑', text:'Give him one choice about the exit — how, not whether', sub:'"Do you want to go down the slide one more time first, or are you ready now?"',
+      outcome:'good', scores:{presence:8,timing:8,connection:7,control:9,regulation:8},
+      feedback:'The choice is between two forms of leaving, not between leaving and staying. That distinction matters. He gets agency over the how; the what is already decided.',
+      key_moves:['Both options end with leaving.','Say it lightly, not like a test.','Accept whichever he picks and move.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📣', text:'Remind him of the rules — you said it was time to go', sub:'He knew the deal.',
+      outcome:'wrong', scores:{presence:2,timing:-3,connection:1,control:-2,regulation:-3},
+      feedback:'Invoking the rules in a public standoff rarely resolves it — it escalates it. He knows the deal. The problem isn\'t understanding; it\'s that his nervous system isn\'t ready to leave. A rules reminder doesn\'t fix a regulation problem.',
+      key_moves:['Skip the reminder.','Give him the choice or the warning instead.','Move toward the exit yourself — sometimes movement is the cue.'],
+      warning:'Rules reminders in public standoffs escalate rather than resolve.',
+      consequence:'The standoff hardens. Now it\'s about the principle and he\'s dug in. The exit takes three times as long and ends badly.',
+      cascade_inject:'s-buildup-2' }
+  ]
+},
+
+// ════════════════════════════════
+// SOCIAL GROUP / PROGRAM
+// ════════════════════════════════
+'s-group-1': {
+  type:'anchor', category:'Social Group',
+  context:'It\'s the first session of a new group — a class, a camp morning, a library program. He doesn\'t know anyone. He\'s been resistant since you told him about it and is now at the threshold, refusing to go in.',
+  question:'He\'s at the door and won\'t go in. How do you handle the threshold?',
+  choices:[
+    { icon:'🚶', text:'Go in with him — stay briefly until he finds his footing', sub:'The bridge is you.',
+      outcome:'good', scores:{presence:9,timing:9,connection:8,control:7,regulation:8},
+      feedback:'The threshold is the hardest moment. Going in with him — not hovering, just accompanying — lowers the social cost of entry. Once he\'s in and has something to anchor to, you can step back naturally.',
+      key_moves:['Go in together.','Find a specific low-demand thing to start with: something to look at, somewhere to sit.','Step back once he\'s settled, not before.','Tell him when you\'ll be back — specifically.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🎯', text:'Give him one specific thing to focus on when he walks in', sub:'A task converts an overwhelming room into a defined move.',
+      outcome:'good', scores:{presence:8,timing:8,connection:7,control:8,regulation:8},
+      feedback:'Walking into an unknown social environment is one ask. Walking in to find the table with the materials, or find a chair on the edge, is a much smaller ask. One specific micro-task converts the entry from a social performance into a practical action.',
+      key_moves:['Something observable and achievable: "Find where the art supplies are."','It gives him somewhere to look and something to do with his hands.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'💪', text:'Encourage him — he\'s going to love it once he\'s in', sub:'The nervousness is normal. Get him through the door.',
+      outcome:'wrong', scores:{presence:2,timing:-3,connection:3,control:-2,regulation:-3},
+      feedback:'Predicting he\'ll love it once he\'s in removes his authority over his own experience and adds the pressure of having to love it. If he doesn\'t love it, he was wrong to resist and wrong to feel that way. Skip the prediction.',
+      key_moves:['Don\'t predict how he\'ll feel.','Just help him get in.'],
+      warning:'Predicting positive emotions adds performance pressure to a system already under load.',
+      consequence:'He gets in, doesn\'t immediately love it, and now has to manage both the environment and the feeling of having been wrong to be nervous. The session starts with a deficit.',
+      cascade_inject:'s-shutdown-2' }
+  ]
+},
+
+'s-group-2': {
+  type:'anchor', category:'Social Group',
+  context:'He\'s in the group session. There\'s a moment where participation is expected — a group activity, a go-around, something where he\'s supposed to contribute in front of others. He\'s freezing.',
+  question:'He\'s expected to participate publicly and he\'s freezing. What do you do from the outside?',
+  choices:[
+    { icon:'🌊', text:'Let it go — don\'t intervene, don\'t draw attention to it', sub:'The freeze is managing itself. Don\'t make it bigger.',
+      outcome:'good', scores:{presence:9,timing:9,connection:7,control:8,regulation:8},
+      feedback:'Public intervention when he\'s freezing makes the freeze visible to the whole group. If the facilitator is handling it, let them. If it\'s just passing him by, that\'s fine. He may participate next round. He may not. Either is okay.',
+      key_moves:['Don\'t call across to him.','Don\'t make eye contact that signals distress.','Let the moment pass naturally.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🤝', text:'Talk to the facilitator quietly — give them context', sub:'The person running it should know.',
+      outcome:'good', scores:{presence:8,timing:7,connection:6,control:7,regulation:7},
+      feedback:'A brief quiet word with the facilitator — "he sometimes takes a few sessions to warm up, no pressure to call on him" — can change the entire experience. Most facilitators appreciate the context and will work with it.',
+      key_moves:['Before or after the session, not during.','Keep it brief: "He warms up slowly — feel free to let him pass."','Don\'t over-explain.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'👋', text:'Catch his eye and give him an encouraging signal', sub:'A nod or a thumbs up from you.',
+      outcome:'risky', scores:{presence:5,timing:3,connection:5,control:3,regulation:4},
+      feedback:'An encouraging signal from across a room draws attention to him in a moment he\'s trying to be invisible. Even a warm gesture can feel like a spotlight. If he\'s looking for you, a calm steady presence is better than a performance signal.',
+      key_moves:['Calm, steady, present.','Not engaged, not worried-looking.','If he finds your eyes: just be still and okay.'],
+      warning:'Visible encouragement signals can intensify the spotlight feeling he\'s trying to escape.',
+      consequence:'He feels seen in a moment he was trying to be invisible. The freeze deepens.',
+      cascade_inject:'s-shutdown-1' }
+  ]
+},
+
+'s-group-3': {
+  type:'anchor', category:'Social Group',
+  context:'The session is over. You\'re in the car. He says he hates it and doesn\'t want to go back.',
+  question:'Post-session "I hate it and I\'m not going back." How do you receive this?',
+  choices:[
+    { icon:'👂', text:'Receive it fully first — don\'t defend the group yet', sub:'Hear what\'s under the "I hate it" before anything else.',
+      outcome:'good', scores:{presence:10,timing:9,connection:9,control:7,regulation:9},
+      feedback:'"I hate it" is a summary, not a full report. Under it is usually something specific — one moment, one person, one thing that felt wrong. If you defend the group before finding out what happened, you\'re arguing against something you don\'t understand yet.',
+      key_moves:['"Tell me what was hard about it."','Listen without minimizing.','Find the specific thing before you respond to anything.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔮', text:'Tell him it gets better — it takes time to warm up to new things', sub:'First sessions are always the hardest.',
+      outcome:'risky', scores:{presence:4,timing:3,connection:4,control:3,regulation:4},
+      feedback:'This may be true — and it may not be. Saying it before finding out what happened tells him his read of the experience doesn\'t count. Find out what happened first. Then, if appropriate, you can offer perspective.',
+      key_moves:['Find out what actually happened first.','Perspective is useful — but only after the experience is heard.'],
+      warning:'Future-tense reassurance before present-tense acknowledgment feels like dismissal.',
+      consequence:'He shuts down the conversation. The car ride goes quiet and the real thing never surfaces.',
+      cascade_inject:'s-shutdown-2' },
+    { icon:'✅', text:'Accept it — if he hates it, he doesn\'t have to go back', sub:'His experience is valid. Don\'t force it.',
+      outcome:'risky', scores:{presence:6,timing:4,connection:7,control:8,regulation:5},
+      feedback:'Honoring his experience is right. Deciding in the car after session one that he\'s never going back may be premature — but it also may be accurate. The right move is to hear it fully, give it a day or two, and then revisit. Not a decision in the car.',
+      key_moves:['Acknowledge fully today.','Revisit the decision in two days when he\'s not in the immediate feeling.','One or two more sessions with low pressure is a reasonable ask if nothing specific was harmful.'],
+      warning:'Immediate permanent exit decisions made in an activated state may not reflect his actual read after recovery.',
+      consequence:null, cascade_inject:null }
+  ]
+},
 
 }; // end SCENARIOS
 
@@ -2431,7 +2758,7 @@ const REF_DATA = [
     {b:'anchor',t:'<strong>Frustration bucket:</strong> <em>"How full is your bucket right now — like 1 to 10?"</em> Helps him name it.'},
     {b:'anchor',t:'<strong>Heavy work:</strong> Push palms together hard. Stomp feet. Push against a wall. His body needs the input.'},
     {b:'anchor',t:'<strong>First/then:</strong> <em>"First one quick thing, then Kirby."</em> Makes the demand visible and bounded.'},
-    {b:'anchor',t:'<strong>Feeling at a distance:</strong> Route emotional questions through his worlds. <em>"What do you think makes Bay-bay feel scared?"</em>'},
+    {b:'anchor',t:'<strong>Feeling at a distance:</strong> Route emotional questions through his toys or characters. <em>"What do you think makes [his toy] feel scared?"</em> instead of asking him directly.'},
     {b:'anchor',t:'<strong>Something absorbing:</strong> Kirby, audiobook, building. Device + space is a regulation tool, not a reward.'},
   ]},
   { icon:'🍽️', name:'Food & mealtime rules', color:'warm', items:[
@@ -2467,11 +2794,11 @@ const REF_DATA = [
   ]},
   { icon:'💜', name:'For visiting family — what to know first', color:'calm', items:[
     {b:'calm',t:'<strong>He agreed to seeing you and he means it.</strong> When he fights it right before you arrive, that\'s not about you — the plan became real and real plans have variables.'},
-    {b:'calm',t:'<strong>Give him time to adjust.</strong> Sit down. Be comfortable. Be boring in the best way. He will find you.'},
-    {b:'calm',t:'<strong>Ask about his worlds with genuine curiosity.</strong> Ask who lives in the Outer Rings. Ask what the Temper Temple sounds like. He will light up.'},
-    {b:'calm',t:'<strong>Bay-bay is his plushie dinosaur and she matters deeply.</strong> Don\'t tease it. Ask about her if he mentions her.'},
+    {b:'calm',t:'<strong>Give him time to adjust.</strong> Sit down. Be comfortable. Be boring in the best way. He will find you. Don\'t pursue.'},
+    {b:'calm',t:'<strong>Ask about his worlds with genuine curiosity.</strong> Ask him what he\'s been building or working on. Ask him to show you something. He will light up and talk for as long as you\'ll listen.'},
+    {b:'calm',t:'<strong>He has toys and things that matter deeply to him.</strong> Don\'t tease them. Ask about them if he mentions them. Take them seriously.'},
     {b:'calm',t:'<strong>If he melts down during your visit, it is not your fault.</strong> Follow his parents\' lead. You being calm is the best help you can give.'},
-    {b:'calm',t:'<strong>When you leave:</strong> say one specific true thing from the visit — not about any hard moments. <em>"I\'m so glad I got to hear about the Temper Temple."</em> Then: "I love you. See you soon."'},
+    {b:'calm',t:'<strong>When you leave:</strong> say one specific true thing from this visit — something he showed you or told you today. Then: "I love you. See you soon."'},
   ]},
 
 ];
