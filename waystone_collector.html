@@ -6662,6 +6662,21 @@ window.onload = function() {
   wire('btn-flevel-ok', function() { document.getElementById('flevel-overlay').classList.remove('visible'); drainFriendshipQueue(); });
   wire('btn-saveqr', showSaveQR);
   wire('btn-saveqr-back', function() { show('s-title'); });
+  wire('btn-copy-code', function() {
+    var code = document.getElementById('qr-code-display').textContent;
+    var msg = document.getElementById('qr-copy-msg');
+    if (!code) { msg.textContent = 'Nothing to copy yet.'; return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(function() {
+        msg.textContent = 'Copied! Paste it somewhere safe.';
+      }).catch(function() {
+        // Fallback for browsers that block clipboard
+        selectAndCopy(code, msg);
+      });
+    } else {
+      selectAndCopy(code, msg);
+    }
+  });
   wire('btn-qr-restore', function() {
     var code = document.getElementById('qr-import-text').value.trim();
     var msgEl = document.getElementById('qr-restore-msg');
@@ -6740,19 +6755,8 @@ window.onload = function() {
 
 // Minimal QR code encoder using the qrcode-generator approach via CDN script
 // We load it lazily when the screen opens to keep the file self-contained otherwise
-var qrLibLoaded = false;
-
-function loadQRLib(cb) {
-  if (qrLibLoaded) { cb(); return; }
-  var s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-  s.onload = function() { qrLibLoaded = true; cb(); };
-  s.onerror = function() { cb(true); };
-  document.head.appendChild(s);
-}
-
 function buildSaveCode() {
-  // Compact format — short keys to stay within QR code size limits
+  // Compact format — short keys to stay small for clipboard transfer
   var cc = {};
   CREATURES.forEach(function(cr) {
     var col = collection[cr.id];
@@ -6777,7 +6781,7 @@ function restoreFromCode(code) {
   try {
     var state = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
     if (state.v === 3 && state.c !== undefined) {
-      // Current compact format: c={id:[friendship,nick]}, i=[items], lv=[counts]
+      // Current compact format
       Object.keys(state.c || {}).forEach(function(id) {
         if (!collection[id]) collection[id] = {found:false, nick:'', friendship:0};
         var entry = state.c[id];
@@ -6793,8 +6797,8 @@ function restoreFromCode(code) {
       var lv = state.lv || [0,0,0,0,0];
       locationVisits = {beach:lv[0]||0,forest:lv[1]||0,market:lv[2]||0,lighthouse:lv[3]||0,bridge:lv[4]||0};
       favors = state.fav || 0;
-      if (state.q && typeof questProgress !== 'undefined') questProgress = state.q;
-      if (state.ps && typeof puzzleState !== 'undefined') puzzleState = state.ps;
+      if (state.q && typeof questProgress!=='undefined') questProgress = state.q;
+      if (state.ps && typeof puzzleState!=='undefined') puzzleState = state.ps;
     } else if (!state.v && state.c) {
       // Legacy format
       Object.keys(state.c || {}).forEach(function(id) {
@@ -6821,46 +6825,39 @@ function restoreFromCode(code) {
 
 function showSaveQR() {
   var found = CREATURES.filter(function(cr){return collection[cr.id] && collection[cr.id].found;}).length;
-  var friends = CREATURES.filter(function(cr){
-    return collection[cr.id] && collection[cr.id].friendship > 0;
-  }).length;
-  var bestFriends = CREATURES.filter(function(cr){
-    return collection[cr.id] && collection[cr.id].friendship >= 3;
-  }).length;
-  var itemCount = Object.keys(inventory).filter(function(k){return inventory[k];}).length;
+  var friends = CREATURES.filter(function(cr){return collection[cr.id] && collection[cr.id].friendship > 0;}).length;
+  var bestFriends = CREATURES.filter(function(cr){return collection[cr.id] && collection[cr.id].friendship >= 3;}).length;
+  var itemCount = Object.keys(inventory||{}).filter(function(k){return inventory[k];}).length;
   document.getElementById('qr-stat').textContent =
-    found + ' of 32 creatures · ' + friends + ' friendships · ' +
-    itemCount + ' items · Run ' + run_count +
+    found + ' creatures · ' + friends + ' friendships · Run ' + run_count +
     (bestFriends > 0 ? ' · ' + bestFriends + ' best friend' + (bestFriends>1?'s':'') : '');
   document.getElementById('qr-restore-msg').textContent = '';
   document.getElementById('qr-import-text').value = '';
+  document.getElementById('qr-copy-msg').textContent = '';
 
-  var wrap = document.getElementById('qr-canvas-wrap');
-
-  loadQRLib(function(err) {
-    if (err) {
-      wrap.innerHTML = '<div style="color:rgba(255,255,255,.4);font-size:12px;padding:20px;">QR requires an internet connection.<br>Use the text code below instead.</div>';
-      var code = buildSaveCode();
-      // Show text code as fallback
-      var ta = document.getElementById('qr-import-text');
-      ta.value = code;
-    } else {
-      wrap.innerHTML = '';
-      var code = buildSaveCode();
-      try {
-        new QRCode(wrap, {
-          text: code,
-          width: 220, height: 220,
-          colorDark: '#000000', colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.L
-        });
-      } catch(e) {
-        wrap.innerHTML = '<div style="color:rgba(255,255,255,.4);font-size:12px;padding:20px;">Could not generate QR.</div>';
-      }
-    }
-  });
+  // Generate the save code and display it
+  var code = buildSaveCode();
+  document.getElementById('qr-code-display').textContent = code;
 
   show('s-saveqr');
+}
+
+
+function selectAndCopy(text, msgEl) {
+  // Fallback copy: create temp textarea, select all, copy
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    if (msgEl) msgEl.textContent = 'Copied! Paste it somewhere safe.';
+  } catch(e) {
+    if (msgEl) msgEl.textContent = 'Select the code above and copy manually.';
+  }
+  document.body.removeChild(ta);
 }
 
 </script>
@@ -6990,17 +6987,36 @@ function showSaveQR() {
   </div>
   <div style="flex:1;overflow-y:auto;">
     <div class="qr-wrap">
-      <div class="qr-sub">Your Collection Code</div>
+      <div class="qr-sub">Your Save Code</div>
       <div class="qr-stat" id="qr-stat"></div>
-      <div class="qr-canvas-wrap" id="qr-canvas-wrap">
-        <canvas id="qr-canvas" width="220" height="220"></canvas>
+
+      <!-- Save code display box -->
+      <div style="width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.12);
+        border-radius:12px;padding:14px;word-break:break-all;font-family:monospace;
+        font-size:11px;line-height:1.6;color:rgba(200,220,240,.8);
+        min-height:80px;user-select:all;" id="qr-code-display"></div>
+
+      <div class="btn-gold" id="btn-copy-code" role="button"
+        style="border-radius:12px;padding:12px;font-size:16px;cursor:pointer;
+        text-align:center;width:100%;box-sizing:border-box;">
+        &#x1F4CB; Copy Save Code
       </div>
-      <div class="qr-code-hint">Screenshot or scan this QR code to restore your collection after an update. It contains your creatures, inventory, and run count.</div>
-      <div style="width:100%;border-top:1px solid rgba(255,255,255,.08);padding-top:16px;margin-top:4px;">
+      <div id="qr-copy-msg" style="font-size:12px;color:rgba(180,220,140,.8);
+        text-align:center;min-height:18px;font-family:'Lora',serif;font-style:italic;"></div>
+
+      <div style="width:100%;border-top:1px solid rgba(255,255,255,.08);padding-top:16px;margin-top:8px;">
         <div class="qr-sub" style="margin-bottom:8px;">Restore from Code</div>
-        <textarea class="qr-import-area" id="qr-import-text" placeholder="Paste a save code here to restore your collection..."></textarea>
+        <div style="font-family:'Lora',serif;font-size:12px;font-style:italic;
+          color:rgba(200,220,240,.55);margin-bottom:10px;">
+          Paste your save code below to restore your collection.
+        </div>
+        <textarea class="qr-import-area" id="qr-import-text"
+          placeholder="Paste your save code here..."></textarea>
         <div style="margin-top:8px;">
-          <div class="btn-gold" id="btn-qr-restore" role="button" style="border-radius:12px;padding:11px;font-size:15px;cursor:pointer;">Restore Collection</div>
+          <div class="btn-gold" id="btn-qr-restore" role="button"
+            style="border-radius:12px;padding:11px;font-size:15px;cursor:pointer;">
+            Restore Collection
+          </div>
         </div>
         <div class="qr-stat" id="qr-restore-msg" style="margin-top:8px;min-height:18px;"></div>
       </div>
