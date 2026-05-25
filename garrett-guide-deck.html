@@ -373,6 +373,111 @@ body{
 /* ═══════ MISC ═══════ */
 .divider{height:1px;background:var(--rule);margin:14px 0}
 .mt-12{margin-top:12px}
+
+/* ═══════ WHO IS THIS KID ═══════ */
+.kid-card{
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);
+  padding:20px 18px;margin-bottom:12px;box-shadow:var(--shadow-card);
+}
+.kid-card-eyebrow{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.kid-card-eyebrow.warm{color:var(--warm)}
+.kid-card-eyebrow.calm{color:var(--calm)}
+.kid-card-eyebrow.anchor{color:var(--anchor)}
+.kid-card-eyebrow.curveball{color:var(--curveball)}
+.kid-card-eyebrow.green{color:var(--green)}
+.kid-card-title{font-family:var(--font-head);font-size:1.15rem;font-weight:500;color:var(--ink);margin-bottom:10px}
+.kid-card-body{font-size:13px;line-height:1.75;color:var(--ink-mid)}
+.kid-card-body strong{color:var(--ink)}
+.kid-divider-label{
+  text-align:center;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-soft);margin:18px 0 14px;
+}
+.kid-truth{
+  background:var(--green-bg);border:1px solid #c8dc90;border-radius:var(--radius);
+  padding:16px 18px;margin-bottom:12px;
+}
+.kid-truth-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.kid-truth-text{font-family:var(--font-head);font-size:14px;line-height:1.85;color:var(--ink);font-style:italic}
+
+/* ═══════ GOOD DAY ═══════ */
+.goodday-intro{
+  background:var(--green-bg);border:1px solid #c8dc90;border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:18px;
+  font-size:13px;color:var(--green);line-height:1.55;font-weight:500;
+}
+.goodday-section{margin-bottom:20px}
+.goodday-section-label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:8px;padding:0 2px;
+}
+.goodday-item{
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-sm);
+  padding:12px 14px;margin-bottom:6px;box-shadow:var(--shadow-card);
+  display:flex;align-items:flex-start;gap:10px;
+}
+.goodday-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.goodday-body{}
+.goodday-text{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.goodday-note{font-size:12px;color:var(--ink-soft);line-height:1.4}
+.goodday-signal{
+  background:var(--anchor-bg);border:1px solid var(--anchor-rule);border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;
+}
+.goodday-signal-dot{width:8px;height:8px;border-radius:50%;background:var(--anchor);flex-shrink:0;margin-top:4px}
+.goodday-signal-text{font-size:13px;color:var(--ink-mid);line-height:1.55}
+.goodday-signal-text strong{color:var(--ink)}
+.protect-item{
+  background:var(--warm-bg);border:1px solid var(--warm-rule);border-radius:var(--radius-sm);
+  padding:12px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px;
+}
+.protect-x{color:var(--warm);font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.protect-text{font-size:13px;color:var(--ink-mid);line-height:1.5}
+.protect-text strong{color:var(--ink)}
+
+/* ═══════ HARD DISCLOSURE ═══════ */
+.disclosure-intro{
+  background:var(--anchor-bg);border:1px solid var(--anchor-rule);border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:20px;
+  font-size:13px;color:var(--anchor);line-height:1.55;font-weight:500;
+}
+.disclosure-type{
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);
+  padding:0;margin-bottom:10px;box-shadow:var(--shadow-card);overflow:hidden;
+}
+.disclosure-type-head{
+  display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;
+  border-left:4px solid var(--anchor-rule);transition:background .12s;
+}
+.disclosure-type-head:hover{background:var(--cream)}
+.disclosure-type-icon{font-size:18px;flex-shrink:0}
+.disclosure-type-name{flex:1;font-size:13px;font-weight:600;color:var(--ink)}
+.disclosure-type-arrow{font-size:10px;color:var(--ink-soft);transition:transform .25s}
+.disclosure-type.open .disclosure-type-arrow{transform:rotate(180deg)}
+.disclosure-type-body{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;padding:0 16px;background:var(--cream)}
+.disclosure-type.open .disclosure-type-body{max-height:1200px;padding:0 16px 16px}
+.disclosure-step{display:flex;align-items:flex-start;gap:12px;margin-top:12px}
+.disclosure-num{
+  font-family:var(--font-head);font-size:1.4rem;font-weight:400;color:var(--anchor-rule);
+  flex-shrink:0;line-height:1;margin-top:2px;min-width:24px;
+}
+.disclosure-action{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.disclosure-why{font-size:12px;color:var(--ink-soft);line-height:1.5}
+.disclosure-say{
+  background:var(--anchor-bg);border-left:3px solid var(--anchor-rule);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  padding:8px 12px;margin-top:6px;font-size:12px;color:var(--anchor);
+  font-style:italic;line-height:1.5;
+}
+.disclosure-never{
+  background:var(--cream-dark);border:1px solid var(--rule-strong);border-radius:var(--radius-sm);
+  padding:12px 14px;margin-top:12px;
+}
+.disclosure-never-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--warm);margin-bottom:6px}
+.disclosure-never-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink-mid);line-height:1.45;margin-bottom:4px}
+.disclosure-never-item::before{content:'✕';color:var(--warm);flex-shrink:0;font-size:10px;margin-top:2px;font-weight:700}
 </style>
 </head>
 <body>
@@ -387,8 +492,11 @@ body{
     <div class="title-divider"></div>
     <div class="title-actions">
       <button class="btn-primary" onclick="showScreen('screen-pick')">Choose a Situation →</button>
+      <button class="btn-secondary" onclick="showScreen('screen-whois')">Who Is This Kid?</button>
+      <button class="btn-secondary" onclick="showScreen('screen-goodday')">Good Day Mode</button>
       <button class="btn-secondary" onclick="showScreen('screen-arrive')">Before You Arrive</button>
       <button class="btn-secondary" onclick="showScreen('screen-emergency')">Something Just Happened</button>
+      <button class="btn-secondary" onclick="showScreen('screen-disclosure')">He Told Me Something Hard</button>
       <button class="btn-secondary" onclick="showScreen('screen-ref')">Quick Reference Guide</button>
     </div>
 
@@ -625,6 +733,208 @@ body{
   </div>
 </div>
 
+<!-- WHO IS THIS KID -->
+<div class="screen" id="screen-whois">
+  <div class="topbar">
+    <button class="topbar-back" onclick="showScreen('screen-title')">Home</button>
+    <span class="topbar-title">Garrett Field Guide</span>
+  </div>
+  <div class="screen-inner">
+    <div class="section-head">
+      <div class="section-eyebrow">Start Here</div>
+      <h2 class="section-title">Who Is This Kid?</h2>
+      <p class="section-sub">Three minutes of context that makes everything else in this guide make sense.</p>
+    </div>
+
+    <div class="kid-card">
+      <div class="kid-card-eyebrow warm">The profile</div>
+      <div class="kid-card-title">Gifted and on the autism spectrum — at the same time</div>
+      <div class="kid-card-body">Garrett is intellectually advanced and on the autism spectrum. These two things exist together in him, and that combination creates a profile that doesn't look like either one alone.<br><br>
+      <strong>Gifted kids</strong> are often assumed to be fine because they're verbal, quick, and capable. They can talk their way through a lot. Their competence masks how much they're carrying.<br><br>
+      <strong>Autistic kids</strong> are often assumed to be struggling because they show it visibly. But Garrett shows it in specific ways — not always the ones people expect.<br><br>
+      Together: he can hold it together longer than you'd think, and then fall further than you'd expect. The ceiling is high. So is the drop.</div>
+    </div>
+
+    <div class="kid-card">
+      <div class="kid-card-eyebrow anchor">How his brain works</div>
+      <div class="kid-card-title">He processes deeply and feels everything at full volume</div>
+      <div class="kid-card-body">His brain takes in more than most. Sounds, textures, social cues, changes in plan, the tone of your voice, the thing you said two conversations ago — all of it registers and all of it costs something.<br><br>
+      He doesn't have a smaller emotional range than other kids. He has a <strong>larger</strong> one, with fewer automatic tools to manage it. When he's good, he's extraordinary. When he's overwhelmed, the system can't sort itself out the way other kids' systems do.<br><br>
+      This is not a behavior problem. It is a nervous system that needs different conditions than average.</div>
+    </div>
+
+    <div class="kid-card">
+      <div class="kid-card-eyebrow curveball">What trips people up</div>
+      <div class="kid-card-title">The instinctive responses are usually wrong</div>
+      <div class="kid-card-body">When a smart kid melts down, the instinct is to reason with him. <strong>He can't be reasoned with when flooded.</strong> His brain is not available for that.<br><br>
+      When a kid digs in and refuses, the instinct is to push harder. <strong>More pressure produces more resistance.</strong> Every time.<br><br>
+      When a kid says something hurtful in anger, the instinct is to address the words. <strong>The words are not the message.</strong> The size of the feeling is the message.<br><br>
+      The guide exists because the right responses feel counterintuitive until you've practiced them enough that they become reflex.</div>
+    </div>
+
+    <div class="kid-card">
+      <div class="kid-card-eyebrow calm">What he needs from you</div>
+      <div class="kid-card-title">Less is almost always more</div>
+      <div class="kid-card-body">Less input. Less pressure. Less explanation. Less pursuit.<br><br>
+      More space. More patience. More genuine curiosity about what he's building and thinking and caring about.<br><br>
+      <strong>He is not difficult.</strong> He is complex. Those are different things. Difficult is a character trait. Complex is a set of conditions. You can learn the conditions.</div>
+    </div>
+
+    <div class="kid-divider-label">The one thing to carry</div>
+
+    <div class="kid-truth">
+      <div class="kid-truth-label">Remember this</div>
+      <div class="kid-truth-text">When he's in a hard moment, he is not giving you a hard time. He is having a hard time. The difference matters for everything you do next.</div>
+    </div>
+
+    <div class="btn-row mt-12">
+      <button class="btn-primary" onclick="showScreen('screen-pick')">Go to Situations</button>
+      <button class="btn-secondary" onclick="showScreen('screen-ref')">Quick Reference</button>
+    </div>
+  </div>
+</div>
+
+<!-- GOOD DAY MODE -->
+<div class="screen" id="screen-goodday">
+  <div class="topbar">
+    <button class="topbar-back" onclick="showScreen('screen-title')">Home</button>
+    <span class="topbar-title">Garrett Field Guide</span>
+  </div>
+  <div class="screen-inner">
+    <div class="section-head">
+      <div class="section-eyebrow">Proactive</div>
+      <h2 class="section-title">Good Day Mode</h2>
+      <p class="section-sub">What fills the tank instead of draining it — and how to protect a good day once it's running.</p>
+    </div>
+
+    <div class="goodday-intro">
+      Most of this guide is for hard moments. This section is for before them. The conditions that produce good days are learnable. So is how to not accidentally break one.
+    </div>
+
+    <div class="goodday-section">
+      <div class="goodday-section-label">Morning anchors</div>
+      <div class="goodday-item">
+        <div class="goodday-icon">☀️</div>
+        <div class="goodday-body">
+          <div class="goodday-text">A predictable start, even a loose one</div>
+          <div class="goodday-note">He doesn't need a rigid schedule — he needs the day to have a recognizable shape. Same rough sequence: wake, eat, transition to something absorbing. That pattern alone reduces morning friction.</div>
+        </div>
+      </div>
+      <div class="goodday-item">
+        <div class="goodday-icon">🍳</div>
+        <div class="goodday-body">
+          <div class="goodday-text">Something he actually likes to eat, without negotiation</div>
+          <div class="goodday-note">A good morning doesn't start with a food battle. A reliable breakfast that requires no decision energy is worth more than a nutritionally optimized one that costs a fight.</div>
+        </div>
+      </div>
+      <div class="goodday-item">
+        <div class="goodday-icon">🎮</div>
+        <div class="goodday-body">
+          <div class="goodday-text">Early access to something absorbing</div>
+          <div class="goodday-note">An open loop in the morning — a Kirby level, a building project, a chapter of an audiobook — gives his brain a track. A brain with no track will find one, and it won't always be a good one.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="goodday-section">
+      <div class="goodday-section-label">What fills the tank</div>
+      <div class="goodday-item">
+        <div class="goodday-icon">🌿</div>
+        <div class="goodday-body">
+          <div class="goodday-text">Time in his creative world with no interruptions</div>
+          <div class="goodday-note">Not screen time as a reward — deep-focus time as a genuine need. An uninterrupted hour in Treat Land or with his characters is regulation, not avoidance.</div>
+        </div>
+      </div>
+      <div class="goodday-item">
+        <div class="goodday-icon">🏃</div>
+        <div class="goodday-body">
+          <div class="goodday-text">Some physical movement, even low-key</div>
+          <div class="goodday-note">His body stores tension. Movement — outside time, jumping, building something physical — releases it in a way nothing else does. Days with movement are measurably better than days without.</div>
+        </div>
+      </div>
+      <div class="goodday-item">
+        <div class="goodday-icon">💬</div>
+        <div class="goodday-body">
+          <div class="goodday-text">One genuine conversation about something he cares about</div>
+          <div class="goodday-note">Not a check-in. Not "how was your day." A real question about his worlds, his projects, what he's been thinking about. Five minutes of genuine curiosity fills something that nothing else does.</div>
+        </div>
+      </div>
+      <div class="goodday-item">
+        <div class="goodday-icon">✅</div>
+        <div class="goodday-body">
+          <div class="goodday-text">At least one moment where he felt in control</div>
+          <div class="goodday-note">A choice that was genuinely his. Something he decided, built, or solved without being redirected. Autonomy is not optional for him — it's structural.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="goodday-section">
+      <div class="goodday-section-label">Signals a good day is running</div>
+      <div class="goodday-signal">
+        <div class="goodday-signal-dot"></div>
+        <div class="goodday-signal-text"><strong>He's talking at length about his worlds</strong> without being prompted. That's the clearest green light there is.</div>
+      </div>
+      <div class="goodday-signal">
+        <div class="goodday-signal-dot"></div>
+        <div class="goodday-signal-text"><strong>He's accepting small redirects without digging in.</strong> Flexible compliance means the tank is full.</div>
+      </div>
+      <div class="goodday-signal">
+        <div class="goodday-signal-dot"></div>
+        <div class="goodday-signal-text"><strong>He's initiating — bringing you things, showing you things.</strong> When he seeks you out, the relationship feels safe to him right now.</div>
+      </div>
+      <div class="goodday-signal">
+        <div class="goodday-signal-dot"></div>
+        <div class="goodday-signal-text"><strong>He's making jokes or being silly.</strong> Humor requires spare capacity. Playfulness is a regulation signal, not just a mood.</div>
+      </div>
+    </div>
+
+    <div class="goodday-section">
+      <div class="goodday-section-label">How to not accidentally break a good day</div>
+      <div class="protect-item">
+        <div class="protect-x">✕</div>
+        <div class="protect-text"><strong>Don't stack a second exciting thing.</strong> One good event fills the tank. Two drains it. The second event spends what the first one built.</div>
+      </div>
+      <div class="protect-item">
+        <div class="protect-x">✕</div>
+        <div class="protect-text"><strong>Don't comment on how well it's going.</strong> "You've been so good today" raises the internal standard and makes the next normal moment feel like failure. Let it run quietly.</div>
+      </div>
+      <div class="protect-item">
+        <div class="protect-x">✕</div>
+        <div class="protect-text"><strong>Don't introduce a demand during deep focus.</strong> A good day with an uninterrupted creative window can absorb a demand afterward. Interrupting the window to make the demand is different.</div>
+      </div>
+      <div class="protect-item">
+        <div class="protect-x">✕</div>
+        <div class="protect-text"><strong>Don't assume the good day means he has more runway than usual.</strong> A full tank is a full tank — not a bigger tank. Treat it as a gift, not a credit line.</div>
+      </div>
+    </div>
+
+    <button class="btn-secondary btn-full" onclick="showScreen('screen-title')">Back to Home</button>
+  </div>
+</div>
+
+<!-- HE TOLD ME SOMETHING HARD -->
+<div class="screen" id="screen-disclosure">
+  <div class="topbar">
+    <button class="topbar-back" onclick="showScreen('screen-title')">Home</button>
+    <span class="topbar-title">Garrett Field Guide</span>
+  </div>
+  <div class="screen-inner">
+    <div class="section-head">
+      <div class="section-eyebrow">Sensitive moments</div>
+      <h2 class="section-title">He Told Me Something Hard</h2>
+      <p class="section-sub">When he drops something heavy — what to do and what not to do.</p>
+    </div>
+
+    <div class="disclosure-intro">
+      Gifted kids with flat affect sometimes say enormous things in a declarative voice. The words sound calm. They aren't. How you respond in this moment determines whether he tells you the next thing.
+    </div>
+
+    <div id="disclosure-sections"></div>
+
+    <button class="btn-secondary btn-full mt-12" onclick="showScreen('screen-title')">Back to Home</button>
+  </div>
+</div>
+
 <!-- SOMETHING JUST HAPPENED -->
 <div class="screen" id="screen-emergency">
   <div class="topbar">
@@ -788,6 +1098,10 @@ const SITUATIONS = [
   { id:'outing',    icon:'🏞️', title:'Zoo, park, or nature outing',        desc:'Big environment, lots of stimulation, no clear role or endpoint.',          color:'warm',      scenarios:['s-outing-1','s-outing-2','s-outing-3'] },
   { id:'playground',icon:'🛝', title:'Playground — other kids present',    desc:'Unscripted peer interaction in a space he doesn\'t control.',               color:'curveball', scenarios:['s-playground-1','s-playground-2','s-playground-3'] },
   { id:'group',     icon:'👥', title:'Social group or program',            desc:'He\'s supposed to participate with unfamiliar kids in something organized.', color:'anchor',    scenarios:['s-group-1','s-group-2','s-group-3'] },
+  { id:'screen',    icon:'📱', title:'Screen time ending',                 desc:'The device has to go away. The loop is still open.',                          color:'warm',      scenarios:['s-screen-1','s-screen-2','s-screen-3'] },
+  { id:'sick',      icon:'🤒', title:'He\'s sick',                         desc:'Illness stripped his regulation tools. Everything is harder today.',          color:'warm',      scenarios:['s-sick-1','s-sick-2','s-sick-3'] },
+  { id:'praise',    icon:'🌟', title:'Public praise backfire',             desc:'You said something positive. He shut down.',                                  color:'calm',      scenarios:['s-praise-1','s-praise-2','s-praise-3'] },
+  { id:'overheard', icon:'👂', title:'He overheard something',            desc:'He picked up something that wasn\'t meant for him. It\'s sitting on him.',    color:'anchor',    scenarios:['s-overheard-1','s-overheard-2','s-overheard-3'] },
 ];
 
 const SCENARIOS = {
@@ -2441,7 +2755,322 @@ const SCENARIOS = {
   ]
 },
 
-}; // end SCENARIOS
+}; // end SCENARIOS — NEW SCENARIOS ADDED BELOW
+
+// ════════════════════════════════
+// SCREEN TIME ENDING
+// ════════════════════════════════
+SCENARIOS['s-screen-1'] = {
+  type:'warm', category:'Screen Time Ending',
+  context:'He\'s mid-game. Not at a save point, not at a natural stopping place. You\'ve told him twice it\'s time to stop. The device needs to go away now.',
+  question:'He\'s deep in an open loop and the time is up. How do you move him out?',
+  choices:[
+    { icon:'💾', text:'Find the save point together before the device goes away', sub:'Close the loop, then transition.',
+      outcome:'good', scores:{presence:9,timing:9,connection:8,control:9,regulation:9},
+      feedback:'The problem isn\'t the device — it\'s the open loop. A forced stop on an active game loop produces predictable resistance. But helping him find a save point closes the loop before the device leaves. The transition that follows a closed loop is a completely different experience.',
+      key_moves:['"Where\'s a good place to save or pause?"','Wait for him to find it.','Then take the device from a closed loop, not a forced break.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'⏱️', text:'Give him a five-minute warning, then hold the line', sub:'He had notice. The time is now.',
+      outcome:'good', scores:{presence:8,timing:9,connection:6,control:8,regulation:7},
+      feedback:'A genuine five-minute warning converts the end from an ambush into a known event. His brain gets time to begin winding down and move toward a stopping place. One warning. Not a series.',
+      key_moves:['"Five minutes — find a good place to stop."','At five minutes: calm, firm, no renegotiation.','If he needs one more minute to save: give it once.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🛑', text:'Take the device — the time has passed and he had notice', sub:'The boundary is the boundary.',
+      outcome:'wrong', scores:{presence:2,timing:-3,connection:2,control:-2,regulation:-4},
+      feedback:'Physically removing a device mid-loop is one of the highest-resistance moves available. Even with prior warning, forced removal of an open loop creates a predictable escalation.',
+      key_moves:['If you must remove it: name the loop is open.','Acknowledge the cost.','Move quickly with minimum words.'],
+      warning:'Forced removal of an open loop produces predictable and significant resistance.',
+      consequence:'He escalates immediately. The device going away is now the smallest part of the next 20 minutes.',
+      cascade_inject:'s-flood-1' }
+  ]
+};
+
+SCENARIOS['s-screen-2'] = {
+  type:'warm', category:'Screen Time Ending',
+  context:'Screen time ended an hour ago. He\'s been off the device. But he\'s been drifting since — nothing absorbing, irritable, bouncing between things. The post-screen flatness is real.',
+  question:'He\'s been off the device but nothing has replaced the regulation it was providing. What do you do?',
+  choices:[
+    { icon:'🎯', text:'Offer something specific and absorbing — not another screen', sub:'Fill the regulation gap with something real.',
+      outcome:'good', scores:{presence:8,timing:8,connection:7,control:7,regulation:8},
+      feedback:'The device wasn\'t just entertainment — it was a regulation anchor. When it ends, the anchor is gone. Offering something with similar absorption qualities — building, audiobook, specific project — gives his brain a new track to follow.',
+      key_moves:['One specific thing — not a menu.','Match it to something you know he\'ll engage with.','Don\'t make it a screen consolation prize.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🏃', text:'Get him moving — the body regulation will shift the mood', sub:'Physical reset.',
+      outcome:'good', scores:{presence:7,timing:7,connection:6,control:7,regulation:8},
+      feedback:'Physical movement — outside, or even heavy indoor work — provides the proprioceptive input his system is now missing. It won\'t replace the screen but it can shift the baseline enough to make other things accessible.',
+      key_moves:['Outside if possible.','If inside: something physical — not structured, just moving.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'⏳', text:'Wait it out — he\'ll find something on his own', sub:'He doesn\'t need your help to land.',
+      outcome:'risky', scores:{presence:5,timing:4,connection:4,control:6,regulation:4},
+      feedback:'Sometimes he will. But a kid who\'s been drifting for an hour with visible irritability building is not always going to self-regulate without something to land on. The longer the drift, the more expensive the landing.',
+      key_moves:['If you wait: stay available but undemanding.','Watch the temperature.','If it\'s building: step in with one specific offer before it tips.'],
+      warning:'Extended unanchored drift can tip into dysregulation without a clear trigger.',
+      consequence:null, cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-screen-3'] = {
+  type:'anchor', category:'Screen Time Ending',
+  context:'He negotiated for more time. You said ten more minutes. That was twenty minutes ago. Now he\'s claiming you said longer.',
+  question:'The negotiated time has passed and now he\'s contesting the agreement. How do you handle it?',
+  choices:[
+    { icon:'⚓', text:'Hold the original agreement calmly — one time, no debate', sub:'"We said ten minutes. That was twenty minutes ago. Time to stop."',
+      outcome:'good', scores:{presence:8,timing:8,connection:6,control:9,regulation:7},
+      feedback:'State the agreement once, calmly, and hold it. Don\'t enter the debate about what was said. The facts are the facts and relitigating them in the moment signals that the agreement is negotiable.',
+      key_moves:['One clear statement.','No debate.','If he escalates: repeat once, then go quiet.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📋', text:'Negotiate a final endpoint — five more minutes to find a save point', sub:'One last reasonable extension.',
+      outcome:'risky', scores:{presence:5,timing:4,connection:5,control:3,regulation:5},
+      feedback:'A one-time extension to find a genuine save point is defensible. But each extension teaches that agreements are negotiable with enough pushback. Know before you offer it whether this will be the last extension.',
+      key_moves:['State clearly this is the final extension.','Name the save-point as the goal.','Hold that line.'],
+      warning:'Repeated extensions teach that persistence overrides agreements.',
+      consequence:null, cascade_inject:null },
+    { icon:'🔁', text:'Engage the dispute — try to establish what was actually said', sub:'Clarity on the agreement first.',
+      outcome:'wrong', scores:{presence:2,timing:-2,connection:3,control:-3,regulation:-2},
+      feedback:'Entering a factual debate about what was said is almost always a losing position — memories are subjective, he was in an absorbed state, and the debate itself becomes the battle. You don\'t need to win the argument. You need to hold the boundary.',
+      key_moves:['Skip the debate.','State the line.','Hold it.'],
+      warning:'Factual debates about screen time agreements extend the conflict and are rarely resolved to anyone\'s satisfaction.',
+      consequence:'The conversation becomes an argument about the agreement rather than the transition. The screen time has now cost twice as much.',
+      cascade_inject:null }
+  ]
+};
+
+// ════════════════════════════════
+// HE'S SICK
+// ════════════════════════════════
+SCENARIOS['s-sick-1'] = {
+  type:'warm', category:'He\'s Sick',
+  context:'He\'s got a cold or fever — not serious, but real. He\'s miserable and his usual regulation tools aren\'t working the same way. Everything is harder and he\'s hitting thresholds faster than usual.',
+  question:'Sick day. His baseline is on the floor. How do you calibrate?',
+  choices:[
+    { icon:'🛋️', text:'Drop all normal expectations — this is a sick day, full stop', sub:'The bar resets to zero today.',
+      outcome:'good', scores:{presence:9,timing:9,connection:8,control:8,regulation:9},
+      feedback:'When he\'s sick, his neurological regulation capacity is genuinely reduced — not behaviorally, physically. Everything that\'s hard for him on a good day is harder now. The only correct calibration is to drop the normal bar entirely and serve the illness.',
+      key_moves:['No demands beyond basic care.','Familiar comfort: his show, his audiobook, his characters.','Food he actually wants, not the balanced option.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🌡️', text:'Keep light structure so the day doesn\'t collapse entirely', sub:'Some shape prevents further dysregulation.',
+      outcome:'risky', scores:{presence:6,timing:5,connection:5,control:5,regulation:5},
+      feedback:'A very light anchor — a loose routine, one known activity — can help. But the instinct to maintain structure on sick days is often about caregiver comfort, not his needs. Watch whether the structure is helping or adding load.',
+      key_moves:['Structure only if it\'s genuinely comforting to him.','If it\'s producing friction: drop it.'],
+      warning:'Sick day structure that produces resistance is working against the goal.',
+      consequence:null, cascade_inject:null },
+    { icon:'💬', text:'Check in frequently — illness can mask other things', sub:'Stay connected to what he\'s feeling.',
+      outcome:'wrong', scores:{presence:3,timing:2,connection:4,control:2,regulation:-2},
+      feedback:'Frequent check-ins on a sick day add social demand to a system that has almost no capacity for it. He needs rest and low input, not ongoing interaction.',
+      key_moves:['Make yourself available without requiring interaction.','One clear check-in when meds are due or he needs something.','Otherwise: present but quiet.'],
+      warning:'Frequent check-ins feel caring but add social load to a depleted system.',
+      consequence:'He becomes irritable with the check-ins. The illness is now accompanied by friction it didn\'t need to have.',
+      cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-sick-2'] = {
+  type:'warm', category:'He\'s Sick',
+  context:'He\'s sick but insisting he wants to do something big — go somewhere, have a friend over, do an involved project. He feels okay right now and doesn\'t see why he can\'t.',
+  question:'He feels okay in this moment and wants to do more than his body can actually handle. What\'s your move?',
+  choices:[
+    { icon:'🌿', text:'Offer a contained version of the thing he wants', sub:'Not no — a smaller yes.',
+      outcome:'good', scores:{presence:8,timing:8,connection:8,control:8,regulation:7},
+      feedback:'When he\'s sick and feels a window of okay, the instinct is to use it. A contained version — the project, but at the table not the floor; the show, but in pajamas on the couch — honors the feeling without borrowing against recovery he doesn\'t have.',
+      key_moves:['Name the smaller version as the offer.','Don\'t explain why it\'s smaller at length.','Just offer it as the plan.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'⏳', text:'Let him do the thing and watch how he lands', sub:'He knows his body. Let him test it.',
+      outcome:'risky', scores:{presence:4,timing:3,connection:5,control:4,regulation:3},
+      feedback:'Sometimes this is fine and teaches him to read his own body. Sometimes it produces a crash that sets the illness back by a day. Know going in that the landing cost is yours to manage.',
+      key_moves:['If you allow it: watch the temperature carefully.','Have an exit ready.','At the first sign of overextension: move to rest without negotiation.'],
+      warning:'Post-exertion crashes during illness tend to land hard and be difficult to manage.',
+      consequence:null, cascade_inject:null },
+    { icon:'🛑', text:'Hold the line — he\'s sick and he needs rest', sub:'The boundary is for his good.',
+      outcome:'wrong', scores:{presence:3,timing:2,connection:2,control:2,regulation:3},
+      feedback:'A flat no on a day he genuinely feels okay in the moment lands as arbitrary and produces more resistance than the illness itself.',
+      key_moves:['If rest is truly needed: anchor it to a specific thing.','Not "because you\'re sick" but "your body needs this afternoon to actually get better."'],
+      warning:'Flat no on a window of okay produces resistance that costs more than the thing he wanted to do.',
+      consequence:'He pushes back hard. The sick day now has a battle layered over the illness.',
+      cascade_inject:'s-demand-1' }
+  ]
+};
+
+SCENARIOS['s-sick-3'] = {
+  type:'calm', category:'He\'s Sick',
+  context:'He\'s on day three of being sick. He\'s not at peak misery anymore but he\'s irritable in a sustained, low-grade way. Nothing is right. He\'s snapping at everything.',
+  question:'Day three of sick. The acute is over but the irritability is still running everything. How do you manage it?',
+  choices:[
+    { icon:'🧭', text:'Name the pattern without judgment — "day three is the hard day"', sub:'Give it a name so it\'s not about you or him.',
+      outcome:'good', scores:{presence:8,timing:8,connection:8,control:7,regulation:7},
+      feedback:'"Day three of being sick is really hard — the fever\'s gone but everything still feels wrong." Giving the irritability a frame that\'s external to both of you removes the blame loop and validates the experience without requiring a fix.',
+      key_moves:['"Day three is the worst day."','One sentence. Then leave it alone.','Don\'t problem-solve. Just name it.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🛋️', text:'Match his low energy — be boring in the best way', sub:'Quiet parallel presence.',
+      outcome:'good', scores:{presence:9,timing:9,connection:7,control:8,regulation:8},
+      feedback:'The best sick day company asks nothing and provides a calm low-stimulus environment. Sit nearby doing your own quiet thing. His system is still recovering and low-stimulus parallel presence is the highest-value thing you can offer.',
+      key_moves:['Be in the room without performing.','Low volume. Comfortable silence.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🎯', text:'Introduce something new — novelty can break the low-grade grump', sub:'A new show, a new game, something different.',
+      outcome:'risky', scores:{presence:5,timing:4,connection:5,control:5,regulation:4},
+      feedback:'Sometimes novelty can shift the mood. But a sick kid on day three has a depleted system and new things require processing energy he may not have. Read whether the flatness is boredom or depletion — boredom responds to novelty, depletion often doesn\'t.',
+      key_moves:['Only try novelty if the signal reads boredom, not exhaustion.','If the novelty doesn\'t land in the first few minutes: drop it and go back to familiar.'],
+      warning:'Novelty on a depleted system adds processing load.',
+      consequence:null, cascade_inject:null }
+  ]
+};
+
+// ════════════════════════════════
+// PUBLIC PRAISE BACKFIRE
+// ════════════════════════════════
+SCENARIOS['s-praise-1'] = {
+  type:'calm', category:'Praise Backfire',
+  context:'You said something positive about him in front of others — "look how well he did that" or "he\'s so smart." He immediately shut down. Now he\'s withdrawn and not responding.',
+  question:'You praised him publicly and he went offline. What\'s happening and what do you do?',
+  choices:[
+    { icon:'🌊', text:'Give him space — the attention was too much, not the praise itself', sub:'Let the spotlight fade.',
+      outcome:'good', scores:{presence:9,timing:9,connection:7,control:8,regulation:9},
+      feedback:'Public attention — even positive — is a sensory and social event that requires him to perform a response for an audience. He may have no available script for being praised, especially in front of others. The shutdown is regulation. Give him space and let the moment pass without adding more input.',
+      key_moves:['Stop drawing attention to him.','Move the conversation elsewhere.','Check in privately when the room has moved on.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'💬', text:'Check in privately — make sure he\'s okay', sub:'Connect quietly after the public moment.',
+      outcome:'good', scores:{presence:8,timing:7,connection:8,control:7,regulation:7},
+      feedback:'A private quiet check-in after the room has moved on can help — one sentence that acknowledges it without making it bigger. "That was a lot of attention at once. You okay?"',
+      key_moves:['Wait until the room has moved on.','One sentence.','Don\'t require a response.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔄', text:'Address it — ask him why the praise bothered him', sub:'Understanding the pattern helps him.',
+      outcome:'wrong', scores:{presence:2,timing:-3,connection:3,control:2,regulation:-3},
+      feedback:'Asking why the praise bothered him while he\'s in shutdown adds cognitive and social demand to a system that has just received more than it could process. This is not the moment for understanding the pattern. That conversation belongs in a calm window, not the shutdown.',
+      key_moves:['Let the shutdown run.','In a calm window later: "Sometimes compliments in front of people feel weird — is that right for you?"'],
+      warning:'Pursuing the "why" during shutdown adds load to an already closed system.',
+      consequence:'He\'s now in a deeper withdrawal because the spotlight that started this is still on him.',
+      cascade_inject:'s-shutdown-1' }
+  ]
+};
+
+SCENARIOS['s-praise-2'] = {
+  type:'calm', category:'Praise Backfire',
+  context:'You told him he did great — one-on-one, privately. He dismissed it immediately: "no I didn\'t" or "it wasn\'t good." He\'s rejecting the positive assessment.',
+  question:'He\'s rejecting genuine positive feedback. How do you respond?',
+  choices:[
+    { icon:'🎯', text:'Get specific — trade the general praise for one concrete true thing', sub:'"The part where you figured out the ramp yourself — that was yours."',
+      outcome:'good', scores:{presence:9,timing:8,connection:8,control:7,regulation:8},
+      feedback:'"You did great" is dismissible because it\'s general and it requires him to accept an overall judgment he may not share. A specific true thing — a moment, a decision, a thing he built or figured out — is harder to dismiss because it\'s verifiable. It doesn\'t ask him to agree that he\'s great. It just names something that happened.',
+      key_moves:['One specific recent thing.','State it as an observation, not a compliment.','Then drop it — don\'t repeat it.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🌿', text:'Don\'t argue it — accept his read and move on', sub:'His self-assessment is his to hold.',
+      outcome:'good', scores:{presence:7,timing:8,connection:7,control:8,regulation:7},
+      feedback:'Insisting he accept the praise after he\'s rejected it converts the positive moment into a negotiation. Accepting his self-assessment and moving on keeps the relationship intact and avoids the loop. The praise landed — it just didn\'t take. That\'s okay.',
+      key_moves:['Don\'t press it.','Move the conversation forward.','The seed is planted whether or not he watered it.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔁', text:'Press it — help him see why the self-criticism isn\'t accurate', sub:'He needs to hear the truth from someone he trusts.',
+      outcome:'wrong', scores:{presence:3,timing:-2,connection:3,control:2,regulation:-2},
+      feedback:'Pressing positive feedback after it\'s been rejected reliably produces two things: a more entrenched rejection, and a power struggle over his self-concept. He has the right to his own assessment. Your job is to offer the true thing — not to require him to accept it.',
+      key_moves:['Offer it once.','Let it land or not.','Don\'t pursue.'],
+      warning:'Insisting on positive assessments he\'s rejected produces entrenched self-criticism.',
+      consequence:'He becomes more emphatic in the self-dismissal. The conversation that was meant to be encouraging has become an argument about his worth.',
+      cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-praise-3'] = {
+  type:'anchor', category:'Praise Backfire',
+  context:'He had a genuinely impressive moment — something he built, figured out, created. You want to honor it. But you know praise can backfire. How do you do it right?',
+  question:'He did something real. How do you honor it without triggering the backfire?',
+  choices:[
+    { icon:'👁️', text:'Name what you saw, not what you think of it', sub:'"You figured that out yourself" not "you\'re so smart."',
+      outcome:'good', scores:{presence:9,timing:8,connection:9,control:8,regulation:8},
+      feedback:'Observational language describes what happened without requiring him to receive a judgment. "You spent an hour on that and you found the answer" is a fact. "You\'re brilliant" is an evaluation he has to either accept or reject. Facts land without pressure.',
+      key_moves:['Describe what you saw.','Past tense, specific, factual.','Don\'t attach a "which means you\'re..."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔇', text:'Say nothing — let the work speak', sub:'Silence is sometimes the fullest acknowledgment.',
+      outcome:'good', scores:{presence:8,timing:9,connection:7,control:9,regulation:8},
+      feedback:'Sometimes the best honor is witnessing without commentary. Sitting next to something he made and being visibly interested in it — looking at it, asking a question about how something works — says more than praise does.',
+      key_moves:['Be interested. Not effusive.','Ask about the thing itself.','Let him lead the narration.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🎉', text:'Express genuine enthusiasm — he should feel how proud you are', sub:'Your joy at his achievement is real and worth sharing.',
+      outcome:'risky', scores:{presence:6,timing:5,connection:7,control:4,regulation:5},
+      feedback:'Genuine enthusiasm can land beautifully — or produce a backfire shutdown depending on where he is and how public the moment is. Calibrate the volume of the reaction to his current baseline. Full enthusiasm on a full tank is fine. Full enthusiasm on a partially depleted system can overwhelm.',
+      key_moves:['Read the baseline before the reaction.','Match the volume of enthusiasm to his current capacity.','Quiet appreciation often lands better than big celebration.'],
+      warning:'High-volume positive reactions require capacity to receive them.',
+      consequence:null, cascade_inject:null }
+  ]
+};
+
+// ════════════════════════════════
+// HE OVERHEARD SOMETHING
+// ════════════════════════════════
+SCENARIOS['s-overheard-1'] = {
+  type:'anchor', category:'He Overheard Something',
+  context:'He was in the next room and heard an adult conversation he wasn\'t meant to hear — a disagreement, a worry, something about finances or family. He hasn\'t said anything. But you can see it\'s sitting on him.',
+  question:'He heard something and hasn\'t brought it up. Something is clearly sitting on him. What do you do?',
+  choices:[
+    { icon:'🚪', text:'Open the door without requiring him to walk through it', sub:'"I know you heard some of that. I\'m available if you have questions."',
+      outcome:'good', scores:{presence:9,timing:8,connection:9,control:9,regulation:8},
+      feedback:'He heard something he wasn\'t meant to hear, which means he\'s now carrying partial information in a context where he didn\'t have permission to have it. Opening the door explicitly — naming that you know he heard it and that you\'re available — gives him agency over whether and when to bring it up.',
+      key_moves:['"I know you may have heard some of what we were talking about. I\'m here if you have questions."','Then let it go.','Don\'t require a response.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔍', text:'Ask him directly what he heard and how he\'s doing', sub:'Clear the air.',
+      outcome:'risky', scores:{presence:6,timing:5,connection:6,control:4,regulation:5},
+      feedback:'A direct question can work — but it puts the disclosure burden on him before he\'s decided whether he wants to disclose. If he wasn\'t ready to bring it up, being asked can make him feel caught.',
+      key_moves:['If you ask: ask what he wants to know, not what he heard.','Keep it brief.','Don\'t require him to recount what he overheard.'],
+      warning:'Asking what he heard can feel like being caught eavesdropping even when it wasn\'t intentional.',
+      consequence:null, cascade_inject:null },
+    { icon:'🌊', text:'Let it sit — he\'ll bring it up when he\'s ready', sub:'Don\'t force the conversation.',
+      outcome:'wrong', scores:{presence:3,timing:2,connection:4,control:4,regulation:2},
+      feedback:'Partial information about adult worries that doesn\'t get addressed has a documented tendency to grow in a gifted kid\'s mind. He will fill the gaps with whatever his imagination provides, and his imagination is detailed. Opening the door costs almost nothing. Not opening it can cost more.',
+      key_moves:['Open the door. One sentence.','You don\'t have to have the full conversation.','Just make him not carry it alone.'],
+      warning:'Partial information about adult concerns tends to grow in a high-imagination mind.',
+      consequence:'He sits with whatever version his mind built. It\'s almost certainly worse than the reality.',
+      cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-overheard-2'] = {
+  type:'anchor', category:'He Overheard Something',
+  context:'He heard you and another adult disagree — voices raised, tension in the air. The disagreement is resolved but he was present for it. He\'s quiet and watchful.',
+  question:'He witnessed adult conflict. It\'s resolved now but he was in it. How do you address it?',
+  choices:[
+    { icon:'🌱', text:'Name it directly and simply — adults argue sometimes, it\'s okay', sub:'"We had a disagreement. We worked it out. We\'re okay."',
+      outcome:'good', scores:{presence:9,timing:9,connection:9,control:8,regulation:9},
+      feedback:'When kids witness adult conflict, the most destabilizing thing is not the conflict itself — it\'s the uncertainty about whether the relationship is okay. A brief, calm, factual statement that names what happened and confirms the outcome removes the uncertainty.',
+      key_moves:['"We had a disagreement. We talked it through. We\'re both okay."','One sentence.','Then be visibly, genuinely okay in front of him.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🎭', text:'Act normal — don\'t draw attention to it, let it pass', sub:'Kids are resilient. Move forward.',
+      outcome:'wrong', scores:{presence:2,timing:-2,connection:3,control:3,regulation:2},
+      feedback:'Gifted kids in particular read adult tone and body language with high precision. Pretending nothing happened when he clearly observed something happening tells him his read is wrong — or that adults lie about their emotional state. Neither is a good lesson.',
+      key_moves:['Name it. Simply.','He doesn\'t need a detailed account.','He needs to know things are okay.'],
+      warning:'Acting normal after visible adult conflict tells a high-read kid that the adults can\'t be trusted to be honest about what he observed.',
+      consequence:'He carries the uncertainty silently. It shows up later as watchfulness and distance.',
+      cascade_inject:null },
+    { icon:'💬', text:'Talk him through what happened and why adults disagree', sub:'Understanding it helps him process it.',
+      outcome:'risky', scores:{presence:6,timing:5,connection:6,control:5,regulation:5},
+      feedback:'Age-appropriate explanation is useful, but the volume of the explanation matters. What he needs first is confirmation that it\'s resolved and everyone is okay. The explanation can follow, briefly, if he has questions.',
+      key_moves:['Confirm the resolution first.','Then answer questions if he has them.','Don\'t explain more than he asked.'],
+      warning:'Over-explanation of adult conflict can make the conflict feel larger than it was.',
+      consequence:null, cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-overheard-3'] = {
+  type:'anchor', category:'He Overheard Something',
+  context:'He overheard something about himself — an adult conversation about him, his behavior, his challenges. He hasn\'t said anything. But you know he knows.',
+  question:'He overheard a conversation about him. How do you handle this one?',
+  choices:[
+    { icon:'💛', text:'Acknowledge it directly — he heard it, he knows you know, name it', sub:'Don\'t make him carry the secret of knowing.',
+      outcome:'good', scores:{presence:10,timing:9,connection:10,control:8,regulation:9},
+      feedback:'Conversations about him that he wasn\'t meant to hear carry a specific injury — he knows he overheard, he knows you don\'t know he overheard, and now he has to manage that gap. Naming it clearly removes the injury of the gap: "I think you may have heard us talking about you. That\'s not how you should have learned that. I\'m sorry."',
+      key_moves:['"I think you heard us talking about you. That wasn\'t fair to you."','Then ask what he heard — or what he wants to know.','Be honest at an appropriate level.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'⏳', text:'Wait until he brings it up — it\'s his call whether to address it', sub:'Give him agency over the disclosure.',
+      outcome:'risky', scores:{presence:5,timing:4,connection:5,control:6,regulation:4},
+      feedback:'Respecting his agency over disclosure is a genuine value. But overheard conversations about himself are a different case — he\'s now carrying partial information about how the adults in his life see him, without context, without the full conversation. Waiting puts that weight on him.',
+      key_moves:['If you wait: stay warm and available.','If he brings it up: receive it fully without defensiveness.','If he doesn\'t bring it up within a day: open the door yourself.'],
+      warning:'Partial information about how adults see him has outsized weight in a high-IQ self-aware kid.',
+      consequence:null, cascade_inject:null },
+    { icon:'🌊', text:'Move on — kids don\'t always process what they overhear', sub:'He may not have understood it.',
+      outcome:'wrong', scores:{presence:1,timing:-3,connection:1,control:3,regulation:-2},
+      feedback:'He understood it. High-IQ spectrum kids process ambient conversation at a high level and often retain it with precision. Assuming he didn\'t understand it is almost always incorrect, and it leaves him with the message that what he heard was true and that no one is going to talk to him about it.',
+      key_moves:['Don\'t assume he missed it.','Name it.','Give him the honest version.'],
+      warning:'Assuming he didn\'t understand it leaves him with the uncontextualized version.',
+      consequence:'He carries his interpretation of the conversation — which is almost certainly harsher and more absolute than what was actually said — with no correction offered.',
+      cascade_inject:'s-shutdown-2' }
+  ]
+};
 
 
 // ═══════ STATE ═══════
@@ -2906,8 +3535,102 @@ function toggleRef(id) {
   document.getElementById(id).classList.toggle('open');
 }
 
+// ═══════ DISCLOSURE DATA ═══════
+const DISCLOSURE_DATA = [
+  {
+    icon:'😔', name:'"I don\'t have any friends"', color:'anchor',
+    steps:[
+      { action:'Don\'t fix it immediately', why:'The instinct is to reassure — "of course you have friends" or "you\'ll make friends." Resist it. He said something true to him. Arguing the truth closes the door.', say:null },
+      { action:'Sit with it first', why:'One sentence that receives the weight without solving it.', say:'"That sounds really lonely."' },
+      { action:'Ask one open question — then listen fully', why:'Not "who did you talk to at school?" — that\'s an audit. An open question: what he means, what it feels like.', say:'"What does that feel like for you?"' },
+      { action:'If he wants more: reflect, don\'t redirect', why:'Reflection ("so it feels like no one really gets what you care about") is different from redirection ("well what about so-and-so"). Stay in his frame.', say:null },
+      { action:'Close with something true and specific', why:'Not "you\'re so easy to love." Find something real.', say:'"You notice things most people miss. The right people will catch that eventually."' }
+    ],
+    never:['Tell him he\'s wrong about having no friends','List people you think should count','Promise that things will change','Make it about your feelings ("that breaks my heart")']
+  },
+  {
+    icon:'🪨', name:'"I think I\'m stupid" / "I can\'t do anything right"', color:'warm',
+    steps:[
+      { action:'Don\'t argue the premise', why:'Arguing "you\'re not stupid" doesn\'t dissolve the feeling — it gives him a position to defend. He\'s not looking for a verdict from you. He\'s looking to not be alone with the weight.', say:null },
+      { action:'Name the feeling, not the belief', why:'"That sounds like it feels really heavy right now" is different from "that\'s not true." One sits with him. The other debates him.', say:'"That sounds really heavy."' },
+      { action:'Pause. Let it land.', why:'Silence after validation does more work than the next sentence. He needs to feel that you received it, not that you\'re managing it.', say:null },
+      { action:'Then one specific true thing — not general reassurance', why:'"You\'re so smart" is dismissible. A specific, recent, verifiable thing is not.', say:'"You figured out how Mismageus would sound before you even drew him. You did that."' },
+      { action:'Don\'t require him to accept it', why:'State it once. Let it sit. Don\'t ask if he believes you. The seed is planted whether or not it takes root today.', say:null }
+    ],
+    never:['Say "you\'re the smartest kid I know"','List his achievements like a case for the defense','Tell him everyone feels this way sometimes','Circle back to it later the same day to check if he believes it now']
+  },
+  {
+    icon:'💜', name:'"Nobody likes me" / "Everyone hates me"', color:'calm',
+    steps:[
+      { action:'Receive the feeling at its full size', why:'Big language carries big feeling. Don\'t reduce it. "Everybody hates me" means "I feel completely alone right now." That\'s real even if the words are extreme.', say:'"That sounds like the worst kind of alone."' },
+      { action:'Don\'t argue the "everyone" or "nobody"', why:'Correcting the logic of the statement ("not everyone — what about...") tells him you\'re debating him instead of hearing him.', say:null },
+      { action:'Ask what happened', why:'There is almost always a specific event underneath the global statement. Getting to the specific gives you something real to work with.', say:'"Did something happen today that made it feel that way?"' },
+      { action:'Validate the specific event before anything else', why:'Whatever happened — even if it sounds small — was real to him. Validate it before you contextualize it.', say:null },
+      { action:'Only after validation: gently offer a different frame', why:'Not "they didn\'t mean it" — but something that widens the picture slightly without dismissing what he felt.', say:'"That sounds like it really hurt. And I don\'t think that\'s the whole story about how people see you — but it makes sense that it feels that way right now."' }
+    ],
+    never:['Name specific people who you think like him as evidence','Say "you have so many people who love you"','Tell him he\'s being dramatic','Move to problem-solving before he feels heard']
+  },
+  {
+    icon:'🌑', name:'"I don\'t want to be here" / "I wish I didn\'t exist"', color:'warm',
+    steps:[
+      { action:'Stay calm on the outside', why:'Your reaction determines whether he says the next thing. If you panic, he learns this topic is too big for you. Stay still.', say:null },
+      { action:'Ask what he means — directly and gently', why:'These words can mean many things. You need to know which thing before you respond.', say:'"When you say that — can you tell me more about what you mean?"' },
+      { action:'Listen to the whole answer before responding', why:'He may mean "I\'m exhausted and overwhelmed." He may mean something heavier. You need to hear it fully before you know what the response is.', say:null },
+      { action:'If it\'s overwhelm: validate and be present', why:'"I hear you. That sounds like too much to carry right now."', say:'"I\'m right here. You don\'t have to carry that alone."' },
+      { action:'If it\'s something heavier: tell him you\'re glad he told you', why:'No matter what he said, the fact that he said it to you is the most important thing. Receive it as a trust.', say:'"I\'m really glad you told me that. Can we talk about it together — and maybe talk to someone else who knows how to help with these feelings?"' }
+    ],
+    never:['React with visible alarm that shuts down further disclosure','Tell him he doesn\'t mean it','Change the subject','Promise to keep it secret','Handle it alone without involving a professional if he expresses ongoing thoughts of not wanting to exist']
+  },
+  {
+    icon:'😡', name:'"I hate myself" / Self-critical anger after a mistake', color:'curveball',
+    steps:[
+      { action:'Don\'t rush to comfort', why:'Quick comfort ("don\'t say that!") tells him the words were the problem, not the feeling. He needs the feeling received first.', say:null },
+      { action:'Name the size of the feeling', why:'Self-critical anger after mistakes is real and familiar to him. It\'s not always about the mistake — sometimes it\'s about the standard he holds himself to.', say:'"That sounds like it was really important to you to do it right."' },
+      { action:'Give the feeling somewhere to go', why:'He needs to discharge the intensity somehow — not suppress it. Physical movement, naming it, drawing it, can all work.', say:'"Do you want to just be mad about it for a minute? That\'s okay."' },
+      { action:'Separate the mistake from his worth', why:'Not "mistakes are fine" — that dismisses his standard. Try: the mistake and the person are different things.', say:'"You made a mistake. That\'s different from being a mistake."' },
+      { action:'Only after the emotion: one specific true thing', why:'Something he did right recently. Not in this moment — recently. Verifiable. Said quietly.', say:null }
+    ],
+    never:['Tell him to calm down','Say "it\'s not a big deal"','Launch into the lesson about what he could do differently','Compare him to himself on a better day ("you usually handle this fine")']
+  }
+];
+
+function buildDisclosureSections() {
+  const container = document.getElementById('disclosure-sections');
+  if (!container) return;
+  container.innerHTML = DISCLOSURE_DATA.map((sec,i) => `
+    <div class="disclosure-type" id="disc-sec-${i}">
+      <div class="disclosure-type-head" onclick="toggleDisclosure('disc-sec-${i}')">
+        <span class="disclosure-type-icon">${sec.icon}</span>
+        <span class="disclosure-type-name">${sec.name}</span>
+        <span class="disclosure-type-arrow">▼</span>
+      </div>
+      <div class="disclosure-type-body">
+        ${sec.steps.map((step,j) => `
+          <div class="disclosure-step">
+            <div class="disclosure-num">${j+1}</div>
+            <div>
+              <div class="disclosure-action">${step.action}</div>
+              <div class="disclosure-why">${step.why}</div>
+              ${step.say ? `<div class="disclosure-say">"${step.say}"</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+        <div class="disclosure-never">
+          <div class="disclosure-never-label">Never say or do</div>
+          ${sec.never.map(n => `<div class="disclosure-never-item">${n}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleDisclosure(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
 buildSitGrid();
 buildRefSections();
+buildDisclosureSections();
 updateArriveRead();
 </script>
 </body>
