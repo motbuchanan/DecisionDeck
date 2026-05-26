@@ -56,25 +56,144 @@ body{
 .screen.active{display:flex}
 .screen-inner{width:100%;max-width:540px;margin:0 auto;padding:24px 20px 48px}
 
-/* ═══════ TITLE ═══════ */
-#screen-title{background:var(--cream);justify-content:center;align-items:center}
-#screen-title .screen-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding-top:0;padding-bottom:0}
-.title-eyebrow{
-  font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--ink-soft);margin-bottom:20px;
+/* ═══════ HOME SCREEN REDESIGN ═══════ */
+#screen-title{background:var(--cream);justify-content:flex-start;align-items:stretch;overflow-y:auto}
+#screen-title .screen-inner{
+  display:flex;flex-direction:column;align-items:stretch;
+  min-height:100vh;padding-top:40px;padding-bottom:40px;
+  text-align:left;
 }
-.title-rule{width:48px;height:2px;background:var(--rule-strong);margin:0 auto 20px}
-.title-main{
-  font-family:var(--font-head);font-size:clamp(2.2rem,8vw,3.2rem);font-weight:400;
-  color:var(--ink);line-height:1.15;margin-bottom:6px;
+
+.home-header{text-align:center;margin-bottom:28px}
+.home-eyebrow{
+  font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;
 }
-.title-main em{font-style:italic;color:var(--warm)}
-.title-tag{
-  font-family:var(--font-head);font-style:italic;font-size:1rem;
-  color:var(--ink-soft);margin-bottom:32px;
+.home-rule{width:40px;height:2px;background:var(--rule-strong);margin:0 auto 16px}
+.home-title{
+  font-family:var(--font-head);font-size:clamp(2rem,8vw,2.8rem);font-weight:400;
+  color:var(--ink);line-height:1.15;margin-bottom:4px;
 }
-.title-divider{width:100%;max-width:280px;height:1px;background:var(--rule);margin:0 auto 28px}
-.title-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px}
+.home-title em{font-style:italic;color:var(--warm)}
+.home-tag{
+  font-family:var(--font-head);font-style:italic;font-size:.95rem;
+  color:var(--ink-soft);
+}
+
+/* Emergency card */
+.home-emergency{
+  background:var(--warm);border-radius:var(--radius);
+  padding:18px 20px;margin-bottom:10px;cursor:pointer;
+  display:flex;align-items:center;gap:16px;
+  box-shadow:0 3px 14px rgba(192,66,10,.25);
+  transition:background .15s,transform .1s;
+  border:none;width:100%;text-align:left;
+}
+.home-emergency:hover{background:#a8380a}
+.home-emergency:active{transform:scale(.98)}
+.home-emergency-icon{font-size:32px;flex-shrink:0}
+.home-emergency-body{}
+.home-emergency-label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.7);margin-bottom:3px;
+}
+.home-emergency-title{
+  font-family:var(--font-head);font-size:1.2rem;font-weight:500;
+  color:#fff;line-height:1.2;margin-bottom:3px;
+}
+.home-emergency-desc{font-size:12px;color:rgba(255,255,255,.8);line-height:1.4}
+
+/* Prep card */
+.home-prep{
+  background:var(--anchor);border-radius:var(--radius);
+  padding:16px 20px;margin-bottom:20px;cursor:pointer;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 2px 10px rgba(74,59,156,.2);
+  transition:background .15s,transform .1s;
+  border:none;width:100%;text-align:left;
+}
+.home-prep:hover{background:#3d3186}
+.home-prep:active{transform:scale(.98)}
+.home-prep-icon{font-size:26px;flex-shrink:0}
+.home-prep-body{}
+.home-prep-label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.65);margin-bottom:2px;
+}
+.home-prep-title{
+  font-family:var(--font-head);font-size:1.05rem;font-weight:500;
+  color:#fff;line-height:1.2;margin-bottom:2px;
+}
+.home-prep-desc{font-size:12px;color:rgba(255,255,255,.75);line-height:1.4}
+
+/* Section divider */
+.home-section-label{
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:10px;padding:0 2px;
+}
+
+/* Learn nav list */
+.home-nav-list{
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow-card);margin-bottom:20px;
+}
+.home-nav-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;cursor:pointer;
+  background:var(--paper);border:none;border-bottom:1px solid var(--rule);
+  text-align:left;width:100%;transition:background .12s;
+}
+.home-nav-item:last-child{border-bottom:none}
+.home-nav-item:hover{background:var(--cream)}
+.home-nav-item:active{background:var(--cream-dark)}
+.home-nav-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.home-nav-body{flex:1}
+.home-nav-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.home-nav-desc{font-size:12px;color:var(--ink-soft);line-height:1.35}
+.home-nav-arrow{color:var(--ink-soft);font-size:14px;flex-shrink:0}
+
+.home-footer{text-align:center;font-size:11px;color:var(--ink-soft);margin-top:4px}
+
+/* Situations — third prominent button */
+.home-situations{
+  background:var(--ink);border-radius:var(--radius);
+  padding:16px 20px;margin-bottom:20px;cursor:pointer;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 2px 10px rgba(44,36,24,.18);
+  transition:background .15s,transform .1s;
+  border:none;width:100%;text-align:left;
+}
+.home-situations:hover{background:#3d3120}
+.home-situations:active{transform:scale(.98)}
+.home-situations-icon{font-size:24px;flex-shrink:0}
+.home-situations-body{}
+.home-situations-label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);margin-bottom:2px;
+}
+.home-situations-title{
+  font-family:var(--font-head);font-size:1.05rem;font-weight:500;
+  color:#fff;line-height:1.2;margin-bottom:2px;
+}
+.home-situations-desc{font-size:12px;color:rgba(255,255,255,.7);line-height:1.4}
+
+/* Quick ref — standalone bottom button */
+.home-ref{
+  display:flex;align-items:center;gap:14px;
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:14px;cursor:pointer;
+  box-shadow:var(--shadow-card);transition:background .12s;
+  text-align:left;width:100%;
+}
+.home-ref:hover{background:var(--cream)}
+.home-ref:active{background:var(--cream-dark)}
+.home-ref-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.home-ref-body{flex:1}
+.home-ref-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.home-ref-desc{font-size:12px;color:var(--ink-soft);line-height:1.35}
+.home-ref-arrow{color:var(--ink-soft);font-size:14px;flex-shrink:0}
+
+/* ═══════ BUTTONS (used across all screens) ═══════ */
 .btn-primary{
   background:var(--ink);color:var(--cream);
   font-family:var(--font-body);font-size:14px;font-weight:600;letter-spacing:.03em;
@@ -90,7 +209,6 @@ body{
   transition:border-color .15s,background .15s;
 }
 .btn-secondary:hover{border-color:var(--ink-soft);background:var(--cream)}
-.title-footer{font-size:11px;color:var(--ink-soft);margin-top:20px}
 
 /* ═══════ TOP BAR ═══════ */
 .topbar{
@@ -370,6 +488,139 @@ body{
 .never-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink-mid);line-height:1.5;margin-bottom:5px}
 .never-item::before{content:'✕';color:var(--warm);flex-shrink:0;font-size:10px;margin-top:2px;font-weight:700}
 
+/* ═══════ EMERGENCY — REDESIGNED ═══════ */
+#screen-emergency{background:var(--cream)}
+.emg-state-screen{display:flex;flex-direction:column;height:100%}
+
+.emg-triage{
+  display:flex;flex-direction:column;
+  padding:24px 20px 32px;
+  max-width:540px;margin:0 auto;width:100%;
+}
+.emg-triage-label{
+  font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--warm);margin-bottom:8px;margin-top:56px;
+}
+.emg-triage-q{
+  font-family:var(--font-head);font-size:1.6rem;font-weight:400;
+  color:var(--ink);line-height:1.25;margin-bottom:28px;
+}
+.emg-state-btn{
+  display:flex;align-items:center;gap:16px;
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);
+  padding:18px 20px;margin-bottom:10px;cursor:pointer;
+  box-shadow:var(--shadow-card);transition:background .12s,border-color .12s;
+  text-align:left;width:100%;
+}
+.emg-state-btn:hover{background:var(--cream-dark);border-color:var(--rule-strong)}
+.emg-state-btn:active{transform:scale(.98)}
+.emg-state-btn.flood{border-left:5px solid var(--warm)}
+.emg-state-btn.shutdown{border-left:5px solid var(--calm)}
+.emg-state-btn.after{border-left:5px solid var(--green)}
+.emg-state-icon{font-size:28px;flex-shrink:0}
+.emg-state-body{}
+.emg-state-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.emg-state-desc{font-size:12px;color:var(--ink-soft);line-height:1.4}
+
+/* Step view */
+.emg-step-screen{
+  display:flex;flex-direction:column;
+  max-width:540px;margin:0 auto;width:100%;
+  padding:0 0 40px;
+}
+.emg-step-header{
+  padding:14px 20px 12px;
+  border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;gap:10px;
+  background:var(--cream);
+  position:sticky;top:0;z-index:5;
+}
+.emg-step-back{
+  font-size:13px;font-weight:500;color:var(--ink-soft);
+  background:none;border:none;cursor:pointer;padding:4px 0;
+  display:flex;align-items:center;gap:6px;
+}
+.emg-step-back::before{content:'←';font-size:14px}
+.emg-step-badge{
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;flex-shrink:0;
+}
+.emg-step-badge.flood{background:var(--warm-bg);color:var(--warm);border:1px solid var(--warm-rule)}
+.emg-step-badge.shutdown{background:var(--calm-bg);color:var(--calm);border:1px solid var(--calm-rule)}
+.emg-step-badge.after{background:var(--green-bg);color:var(--green);border:1px solid #c8dc90}
+
+.emg-progress-bar{
+  height:3px;background:var(--rule);
+}
+.emg-progress-fill{
+  height:100%;background:var(--warm);
+  transition:width .4s ease;
+}
+.emg-progress-fill.shutdown{background:var(--calm)}
+.emg-progress-fill.after{background:var(--green)}
+
+.emg-step-body{padding:24px 20px 0}
+
+.emg-step-num{
+  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:10px;
+}
+.emg-step-action{
+  font-family:var(--font-head);font-size:1.75rem;font-weight:500;
+  color:var(--ink);line-height:1.2;margin-bottom:0;
+}
+.emg-step-say{
+  background:var(--anchor-bg);border-left:3px solid var(--anchor-rule);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  padding:12px 16px;margin-top:20px;
+  font-family:var(--font-head);font-size:1rem;color:var(--anchor);
+  font-style:italic;line-height:1.6;
+}
+.emg-step-why-toggle{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;color:var(--ink-soft);
+  background:none;border:none;cursor:pointer;padding:16px 0 4px;
+  letter-spacing:.04em;
+}
+.emg-step-why-toggle::before{content:'▶';font-size:9px;transition:transform .2s}
+.emg-step-why-toggle.open::before{transform:rotate(90deg)}
+.emg-step-why{
+  font-size:13px;color:var(--ink-soft);line-height:1.65;
+  max-height:0;overflow:hidden;transition:max-height .3s ease;
+}
+.emg-step-why.open{max-height:300px}
+
+.emg-step-nav{
+  display:flex;gap:8px;padding:20px 20px 0;
+}
+.emg-step-nav .btn-primary{flex:1}
+.emg-step-nav .btn-secondary{flex:1}
+
+.emg-never{
+  margin:20px 20px 0;
+  background:var(--cream-dark);border:1px solid var(--rule-strong);border-radius:var(--radius);
+  padding:14px 16px;
+}
+.emg-never-label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--warm);margin-bottom:8px;
+}
+.emg-never-item{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:13px;color:var(--ink-mid);line-height:1.5;margin-bottom:6px;
+}
+.emg-never-item::before{content:'✕';color:var(--warm);flex-shrink:0;font-size:10px;margin-top:3px;font-weight:700}
+.emg-never-item:last-child{margin-bottom:0}
+
+.emg-done{
+  margin:20px 20px 0;
+  background:var(--green-bg);border:1px solid #c8dc90;border-radius:var(--radius);
+  padding:18px;text-align:center;
+}
+.emg-done-icon{font-size:32px;margin-bottom:8px}
+.emg-done-title{font-family:var(--font-head);font-size:1.2rem;color:var(--ink);margin-bottom:6px}
+.emg-done-sub{font-size:13px;color:var(--ink-soft);line-height:1.55;margin-bottom:14px}
+
 /* ═══════ MISC ═══════ */
 .divider{height:1px;background:var(--rule);margin:14px 0}
 .mt-12{margin-top:12px}
@@ -401,6 +652,73 @@ body{
 }
 .kid-truth-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
 .kid-truth-text{font-family:var(--font-head);font-size:14px;line-height:1.85;color:var(--ink);font-style:italic}
+
+/* ═══════ WHO IS THIS KID — EXPANDED ═══════ */
+.kid-section{
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);
+  margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow-card);
+}
+.kid-section-head{
+  display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;
+  transition:background .12s;
+}
+.kid-section-head:hover{background:var(--cream)}
+.kid-section-head.warm{border-left:4px solid var(--warm-rule)}
+.kid-section-head.calm{border-left:4px solid var(--calm-rule)}
+.kid-section-head.anchor{border-left:4px solid var(--anchor-rule)}
+.kid-section-head.curveball{border-left:4px solid var(--curveball-rule)}
+.kid-section-head.green{border-left:4px solid #c8dc90}
+.kid-section-icon{font-size:20px;flex-shrink:0}
+.kid-section-meta{flex:1}
+.kid-section-eyebrow{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.kid-section-eyebrow.warm{color:var(--warm)}
+.kid-section-eyebrow.calm{color:var(--calm)}
+.kid-section-eyebrow.anchor{color:var(--anchor)}
+.kid-section-eyebrow.curveball{color:var(--curveball)}
+.kid-section-eyebrow.green{color:var(--green)}
+.kid-section-title{font-family:var(--font-head);font-size:1rem;font-weight:500;color:var(--ink);line-height:1.3}
+.kid-section-arrow{font-size:10px;color:var(--ink-soft);transition:transform .25s;flex-shrink:0}
+.kid-section.open .kid-section-arrow{transform:rotate(180deg)}
+.kid-section-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .4s ease,padding .4s ease;
+  padding:0 18px;background:var(--cream);
+}
+.kid-section.open .kid-section-body{max-height:2400px;padding:0 18px 18px}
+.kid-section-body p{font-size:13px;line-height:1.75;color:var(--ink-mid);margin-bottom:12px}
+.kid-section-body p:last-child{margin-bottom:0}
+.kid-section-body p strong{color:var(--ink)}
+.kid-section-body p em{font-style:italic;color:var(--ink-mid)}
+
+.diag-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:700;letter-spacing:.07em;
+  padding:4px 10px;border-radius:20px;margin-bottom:14px;
+}
+.diag-badge.official{background:var(--anchor-bg);color:var(--anchor);border:1px solid var(--anchor-rule)}
+.diag-badge.working{background:var(--curveball-bg);color:var(--curveball);border:1px solid var(--curveball-rule)}
+.diag-badge.observed{background:var(--green-bg);color:var(--green);border:1px solid #c8dc90}
+
+.obs-list{display:flex;flex-direction:column;gap:0;margin-bottom:12px}
+.obs-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--rule)}
+.obs-item:last-child{border-bottom:none}
+.obs-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.obs-dot.warm{background:var(--warm)}
+.obs-dot.calm{background:var(--calm)}
+.obs-dot.anchor{background:var(--anchor)}
+.obs-dot.green{background:var(--green)}
+.obs-dot.curveball{background:var(--curveball)}
+.obs-text{font-size:13px;color:var(--ink-mid);line-height:1.55}
+.obs-text strong{color:var(--ink)}
+
+.needs-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.need-item{
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-sm);
+  padding:10px 12px;display:flex;align-items:flex-start;gap:10px;
+}
+.need-icon{font-size:16px;flex-shrink:0}
+.need-text{font-size:13px;color:var(--ink-mid);line-height:1.5}
+.need-text strong{color:var(--ink)}
 
 /* ═══════ GOOD DAY ═══════ */
 .goodday-intro{
@@ -485,20 +803,88 @@ body{
 <!-- TITLE -->
 <div class="screen active" id="screen-title">
   <div class="screen-inner">
-    <div class="title-eyebrow">A Family Reference</div>
-    <div class="title-rule"></div>
-    <h1 class="title-main">Garrett<br><em>Field Guide</em></h1>
-    <p class="title-tag">For everyone who loves him</p>
-    <div class="title-divider"></div>
-    <div class="title-actions">
-      <button class="btn-primary" onclick="showScreen('screen-pick')">Choose a Situation →</button>
-      <button class="btn-secondary" onclick="showScreen('screen-whois')">Who Is This Kid?</button>
-      <button class="btn-secondary" onclick="showScreen('screen-goodday')">Good Day Mode</button>
-      <button class="btn-secondary" onclick="showScreen('screen-arrive')">Before You Arrive</button>
-      <button class="btn-secondary" onclick="showScreen('screen-emergency')">Something Just Happened</button>
-      <button class="btn-secondary" onclick="showScreen('screen-disclosure')">He Told Me Something Hard</button>
-      <button class="btn-secondary" onclick="showScreen('screen-ref')">Quick Reference Guide</button>
+
+    <div class="home-header">
+      <div class="home-eyebrow">A Family Reference</div>
+      <div class="home-rule"></div>
+      <h1 class="home-title">Garrett<br><em>Field Guide</em></h1>
+      <p class="home-tag">For everyone who loves him</p>
     </div>
+
+    <!-- EMERGENCY -->
+    <button class="home-emergency" onclick="showScreen('screen-emergency')">
+      <div class="home-emergency-icon">🚨</div>
+      <div class="home-emergency-body">
+        <div class="home-emergency-label">Right now</div>
+        <div class="home-emergency-title">Something Just Happened</div>
+        <div class="home-emergency-desc">He's flooding, shut down, or the storm just passed. Tap here first.</div>
+      </div>
+    </button>
+
+    <!-- PREP -->
+    <button class="home-prep" onclick="showScreen('screen-arrive')">
+      <div class="home-prep-icon">📋</div>
+      <div class="home-prep-body">
+        <div class="home-prep-label">Before you walk in</div>
+        <div class="home-prep-title">Before You Arrive</div>
+        <div class="home-prep-desc">60-second read of his day. Calibrate before you engage.</div>
+      </div>
+    </button>
+
+    <!-- SITUATIONS — prominent third button -->
+    <button class="home-situations" onclick="showScreen('screen-pick')">
+      <div class="home-situations-icon">🎯</div>
+      <div class="home-situations-body">
+        <div class="home-situations-label">Practice & train</div>
+        <div class="home-situations-title">Choose a Situation</div>
+        <div class="home-situations-desc">Run a scenario — practice the moves before you need them</div>
+      </div>
+    </button>
+
+    <!-- LEARN / EXPLORE -->
+    <div class="home-section-label">Read & Reference</div>
+    <div class="home-nav-list">
+
+      <button class="home-nav-item" onclick="showScreen('screen-whois')">
+        <div class="home-nav-icon">👦</div>
+        <div class="home-nav-body">
+          <div class="home-nav-title">Who Is This Kid?</div>
+          <div class="home-nav-desc">His diagnosis, observed behaviors, and what he needs — start here</div>
+        </div>
+        <div class="home-nav-arrow">›</div>
+      </button>
+
+      <button class="home-nav-item" onclick="showScreen('screen-goodday')">
+        <div class="home-nav-icon">🌿</div>
+        <div class="home-nav-body">
+          <div class="home-nav-title">Good Day Mode</div>
+          <div class="home-nav-desc">What fills the tank — and how to not accidentally break a good day</div>
+        </div>
+        <div class="home-nav-arrow">›</div>
+      </button>
+
+      <button class="home-nav-item" onclick="showScreen('screen-disclosure')">
+        <div class="home-nav-icon">💜</div>
+        <div class="home-nav-body">
+          <div class="home-nav-title">He Told Me Something Hard</div>
+          <div class="home-nav-desc">When he drops something heavy — what to say and what not to say</div>
+        </div>
+        <div class="home-nav-arrow">›</div>
+      </button>
+
+    </div>
+
+    <!-- QUICK REF — standalone always-visible button -->
+    <button class="home-ref" onclick="showScreen('screen-ref')">
+      <div class="home-ref-icon">📖</div>
+      <div class="home-ref-body">
+        <div class="home-ref-title">Quick Reference Guide</div>
+        <div class="home-ref-desc">The rules that don't change, no matter the situation</div>
+      </div>
+      <div class="home-ref-arrow">›</div>
+    </button>
+
+    <div class="home-footer">Garrett Field Guide · v4</div>
 
   </div>
 </div>
@@ -743,41 +1129,167 @@ body{
     <div class="section-head">
       <div class="section-eyebrow">Start Here</div>
       <h2 class="section-title">Who Is This Kid?</h2>
-      <p class="section-sub">Three minutes of context that makes everything else in this guide make sense.</p>
+      <p class="section-sub">Read this first. Everything else in the guide makes more sense with this context.</p>
     </div>
 
-    <div class="kid-card">
-      <div class="kid-card-eyebrow warm">The profile</div>
-      <div class="kid-card-title">Gifted and on the autism spectrum — at the same time</div>
-      <div class="kid-card-body">Garrett is intellectually advanced and on the autism spectrum. These two things exist together in him, and that combination creates a profile that doesn't look like either one alone.<br><br>
-      <strong>Gifted kids</strong> are often assumed to be fine because they're verbal, quick, and capable. They can talk their way through a lot. Their competence masks how much they're carrying.<br><br>
-      <strong>Autistic kids</strong> are often assumed to be struggling because they show it visibly. But Garrett shows it in specific ways — not always the ones people expect.<br><br>
-      Together: he can hold it together longer than you'd think, and then fall further than you'd expect. The ceiling is high. So is the drop.</div>
+    <!-- OFFICIAL DIAGNOSIS -->
+    <div class="kid-section" id="whois-sec-0">
+      <div class="kid-section-head anchor" onclick="toggleWhois('whois-sec-0')">
+        <div class="kid-section-icon">📋</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow anchor">Official Diagnosis</div>
+          <div class="kid-section-title">Autism Spectrum Disorder, Level 1</div>
+        </div>
+        <div class="kid-section-arrow">▼</div>
+      </div>
+      <div class="kid-section-body">
+        <div class="diag-badge official">📋 Formally Identified</div>
+        <p>Garrett has a formal diagnosis of <strong>Autism Spectrum Disorder (ASD), Level 1</strong>, assessed by a licensed psychologist. This is the current clinical designation for what was previously referred to as Asperger's syndrome or "high-functioning autism" — both of those terms are now retired from diagnostic use.</p>
+        <p><strong>What Level 1 means in practice:</strong> He requires support in some areas — particularly around social communication and managing unexpected change — but does not require the level of daily support associated with Levels 2 or 3. He is largely independent in most settings and capable of masking his difficulties, sometimes to a significant degree.</p>
+        <p><strong>What the psychologist said:</strong> He was described as "amazingly workable" — meaning he engages with adults, responds to clear structure, and is not oppositional as a baseline. His challenges are real, but they are navigable with the right approach. This guide is that approach.</p>
+        <p><strong>What Level 1 does not mean:</strong> It does not mean "barely autistic" or "almost neurotypical." It means his challenges are less visible — which often means they are less accommodated. He is doing more work than most people realize to hold himself together in ordinary situations.</p>
+      </div>
     </div>
 
-    <div class="kid-card">
-      <div class="kid-card-eyebrow anchor">How his brain works</div>
-      <div class="kid-card-title">He processes deeply and feels everything at full volume</div>
-      <div class="kid-card-body">His brain takes in more than most. Sounds, textures, social cues, changes in plan, the tone of your voice, the thing you said two conversations ago — all of it registers and all of it costs something.<br><br>
-      He doesn't have a smaller emotional range than other kids. He has a <strong>larger</strong> one, with fewer automatic tools to manage it. When he's good, he's extraordinary. When he's overwhelmed, the system can't sort itself out the way other kids' systems do.<br><br>
-      This is not a behavior problem. It is a nervous system that needs different conditions than average.</div>
+    <!-- WORKING PICTURE -->
+    <div class="kid-section" id="whois-sec-1">
+      <div class="kid-section-head curveball" onclick="toggleWhois('whois-sec-1')">
+        <div class="kid-section-icon">🔍</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow curveball">Working Picture — Not Formally Diagnosed</div>
+          <div class="kid-section-title">Attention patterns, demand sensitivity, and what we observe</div>
+        </div>
+        <div class="kid-section-arrow">▼</div>
+      </div>
+      <div class="kid-section-body">
+        <div class="diag-badge working">🔍 Observed, Not Formal</div>
+        <p>There is no additional formal diagnosis beyond ASD Level 1 at this time. However, the following patterns are consistently observed and meaningfully affect how he moves through the world. They are listed here not as labels but as a practical map.</p>
+        <p><strong>Attention and focus:</strong> He shows patterns consistent with attention difficulties — highly variable focus depending on interest level, difficulty shifting away from absorbed states, and challenges with sustained attention on low-interest tasks. These patterns have not been formally assessed, and no ADHD diagnosis has been made. What is clear is that his focus is demand-dependent: when the task is self-chosen and intrinsically engaging, his focus is extraordinary. When it is externally assigned and low-interest, it drops significantly.</p>
+        <p><strong>Demand sensitivity:</strong> He shows a pattern sometimes called Pathological Demand Avoidance (PDA) — though this term is not in current diagnostic use in the US and no formal assessment has been made. In plain terms: demands — particularly those that feel externally imposed, unpredictable, or beyond his current capacity — can produce significant resistance even when the demand itself is small. This is not defiance. It is a nervous system response to perceived loss of control. The effective approach is almost never more pressure. It is almost always more agency.</p>
+        <p><strong>What this means for you:</strong> These patterns are real and consistent regardless of formal label. The guide is built around what works for him, not around what he has been officially diagnosed with.</p>
+      </div>
     </div>
 
-    <div class="kid-card">
-      <div class="kid-card-eyebrow curveball">What trips people up</div>
-      <div class="kid-card-title">The instinctive responses are usually wrong</div>
-      <div class="kid-card-body">When a smart kid melts down, the instinct is to reason with him. <strong>He can't be reasoned with when flooded.</strong> His brain is not available for that.<br><br>
-      When a kid digs in and refuses, the instinct is to push harder. <strong>More pressure produces more resistance.</strong> Every time.<br><br>
-      When a kid says something hurtful in anger, the instinct is to address the words. <strong>The words are not the message.</strong> The size of the feeling is the message.<br><br>
-      The guide exists because the right responses feel counterintuitive until you've practiced them enough that they become reflex.</div>
+    <!-- GIFTED PROFILE -->
+    <div class="kid-section" id="whois-sec-2">
+      <div class="kid-section-icon" style="display:none"></div>
+      <div class="kid-section-head green" onclick="toggleWhois('whois-sec-2')">
+        <div class="kid-section-icon">⭐</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow green">Gifted Profile</div>
+          <div class="kid-section-title">Intellectually advanced — and why that complicates everything</div>
+        </div>
+        <div class="kid-section-arrow">▼</div>
+      </div>
+      <div class="kid-section-body">
+        <div class="diag-badge observed">⭐ Reported & Observed</div>
+        <p>Based on reported behaviors and observed performance, Garrett is intellectually gifted. This has not been formalized through IQ testing at this time, but is recognized by the professionals who have worked with him and is consistent across every domain — his vocabulary, his reasoning, the complexity of the worlds he builds, the precision of his memory, the speed at which he processes new information.</p>
+        <p><strong>Why giftedness matters for this guide:</strong> Gifted kids are regularly misread as fine because they are verbal and capable. They can articulate their feelings with unusual precision — which adults often interpret as proof they are regulated. They are not always regulated. They are just verbal.</p>
+        <p><strong>The twice-exceptional profile:</strong> When giftedness and autism coexist — sometimes called "twice exceptional" or 2e — the two profiles can mask each other. His intellectual strengths compensate for his challenges in ways that make both harder to see. A teacher sees a smart, articulate kid and assumes he is coping. He may be coping extraordinarily well on the outside and running on empty on the inside.</p>
+        <p><strong>His specific gifts:</strong> Rich, detailed world-building and creative invention. Exceptional memory for things that matter to him. Rapid pattern recognition. Sophisticated moral and philosophical reasoning. Deep, sustained focus on subjects of genuine interest. He notices everything.</p>
+        <p><strong>The cost of that:</strong> He also notices everything that isn't said, every change in tone, every inconsistency in what adults claim versus what they do. He is harder to manage with vague or dishonest communication than most kids, and he will remember it.</p>
+      </div>
     </div>
 
-    <div class="kid-card">
-      <div class="kid-card-eyebrow calm">What he needs from you</div>
-      <div class="kid-card-title">Less is almost always more</div>
-      <div class="kid-card-body">Less input. Less pressure. Less explanation. Less pursuit.<br><br>
-      More space. More patience. More genuine curiosity about what he's building and thinking and caring about.<br><br>
-      <strong>He is not difficult.</strong> He is complex. Those are different things. Difficult is a character trait. Complex is a set of conditions. You can learn the conditions.</div>
+    <!-- OBSERVED BEHAVIORS -->
+    <div class="kid-section" id="whois-sec-3">
+      <div class="kid-section-head warm" onclick="toggleWhois('whois-sec-3')">
+        <div class="kid-section-icon">👁️</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow warm">Observed Behaviors</div>
+          <div class="kid-section-title">What we actually see — specific to him</div>
+        </div>
+        <div class="kid-section-arrow">▼</div>
+      </div>
+      <div class="kid-section-body">
+        <div class="diag-badge observed">👁️ Family-Observed</div>
+        <div class="obs-list">
+          <div class="obs-item">
+            <div class="obs-dot warm"></div>
+            <div class="obs-text"><strong>Dysregulation cascades from small things.</strong> The event that tips him into a meltdown is almost never the actual cause. It is the last item in a stack that built through the day. What looks like an overreaction to a minor thing is a full-capacity system hitting one more input.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot anchor"></div>
+            <div class="obs-text"><strong>Open loops hold him.</strong> Interrupted games, unfinished projects, plans that changed — these stay active in his mind. He cannot fully transition away from an open loop. Closing the loop before a transition dramatically reduces resistance.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot curveball"></div>
+            <div class="obs-text"><strong>He is verbal enough to argue while flooded.</strong> His sentences may be grammatically coherent during a meltdown. This is not evidence he is regulated. His brain is not available for reasoning. Do not respond to the content of the argument.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot warm"></div>
+            <div class="obs-text"><strong>Emoji walls and keyboard mashing are shutdown signals.</strong> A wall of stop/no emojis (🛑❌⛔️💢) is a nonverbal exit signal, not play. Keyboard mashing is sensory discharge. Engaging during these escalates rather than settles. The combination of mashing and "God." is a confirmed flooding pattern.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot calm"></div>
+            <div class="obs-text"><strong>He declares a good day and then crashes.</strong> Positive declarations raise his internal standard. The subsequent normal difficulty feels catastrophic by contrast. Positive mirroring during a fragile baseline can destabilize it. Let good days run quietly.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot green"></div>
+            <div class="obs-text"><strong>His creative worlds are real and governed by rules he enforces.</strong> Treat Land, Spaceland, and his characters are not pretend in the casual sense. He maintains precise internal consistency and will correct errors calmly and firmly. He is the author. Do not add to his worlds without invitation.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot anchor"></div>
+            <div class="obs-text"><strong>He compartmentalizes between sessions and interactions.</strong> A fast reset after a hard moment can mask cumulative stress. He may present as fine while still carrying the weight of earlier difficulty.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot curveball"></div>
+            <div class="obs-text"><strong>Re-entry after shutdown often comes too fast.</strong> He may seem ready to reconnect before he actually is. Short, low-demand check-ins work better than open questions in the repair window.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot warm"></div>
+            <div class="obs-text"><strong>Touch is on his terms.</strong> Affectionate contact when he's already loaded — even a hand on the shoulder — can tip a building situation. He initiates physical connection when he wants it. Follow his lead.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot green"></div>
+            <div class="obs-text"><strong>Self-directed creative projects function as natural regulation.</strong> He built a handwriting font unprompted. He invented Mismageus through sound play and pivoted fluidly. When he is creating, he is regulating. Protect that space.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT HE NEEDS -->
+    <div class="kid-section" id="whois-sec-4">
+      <div class="kid-section-head calm" onclick="toggleWhois('whois-sec-4')">
+        <div class="kid-section-icon">💚</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow calm">What He Needs</div>
+          <div class="kid-section-title">The conditions that let him thrive</div>
+        </div>
+        <div class="kid-section-arrow">▼</div>
+      </div>
+      <div class="kid-section-body">
+        <div class="needs-grid">
+          <div class="need-item">
+            <div class="need-icon">🎮</div>
+            <div class="need-text"><strong>Agency over his own experience.</strong> Choices, not directives. Timing options, not hard commands. A sense that his input matters in how things go.</div>
+          </div>
+          <div class="need-item">
+            <div class="need-icon">🔮</div>
+            <div class="need-text"><strong>Predictability and honest communication.</strong> He reads adults with precision. Vague answers and false reassurances cost trust and load his system. Concrete, honest, simple.</div>
+          </div>
+          <div class="need-item">
+            <div class="need-icon">🎨</div>
+            <div class="need-text"><strong>His creative world taken seriously.</strong> Ask about it with genuine curiosity. Remember what he told you. Receive corrections gracefully. His worlds are how he processes everything.</div>
+          </div>
+          <div class="need-item">
+            <div class="need-icon">🧘</div>
+            <div class="need-text"><strong>Space to regulate without pursuit.</strong> When he withdraws, he is not abandoning the relationship. He is protecting it. Low-demand presence without pressure is more effective than engagement.</div>
+          </div>
+          <div class="need-item">
+            <div class="need-icon">⏱️</div>
+            <div class="need-text"><strong>Transitions with warning and closure.</strong> Open loops need closing before he can move. Five minutes' notice changes the entire experience of a transition.</div>
+          </div>
+          <div class="need-item">
+            <div class="need-icon">💛</div>
+            <div class="need-text"><strong>Repair without conditions.</strong> He will come back after hard moments. Receive him fully — no lesson attached, no reference to the storm. The relationship being intact is the message he needs.</div>
+          </div>
+          <div class="need-item">
+            <div class="need-icon">🎯</div>
+            <div class="need-text"><strong>Specific, true acknowledgment.</strong> Not general praise — specific, recent, verifiable observations about what he actually did. General praise is dismissible. Specific truth is not.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="kid-divider-label">The one thing to carry</div>
@@ -941,96 +1453,65 @@ body{
     <button class="topbar-back" onclick="showScreen('screen-title')">Home</button>
     <span class="topbar-title">Garrett Field Guide</span>
   </div>
-  <div class="screen-inner">
-    <div class="section-head">
-      <h2 class="section-title">Something Just Happened</h2>
-      <p class="section-sub">He's in it right now. Here's exactly what to do.</p>
-    </div>
-    <div class="emergency-intro">
-      Don't read this whole page. Just do the steps in order. Come back and read the why later.
-    </div>
 
-    <div class="phase-label during">During — right now</div>
+  <!-- TRIAGE — pick what's happening -->
+  <div id="emg-triage-view">
+    <div class="emg-triage">
+      <div class="emg-triage-label">Right now</div>
+      <div class="emg-triage-q">What's happening?</div>
+      <button class="emg-state-btn flood" onclick="startEmergency('flood')">
+        <div class="emg-state-icon">🌊</div>
+        <div class="emg-state-body">
+          <div class="emg-state-title">Yelling, crying, exploding</div>
+          <div class="emg-state-desc">Big language, can't be reached, full meltdown in progress</div>
+        </div>
+      </button>
+      <button class="emg-state-btn shutdown" onclick="startEmergency('shutdown')">
+        <div class="emg-state-icon">🧊</div>
+        <div class="emg-state-body">
+          <div class="emg-state-title">Gone quiet, shut down, frozen</div>
+          <div class="emg-state-desc">Withdrew, won't respond, checked out completely</div>
+        </div>
+      </button>
+      <button class="emg-state-btn after" onclick="startEmergency('after')">
+        <div class="emg-state-icon">🌱</div>
+        <div class="emg-state-body">
+          <div class="emg-state-title">It just passed — he's calming down</div>
+          <div class="emg-state-desc">The storm is over. How do we reconnect?</div>
+        </div>
+      </button>
+    </div>
+  </div>
 
-    <div class="emergency-step">
-      <div class="emergency-num">1</div>
-      <div class="emergency-body">
-        <div class="emergency-action">Stop talking</div>
-        <div class="emergency-why">Every word you add is more load on a system that's already full. Silence is not abandonment — it's the first de-escalation move.</div>
+  <!-- STEP VIEW — shown after state is chosen -->
+  <div id="emg-step-view" style="display:none;overflow-y:auto;flex:1">
+    <div class="emg-step-screen">
+      <div class="emg-step-header">
+        <button class="emg-step-back" onclick="resetEmergency()">What's happening?</button>
+        <div class="emg-step-badge" id="emg-badge"></div>
+      </div>
+      <div class="emg-progress-bar">
+        <div class="emg-progress-fill" id="emg-progress"></div>
+      </div>
+      <div class="emg-step-body">
+        <div class="emg-step-num" id="emg-step-num"></div>
+        <div class="emg-step-action" id="emg-step-action"></div>
+        <div class="emg-step-say" id="emg-step-say" style="display:none"></div>
+        <button class="emg-step-why-toggle" id="emg-why-toggle" onclick="toggleEmgWhy()">Why this works</button>
+        <div class="emg-step-why" id="emg-step-why"></div>
+      </div>
+      <div class="emg-step-nav" id="emg-step-nav"></div>
+      <div class="emg-never" id="emg-never" style="display:none">
+        <div class="emg-never-label">Never during this</div>
+        <div id="emg-never-items"></div>
+      </div>
+      <div class="emg-done" id="emg-done" style="display:none">
+        <div class="emg-done-icon">🌱</div>
+        <div class="emg-done-title">You made it through.</div>
+        <div class="emg-done-sub">The hard part is behind you. He needs space and warmth right now — nothing else.</div>
+        <button class="btn-secondary btn-full" onclick="showScreen('screen-title')">Back to Home</button>
       </div>
     </div>
-
-    <div class="emergency-step">
-      <div class="emergency-num">2</div>
-      <div class="emergency-body">
-        <div class="emergency-action">Lower your body and your voice</div>
-        <div class="emergency-why">His nervous system mirrors yours. Slow, low, calm outside helps calm inside. Crouch if you can. Sit down.</div>
-      </div>
-    </div>
-
-    <div class="emergency-step">
-      <div class="emergency-num">3</div>
-      <div class="emergency-body">
-        <div class="emergency-action">Stay nearby but don't pursue</div>
-        <div class="emergency-why">Physical presence without pressure tells him the relationship is intact. Don't follow him if he moves away — but don't disappear either.</div>
-      </div>
-    </div>
-
-    <div class="emergency-step">
-      <div class="emergency-num">4</div>
-      <div class="emergency-body">
-        <div class="emergency-action">Wait. Actually wait.</div>
-        <div class="emergency-why">This will pass. It always passes. Your job right now is not to fix it — it's to not make it worse. That means waiting longer than feels comfortable.</div>
-      </div>
-    </div>
-
-    <div class="emergency-step">
-      <div class="emergency-num">5</div>
-      <div class="emergency-body">
-        <div class="emergency-action">If you need to leave the room, name it first</div>
-        <div class="emergency-why"><em>"I'm going to give us both some space. I'm right here when you're ready."</em> Then go to the next room. Stay in earshot. Don't slam anything.</div>
-      </div>
-    </div>
-
-    <div class="emergency-divider">— when he's calm again —</div>
-
-    <div class="phase-label after">After — once it's passed</div>
-
-    <div class="emergency-step">
-      <div class="emergency-num">6</div>
-      <div class="emergency-body">
-        <div class="emergency-action">Don't process it immediately</div>
-        <div class="emergency-why">He's calm but not recovered. Moving straight to "let's talk about what happened" can reopen it. Give it real time — 20 minutes minimum.</div>
-      </div>
-    </div>
-
-    <div class="emergency-step">
-      <div class="emergency-num">7</div>
-      <div class="emergency-body">
-        <div class="emergency-action">If he comes to you sweet and close, receive it</div>
-        <div class="emergency-why">That's a repair bid. He's reaching toward you. Receive it warmly — no lesson attached, no reference to what just happened. Just warmth.</div>
-      </div>
-    </div>
-
-    <div class="emergency-step">
-      <div class="emergency-num">8</div>
-      <div class="emergency-body">
-        <div class="emergency-action">One specific true thing, said quietly</div>
-        <div class="emergency-why">Not "you're such a good kid." Find something real and recent. Something he made, discovered, or did. Say it once. Let it land.</div>
-      </div>
-    </div>
-
-    <div class="never-do">
-      <div class="never-do-label">Never during a meltdown</div>
-      <div class="never-item">Explain why he was wrong</div>
-      <div class="never-item">Issue a consequence</div>
-      <div class="never-item">Ask him why he did it</div>
-      <div class="never-item">Tell him to calm down</div>
-      <div class="never-item">Bring up what he said in anger</div>
-      <div class="never-item">Make him apologize before he's ready</div>
-    </div>
-
-    <button class="btn-secondary btn-full mt-12" onclick="showScreen('screen-title')">Back to Home</button>
   </div>
 </div>
 
@@ -1102,6 +1583,10 @@ const SITUATIONS = [
   { id:'sick',      icon:'🤒', title:'He\'s sick',                         desc:'Illness stripped his regulation tools. Everything is harder today.',          color:'warm',      scenarios:['s-sick-1','s-sick-2','s-sick-3'] },
   { id:'praise',    icon:'🌟', title:'Public praise backfire',             desc:'You said something positive. He shut down.',                                  color:'calm',      scenarios:['s-praise-1','s-praise-2','s-praise-3'] },
   { id:'overheard', icon:'👂', title:'He overheard something',            desc:'He picked up something that wasn\'t meant for him. It\'s sitting on him.',    color:'anchor',    scenarios:['s-overheard-1','s-overheard-2','s-overheard-3'] },
+  { id:'tooth',     icon:'🦷', title:'Loose or lost tooth',               desc:'The tooth is the only thing in his world right now.',                          color:'warm',      scenarios:['s-tooth-1','s-tooth-2','s-tooth-3'] },
+  { id:'pain-acute',icon:'🤕', title:'Stubbed toe / sudden injury',       desc:'Unexpected pain hit without warning. The spike is real.',                      color:'warm',      scenarios:['s-pain-1','s-pain-2','s-pain-3'] },
+  { id:'growing',   icon:'🌙', title:'Growing pains',                     desc:'His legs hurt at night and sleep isn\'t coming.',                              color:'anchor',    scenarios:['s-growing-1','s-growing-2','s-growing-3'] },
+  { id:'soreness',  icon:'😣', title:'Residual pain / lingering soreness',desc:'It\'s "better" to everyone else. It\'s still real to him.',                   color:'calm',      scenarios:['s-sore-1','s-sore-2','s-sore-3'] },
 ];
 
 const SCENARIOS = {
@@ -3072,6 +3557,315 @@ SCENARIOS['s-overheard-3'] = {
   ]
 };
 
+// ════════════════════════════════
+// LOOSE / LOST TOOTH
+// ════════════════════════════════
+SCENARIOS['s-tooth-1'] = {
+  type:'warm', category:'Loose or Lost Tooth',
+  context:'A tooth has been loose for days. He can\'t stop touching it. It\'s not ready to come out and it hurts when he wiggles it — but he keeps wiggling it. He\'s spiraling into fixation and distress simultaneously.',
+  question:'The tooth has consumed his entire focus. It hurts but he can\'t leave it alone. What do you do?',
+  choices:[
+    { icon:'🎯', text:'Give the fixation a job — make the wiggling purposeful', sub:'Channel it rather than stop it.',
+      outcome:'good', scores:{presence:8,timing:8,connection:7,control:9,regulation:8},
+      feedback:'Telling him to stop touching it will not work. His nervous system is drawn to the sensation regardless of pain. Giving the fixation a frame — "let\'s see if it moves a little more each time you check it" — turns an anxiety loop into a task with an endpoint.',
+      key_moves:['Give him permission to check it — on a schedule.','Every 20 minutes, not constantly.','Make the endpoint visible: "when it moves this much, it\'s close."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🛑', text:'Tell him to leave it alone — the constant touching is making it worse', sub:'He needs to stop for it to heal.',
+      outcome:'wrong', scores:{presence:2,timing:-3,connection:3,control:-3,regulation:-4},
+      feedback:'This is accurate advice that will produce zero compliance and significant resistance. His nervous system is not choosing to touch it. The instruction to stop without a replacement behavior leaves him with a demand he physically cannot meet.',
+      key_moves:['Replace, don\'t prohibit.','Give him something else for his hands if possible.','The tooth will come out when it\'s ready.'],
+      warning:'Demanding he stop a sensory-driven behavior without a replacement creates a compliance battle he cannot win.',
+      consequence:'He feels controlled and misunderstood. The tooth distress now has a relational layer on top of it.',
+      cascade_inject:'s-buildup-1' },
+    { icon:'🧊', text:'Offer something cold to numb it — reduce the sensation', sub:'Address the physical signal directly.',
+      outcome:'good', scores:{presence:9,timing:8,connection:8,control:7,regulation:8},
+      feedback:'Cold reduces inflammation and temporarily numbs the area, which lowers the sensory signal driving the fixation. A cold cloth, cold water to swish, or a cold spoon can give his nervous system genuine relief rather than a demand to ignore the sensation.',
+      key_moves:['Cold water or a cold damp cloth on the area.','Don\'t oversell it — "this might help a little."','Pair with the purposeful checking frame if he wants to keep monitoring it.'],
+      warning:null, consequence:null, cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-tooth-2'] = {
+  type:'warm', category:'Loose or Lost Tooth',
+  context:'The tooth just came out — fell out or was pulled. There\'s blood. He can see the hole with his tongue. The sensation is unfamiliar and it\'s genuinely bothering him. He\'s describing it in alarming terms.',
+  question:'The tooth is out. The blood and the hole are consuming him. How do you respond?',
+  choices:[
+    { icon:'💛', text:'Validate the sensation fully before doing anything else', sub:'It is weird. It does feel strange. Say so.',
+      outcome:'good', scores:{presence:10,timing:9,connection:10,control:8,regulation:9},
+      feedback:'The instinct is to reassure — "it\'s fine, it\'s normal, it\'ll stop soon." That reassurance lands as dismissal. The sensation IS strange. The hole IS there. His tongue IS finding it involuntarily. Validating the experience first — "that hole feels really weird, doesn\'t it" — tells him his read is accurate, which is calming.',
+      key_moves:['"That hole feels really strange — that\'s completely real."','Then: "The bleeding stops on its own. Your body already knows what to do."','Give him a mirror so he can see what\'s there — removing the unknown helps.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📋', text:'Walk him through the process — explain what happens next', sub:'Information helps him manage the unknown.',
+      outcome:'good', scores:{presence:8,timing:8,connection:7,control:8,regulation:8},
+      feedback:'For a high-information kid, knowing the sequence reduces anxiety about the unknown. What the blood does, how long, what the hole will feel like tomorrow, when a new tooth starts, what the Tooth Fairy situation is — he can hold all of it and it helps.',
+      key_moves:['Brief, concrete, honest.','Don\'t minimize: "it might feel sensitive for a day or two."','Include the timeline: "by tomorrow it will feel much more normal."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🌟', text:'Redirect to the exciting part — Tooth Fairy, milestone, celebration', sub:'Turn the distress into an event.',
+      outcome:'risky', scores:{presence:4,timing:3,connection:5,control:4,regulation:4},
+      feedback:'The celebration pivot can work once the immediate distress has passed. Jumping to it while he\'s still in the sensation skips the step where he needed to be heard. Receive the distress first. The Tooth Fairy can wait five minutes.',
+      key_moves:['Validate first.','Then the celebration.','Don\'t rush the pivot.'],
+      warning:'Redirecting to excitement before the distress is received teaches him to skip his own feelings.',
+      consequence:null, cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-tooth-3'] = {
+  type:'calm', category:'Loose or Lost Tooth',
+  context:'It\'s been two days since the tooth came out. He keeps finding the hole with his tongue. He\'s not in acute distress but he\'s mentioning it repeatedly — it\'s still sitting in his awareness.',
+  question:'The tooth is gone, the immediate event is over, but it\'s still running in his background. How do you handle the ongoing mentions?',
+  choices:[
+    { icon:'🌿', text:'Receive each mention without dismissing it', sub:'It\'s still real to him. Let it be.',
+      outcome:'good', scores:{presence:8,timing:9,connection:8,control:8,regulation:8},
+      feedback:'Repeated mentions of a sensory experience aren\'t a loop he\'s stuck in — they\'re updates he\'s processing. A brief acknowledgment each time ("still noticing it, huh") without alarm or dismissal lets the processing run its course naturally.',
+      key_moves:['Brief acknowledgment each time.','No "you keep saying that" or "you\'re fine."','It will resolve on its own.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📅', text:'Give him a timeline — tell him when it will stop feeling different', sub:'An endpoint helps him stop monitoring.',
+      outcome:'good', scores:{presence:8,timing:8,connection:7,control:7,regulation:8},
+      feedback:'For a kid who monitors sensations closely, a concrete timeline is genuinely regulating. "Most kids stop noticing it after about a week" gives his brain a frame to work with instead of open-ended monitoring.',
+      key_moves:['"Most people stop noticing it after about a week."','Don\'t promise — "usually" not "definitely."','It gives his monitoring brain something to work toward.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🛑', text:'Tell him to stop bringing it up — it\'s healed and he\'s fine', sub:'Redirect him away from the focus.',
+      outcome:'wrong', scores:{presence:2,timing:-2,connection:2,control:-2,regulation:-3},
+      feedback:'His tongue is finding the hole involuntarily. He cannot stop noticing it by being told to stop noticing it. Telling him to stop bringing it up adds a social layer of "something is wrong with me for noticing this" on top of a sensory experience that is genuinely still present.',
+      key_moves:['Receive it.','Or give a timeline.','Don\'t prohibit the noticing.'],
+      warning:'Telling him to stop noticing a real sensory experience teaches him his observations are wrong.',
+      consequence:'He stops mentioning it to you. He doesn\'t stop noticing it. The gap between what he\'s experiencing and what he shares with you widens.',
+      cascade_inject:null }
+  ]
+};
+
+// ════════════════════════════════
+// STUBBED TOE / SUDDEN INJURY
+// ════════════════════════════════
+SCENARIOS['s-pain-1'] = {
+  type:'warm', category:'Sudden Pain',
+  context:'He stubbed his toe hard. The pain spike was immediate and significant. He\'s crying, he\'s on the floor, he\'s saying it\'s broken. The words are big. The pain is real.',
+  question:'Sudden acute pain. He\'s on the floor and the words are alarming. What\'s your first move?',
+  choices:[
+    { icon:'🧎', text:'Get down to his level immediately — be physically present with the pain', sub:'Go to him before you say anything.',
+      outcome:'good', scores:{presence:10,timing:10,connection:9,control:8,regulation:9},
+      feedback:'Before any words, before any assessment, before any reassurance — get down. Crouch, kneel, sit beside him. Physical presence at his level communicates that this matters and you\'re in it with him. It also models calm with your body before your voice.',
+      key_moves:['Down to his level first.','Hand on his back or shoulder if he\'ll allow it.','Then one word: "I\'m here."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔍', text:'Assess it immediately — check if it\'s actually injured', sub:'Find out what you\'re dealing with.',
+      outcome:'risky', scores:{presence:5,timing:4,connection:4,control:6,regulation:5},
+      feedback:'Assessment is necessary but timing matters. Moving straight to "let me look at it" before he\'s been received can feel clinical and cold. He needs to feel met first — even 30 seconds of presence before the assessment changes the whole experience.',
+      key_moves:['30 seconds of presence first.','Then: "Can I look at it?"','Assessment as care, not triage.'],
+      warning:'Immediate clinical assessment without presence first can feel like you\'re checking the injury rather than caring about him.',
+      consequence:null, cascade_inject:null },
+    { icon:'💬', text:'Reassure him immediately — "you\'re okay, it\'s just a stubbed toe"', sub:'Help him know it\'s not serious.',
+      outcome:'wrong', scores:{presence:2,timing:-3,connection:2,control:3,regulation:-3},
+      feedback:'"You\'re okay" before he feels heard tells him his pain is wrong. The pain is not wrong. It\'s a genuine acute spike that his nervous system is amplifying. "You\'re okay" minimizes the experience before it\'s been acknowledged and reliably escalates rather than settles.',
+      key_moves:['Never lead with "you\'re okay."','Lead with presence.','Reassurance comes after acknowledgment, not before.'],
+      warning:'"You\'re okay" before acknowledgment invalidates the experience and often intensifies the response.',
+      consequence:'He escalates. The reassurance read as dismissal and now he needs to prove the pain is real.',
+      cascade_inject:'s-flood-1' }
+  ]
+};
+
+SCENARIOS['s-pain-2'] = {
+  type:'warm', category:'Sudden Pain',
+  context:'The acute spike has passed — maybe two minutes in. He\'s still crying but starting to come down. He\'s describing the pain in very detailed, dramatic terms. "It feels like my whole foot is on fire."',
+  question:'The spike is fading but the language is still big. How do you meet him where he is right now?',
+  choices:[
+    { icon:'💛', text:'Match the language — take the description seriously', sub:'If it feels like fire, say so.',
+      outcome:'good', scores:{presence:9,timing:9,connection:9,control:7,regulation:9},
+      feedback:'His descriptions are accurate to his internal experience, not exaggerated. "That sounds like it really burned through your whole foot" — matching his language without correction tells him his sensory read is valid. This is not reinforcing drama. It\'s confirming that you hear the actual signal he\'s sending.',
+      key_moves:['Reflect his language back.','Don\'t correct the metaphor.','Then: "Is it starting to change at all — still the same or shifting?"'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📊', text:'Help him scale it — "on a scale of 1 to 10, how bad is it now?"', sub:'Give the pain somewhere to go.',
+      outcome:'good', scores:{presence:8,timing:8,connection:7,control:7,regulation:8},
+      feedback:'The scale gives the pain a number, which does two useful things: it engages his analytical brain (which is regulating) and it creates a trackable metric he can watch decrease. "What was it at the worst? What\'s it at now?" gives him agency over monitoring his own recovery.',
+      key_moves:['Introduce the scale gently.','Establish the peak number.','Check back in 2 minutes: "what\'s it at now?"'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🌊', text:'Redirect to something absorbing — distraction helps pain', sub:'Get his mind off it.',
+      outcome:'risky', scores:{presence:4,timing:3,connection:4,control:5,regulation:5},
+      feedback:'Distraction does reduce pain perception and will eventually work here. But deploying it before he feels heard reads as "stop talking about it." If he\'s still in the description phase, distraction is premature. Receive first, then offer distraction as a tool, not an exit.',
+      key_moves:['Receive first.','Then: "Do you want something to watch while it settles?"','Frame it as a tool, not a redirect.'],
+      warning:'Distraction before acknowledgment reads as dismissal.',
+      consequence:null, cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-pain-3'] = {
+  type:'calm', category:'Sudden Pain',
+  context:'He\'s recovered. The pain is gone or minimal. But 20 minutes later he\'s bringing it up again — telling someone else about it, revisiting it, still processing the event.',
+  question:'The pain is over but the event is still being processed. How do you handle the retelling?',
+  choices:[
+    { icon:'🌿', text:'Let him retell it — the story is part of how he processes it', sub:'The narrative is doing work.',
+      outcome:'good', scores:{presence:8,timing:9,connection:8,control:8,regulation:8},
+      feedback:'Retelling a painful or frightening event is how the brain files it. For a high-narrative kid, the story needs to be told until it\'s complete. Listening fully — even the third time — tells him the event has been witnessed and processed, not just survived.',
+      key_moves:['Listen fully.','Ask a genuine question about it.','Don\'t rush to "but you\'re fine now."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'✅', text:'Affirm his handling of it — "you got through something really hard"', sub:'Acknowledge how he managed.',
+      outcome:'good', scores:{presence:9,timing:8,connection:9,control:7,regulation:8},
+      feedback:'Not "you were so brave" — which requires him to accept a character judgment. But "you got through that — that was a hard spike and you came through it" is a factual observation about what happened. It closes the event with a frame of survival and competence.',
+      key_moves:['"That was a hard moment and you got through it."','Specific and factual.','Don\'t overdo it — once, then let it land.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔚', text:'Move him on — "you\'re fine now, let\'s do something else"', sub:'The event is over.',
+      outcome:'wrong', scores:{presence:2,timing:-2,connection:2,control:3,regulation:-2},
+      feedback:'The event is over for you. His nervous system is still filing it. Cutting off the processing loop before it completes doesn\'t end it — it suspends it. He\'ll return to it again, and it will carry the additional weight of having been dismissed.',
+      key_moves:['Let the loop complete.','It won\'t take long if it\'s not interrupted.'],
+      warning:'Cutting the processing loop short suspends rather than ends it.',
+      consequence:'He returns to it later, and the retelling now carries an extra layer of needing to be believed.',
+      cascade_inject:null }
+  ]
+};
+
+// ════════════════════════════════
+// GROWING PAINS
+// ════════════════════════════════
+SCENARIOS['s-growing-1'] = {
+  type:'anchor', category:'Growing Pains',
+  context:'It\'s 9:30pm. He\'s supposed to be winding down. He comes out saying his legs hurt — a deep ache in his calves or thighs. He\'s had this before. It\'s real. It\'s also now standing between him and sleep.',
+  question:'Growing pains are real and they\'re happening at the worst time. What\'s your approach?',
+  choices:[
+    { icon:'🙌', text:'Physical intervention first — massage, heat, or gentle pressure', sub:'Address the sensation directly.',
+      outcome:'good', scores:{presence:9,timing:10,connection:8,control:8,regulation:9},
+      feedback:'Growing pains respond well to physical input — firm massage, a warm compress, or gentle stretching. His proprioceptive system is already amplifying the ache; counter-pressure or warmth gives it a different signal to process. This is the most direct path to relief and sleep.',
+      key_moves:['Firm massage on the calves or wherever he points.','Warm compress or heating pad on low.','Gentle stretch — pull toes back toward him slowly.','Stay with him while you do it.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'💊', text:'Pain relief if appropriate — ibuprofen or acetaminophen', sub:'Manage the physical signal.',
+      outcome:'good', scores:{presence:8,timing:8,connection:6,control:7,regulation:8},
+      feedback:'Growing pains are real musculoskeletal discomfort. Age-appropriate pain relief is a legitimate tool — not a reward for complaining, and not giving in. If it\'s been more than four hours since any medication and the pain is significant enough to prevent sleep, it\'s appropriate.',
+      key_moves:['Age-appropriate dosing.','Frame it matter-of-factly — not as a treat, not as a big deal.','Pair with the physical intervention for faster effect.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'💤', text:'Send him back to bed — growing pains pass on their own', sub:'He needs sleep more than intervention.',
+      outcome:'wrong', scores:{presence:1,timing:-4,connection:2,control:2,regulation:-4},
+      feedback:'Growing pains will pass on their own — but not quickly enough for sleep to come naturally without intervention. Sending him back without addressing the physical signal leaves him alone with an ache and no tools, which produces either a second trip out or a long awake stretch that will affect tomorrow.',
+      key_moves:['The intervention is brief.','Five minutes of massage is faster than 45 minutes of him not sleeping.'],
+      warning:'Untreated growing pains at bedtime reliably produce extended wakefulness.',
+      consequence:'He lies there in discomfort. Either comes back out again or stays awake too long. Tomorrow starts depleted.',
+      cascade_inject:'s-bed-1' }
+  ]
+};
+
+SCENARIOS['s-growing-2'] = {
+  type:'anchor', category:'Growing Pains',
+  context:'He\'s describing the pain and the description is escalating — "it\'s like my bones are being pulled apart," "it\'s the worst pain I\'ve ever felt." You\'ve seen this before and you know it\'s growing pains. The language is alarming but the pattern is familiar.',
+  question:'The description is alarming but the pattern is familiar. How do you hold both things?',
+  choices:[
+    { icon:'🧭', text:'Name the pattern — give it a known frame', sub:'"This is what growing pains feel like. You\'ve had this before."',
+      outcome:'good', scores:{presence:9,timing:9,connection:9,control:8,regulation:9},
+      feedback:'For a high-anxiety kid, one of the most regulating things you can say about a scary sensation is "I know this one." Naming the pattern — without dismissing the pain — gives the experience a container. It\'s not unknown, it\'s not getting worse, it\'s a known thing with a known end.',
+      key_moves:['"This is growing pains — your body does this when it\'s building new bone."','Don\'t minimize: "it really does hurt, and it passes."','Give the endpoint: "usually better by morning."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔍', text:'Take the description seriously — assess whether it needs medical attention', sub:'Big pain language could mean something real.',
+      outcome:'risky', scores:{presence:6,timing:5,connection:6,control:6,regulation:5},
+      feedback:'It\'s correct to rule out something more serious — growing pains are typically bilateral, in the muscle belly, and worse at night. If it\'s a single joint, following a fall, or presenting differently than usual, assessment is right. If it matches the known pattern: name it and treat it.',
+      key_moves:['Quick check: same as usual or different?','If same: name and treat.','If different location or character: assess further.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🌊', text:'Validate without naming it — "that sounds really painful"', sub:'Meet the feeling without framing it.',
+      outcome:'risky', scores:{presence:7,timing:6,connection:7,control:5,regulation:5},
+      feedback:'Validation is always right — but for this pattern, validation alone leaves the anxiety about what it is still running. He needs both: to be heard and to know what he\'s dealing with. Give him the name.',
+      key_moves:['Validate AND name.','Both in the same response.'],
+      warning:'Validation without the frame leaves the "what is this" question open.',
+      consequence:null, cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-growing-3'] = {
+  type:'anchor', category:'Growing Pains',
+  context:'It\'s the third night this week. He\'s come out for the same thing. You\'re tired. He\'s tired. The routine is starting to feel like a pattern and you\'re not sure whether to keep responding the same way.',
+  question:'Third night in a row. Repeated pattern. How do you think about this without eroding the response?',
+  choices:[
+    { icon:'🛠️', text:'Build a protocol — same response every night, no variance', sub:'Predictability is regulation for both of you.',
+      outcome:'good', scores:{presence:9,timing:9,connection:8,control:9,regulation:9},
+      feedback:'Repeated growing pain episodes need a consistent, low-drama protocol that both of you know in advance. The same steps each time — massage, heat, ibuprofen if needed, back to bed — removes the decision fatigue and the ambiguity. He knows what happens, you know what happens, the event is contained.',
+      key_moves:['Name the protocol when he\'s not in pain: "when your legs hurt at night, here\'s what we do."','Execute it calmly and consistently.','Keep it brief — not a production.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🌿', text:'Preventive approach — address it before bed on hard nights', sub:'Head it off rather than respond to it.',
+      outcome:'good', scores:{presence:8,timing:9,connection:7,control:8,regulation:8},
+      feedback:'After a physically active day, or when the pattern has been running for several nights, proactive massage or a warm bath before bed can reduce the likelihood of a middle-of-night episode. It\'s cheaper than the wake-up.',
+      key_moves:['After active days: five minutes of leg massage before sleep.','Warm bath in the wind-down.','Magnesium supplement — consult your pediatrician, but it\'s commonly recommended for growing pains.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📉', text:'Scale back the response — you don\'t want to reinforce the pattern', sub:'Three nights in a row suggests something behavioral.',
+      outcome:'wrong', scores:{presence:1,timing:-3,connection:2,control:2,regulation:-3},
+      feedback:'Growing pains are physiological, not behavioral. Scaling back the response because it\'s become a pattern doesn\'t reduce the pain — it just removes the support. He will lie awake in discomfort instead of coming to you, which is worse for sleep and worse for trust.',
+      key_moves:['Respond consistently.','Build a protocol so responding doesn\'t cost as much.'],
+      warning:'Treating a physiological pattern as a behavioral one removes support for a real physical experience.',
+      consequence:'He stops coming out. The pain is still there. He lies awake managing it alone, and tomorrow he starts tired.',
+      cascade_inject:'s-sick-3' }
+  ]
+};
+
+// ════════════════════════════════
+// RESIDUAL PAIN / LINGERING SORENESS
+// ════════════════════════════════
+SCENARIOS['s-sore-1'] = {
+  type:'calm', category:'Lingering Soreness',
+  context:'Yesterday\'s stubbed toe. Two days after the tooth came out. The "official" injury window is over. He\'s still mentioning that it hurts. Everyone else considers it resolved.',
+  question:'It\'s better by most measures. He\'s still telling you it hurts. How do you respond?',
+  choices:[
+    { icon:'💛', text:'Take the report at face value', sub:'If he says it hurts, it hurts.',
+      outcome:'good', scores:{presence:9,timing:9,connection:9,control:8,regulation:8},
+      feedback:'His sensory system lingers on signals longer than average. What has resolved for most people may genuinely still be present for him. Taking the report seriously — not with alarm, but with acknowledgment — keeps the communication channel open and confirms that his reads are trusted.',
+      key_moves:['"Still sore? That makes sense — sometimes these things take a little longer."','Brief acknowledgment.','Don\'t require him to prove it or explain it.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📅', text:'Give it a concrete frame — "it should feel a lot better by tomorrow"', sub:'An endpoint reduces the monitoring.',
+      outcome:'good', scores:{presence:8,timing:8,connection:7,control:7,regulation:8},
+      feedback:'A concrete endpoint for residual pain is regulating for a brain that monitors sensations closely. "Usually by day three this kind of soreness is mostly gone" gives his system a timeline instead of an open-ended monitoring task.',
+      key_moves:['Honest timeline — don\'t promise, estimate.','Check back when the timeline arrives.','Acknowledge if it\'s not gone yet: "sometimes a little longer."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔚', text:'Tell him he\'s fine — it\'s been two days', sub:'He needs to move past it.',
+      outcome:'wrong', scores:{presence:1,timing:-3,connection:1,control:2,regulation:-3},
+      feedback:'"You\'re fine" applied to a sensation he can still feel tells him his nervous system is wrong. It isn\'t wrong. It\'s running a signal he can\'t turn off. Dismissing it doesn\'t end the signal — it ends the conversation, and teaches him that reporting physical experiences to you has a shelf life.',
+      key_moves:['Acknowledge the lingering.','Give a timeline.','Don\'t invalidate the signal.'],
+      warning:'Dismissing persistent sensory reports teaches him not to report them.',
+      consequence:'He stops mentioning it. He also starts filtering other physical experiences before bringing them to you. The threshold for what he shares goes up.',
+      cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-sore-2'] = {
+  type:'calm', category:'Lingering Soreness',
+  context:'He\'s protecting the area. Walking differently, holding his hand differently, guarding the tooth socket with his tongue. The behavior is noticeable and it\'s been days.',
+  question:'He\'s still physically guarding an area that should be healed. What does that tell you and what do you do?',
+  choices:[
+    { icon:'👁️', text:'Notice it without making it a big deal', sub:'Observe, don\'t interrogate.',
+      outcome:'good', scores:{presence:8,timing:8,connection:8,control:8,regulation:8},
+      feedback:'Guarding behavior is information. It means the area is still registering discomfort even if the "injury" is resolved. Noticing it quietly — "I see you\'re still being careful with that foot" — opens a door without turning it into a production or a medical event.',
+      key_moves:['"I noticed you\'re still being careful with that — is it still sore?"','One question.','Receive whatever answer he gives.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🏥', text:'Consider whether it needs a second look', sub:'Extended guarding could mean something wasn\'t resolved.',
+      outcome:'good', scores:{presence:8,timing:7,connection:7,control:7,regulation:7},
+      feedback:'Extended guarding that persists past the normal healing window is worth a conversation with a doctor, especially for injuries that could have structural components. Trust the signal. He\'s not performing — he\'s reporting through his body.',
+      key_moves:['If guarding persists past a week for a significant injury: check in with a doctor.','Don\'t lead with alarm.','Just: "Let\'s have someone take a look to make sure everything healed right."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'💬', text:'Tell him to walk normally — the injury is healed', sub:'The guarding is habit now, not pain.',
+      outcome:'wrong', scores:{presence:1,timing:-2,connection:2,control:-2,regulation:-3},
+      feedback:'Instructing him to stop guarding assumes the guarding is behavioral. It may not be. His nervous system is still registering the area as vulnerable — the guarding is a genuine proprioceptive response, not a performance. Telling him to walk normally when his body is saying otherwise creates a disconnect between his experience and the instruction.',
+      key_moves:['Don\'t demand normal behavior from a nervous system that hasn\'t cleared the signal yet.','Observe, inquire, consider a second look.'],
+      warning:'Treating physiological guarding as behavioral habit dismisses real sensory information.',
+      consequence:'He tries to comply and either can\'t, or does and experiences more discomfort. Either way, the message is that his body\'s signals are wrong.',
+      cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-sore-3'] = {
+  type:'calm', category:'Lingering Soreness',
+  context:'He\'s anxious about doing something he normally loves — running, playing, a physical activity — because of residual soreness from an injury. He\'s holding back and it\'s affecting his day.',
+  question:'Residual soreness is making him avoid something he loves. How do you handle the avoidance?',
+  choices:[
+    { icon:'🧭', text:'Help him assess the signal — is it protective pain or residual caution?', sub:'Give him the language to read his own body.',
+      outcome:'good', scores:{presence:9,timing:8,connection:9,control:9,regulation:9},
+      feedback:'Teaching him to distinguish between "this hurts in a way that means stop" and "this is leftover caution from something that\'s mostly healed" is a long-term skill. Not dismissing the signal — but helping him read it more precisely. "Does it hurt when you do this, or are you worried it might?"',
+      key_moves:['"Does it actually hurt right now, or does it feel scary to try?"','No right or wrong answer.','If it\'s caution: "Want to test it really gently and see?"'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🌱', text:'Let him return at his own pace', sub:'Forcing the return creates more avoidance.',
+      outcome:'good', scores:{presence:8,timing:9,connection:7,control:9,regulation:8},
+      feedback:'Pressuring return to activity after injury — even when the injury is resolved — creates performance anxiety on top of physical caution. Letting him find his own re-entry timeline, with gentle availability ("whenever you\'re ready, I\'ll be here"), produces faster actual recovery.',
+      key_moves:['Don\'t push the return.','Keep the activity available and low-pressure.','Celebrate the first time he does it again — specifically.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'💪', text:'Encourage him to push through — getting back to it breaks the avoidance cycle', sub:'The sooner he tries, the sooner he\'ll know it\'s okay.',
+      outcome:'risky', scores:{presence:4,timing:3,connection:4,control:3,regulation:4},
+      feedback:'This is sometimes right — graduated exposure to feared activities is a real therapeutic tool. But "push through" framing without the body-reading layer can teach him to override his own sensory signals generally, which is a pattern with long-term costs for a kid whose system already struggles to read internal states accurately.',
+      key_moves:['If you encourage return: frame it as a test, not a requirement.','Give him the out if it genuinely hurts.','The goal is information, not performance.'],
+      warning:'Pushing through without body-reading language can teach override of sensory signals.',
+      consequence:null, cascade_inject:null }
+  ]
+};
+
 
 // ═══════ STATE ═══════
 let run = { queue:[], index:0, history:[], situationId:'', situationColor:'' };
@@ -3082,6 +3876,7 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
   if (id === 'screen-arrive') updateArriveRead();
+  if (id !== 'screen-emergency') resetEmergency();
 }
 
 // ═══════ SIT GRID ═══════
@@ -3535,6 +4330,10 @@ function toggleRef(id) {
   document.getElementById(id).classList.toggle('open');
 }
 
+function toggleWhois(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
 // ═══════ DISCLOSURE DATA ═══════
 const DISCLOSURE_DATA = [
   {
@@ -3627,6 +4426,200 @@ function buildDisclosureSections() {
 function toggleDisclosure(id) {
   document.getElementById(id).classList.toggle('open');
 }
+
+// ═══════ EMERGENCY ENGINE ═══════
+const EMG_DATA = {
+  flood: {
+    label: '🌊 Flooding',
+    color: 'flood',
+    steps: [
+      { action: 'Stop talking',
+        why: 'Every word adds load to a system that\'s already full. Silence is not abandonment — it\'s the first de-escalation move.',
+        say: null },
+      { action: 'Lower your body and your voice',
+        why: 'His nervous system is mirroring yours. Slow, low, and calm on the outside helps calm the inside. Crouch. Sit down.',
+        say: null },
+      { action: 'Stay nearby — don\'t pursue',
+        why: 'Physical presence without pressure tells him the relationship is intact. Don\'t follow if he moves away. Don\'t disappear either.',
+        say: null },
+      { action: 'Wait. Actually wait.',
+        why: 'This will pass. It always passes. Your job is not to fix it — it\'s to not make it worse. That means waiting longer than feels comfortable.',
+        say: null },
+      { action: 'If you need to leave, name it first',
+        why: 'Then go to the next room. Stay in earshot. Don\'t slam anything.',
+        say: 'I\'m going to give us both some space. I\'m right here when you\'re ready.' }
+    ],
+    never: [
+      'Explain why he was wrong',
+      'Issue a consequence',
+      'Ask him why he did it',
+      'Tell him to calm down',
+      'Bring up what he said in anger',
+      'Make him apologize before he\'s ready'
+    ]
+  },
+  shutdown: {
+    label: '🧊 Shutdown',
+    color: 'shutdown',
+    steps: [
+      { action: 'Don\'t pursue',
+        why: 'Shutdown is protective. He has left the interaction because the system needed to stop. Pursuing him — physically or verbally — tells him the exit didn\'t work.',
+        say: null },
+      { action: 'Be present without requiring anything',
+        why: 'Sit somewhere nearby doing something quiet. Not waiting. Not watching. Just being in the space. This tells him the relationship is intact without asking him to perform.',
+        say: null },
+      { action: 'If you say anything — one sentence, then stop',
+        why: 'Keep your voice low and flat. No question at the end. Then actually stop.',
+        say: 'I\'m right here. No rush.' },
+      { action: 'Let him set the re-entry timeline',
+        why: 'He will come back when he\'s ready. Any pressure on that timeline extends the shutdown. Fast re-entry can look like recovery and not be — don\'t rush it.',
+        say: null }
+    ],
+    never: [
+      'Ask him what\'s wrong',
+      'Tell him he\'s being dramatic',
+      'Check in repeatedly',
+      'Require eye contact or a response',
+      'Fill the silence with talking'
+    ]
+  },
+  after: {
+    label: '🌱 After the Storm',
+    color: 'after',
+    steps: [
+      { action: 'Don\'t process it yet',
+        why: 'He\'s calm but not recovered. Moving straight to "let\'s talk about what happened" can reopen it. 20 minutes minimum before anything that resembles a debrief.',
+        say: null },
+      { action: 'Be somewhere warm and accessible',
+        why: 'Don\'t make him come find you in another room. Be visible. Be doing something low-key. The message is: the relationship is intact and there\'s something normal in front of us.',
+        say: null },
+      { action: 'If he comes to you sweet and close — receive it fully',
+        why: 'That\'s a repair bid. He\'s reaching back toward you. No lesson attached. No reference to the storm. Just warmth.',
+        say: null },
+      { action: 'One specific true thing, said quietly',
+        why: 'Not "you\'re such a good kid." Find something real and recent — something he made, figured out, or did. Say it once. Let it land.',
+        say: null }
+    ],
+    never: [
+      'Reference what he said during the meltdown',
+      'Attach a lesson to his repair bid',
+      'Process it before the connection is repaired',
+      'Require an apology',
+      'Act like everything is fine before it is'
+    ]
+  }
+};
+
+let emgState = null;
+let emgStep = 0;
+
+function startEmergency(state) {
+  emgState = state;
+  emgStep = 0;
+  document.getElementById('emg-triage-view').style.display = 'none';
+  const stepView = document.getElementById('emg-step-view');
+  stepView.style.display = 'block';
+  stepView.scrollTop = 0;
+  renderEmgStep();
+}
+
+function resetEmergency() {
+  emgState = null;
+  emgStep = 0;
+  document.getElementById('emg-triage-view').style.display = 'block';
+  document.getElementById('emg-step-view').style.display = 'none';
+  // close why if open
+  const why = document.getElementById('emg-step-why');
+  const toggle = document.getElementById('emg-why-toggle');
+  why.classList.remove('open');
+  toggle.classList.remove('open');
+}
+
+function renderEmgStep() {
+  const data = EMG_DATA[emgState];
+  const steps = data.steps;
+  const total = steps.length;
+  const step = steps[emgStep];
+  const isLast = emgStep === total - 1;
+
+  // Badge
+  const badge = document.getElementById('emg-badge');
+  badge.textContent = data.label;
+  badge.className = `emg-step-badge ${data.color}`;
+
+  // Progress
+  const prog = document.getElementById('emg-progress');
+  prog.style.width = `${((emgStep + 1) / total) * 100}%`;
+  prog.className = `emg-progress-fill ${data.color}`;
+
+  // Step content
+  document.getElementById('emg-step-num').textContent = `Step ${emgStep + 1} of ${total}`;
+  document.getElementById('emg-step-action').textContent = step.action;
+
+  // Say block
+  const sayEl = document.getElementById('emg-step-say');
+  if (step.say) {
+    sayEl.textContent = `"${step.say}"`;
+    sayEl.style.display = 'block';
+  } else {
+    sayEl.style.display = 'none';
+  }
+
+  // Why — reset closed
+  const why = document.getElementById('emg-step-why');
+  const toggle = document.getElementById('emg-why-toggle');
+  why.textContent = step.why;
+  why.classList.remove('open');
+  toggle.classList.remove('open');
+
+  // Nav buttons
+  const nav = document.getElementById('emg-step-nav');
+  const prevBtn = emgStep > 0
+    ? `<button class="btn-secondary" onclick="emgNav(-1)">← Back</button>` : '';
+  const nextBtn = isLast
+    ? `<button class="btn-primary" onclick="emgFinish()">Done →</button>`
+    : `<button class="btn-primary" onclick="emgNav(1)">Next →</button>`;
+  nav.innerHTML = prevBtn + nextBtn;
+
+  // Never list — show on last step
+  const neverEl = document.getElementById('emg-never');
+  const neverItems = document.getElementById('emg-never-items');
+  const doneEl = document.getElementById('emg-done');
+  doneEl.style.display = 'none';
+
+  if (isLast) {
+    neverEl.style.display = 'block';
+    neverItems.innerHTML = data.never.map(n =>
+      `<div class="emg-never-item">${n}</div>`
+    ).join('');
+  } else {
+    neverEl.style.display = 'none';
+  }
+
+  // Scroll step view to top
+  const stepView = document.getElementById('emg-step-view');
+  stepView.scrollTop = 0;
+}
+
+function emgNav(dir) {
+  emgStep += dir;
+  renderEmgStep();
+}
+
+function emgFinish() {
+  document.getElementById('emg-step-nav').innerHTML = '';
+  document.getElementById('emg-never').style.display = 'none';
+  document.getElementById('emg-done').style.display = 'block';
+  document.getElementById('emg-step-view').scrollTop = 9999;
+}
+
+function toggleEmgWhy() {
+  const why = document.getElementById('emg-step-why');
+  const toggle = document.getElementById('emg-why-toggle');
+  why.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
 
 buildSitGrid();
 buildRefSections();
