@@ -82,6 +82,24 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .mode-card-arrow{position:absolute;right:20px;top:50%;transform:translateY(-50%);color:var(--copper);font-size:1.2rem;opacity:0.5;transition:opacity 0.2s,transform 0.2s;}
 .mode-card:hover .mode-card-arrow{opacity:1;transform:translateY(-50%) translateX(3px);}
 
+/* ── ONBOARDING OVERLAY ── */
+.onboard-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,6,4,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.onboard-overlay.hidden{display:none;}
+.onboard-card-wrap{width:100%;max-width:360px;}
+.onboard-card{background:var(--ink2);border:1px solid rgba(200,114,42,0.25);border-radius:24px;padding:36px 28px 28px;text-align:center;animation:onboardIn 0.45s cubic-bezier(0.34,1.2,0.64,1) both;}
+@keyframes onboardIn{from{opacity:0;transform:translateY(24px) scale(0.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+.onboard-icon{font-size:3rem;margin-bottom:16px;display:block;animation:iconBounce 0.6s cubic-bezier(0.34,1.4,0.64,1) 0.3s both;}
+@keyframes iconBounce{from{opacity:0;transform:scale(0.4);}to{opacity:1;transform:scale(1);}}
+.onboard-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--foam);margin-bottom:10px;line-height:1.2;}
+.onboard-title em{font-style:italic;color:var(--copper2);}
+.onboard-body{font-size:0.82rem;color:var(--muted2);line-height:1.7;margin-bottom:24px;}
+.onboard-body strong{color:var(--parchment);}
+.onboard-next{width:100%;background:linear-gradient(135deg,var(--copper),var(--copper2));border:none;border-radius:var(--rad);padding:14px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;color:var(--ink);cursor:pointer;letter-spacing:0.5px;transition:all 0.2s;box-shadow:0 4px 20px rgba(200,114,42,0.25);}
+.onboard-next:active{transform:scale(0.98);}
+.onboard-skip{margin-top:14px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.72rem;cursor:pointer;letter-spacing:1px;text-transform:uppercase;}
+.onboard-dots{display:flex;gap:8px;justify-content:center;margin-top:20px;}
+.onboard-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s;}
+.onboard-dot.active{background:var(--copper);box-shadow:0 0 8px var(--copper-glow);width:18px;border-radius:4px;}
 /* ── VERSION BADGE ── */
 .version-badge{
   display:flex;align-items:center;gap:7px;
@@ -133,8 +151,9 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 }
 
 /* Flip card — add subtle shadow lift on flip */
+/* Flipped card gets a warm glow */
 .flip-card-outer.flipped .flip-card-inner{
-  filter:drop-shadow(0 8px 24px rgba(200,114,42,0.12));
+  filter:drop-shadow(0 4px 16px rgba(200,114,42,0.15));
 }
 
 /* Ingredient row hover */
@@ -227,28 +246,50 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .recipe-grid{display:flex;flex-direction:column;gap:16px;}
 
 /* ── FLIP CARDS ── */
-.flip-card-outer{perspective:1200px;cursor:pointer;}
-/* Use CSS grid so both faces occupy the same cell and size each other.
-   This prevents the absolute-positioned back face from overflowing
-   the card container and overlapping adjacent cards. */
+.flip-card-outer{cursor:pointer;position:relative;}
+/* Cross-browser flip: no 3D transforms at all.
+   Front and back both sit in the same space via absolute positioning.
+   Swap is driven by opacity + pointer-events.
+   A subtle scale pulse gives the feel of a physical flip without WebKit bugs. */
 .flip-card-inner{
-  display:grid;
+  position:relative;
   width:100%;
-  transform-style:preserve-3d;
-  transition:transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+  min-height:148px;
   border-radius:var(--rad2);
 }
-.flip-card-outer.flipped .flip-card-inner{transform:rotateY(180deg);}
+/* Both faces stack in the same space */
 .card-face{
-  grid-area:1/1;
   width:100%;
-  backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
   border-radius:var(--rad2);
   overflow:hidden;
+  transition:opacity 0.28s ease, transform 0.28s cubic-bezier(0.4,0,0.2,1);
 }
-.card-back{transform:rotateY(180deg);}
-.card-front{background:var(--ink2);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:stretch;min-height:130px;position:relative;overflow:hidden;}
+.card-back{
+  position:absolute;
+  top:0;left:0;right:0;
+  opacity:0;
+  pointer-events:none;
+  transform:scale(0.97);
+}
+.card-front{
+  background:var(--ink2);
+  border:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:stretch;
+  min-height:148px;position:relative;overflow:hidden;
+  opacity:1;
+  transform:scale(1);
+}
+/* Flipped state: hide front, show back */
+.flip-card-outer.flipped .card-front{
+  opacity:0;
+  pointer-events:none;
+  transform:scale(0.97);
+}
+.flip-card-outer.flipped .card-back{
+  opacity:1;
+  pointer-events:auto;
+  transform:scale(1);
+}
 .card-front::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.025) 0%,transparent 50%);pointer-events:none;}
 .card-glass-panel{width:100px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:16px 8px;position:relative;}
 .card-info{flex:1;padding:18px 16px 18px 8px;display:flex;flex-direction:column;justify-content:space-between;}
@@ -477,7 +518,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
       <p class="splash-sub fade-in fade-in-d2">Homebrew Training System</p>
       <div class="version-badge fade-in fade-in-d2">
         <span class="version-dot"></span>
-        Homebrewer Review Edition · v1E
+        Homebrewer Review Edition · v2
       </div>
       <div class="hop-divider fade-in fade-in-d2"><div class="hop-line"></div><div class="hop-icon">✿</div><div class="hop-line"></div></div>
       <div class="mode-cards fade-in fade-in-d3">
@@ -558,6 +599,17 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
   </div>
 </div>
 
+<!-- ═══════════════ ONBOARDING OVERLAY ═══════════════ -->
+<div class="onboard-overlay hidden" id="onboard-overlay">
+  <div class="onboard-card-wrap">
+    <div class="onboard-card" id="onboard-card"></div>
+    <div class="onboard-dots">
+      <div class="onboard-dot active" id="od-0"></div>
+      <div class="onboard-dot" id="od-1"></div>
+      <div class="onboard-dot" id="od-2"></div>
+    </div>
+  </div>
+</div>
 <!-- ═══════════════ BOTTOM NAV ═══════════════ -->
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-home" onclick="goTo('screen-home')"><span class="nav-icon">🏠</span>Home</button>
@@ -655,6 +707,107 @@ const RECIPES = [
       {title:'Pour the German Way',time:'1 min',body:'Rinse glass with cold water. Pour ⅔ at 45°, then tilt upright for the rest. Roll the last inch to rouse yeast sediment, pour it on top. The haze is the style.'},
     ],
     tips:['WY3068 ferments violently. Use a blow-off tube (1/2-inch tubing into the airlock grommet, other end in Star San) instead of an airlock for the first 48 hours.','Banana = warm fermentation. Clove = cool. The ratio of these two makes a great hefeweizen.','Don\'t filter this beer. The cloudiness is authentic — it\'s yeast in suspension and it\'s part of the flavor.','Best consumed within 6 weeks of bottling. The banana character fades with age.'],
+    simId:'hefe', },
+
+  { id:'wcipa', name:'West Coast IPA', family:'hoppy', subtitle:'Bitter, Clear & Uncompromising',
+    tags:['Intermediate','Hoppy','5-Gal'], highlight:'ABV 6.0–7.5%', locked:false,
+    glass:'pint_amber', glassW:80, glassH:110, bgColor:'#5a7010', flavorColor:'#90c020',
+    description:'The West Coast IPA is all edge — aggressively bitter, crystal clear, and dry as a bone. Higher alcohol, higher IBUs, and less margin for error than a Pale Ale. Dry-hopping is essential. Cold crashing for clarity is expected.',
+    flavor:{bitter:95,malt:35,sweet:15,aroma:80}, abv:'6.0–7.5%', ibu:'50–75', difficulty:'Intermediate', time:'~5 weeks',
+    ingredients:[
+      {type:'malt',icon:'🌾',name:'Extra Light DME',amount:'9 lbs',role:'High fermentable base · very light color'},
+      {type:'malt',icon:'🌾',name:'Crystal 10L',amount:'0.25 lbs',role:'Minimal color · slight sweetness to balance bitterness'},
+      {type:'hops',icon:'🌿',name:'Magnum Hops (bittering)',amount:'1 oz',role:'60 min · clean neutral bitterness backbone'},
+      {type:'hops',icon:'🌿',name:'Centennial Hops (flavor)',amount:'1 oz',role:'15 min · floral and citrus flavor'},
+      {type:'hops',icon:'🌿',name:'Cascade + Centennial (aroma)',amount:'1 oz each',role:'0 min flameout · big citrus/floral nose'},
+      {type:'hops',icon:'🌿',name:'Cascade Dry Hop',amount:'1.5 oz',role:'Added to fermenter day 5 · intense aroma'},
+      {type:'yeast',icon:'🔬',name:'US-05 American Ale Yeast',amount:'1 packet',role:'Clean neutral fermentation · lets hops dominate'},
+      {type:'other',icon:'💧',name:'Water',amount:'5 gallons',role:'Sulfate-forward water profile enhances hop bitterness'},
+      {type:'other',icon:'🍬',name:'Priming Sugar',amount:'¾ cup',role:'Medium-high carbonation'},
+    ],
+    steps:[
+      {title:'Sanitize Everything',time:'30 min',body:'Full sanitize — fermenter, dry hop bag, auto-siphon, airlock. Dry hopping adds an extra contact point that needs to be clean.'},
+      {title:'Steep Crystal 10L',time:'15 min',body:'Heat 2.5 gallons to 155°F. Steep Crystal 10L for 15 minutes — minimal color and sweetness addition only.'},
+      {title:'Add DME & Boil',time:'15 min',body:'Off heat, stir in 9 lbs Extra Light DME completely. Return to heat, bring to rolling boil.'},
+      {title:'60-Min Bittering Addition',time:'60 min',body:'Add 1 oz Magnum at start of boil. Magnum is a clean bittering hop — high alpha acid, neutral flavor, builds the bitter foundation.',warning:'West Coast IPAs are about hop layering. Different additions at different times build bitterness, flavor, and aroma independently.'},
+      {title:'15-Min Flavor Addition',time:'15 min',body:'Add 1 oz Centennial with 15 minutes left. Adds floral and grapefruit flavor that survives the boil.'},
+      {title:'Flameout Aroma Addition',time:'0 min',body:'Turn off heat. Add 1 oz Cascade and 1 oz Centennial. Steep 15 minutes before chilling. These bridge the boil additions and dry hopping.'},
+      {title:'Cool & Pitch',time:'30-45 min',body:'Cool to 65-68°F. Pitch US-05. Ferment at 65-68°F for clean fermentation — lets the hops be the star.'},
+      {title:'Dry Hop on Day 5',time:'5 min active',body:'When active fermentation slows (day 4-6), add 1.5 oz Cascade directly to the fermenter. Leave for 3-4 days.',warning:'Don\\\'t dry hop during peak fermentation — CO2 will scrub the aroma compounds out of the beer.'},
+      {title:'Cold Crash',time:'48 hrs',body:'After dry hopping, move fermenter to the coldest place you have (ideally 35-40°F) for 48 hours. This gives you West Coast clarity.'},
+      {title:'Bottle',time:'2 hrs',body:'Siphon carefully to avoid disturbing settled trub. Prime with ¾ cup corn sugar. Condition 2 weeks.'},
+    ],
+    tips:[
+      'Sulfate-heavy water (adding gypsum) amplifies hop bitterness and dryness — even a pinch makes a noticeable difference.',
+      'The cold crash is not optional for this style. A hazy West Coast IPA is an unfinished one.',
+      'Dry hopping during active fermentation wastes hops. Wait for the krausen to drop.',
+      'Best within 6 weeks of packaging. Hop aroma fades fast.',
+    ],
+    simId:'wcipa',
+  },
+
+  { id:'amber', name:'American Amber Ale', family:'light', subtitle:'The Middle Ground',
+    tags:['Beginner','Malty','5-Gal'], highlight:'ABV 4.5–6.2%', locked:false,
+    glass:'pint_amber', glassW:80, glassH:110, bgColor:'#6a3010', flavorColor:'#b05820',
+    description:'The American Amber sits between a Pale Ale and a Brown — caramel malt forward, reddish-amber color, moderate hops that complement rather than dominate. A great second recipe because it teaches you how caramel malts work.',
+    flavor:{bitter:42,malt:72,sweet:58,aroma:45}, abv:'4.5–6.2%', ibu:'25–40', difficulty:'Beginner', time:'~4 weeks',
+    ingredients:[
+      {type:'malt',icon:'🌾',name:'Pale DME',amount:'5.5 lbs',role:'Fermentable base'},
+      {type:'malt',icon:'🌾',name:'Crystal 60L',amount:'0.75 lbs',role:'Deep caramel flavor · reddish color · signature amber character'},
+      {type:'malt',icon:'🌾',name:'Crystal 120L',amount:'0.25 lbs',role:'Dark caramel · dried fruit notes · deeper color'},
+      {type:'hops',icon:'🌿',name:'Centennial (bittering)',amount:'0.75 oz',role:'60 min · moderate bitterness'},
+      {type:'hops',icon:'🌿',name:'Cascade (aroma)',amount:'0.5 oz',role:'5 min · light citrus'},
+      {type:'yeast',icon:'🔬',name:'US-05 American Ale Yeast',amount:'1 packet',role:'Clean fermentation · lets malt character show'},
+      {type:'other',icon:'💧',name:'Water',amount:'5 gallons',role:'Standard filtered or spring water'},
+      {type:'other',icon:'🍬',name:'Priming Sugar',amount:'¾ cup',role:'Standard carbonation'},
+    ],
+    steps:[
+      {title:'Sanitize',time:'30 min',body:'Full sanitize as always.'},
+      {title:'Steep Both Crystal Malts',time:'20 min',body:'Heat 2.5 gallons to 154°F. Steep Crystal 60L and 120L together for 20 minutes. The combination gives layered caramel — lighter from the 60L, dark caramel and raisin from the 120L.',warning:'Crystal malts above 80L extract quickly. Don\\\'t push past 20 minutes or the dark caramel turns harsh.'},
+      {title:'Add DME & Boil',time:'15 min',body:'Off heat, add 5.5 lbs DME, dissolve fully, return to boil.'},
+      {title:'Bittering Hops',time:'60 min',body:'Add 0.75 oz Centennial at start of 60-minute boil. Lower hop rate than the APA — in an Amber, hops balance the malt rather than dominate.'},
+      {title:'Aroma Hops',time:'5 min',body:'Add 0.5 oz Cascade with 5 minutes left. A hint of citrus to brighten the finish.'},
+      {title:'Cool, Pitch & Ferment',time:'30-45 min',body:'Cool to 65-70°F. Pitch US-05. Ferment at 65-68°F for 12-14 days.'},
+      {title:'Bottle & Condition',time:'2 hrs',body:'Prime with ¾ cup corn sugar. Condition 2-3 weeks. The caramel character rounds out with an extra week of conditioning.'},
+    ],
+    tips:[
+      'Crystal 60L is the workhorse of the Amber Ale — it gives the signature caramel sweetness and red-amber color.',
+      'If the finished beer tastes too sweet, fermentation temperature ran high. Try a degree or two cooler next batch.',
+      'Great style to brew back-to-back with an APA. Same yeast, similar process, completely different result from the specialty grain.',
+      'American Amber teaches you that malt is not just the substrate the hops sit on top of.',
+    ],
+    simId:null,
+  },
+
+  { id:'oatstout', name:'Oatmeal Stout', family:'dark', subtitle:'Silk in a Dark Glass',
+    tags:['Intermediate','Dark','5-Gal'], highlight:'ABV 4.5–6.0%', locked:false,
+    glass:'pint_black', glassW:80, glassH:110, bgColor:'#180a04', flavorColor:'#503020',
+    description:'Where the Irish Dry Stout is lean and roasty, the Oatmeal Stout is rich and silky. Oats add a protein-heavy body that feels almost creamy. Less dry than the Irish, with chocolate and coffee character plus a soft roundness that makes it dangerously drinkable.',
+    flavor:{bitter:38,malt:85,sweet:65,aroma:50}, abv:'4.5–6.0%', ibu:'20–40', difficulty:'Intermediate', time:'~5 weeks',
+    ingredients:[
+      {type:'malt',icon:'🌾',name:'Dark LME',amount:'6 lbs',role:'Dark fermentable base · roasty backbone'},
+      {type:'malt',icon:'🌾',name:'Flaked Oats',amount:'1 lb',role:'Signature silky body · the defining ingredient'},
+      {type:'malt',icon:'🌾',name:'Roasted Barley',amount:'0.5 lbs',role:'Coffee and dark chocolate character'},
+      {type:'malt',icon:'🌾',name:'Chocolate Malt',amount:'0.25 lbs',role:'Smooth chocolate complexity · less harsh than roasted barley alone'},
+      {type:'hops',icon:'🌿',name:'East Kent Goldings',amount:'1.5 oz',role:'60 min · earthy, restrained bitterness'},
+      {type:'yeast',icon:'🔬',name:'Wyeast 1084 Irish Ale',amount:'1 smack pack',role:'Slight fruitiness that complements chocolate character'},
+      {type:'other',icon:'💧',name:'Water',amount:'5 gallons',role:'Soft water preferred'},
+      {type:'other',icon:'🍬',name:'Priming Sugar',amount:'½ cup',role:'Low carbonation — same philosophy as Irish Stout'},
+    ],
+    steps:[
+      {title:'Sanitize',time:'30 min',body:'Full sanitize. Activate WY1084 smack pack 3 hours before brew day.'},
+      {title:'Steep Specialty Grains',time:'30 min',body:'Heat 2.5 gallons to 154°F. Steep flaked oats, roasted barley, and chocolate malt together for 30 minutes.',warning:'Flaked oats in an extract steep is an approximation — you won\\\'t get full starch conversion, but proteins and beta-glucans still contribute to mouthfeel.'},
+      {title:'Add LME & Boil',time:'15 min',body:'Off heat, add 6 lbs Dark LME. Dark LME contributes roasty color and flavor alongside the specialty grains. Dissolve fully, return to boil.'},
+      {title:'60-Min Hop Addition',time:'60 min',body:'Add 1.5 oz East Kent Goldings at boil start. Earthy and restrained — balances malt sweetness without competing with chocolate character.'},
+      {title:'Cool & Pitch',time:'30-45 min',body:'Cool to 65-68°F. Pitch WY1084. Ferment at 65-68°F for 14 days.'},
+      {title:'Extended Conditioning',time:'3 weeks',body:'Condition for 3 weeks instead of 2 after bottling. Oat character and chocolate malt complexity round out significantly with the extra time.'},
+    ],
+    tips:[
+      'Flaked oats must be in significant quantity to matter — less than 10% of the grain bill and you\\\'ll barely notice them.',
+      'Dark LME varies by brand. Muntons and Briess are most consistent.',
+      'This beer pairs well with chocolate desserts, oysters, and barbecue.',
+      'The Oatmeal Stout is a great first all-grain recipe — the process is forgiving and results are dramatically better than extract.',
+    ],
     simId:null,
   },
 ];
@@ -720,6 +873,188 @@ const SIM_RECIPES = {
         {text:'Clean the outside, re-seat the lid with a new sanitized airlock. Move on.',scores:{quality:+8,technique:+8,knowledge:+8},outcome:'good',feedback:'Exactly right. Active fermentation produces CO2 at such a rate it\'s protecting the beer — the outgassing pushes contaminants away. Re-seal, sanitize the exterior, let it run.',tip:'Irish Ale yeast (WY1084) is famous for violent fermentation. Always use a blow-off tube for the first 48 hours with this strain.'},
         {text:'The beer is contaminated. Pour it out and start over.',scores:{quality:-5,technique:0,knowledge:-8},outcome:'bad',feedback:'Over-reaction. Active fermentation protects itself. The CO2 creates a blanket keeping oxygen and contaminants out. This is solvable.',tip:'The most expensive mistakes in homebrewing come from dumping beer prematurely. Give the beer a chance.'},
         {text:'Add a blow-off tube to the fermenter and let it vent into a jar of sanitizer.',scores:{quality:+10,technique:+10,knowledge:+10},outcome:'good',feedback:'Perfect. This is exactly what a blow-off tube is for. You\'ve turned an emergency into a learning moment AND improved your setup mid-brew. That\'s how good brewers think.',tip:'A blow-off tube is a piece of 1/2-inch (or 5/8-inch) tubing that fits into your airlock grommet hole, with the other end dropping into a jar of Star San. Costs nothing. Saves batches.'},
+      ]},
+    ],
+  },
+
+  hefe: {
+    name:'Hefeweizen', glassColor:'#d4b040',
+    scenarios:[
+      {id:'hf1',step:'Yeast Activation',type:'normal',
+      context:'You have WY3068 Weihenstephan Weizen — a smack pack. It is brew day morning. You forgot to take it out of the fridge last night.',
+      question:'The pack is cold and hasn\'t been activated. You need it ready in 3 hours. What do you do?',
+      choices:[
+        {text:'Smack it now and leave it at room temperature. Three hours is cutting it close but workable.',
+        scores:{quality:+5,technique:+5,knowledge:+6},outcome:'good',
+        feedback:'Reasonable call. WY3068 activates in 2-4 hours at room temperature when starting from fridge temp. Three hours is the short end but usually sufficient.',
+        tip:'Wyeast recommends activating smack packs 3-6 hours before pitching. For cold packs, 4-6 hours is more reliable.'},
+        {text:'Warm it in your hands and near a warm lamp to speed activation.',
+        scores:{quality:+7,technique:+7,knowledge:+8},outcome:'good',
+        feedback:'Smart. Gently warming the pack shortens activation time without stressing the yeast. You are looking for the pack to swell and feel pressurized — that is CO2 from active yeast.',
+        tip:'Never use hot water — anything above 90°F can start killing yeast cells. Body temperature is the ceiling for warming.'},
+        {text:'Skip the smack pack step — just pitch it cold straight from the fridge.',
+        scores:{quality:-8,technique:-6,knowledge:-5},outcome:'bad',
+        feedback:'Pitching cold, unactivated yeast into warm wort causes severe thermal shock. The yeast goes into stress mode. For a hefeweizen where the yeast IS the flavor, stressed yeast produces the wrong esters at the wrong levels.',
+        tip:'WY3068 stressed at pitch produces harsh phenols rather than the clean banana-clove balance you want. Activation is not optional for this style.'},
+      ]},
+      {id:'hf2',step:'Fermentation Temperature',type:'normal',
+      context:'Your wort is cooled and ready to pitch. You need to decide your fermentation temperature before you pitch — it sets the flavor direction of the entire batch.',
+      question:'What fermentation temperature do you target?',
+      choices:[
+        {text:'Pitch at 62°F and hold steady. Lower temperature for more clove character.',
+        scores:{quality:+6,technique:+7,knowledge:+8},outcome:'good',
+        feedback:'Solid choice for a clove-forward hefeweizen. WY3068 at 62°F produces more 4-vinyl guaiacol (clove) relative to isoamyl acetate (banana). Traditional Bavarian breweries often pitch cool.',
+        tip:'A ferulic acid rest at 113°F during the mash (all-grain) dramatically increases clove character. In an extract brew, pitching cool is your main lever.'},
+        {text:'Pitch at 66°F and let it free-rise to 68°F. Targeting the banana-clove balance.',
+        scores:{quality:+10,technique:+8,knowledge:+10},outcome:'good',
+        feedback:'The sweet spot for a balanced hefeweizen — enough warmth for isoamyl acetate production, cool enough to keep 4-vinyl guaiacol present. Free-rise fermentation mimics how many German breweries ferment this style.',
+        tip:'WY3068 is predictable in this range. The banana-clove ratio you get is what made Weihenstephan famous.'},
+        {text:'Pitch at 72°F for maximum banana character — that is what most people expect.',
+        scores:{quality:-4,technique:-3,knowledge:-4},outcome:'bad',
+        feedback:'72°F pushes WY3068 into ester overdrive. You\'ll get banana in spades but almost no clove, and at that temperature you also risk harsher fusel alcohols. A one-dimensional banana bomb is not a great hefeweizen.',
+        tip:'The best hefeweizens have tension between banana and clove. If one completely dominates, something went wrong.'},
+      ]},
+      {id:'hf-cb1',step:'Fermentation Day 1',type:'curveball',
+      context:'18 hours after pitching WY3068, you check your fermenter. The airlock is not bubbling — it is submerged in foam that pushed out through the airlock hole and is running down the bucket.',
+      question:'WY3068 is living up to its reputation. What do you do right now?',
+      choices:[
+        {text:'Set up a blow-off tube immediately — 1/2-inch tubing from the grommet hole into a jar of Star San.',
+        scores:{quality:+10,technique:+10,knowledge:+10},outcome:'good',
+        feedback:'Perfect. This is exactly the situation blow-off tubes exist for. WY3068 is infamous for this behavior — some brewers set up the blow-off tube before pitching as standard practice.',
+        tip:'Always use a blow-off tube for the first 48 hours with WY3068. Without exception.'},
+        {text:'Clean up the mess, replace the airlock with a clean sanitized one, and monitor closely.',
+        scores:{quality:+4,technique:+4,knowledge:+4},outcome:'mid',
+        feedback:'Workable but you are fighting a losing battle. If it overflowed once, it will likely overflow again within hours. The airlock is not the right tool for this strain at peak fermentation.',
+        tip:'A replacement airlock buys you maybe another hour. The blow-off tube is the real solution.'},
+        {text:'Remove the lid entirely and cover with sanitized aluminum foil.',
+        scores:{quality:-6,technique:-4,knowledge:-3},outcome:'bad',
+        feedback:'Open fermentation is a real technique some breweries use intentionally. But loose foil over a bucket is not controlled open fermentation — you are introducing oxygen and contamination risk at the worst possible time.',
+        tip:'Open fermentation requires a dedicated vessel and controlled environment. Foil over a bucket is not that.'},
+      ]},
+      {id:'hf3',step:'Post-Fermentation',type:'normal',
+      context:'Fermentation is complete. A friend who brews IPAs suggests you dry hop your hefeweizen with some Mosaic to add a fruity kick and modernize it.',
+      question:'Do you dry hop your hefeweizen?',
+      choices:[
+        {text:'No. The style is defined by yeast character, not hop aroma. Keep it traditional.',
+        scores:{quality:+10,technique:+6,knowledge:+10},outcome:'good',
+        feedback:'Correct. A hefeweizen\'s aroma comes entirely from the yeast — banana, clove, sometimes a hint of vanilla. Adding dry hops competes with and muddles the yeast character that is the whole point.',
+        tip:'Dry hopped hefeweizens exist and some are good. But they are a different beer. If you want to know if your process worked, brew it clean first.'},
+        {text:'Add a small amount — half an ounce of something neutral like Hallertau for depth.',
+        scores:{quality:-2,technique:-2,knowledge:-4},outcome:'mid',
+        feedback:'Hallertau is at least a style-appropriate hop, but any dry hopping on a hefeweizen risks masking the yeast esters you worked to develop.',
+        tip:'If you must hop it, use a noble variety at flameout — not dry hopping. The style has no tradition of dry hopping.'},
+        {text:'Go for it — a pound of Mosaic will make it more interesting.',
+        scores:{quality:-12,technique:-8,knowledge:-10},outcome:'bad',
+        feedback:'A pound of Mosaic will completely overpower everything the yeast produced. You\'ll have a cloudy, tropical-smelling wheat beer that tastes nothing like a hefeweizen.',
+        tip:'Knowing when not to add something is a brewing skill. The hefeweizen is a study in restraint.'},
+      ]},
+      {id:'hf4',step:'The Pour',type:'checkin',
+      context:'Your hefeweizen is carbonated and cold. Your friend grabs the bottle and starts pouring it like a regular beer — going steady until full, leaving the last inch of cloudy sediment in the bottle.',
+      question:'Do you intervene?',
+      choices:[
+        {text:'Yes — the yeast sediment is part of the style. Show them the German pour.',
+        scores:{quality:+8,technique:+6,knowledge:+8},outcome:'good',
+        feedback:'The German hefeweizen pour: fill 2/3 of the glass, set the bottle down, roll it gently to rouse the yeast sediment, then pour the rest in one motion. The yeast goes into the glass, not down the drain.',
+        tip:'The yeast sediment is not waste — it\'s flavor, protein, and part of the authentic appearance. A bottled hefeweizen without the sediment poured in is incomplete.'},
+        {text:'Let them pour however they want — it\'s their beer.',
+        scores:{quality:-2,technique:0,knowledge:-4},outcome:'mid',
+        feedback:'Hospitality, sure. But they are missing a real part of the experience. The yeast in suspension contributes to the flavor. A hefeweizen poured clear tastes flatter.',
+        tip:'Teaching someone the pour is part of sharing a hefeweizen. It genuinely changes the drinking experience.'},
+        {text:'Stop them mid-pour and take over completely.',
+        scores:{quality:+4,technique:+4,knowledge:+4},outcome:'mid',
+        feedback:'Well-intentioned but slightly awkward. Better to let them finish and explain for the next bottle.',
+        tip:'Explain the pour technique before opening the next bottle, not mid-pour of this one.'},
+      ]},
+      {id:'hf-cb2',step:'Tasting',type:'curveball',
+      context:'You pour the finished beer. Beautifully cloudy, great head. But the aroma is overwhelmingly banana — almost like banana candy. There is no clove whatsoever. It tastes one-dimensional.',
+      question:'What happened and what do you do next time?',
+      choices:[
+        {text:'Fermentation ran too warm. Next batch: pitch cooler and hold temperature more tightly.',
+        scores:{quality:+4,technique:+6,knowledge:+10},outcome:'good',
+        feedback:'Exactly right. Excess isoamyl acetate (banana ester) is almost always a sign of fermentation temperature running high. WY3068 above 70°F produces ester overdrive. The fix: pitch at 64-66°F and hold.',
+        tip:'Keep a brewing log. Write down pitch temp, ambient temp, and peak fermentation temp for every batch. Pattern recognition is how you improve.'},
+        {text:'The yeast was bad or old. Buy a fresh pack next time.',
+        scores:{quality:0,technique:0,knowledge:-6},outcome:'bad',
+        feedback:'Unlikely. WY3068 producing too much banana is a sign of ideal conditions for ester production — usually too warm. Old or stressed yeast would produce off-flavors like sulfur or acetaldehyde, not clean banana esters in excess.',
+        tip:'Over-banana in a hefeweizen almost always means temperature. Under-banana usually means too cold. The yeast is rarely the culprit.'},
+        {text:'Add cold-side clarifying agents to strip the ester character.',
+        scores:{quality:-5,technique:-3,knowledge:-8},outcome:'bad',
+        feedback:'You can\'t clarify out ester compounds — they\'re dissolved in the beer, not suspended particles. Fining agents remove yeast and proteins. The banana flavor is in the liquid itself.',
+        tip:'What\'s in solution stays in solution. Fix ester problems at fermentation temperature, not post-fermentation.'},
+      ]},
+    ],
+  },
+
+  wcipa: {
+    name:'West Coast IPA', glassColor:'#90c020',
+    scenarios:[
+      {id:'wc1',step:'Water Profile',type:'normal',
+      context:'Before you brew, you keep reading about water chemistry for West Coast IPAs — specifically sulfate levels. Your tap water shows low sulfate (around 50 ppm). The recommended level for WCIPA is 150-300 ppm.',
+      question:'Do you adjust your water chemistry?',
+      choices:[
+        {text:'Yes — add gypsum (calcium sulfate) to hit ~200 ppm sulfate.',
+        scores:{quality:+10,technique:+10,knowledge:+10},outcome:'good',
+        feedback:'This is the single highest-impact thing you can do for a West Coast IPA beyond the hops themselves. Sulfate ions interact with iso-alpha acids from hops to produce a drier, sharper, more pronounced bitterness.',
+        tip:'For 5 gallons, roughly 1 teaspoon of gypsum raises sulfate by ~100 ppm. Start there and dial in over batches.'},
+        {text:'Skip it — water chemistry is advanced and you don\'t want to overcomplicate a first IPA.',
+        scores:{quality:-3,technique:-2,knowledge:-3},outcome:'mid',
+        feedback:'Reasonable for a first batch. The beer will still taste like an IPA. But you\'ll notice the difference if you ever brew the same recipe with adjusted water — the sulfate-forward version will taste sharper and drier.',
+        tip:'Water chemistry is the most underrated brewing variable. Even a single gypsum addition is worth experimenting with.'},
+        {text:'Use bottled spring water instead — more consistent mineral profile.',
+        scores:{quality:+4,technique:+5,knowledge:+5},outcome:'mid',
+        feedback:'Better than random tap water. Spring water profiles vary by brand but are generally moderate in minerals. You\'re unlikely to hit ideal WCIPA sulfate levels, but you\'ll have a predictable starting point.',
+        tip:'Check the mineral report on your spring water brand\'s website — many publish full water chemistry.'},
+      ]},
+      {id:'wc2',step:'Dry Hopping',type:'normal',
+      context:'It\'s day 4. Fermentation looks mostly complete — airlock activity is minimal. You\'re eager to add your dry hops. But you haven\'t taken a gravity reading yet.',
+      question:'Do you add the dry hops now?',
+      choices:[
+        {text:'Take a gravity reading first. If it\'s at or near expected FG, add the dry hops.',
+        scores:{quality:+10,technique:+10,knowledge:+10},outcome:'good',
+        feedback:'The right call every time. Dry hopping during active fermentation lets CO2 scrub out the volatile aroma compounds you paid for. A gravity reading takes 5 minutes.',
+        tip:'Expected FG for a 9 lb DME batch with US-05 is around 1.010-1.014. If you\'re there, you\'re safe to dry hop.'},
+        {text:'Add them now — day 4 is long enough and you don\'t want to wait.',
+        scores:{quality:-8,technique:-6,knowledge:-6},outcome:'bad',
+        feedback:'If fermentation isn\'t fully complete, CO2 still being produced will carry your dry hop aroma compounds right out of the beer. You\'ll use 1.5 oz of hops and get a fraction of the aroma they should contribute.',
+        tip:'Dry hopping too early is one of the most expensive mistakes in IPA brewing. Hops cost money. Wait for the gravity to confirm.'},
+        {text:'Wait until day 7 to be safe, then dry hop.',
+        scores:{quality:+6,technique:+5,knowledge:+6},outcome:'good',
+        feedback:'Conservative and totally valid. Day 7 with US-05 at 65-68°F is almost certainly complete fermentation.',
+        tip:'Dry hop contact time of 3-4 days at fermentation temperature is the sweet spot. Too long (7+ days) and you can get grassy off-flavors.'},
+      ]},
+      {id:'wc-cb1',step:'Cold Crash',type:'curveball',
+      context:'You\'ve cold crashed for 48 hours at 38°F. You pull a sample and it\'s still hazy — cloudy enough that you can\'t see through it. West Coast IPAs should be crystal clear.',
+      question:'What do you do?',
+      choices:[
+        {text:'Cold crash for another 48 hours. Patience — the yeast is still dropping.',
+        scores:{quality:+8,technique:+7,knowledge:+7},outcome:'good',
+        feedback:'Often the right answer. Haze from yeast takes time to drop, especially if fermentation was slightly warmer than ideal. Another 48 hours at cold temperatures almost always helps.',
+        tip:'Cold crashing longer costs nothing and risks nothing. It\'s the lowest-risk solution to haze.'},
+        {text:'Add gelatin finings — dissolve in warm water and add to the cold fermenter.',
+        scores:{quality:+10,technique:+9,knowledge:+9},outcome:'good',
+        feedback:'Gelatin is a classic and highly effective fining agent. It has a positive charge that attracts negatively charged yeast cells, forming clumps that drop to the bottom. Results in 24-48 hours.',
+        tip:'Use unflavored Knox gelatin. 1/2 teaspoon dissolved in 1/4 cup of 150°F water, cooled slightly, added to the cold fermenter. Don\'t boil the gelatin — it denatures and stops working.'},
+        {text:'Bottle it hazy — hop haze is trendy right now anyway.',
+        scores:{quality:-8,technique:-6,knowledge:-8},outcome:'bad',
+        feedback:'Hop haze and yeast haze are different things. Yeast haze in a West Coast IPA indicates incomplete clarification. The beer will taste duller and yeastier than intended.',
+        tip:'Know your haze. A West Coast IPA should be brilliant. If it\'s not, something is unfinished.'},
+      ]},
+      {id:'wc3',step:'Conditioning',type:'checkin',
+      context:'You\'ve bottled your West Coast IPA. It\'s been 10 days. You know it needs 2 weeks for carbonation but you\'re having friends over tonight.',
+      question:'Do you open some early?',
+      choices:[
+        {text:'Wait. Open something else tonight. The IPA gets 2 full weeks.',
+        scores:{quality:+8,technique:+6,knowledge:+6},outcome:'good',
+        feedback:'The right call. An under-carbonated IPA is not representative of what you made. Your guests\' first impression becomes the lasting impression of the beer.',
+        tip:'If you brew for friends, build in the full conditioning time before the event. Start the batch 6 weeks out, not 3.'},
+        {text:'Open one as a test — if it\'s carbonated enough, serve them.',
+        scores:{quality:+4,technique:+5,knowledge:+5},outcome:'mid',
+        feedback:'Sensible compromise. A 10-day bottle test is reasonable. If it\'s fizzy and cold, it\'s probably fine.',
+        tip:'Keep a test bottle — a clear plastic bottle from a homebrew shop that you can squeeze to feel carbonation pressure without opening it.'},
+        {text:'Open them all — they\'re your friends, they\'ll appreciate the effort regardless.',
+        scores:{quality:-4,technique:-3,knowledge:-2},outcome:'bad',
+        feedback:'Your friends will be polite. But a flat, warm, 10-day IPA tastes like a science project. The hop aroma is already fading in bottle — undercut it further with inadequate carbonation and you\'ve wasted a good batch on a bad presentation.',
+        tip:'Serve beer in its best possible condition. That\'s respect for the work you put in.'},
       ]},
     ],
   },
@@ -908,6 +1243,8 @@ function renderSimPick() {
   const app = document.getElementById('sim-app');
   const runsCount = state.runs.length;
   const hefeUnlocked = state.xp >= 150;
+  const wcipaOnclick = 'onclick="startSim(\'wcipa\')"';
+  const hefeOnclick = 'onclick="startSim(\'hefe\')"';
   app.innerHTML = `
     <nav class="topbar">
       <button class="back-btn" onclick="goTo('screen-home')">← Home</button>
@@ -927,13 +1264,15 @@ function renderSimPick() {
         <div class="sim-recipe-info"><div class="sim-recipe-name">Dry Irish Stout</div><div class="sim-recipe-meta">3 decisions · 1 curveball · Beginner</div></div>
         <div class="sim-recipe-arrow">→</div>
       </button>
-      <button class="sim-recipe-btn ${runsCount < 2 ? 'locked' : ''}" ${runsCount < 2 ? '' : 'onclick="comingSoon()"'}>
+      <button class="sim-recipe-btn ${runsCount < 2 ? 'locked' : ''}" ${runsCount < 2 ? '' : wcipaOnclick}>
         <div class="sim-recipe-icon">${runsCount < 2 ? '🔒' : '🌿'}</div>
-        <div class="sim-recipe-info"><div class="sim-recipe-name">West Coast IPA</div><div class="sim-recipe-meta">${runsCount < 2 ? 'Complete 2 runs to unlock · ' + runsCount + '/2 done' : 'Coming in next build'}</div></div>
+        <div class="sim-recipe-info"><div class="sim-recipe-name">West Coast IPA</div><div class="sim-recipe-meta">${runsCount < 2 ? 'Complete 2 runs to unlock · ' + runsCount + '/2 done' : '4 decisions · 1 curveball · Intermediate'}</div></div>
+        ${runsCount >= 2 ? '<div class="sim-recipe-arrow">→</div>' : ''}
       </button>
-      <button class="sim-recipe-btn ${!hefeUnlocked ? 'locked' : ''}" ${!hefeUnlocked ? '' : 'onclick="comingSoon()"'}>
+      <button class="sim-recipe-btn ${!hefeUnlocked ? 'locked' : ''}" ${!hefeUnlocked ? '' : hefeOnclick}>
         <div class="sim-recipe-icon">${!hefeUnlocked ? '🔒' : '🍺'}</div>
-        <div class="sim-recipe-info"><div class="sim-recipe-name">Hefeweizen</div><div class="sim-recipe-meta">${!hefeUnlocked ? 'Earn 150 XP to unlock · ' + state.xp + '/150 XP' : 'Coming in next build'}</div></div>
+        <div class="sim-recipe-info"><div class="sim-recipe-name">Hefeweizen</div><div class="sim-recipe-meta">${!hefeUnlocked ? 'Earn 150 XP to unlock · ' + state.xp + '/150 XP' : '6 decisions · 2 curveballs · Intermediate'}</div></div>
+        ${hefeUnlocked ? '<div class="sim-recipe-arrow">→</div>' : ''}
       </button>
     </div>`;
 }
@@ -1121,12 +1460,27 @@ function getTastingNotes(recipeId, scores, log) {
     notes.push(t >= 70 ? `<strong>Flavor:</strong> Coffee and dark chocolate with a dry finish. The roasted barley did its job.` : `<strong>Flavor:</strong> Slightly harsh on the finish. Steep temperature may have been too high.`);
     notes.push(k >= 70 ? `<strong>Mouthfeel:</strong> Silky and smooth — the flaked barley extracted well.` : `<strong>Mouthfeel:</strong> Thinner than expected.`);
   }
+  if(recipeId === 'hefe') {
+    notes.push(q >= 75 ? '<strong>Aroma:</strong> Banana and clove in balance — WY3068 did what it promised.' : '<strong>Aroma:</strong> One-dimensional. Fermentation ran too warm (banana) or too cold (clove only).');
+    notes.push(t >= 70 ? '<strong>Appearance:</strong> Properly cloudy — yeast in suspension, just as intended.' : '<strong>Appearance:</strong> Clearer than expected.');
+    notes.push(k >= 70 ? '<strong>Mouthfeel:</strong> Soft and creamy from the wheat malt. Carbonation lifts the head beautifully.' : '<strong>Mouthfeel:</strong> Thinner than expected, or over-carbonated.');
+  } else if(recipeId === 'wcipa') {
+    notes.push(q >= 75 ? '<strong>Aroma:</strong> Resinous pine and grapefruit — the dry hops came through clean.' : '<strong>Aroma:</strong> Muted hop aroma. Dry hops may have been added too early.');
+    notes.push(t >= 70 ? '<strong>Appearance:</strong> Crystal clear — the cold crash worked. Classic West Coast.' : '<strong>Appearance:</strong> Hazier than intended. Extended cold crash or gelatin finings would have helped.');
+    notes.push(k >= 70 ? '<strong>Bitterness:</strong> Sharp, dry, assertive. Exactly where a WCIPA should land.' : '<strong>Bitterness:</strong> Either soft (water chemistry) or harsh (process issue).');
+  }
   notes.push(q >= 80 && t >= 80 && k >= 80 ? `<strong>Overall:</strong> This one's worth sharing. Pour it properly.` : q >= 60 ? `<strong>Overall:</strong> Drinkable. Honest. You'll know what to fix next time.` : `<strong>Overall:</strong> Rough batch. But you learned more from this one than from a perfect run.`);
   return notes;
 }
 function buildResultGlass(recipeId, score) {
   const fill = 0.55 + (score/100)*0.4;
   const foam = score >= 70 ? 14 : score >= 50 ? 8 : 4;
+  if(recipeId === 'hefe') {
+    return '<svg width="75" height="130" viewBox="0 0 70 130" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rg-h" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8d060" stop-opacity="' + fill + '"/><stop offset="100%" stop-color="#c09020" stop-opacity="' + fill + '"/></linearGradient><clipPath id="rg-hc"><path d="M28 8 Q22 40 18 70 Q15 85 14 100 Q13 112 16 118 Q19 124 24 124 L46 124 Q51 124 54 118 Q57 112 56 100 Q55 85 52 70 Q48 40 42 8 Z"/></clipPath></defs><path d="M28 8 Q22 40 18 70 Q15 85 14 100 Q13 112 16 118 Q19 124 24 124 L46 124 Q51 124 54 118 Q57 112 56 100 Q55 85 52 70 Q48 40 42 8 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/><rect x="12" y="38" width="46" height="90" fill="url(#rg-h)" clip-path="url(#rg-hc)"/><ellipse cx="35" cy="38" rx="' + Math.min(22,8+score*0.14) + '" ry="' + (foam/2) + '" fill="rgba(252,246,234,0.95)"/><circle cx="27" cy="95" r="1.5" fill="rgba(255,255,255,0.2)"><animate attributeName="cy" values="110;42" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.3;0" dur="3s" repeatCount="indefinite"/></circle><path d="M20 20 Q17 60 16 100" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linecap="round" fill="none"/></svg>';
+  }
+  if(recipeId === 'wcipa') {
+    return '<svg width="90" height="120" viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rg-w" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8e040" stop-opacity="' + fill + '"/><stop offset="100%" stop-color="#708010" stop-opacity="' + fill + '"/></linearGradient><clipPath id="rg-wc"><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z"/></clipPath></defs><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.13)" stroke-width="1.2"/><rect x="6" y="' + (38-Math.round(score/100*12)) + '" width="68" height="74" fill="url(#rg-w)" clip-path="url(#rg-wc)"/><ellipse cx="40" cy="' + (38-Math.round(score/100*12)) + '" rx="' + Math.min(26,Math.round(8+score*0.18)) + '" ry="' + Math.round(foam/2) + '" fill="rgba(245,242,225,0.92)"/><circle cx="30" cy="80" r="1.5" fill="rgba(255,255,255,0.15)"><animate attributeName="cy" values="95;42" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.25;0" dur="2.8s" repeatCount="indefinite"/></circle><path d="M18 18 L12 96" stroke="rgba(255,255,255,0.18)" stroke-width="2.5" stroke-linecap="round"/></svg>';
+  }
   if(recipeId === 'stout') {
     return `<svg width="90" height="120" viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rg-s" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a0a04" stop-opacity="${fill}"/><stop offset="100%" stop-color="#060200" stop-opacity="${fill}"/></linearGradient><clipPath id="rg-sc"><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z"/></clipPath></defs><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)" stroke-width="1.2"/><rect x="6" y="${36-(score/100)*10}" width="68" height="74" fill="url(#rg-s)" clip-path="url(#rg-sc)"/><ellipse cx="40" cy="${36-(score/100)*10}" rx="${Math.min(26,10+score*0.16)}" ry="${foam/2}" fill="rgba(220,210,190,0.9)"/><path d="M18 18 L12 96" stroke="rgba(255,255,255,0.14)" stroke-width="2" stroke-linecap="round"/></svg>`;
   }
@@ -1187,10 +1541,44 @@ function updateXP() {
 }
 
 // ═══════════════════════════════════════════════════════════
+// ONBOARDING
+// ═══════════════════════════════════════════════════════════
+const ONBOARD_SLIDES = [
+  {icon:'🍺', title:'Welcome to <em>The Brew Deck</em>', body:'A homebrew training system built for learning by doing. Read real recipes. Make real decisions. Find out what kind of brewer you are.', btn:'Show me around'},
+  {icon:'📖', title:'Start in the <em>Brew Book</em>', body:'Browse beer styles, flip cards to see flavor profiles, and open any recipe for a full step-by-step brew guide. <strong>No experience needed.</strong>', btn:'Got it'},
+  {icon:'🧪', title:'Then hit the <em>Brew Sim</em>', body:'Pick a recipe and work through a full brew day. Every decision affects your final score. Curveballs happen. XP unlocks more recipes. <strong>Start brewing.</strong>', btn:"Let's brew"},
+];
+let onboardIdx = 0;
+function showOnboard() {
+  const overlay = document.getElementById('onboard-overlay');
+  const card = document.getElementById('onboard-card');
+  if(!overlay || !card) return;
+  const slide = ONBOARD_SLIDES[onboardIdx];
+  card.style.animation = 'none'; card.offsetHeight; card.style.animation = '';
+  card.innerHTML = '<span class="onboard-icon">' + slide.icon + '</span><div class="onboard-title">' + slide.title + '</div><div class="onboard-body">' + slide.body + '</div><button class="onboard-next" onclick="nextOnboard()">' + slide.btn + ' →</button>' + (onboardIdx < ONBOARD_SLIDES.length - 1 ? '<button class="onboard-skip" onclick="finishOnboard()">Skip intro</button>' : '');
+  for(let i = 0; i < 3; i++) { const dot = document.getElementById('od-' + i); if(dot) dot.className = 'onboard-dot' + (i === onboardIdx ? ' active' : ''); }
+  overlay.classList.remove('hidden');
+}
+function nextOnboard() {
+  onboardIdx++;
+  if(onboardIdx >= ONBOARD_SLIDES.length) finishOnboard();
+  else showOnboard();
+}
+function finishOnboard() {
+  const overlay = document.getElementById('onboard-overlay');
+  if(overlay) overlay.classList.add('hidden');
+  try { localStorage.setItem('brewdeck-seen', '1'); } catch(e){}
+}
+function checkOnboard() {
+  try { if(!localStorage.getItem('brewdeck-seen')) { onboardIdx = 0; showOnboard(); } } catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════
 renderSimPick();
 updateXP();
+checkOnboard();
 </script>
 </body>
 </html>
