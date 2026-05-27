@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Right-of-Way Agent — Field Training System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0d0e10;
+  --surface:  #141618;
+  --card:     #1a1d20;
+  --border:   #252830;
+  --gold:     #c8960a;
+  --gold-lt:  #e8b020;
+  --blue:     #3d7fc1;
+  --blue-lt:  #5a9fd4;
+  --amber:    #c87820;
+  --amber-lt: #e09030;
+  --green:    #3a7050;
+  --green-lt: #5a9870;
+  --steel:    #a0b4c8;
+  --cream:    #dde4ec;
+  --muted:    #6a7280;
+  --white:    #edf2f7;
+  --danger:   #a83030;
+  
+  /* Deck 03 color system */
+  --teal:      #1a8a7a;
+  --teal-lt:   #2ab09e;
+  --red2:      #a83040;
+  --red2-lt:   #d04060;
+  --purple:    #6040a0;
+  --purple-lt: #8060c8;
+  --font-h:   'Barlow Condensed', sans-serif;
+  --font-b:   'Barlow', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-height:100vh; overflow-x:hidden; }
+
+/* ─── SCREENS ─── */
+.screen { display:none; min-height:100vh; flex-direction:column; }
+.screen.active { display:flex; }
+
+/* ═══════════════════════════════════════════
+   HOME SCREEN
+═══════════════════════════════════════════ */
+#home-screen {
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(200,150,10,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 15%, rgba(61,127,193,0.07) 0%, transparent 50%),
+    var(--bg);
+  align-items:center; justify-content:center;
+  padding:2rem; position:relative; overflow:hidden;
+}
+#home-screen::before {
+  content:''; position:absolute; inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 70px,rgba(255,255,255,0.015) 70px,rgba(255,255,255,0.015) 71px),
+    repeating-linear-gradient(90deg,transparent,transparent 70px,rgba(255,255,255,0.015) 70px,rgba(255,255,255,0.015) 71px);
+  pointer-events:none;
+}
+.home-inner { max-width:580px; width:100%; text-align:center; position:relative; z-index:1; animation:fadeUp 0.8s ease both; }
+
+.home-eyebrow {
+  font-family:var(--font-h); font-size:0.7rem; letter-spacing:0.3em;
+  color:var(--muted); text-transform:uppercase; margin-bottom:1.5rem;
+  display:flex; align-items:center; justify-content:center; gap:0.75rem;
+}
+.home-eyebrow::before, .home-eyebrow::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(90deg,transparent,var(--muted),transparent);
+}
+
+.home-title {
+  font-family:var(--font-h); font-size:clamp(3rem,10vw,5.5rem);
+  font-weight:900; line-height:0.9; text-transform:uppercase;
+  letter-spacing:-0.02em; color:var(--white); margin-bottom:0.5rem;
+}
+.home-title .line2 { color:var(--gold); display:block; }
+
+.home-sub {
+  font-family:var(--font-h); font-size:1rem; letter-spacing:0.18em;
+  color:var(--muted); text-transform:uppercase; margin-bottom:2.5rem;
+}
+
+.home-deck-grid {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:1rem; margin-bottom:2rem;
+}
+
+.deck-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:6px; padding:1.5rem 1.25rem;
+  cursor:pointer; text-align:left; transition:all 0.2s;
+  position:relative; overflow:hidden;
+}
+.deck-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  transition:opacity 0.2s;
+}
+.deck-card.deck-intro::before { background:linear-gradient(90deg,var(--blue),var(--blue-lt)); }
+.deck-card.deck-adv::before   { background:linear-gradient(90deg,var(--gold),var(--gold-lt)); }
+
+.deck-card:hover { transform:translateY(-3px); border-color:rgba(255,255,255,0.12); }
+.deck-card.deck-intro:hover { box-shadow:0 12px 32px rgba(61,127,193,0.2); }
+.deck-card.deck-adv:hover   { box-shadow:0 12px 32px rgba(200,150,10,0.2); }
+
+.deck-num {
+  font-family:var(--font-h); font-size:0.65rem; letter-spacing:0.2em;
+  text-transform:uppercase; margin-bottom:0.75rem;
+}
+.deck-card.deck-intro .deck-num { color:var(--blue-lt); }
+.deck-card.deck-adv   .deck-num { color:var(--gold); }
+
+.deck-name {
+  font-family:var(--font-h); font-size:1.4rem; font-weight:900;
+  line-height:1.05; text-transform:uppercase; color:var(--white);
+  margin-bottom:0.5rem;
+}
+
+.deck-tagline {
+  font-size:0.78rem; color:var(--muted); line-height:1.5; margin-bottom:1rem;
+}
+
+.deck-pills {
+  display:flex; flex-wrap:wrap; gap:0.3rem;
+}
+.deck-pill {
+  font-family:var(--font-h); font-size:0.6rem; letter-spacing:0.1em;
+  text-transform:uppercase; padding:0.18rem 0.5rem; border-radius:2px;
+}
+.deck-card.deck-intro .deck-pill { background:rgba(61,127,193,0.15); color:var(--blue-lt); }
+.deck-card.deck-adv   .deck-pill { background:rgba(200,150,10,0.15); color:var(--gold); }
+
+.home-ref-row {
+  display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:2rem;
+}
+.ref-btn {
+  background:var(--card); border:1px solid var(--border); border-radius:4px;
+  padding:0.9rem 1rem; cursor:pointer; text-align:left; transition:all 0.18s;
+  display:flex; align-items:center; gap:0.75rem;
+}
+.ref-btn:hover { border-color:var(--muted); }
+.ref-btn svg { width:18px; height:18px; flex-shrink:0; opacity:0.6; }
+.ref-btn-text {}
+.ref-btn-name { font-family:var(--font-h); font-size:0.8rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--steel); margin-bottom:0.1rem; }
+.ref-btn-desc { font-size:0.68rem; color:var(--muted); }
+
+.home-privacy { font-size:0.68rem; color:var(--muted); line-height:1.5; }
+
+/* ═══════════════════════════════════════════
+   SCENARIO SCREEN
+═══════════════════════════════════════════ */
+#scenario-screen { background:var(--bg); }
+
+.scenario-header {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:0.9rem 1.25rem; display:flex; align-items:center; gap:1rem;
+}
+
+.header-back {
+  background:transparent; border:1px solid var(--border);
+  color:var(--muted); font-family:var(--font-h); font-size:0.68rem;
+  letter-spacing:0.1em; padding:0.32rem 0.75rem;
+  cursor:pointer; border-radius:3px; transition:all 0.16s; white-space:nowrap;
+}
+.header-back:hover { border-color:var(--muted); color:var(--white); }
+
+.header-deck-label {
+  font-family:var(--font-h); font-size:0.7rem; letter-spacing:0.15em;
+  text-transform:uppercase; white-space:nowrap;
+}
+.label-intro { color:var(--blue-lt); }
+.label-adv   { color:var(--gold); }
+
+.progress-track { flex:1; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+.progress-fill  { height:100%; border-radius:2px; transition:width 0.5s ease; }
+.fill-intro { background:linear-gradient(90deg,var(--blue),var(--blue-lt)); }
+.fill-adv   { background:linear-gradient(90deg,var(--gold),var(--gold-lt)); }
+
+.progress-label { font-family:var(--font-h); font-size:0.78rem; letter-spacing:0.1em; color:var(--muted); white-space:nowrap; }
+
+.scenario-body {
+  flex:1; padding:1.5rem; overflow-y:auto;
+  max-width:680px; margin:0 auto; width:100%; padding-bottom:5rem;
+}
+
+/* type badges */
+.type-badge {
+  display:inline-block; font-family:var(--font-h); font-size:0.68rem;
+  font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+  padding:0.28rem 0.7rem; border-radius:2px; margin-bottom:1.1rem;
+}
+.type-title  { background:rgba(200,150,10,0.15);  color:var(--gold); }
+.type-deed   { background:rgba(90,152,112,0.15);  color:var(--green-lt); }
+.type-lien   { background:rgba(200,120,32,0.2);   color:var(--amber-lt); }
+.type-nego   { background:rgba(100,80,160,0.15);  color:#a090e0; }
+.type-legal  { background:rgba(168,48,48,0.15);   color:#e08080; }
+.type-field  { background:rgba(50,130,150,0.15);  color:#70cce0; }
+.type-role   { background:rgba(61,127,193,0.15);  color:var(--blue-lt); }
+.type-day1   { background:rgba(200,120,32,0.15);  color:var(--amber-lt); }
+.type-people { background:rgba(58,112,80,0.15);   color:var(--green-lt); }
+.type-docs   { background:rgba(160,180,200,0.15); color:var(--steel); }
+.type-ethics { background:rgba(168,48,48,0.15);   color:#e08888; }
+
+.scenario-situation {
+  font-family:var(--font-h); font-size:clamp(1.3rem,4vw,1.8rem);
+  font-weight:700; line-height:1.2; color:var(--white); margin-bottom:1rem;
+}
+
+.scenario-context {
+  font-size:0.9rem; line-height:1.75; color:var(--cream); opacity:0.85;
+  padding:0.9rem 1rem; background:var(--surface);
+  border-radius:0 4px 4px 0; margin-bottom:0.75rem;
+}
+.ctx-intro { border-left:3px solid var(--blue); }
+.ctx-adv   { border-left:3px solid var(--gold); }
+
+.callout-box {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:4px; padding:0.65rem 0.9rem; margin-bottom:1.4rem;
+  font-size:0.78rem; color:var(--muted); font-style:italic; line-height:1.55;
+}
+.callout-box strong { color:var(--blue-lt); font-style:normal; }
+.callout-adv strong { color:var(--gold-lt) !important; }
+
+.q-label { font-family:var(--font-h); font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:0.85rem; }
+
+.choices { display:flex; flex-direction:column; gap:0.55rem; margin-bottom:1.25rem; }
+
+.choice-btn {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:4px; padding:0.95rem 1.2rem; color:var(--cream);
+  font-family:var(--font-b); font-size:0.9rem; line-height:1.5;
+  text-align:left; cursor:pointer; transition:all 0.16s; position:relative;
+}
+.choice-btn::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:transparent; border-radius:4px 0 0 4px; transition:background 0.16s;
+}
+.intro-hover:hover { border-color:var(--blue); background:rgba(61,127,193,0.06); }
+.intro-hover:hover::before { background:var(--blue); }
+.adv-hover:hover   { border-color:var(--gold); background:rgba(200,150,10,0.06); }
+.adv-hover:hover::before { background:var(--gold); }
+
+.choice-btn:disabled { cursor:default; }
+.sel-good { border-color:var(--green-lt)!important; background:rgba(58,112,80,0.12)!important; }
+.sel-good::before { background:var(--green-lt)!important; }
+.sel-bad  { border-color:var(--danger)!important; background:rgba(168,48,48,0.1)!important; }
+.sel-bad::before { background:var(--danger)!important; }
+.rev-good { border-color:var(--green-lt)!important; opacity:0.55; }
+
+/* feedback */
+.feedback-panel { display:none; background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:1.2rem; margin-top:0.4rem; animation:fadeUp 0.3s ease both; }
+.feedback-panel.visible { display:block; }
+
+.verdict { font-family:var(--font-h); font-size:0.95rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.55rem; }
+.verdict-good { color:var(--green-lt); }
+.verdict-bad  { color:var(--danger); }
+
+.feedback-text { font-size:0.87rem; line-height:1.7; color:var(--cream); opacity:0.9; margin-bottom:0.9rem; }
+
+.rule-box { padding:0.7rem 0.9rem; border-radius:0 4px 4px 0; margin-bottom:0.9rem; background:var(--card); }
+.rule-intro { border-left:3px solid var(--blue); }
+.rule-adv   { border-left:3px solid var(--gold); }
+
+.rule-label { font-family:var(--font-h); font-size:0.63rem; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:0.28rem; }
+.rl-intro { color:var(--blue-lt); }
+.rl-adv   { color:var(--gold); }
+
+.rule-text { font-size:0.82rem; line-height:1.6; color:var(--cream); opacity:0.87; }
+
+.score-row { display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:0.9rem; }
+.s-chip { font-family:var(--font-h); font-size:0.68rem; font-weight:600; letter-spacing:0.1em; padding:0.22rem 0.55rem; border-radius:2px; text-transform:uppercase; }
+.c-gold  { background:rgba(200,150,10,0.2);  color:var(--gold); }
+.c-blue  { background:rgba(61,127,193,0.2);  color:var(--blue-lt); }
+.c-amber { background:rgba(200,120,32,0.2);  color:var(--amber-lt); }
+.c-green { background:rgba(58,112,80,0.2);   color:var(--green-lt); }
+.c-dim   { background:rgba(255,255,255,0.05); color:var(--muted); }
+
+.btn-next { font-family:var(--font-h); font-size:0.93rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; padding:0.82rem 1.8rem; border:none; cursor:pointer; border-radius:3px; width:100%; transition:background 0.16s; color:#fff; }
+.btn-next-intro { background:var(--blue); } .btn-next-intro:hover { background:var(--blue-lt); }
+.btn-next-adv   { background:var(--gold); color:#0d0e10; } .btn-next-adv:hover { background:var(--gold-lt); }
+
+/* ═══════════════════════════════════════════
+   RESULTS SCREEN
+═══════════════════════════════════════════ */
+#results-screen {
+  background:var(--bg); align-items:center; justify-content:flex-start;
+  padding:2rem 1.5rem 5rem; min-height:100vh; overflow-y:auto;
+}
+.results-inner { max-width:600px; width:100%; margin:0 auto; animation:fadeUp 0.6s ease both; }
+
+.results-eyebrow { font-family:var(--font-h); font-size:0.72rem; letter-spacing:0.25em; text-transform:uppercase; margin-bottom:0.65rem; text-align:center; }
+.re-intro { color:var(--blue-lt); } .re-adv { color:var(--gold); }
+
+.results-title { font-family:var(--font-h); font-size:clamp(2rem,7vw,3.2rem); font-weight:900; line-height:0.95; text-transform:uppercase; color:var(--white); margin-bottom:0.4rem; text-align:center; }
+.results-avg { font-size:0.95rem; color:var(--muted); text-align:center; margin-bottom:1.8rem; }
+.results-avg span { font-weight:600; }
+.ra-intro span { color:var(--blue-lt); } .ra-adv span { color:var(--gold); }
+
+.axis-results { display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:1.25rem; }
+.axis-row { background:var(--surface); padding:0.95rem 1.2rem; display:flex; align-items:center; gap:1rem; }
+.axis-row-name { font-family:var(--font-h); font-size:0.82rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; width:120px; flex-shrink:0; }
+.bar-track { flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:3px; transition:width 1s ease 0.3s; }
+.axis-pct { font-family:var(--font-h); font-size:0.88rem; font-weight:700; width:40px; text-align:right; flex-shrink:0; }
+
+/* axis color classes */
+.ar-0i .axis-row-name,.ar-0i .axis-pct { color:var(--blue-lt); }
+.ar-0i .bar-fill { background:linear-gradient(90deg,var(--blue),var(--blue-lt)); }
+.ar-1i .axis-row-name,.ar-1i .axis-pct { color:var(--amber-lt); }
+.ar-1i .bar-fill { background:linear-gradient(90deg,var(--amber),var(--amber-lt)); }
+.ar-2i .axis-row-name,.ar-2i .axis-pct { color:var(--green-lt); }
+.ar-2i .bar-fill { background:linear-gradient(90deg,var(--green),var(--green-lt)); }
+
+.ar-0a .axis-row-name,.ar-0a .axis-pct { color:var(--gold); }
+.ar-0a .bar-fill { background:linear-gradient(90deg,#a07008,var(--gold-lt)); }
+.ar-1a .axis-row-name,.ar-1a .axis-pct { color:var(--green-lt); }
+.ar-1a .bar-fill { background:linear-gradient(90deg,var(--green),var(--green-lt)); }
+.ar-2a .axis-row-name,.ar-2a .axis-pct { color:var(--amber-lt); }
+.ar-2a .bar-fill { background:linear-gradient(90deg,var(--amber),var(--amber-lt)); }
+
+.r-card { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:1.2rem; margin-bottom:0.9rem; }
+.r-label { font-family:var(--font-h); font-size:0.63rem; letter-spacing:0.25em; text-transform:uppercase; margin-bottom:0.55rem; }
+.rl2-intro { color:var(--blue-lt); } .rl2-adv { color:var(--gold); }
+.r-text { font-size:0.88rem; line-height:1.7; color:var(--cream); opacity:0.85; }
+
+.btn-restart { background:transparent; font-family:var(--font-h); font-size:0.98rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; padding:0.88rem 2rem; cursor:pointer; border-radius:3px; width:100%; transition:all 0.2s; margin-top:0.4rem; }
+.br-intro { border:1px solid var(--blue); color:var(--blue-lt); }
+.br-intro:hover { background:rgba(61,127,193,0.1); }
+.br-adv   { border:1px solid var(--gold); color:var(--gold); }
+.br-adv:hover   { background:rgba(200,150,10,0.1); }
+
+
+.label-deck3  { color: var(--teal-lt); }
+.fill-deck3   { background: linear-gradient(90deg, var(--teal), var(--teal-lt)); }
+.ctx-deck3    { border-left: 3px solid var(--teal); }
+.deck3-hover:hover { border-color: var(--teal); background: rgba(26,138,122,0.06); }
+.deck3-hover:hover::before { background: var(--teal); }
+.btn-next-deck3 { background: var(--teal); } .btn-next-deck3:hover { background: var(--teal-lt); }
+.rule-deck3   { border-left: 3px solid var(--teal); }
+.rl-deck3     { color: var(--teal-lt); }
+.re-deck3     { color: var(--teal-lt); }
+.ra-deck3 span { color: var(--teal-lt); }
+.rl2-deck3    { color: var(--teal-lt); }
+.br-deck3     { border: 1px solid var(--teal); color: var(--teal-lt); }
+.br-deck3:hover { background: rgba(26,138,122,0.1); }
+.ar-0d .axis-row-name, .ar-0d .axis-pct { color: var(--teal-lt); }
+.ar-0d .bar-fill { background: linear-gradient(90deg, var(--teal), var(--teal-lt)); }
+.ar-1d .axis-row-name, .ar-1d .axis-pct { color: var(--red2-lt); }
+.ar-1d .bar-fill { background: linear-gradient(90deg, var(--red2), var(--red2-lt)); }
+.ar-2d .axis-row-name, .ar-2d .axis-pct { color: var(--purple-lt); }
+.ar-2d .bar-fill { background: linear-gradient(90deg, var(--purple), var(--purple-lt)); }
+.c-teal   { background: rgba(26,138,122,0.2); color: var(--teal-lt); }
+.c-red    { background: rgba(168,48,64,0.2);  color: var(--red2-lt); }
+.c-purple { background: rgba(96,64,160,0.2);  color: var(--purple-lt); }
+.deck3-card::before { background: linear-gradient(90deg, var(--teal), var(--teal-lt)); }
+.deck3-card:hover { box-shadow: 0 12px 32px rgba(26,138,122,0.2); }
+.deck3-card .deck-num { color: var(--teal-lt); }
+.deck3-card .deck-pill { background: rgba(26,138,122,0.15); color: var(--teal-lt); }
+
+.btn-home { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:var(--font-h); font-size:0.85rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:0.75rem 2rem; cursor:pointer; border-radius:3px; width:100%; margin-top:0.5rem; transition:all 0.2s; }
+.btn-home:hover { border-color:var(--muted); color:var(--white); }
+
+/* ═══════════════════════════════════════════
+   GUIDE & GLOSSARY SCREENS
+═══════════════════════════════════════════ */
+#guide-screen, #glossary-screen {
+  background:var(--bg); padding:1.5rem; overflow-y:auto; padding-bottom:5rem;
+}
+.ref-inner { max-width:640px; margin:0 auto; }
+
+.ref-header { display:flex; align-items:center; gap:1rem; margin-bottom:2rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+.btn-back { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:var(--font-h); font-size:0.72rem; letter-spacing:0.1em; padding:0.38rem 0.85rem; cursor:pointer; border-radius:3px; transition:all 0.16s; }
+.btn-back:hover { border-color:var(--muted); color:var(--white); }
+.ref-title { font-family:var(--font-h); font-size:1.7rem; font-weight:900; text-transform:uppercase; color:var(--white); }
+
+/* guide styles */
+.guide-section { margin-bottom:2rem; }
+.guide-section-title { font-family:var(--font-h); font-size:0.68rem; letter-spacing:0.25em; color:var(--blue-lt); text-transform:uppercase; margin-bottom:0.85rem; padding-bottom:0.4rem; border-bottom:1px solid var(--border); }
+.guide-block { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:0.9rem 1.1rem; margin-bottom:0.5rem; }
+.guide-block-title { font-family:var(--font-h); font-size:0.95rem; font-weight:700; color:var(--blue-lt); margin-bottom:0.3rem; }
+.guide-block-text { font-size:0.82rem; line-height:1.65; color:var(--cream); opacity:0.85; }
+.guide-block-text ul { padding-left:1rem; margin-top:0.4rem; }
+.guide-block-text li { margin-bottom:0.2rem; }
+.guide-callout { background:rgba(61,127,193,0.08); border:1px solid rgba(61,127,193,0.25); border-radius:6px; padding:1rem 1.2rem; margin-bottom:1rem; }
+.guide-callout p { font-size:0.88rem; line-height:1.7; color:var(--cream); opacity:0.9; }
+
+/* glossary styles */
+.gloss-section-title { font-family:var(--font-h); font-size:0.68rem; letter-spacing:0.25em; color:var(--gold); text-transform:uppercase; margin:1.5rem 0 0.75rem; }
+.term-card { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:0.9rem 1.1rem; margin-bottom:0.5rem; }
+.term-name { font-family:var(--font-h); font-size:1rem; font-weight:700; color:var(--gold-lt); margin-bottom:0.3rem; }
+.term-def { font-size:0.82rem; line-height:1.65; color:var(--cream); opacity:0.85; }
+
+/* ═══════════════════════════════════════════
+   BOTTOM NAV
+═══════════════════════════════════════════ */
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-top:1px solid var(--border); display:flex; z-index:100; }
+.nav-btn { flex:1; padding:0.72rem; background:transparent; border:none; color:var(--muted); font-family:var(--font-h); font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:color 0.16s; display:flex; flex-direction:column; align-items:center; gap:0.2rem; }
+.nav-btn svg { width:17px; height:17px; }
+.nav-btn.active, .nav-btn:hover { color:var(--gold); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+@media(max-width:420px) {
+  .home-deck-grid { grid-template-columns:1fr; }
+  .home-ref-row   { grid-template-columns:1fr; }
+  .axis-row-name  { width:90px; font-size:0.73rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HOME SCREEN ═══ -->
+<div id="home-screen" class="screen active">
+  <div class="home-inner">
+    <div class="home-eyebrow">Oil &amp; Gas · Pipeline · Field Training</div>
+
+    <div class="home-title">
+      Right-of-Way
+      <span class="line2">Agent</span>
+    </div>
+    <div class="home-sub">Training System · Foundation Series</div>
+
+    <div class="home-deck-grid">
+      <div class="deck-card deck-intro" onclick="startDeck('intro')">
+        <div class="deck-num">Deck 01</div>
+        <div class="deck-name">Into the Field</div>
+        <div class="deck-tagline">The role, the duties, the conduct — before any title law. Start here.</div>
+        <div class="deck-pills">
+          <span class="deck-pill">Role Clarity</span>
+          <span class="deck-pill">Judgment</span>
+          <span class="deck-pill">Integrity</span>
+        </div>
+      </div>
+      <div class="deck-card deck-adv" onclick="startDeck('adv')">
+        <div class="deck-num">Deck 02</div>
+        <div class="deck-name">Title &amp; Legal</div>
+        <div class="deck-tagline">Titles, deeds, liens, easements, and field situations. The deep work.</div>
+        <div class="deck-pills">
+          <span class="deck-pill">Title IQ</span>
+          <span class="deck-pill">Legal Instinct</span>
+          <span class="deck-pill">Field Judgment</span>
+        </div>
+      </div>
+    </div>
+
+          <div class="deck-card deck3-card" onclick="startDeck('deck3')">
+        <div class="deck-num">Deck 03</div>
+        <div class="deck-name">Advanced Field</div>
+        <div class="deck-tagline">FERC permits, tribal land, damage settlement, complex negotiations, and professional conduct under pressure.</div>
+        <div class="deck-pills">
+          <span class="deck-pill">Complexity</span>
+          <span class="deck-pill">Regulatory</span>
+          <span class="deck-pill">Professional</span>
+        </div>
+      </div>
+    <div class="home-ref-row">
+      <div class="ref-btn" onclick="navTo('guide')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <div class="ref-btn-text">
+          <div class="ref-btn-name">Role Guide</div>
+          <div class="ref-btn-desc">Plain-English breakdown of the job</div>
+        </div>
+      </div>
+      <div class="ref-btn" onclick="navTo('glossary')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        <div class="ref-btn-text">
+          <div class="ref-btn-name">Field Glossary</div>
+          <div class="ref-btn-desc">16 key terms defined for beginners</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-privacy">Scores stay on this device only. Nothing is transmitted or shared.</div>
+  </div>
+</div>
+
+<!-- ═══ SCENARIO SCREEN ═══ -->
+<div id="scenario-screen" class="screen">
+  <div class="scenario-header">
+    <button class="header-back" onclick="goHome()">← Home</button>
+    <div class="header-deck-label" id="header-deck-label"></div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:10%"></div>
+    </div>
+    <div class="progress-label" id="progress-label">1 / 8</div>
+  </div>
+  <div class="scenario-body" id="scenario-body"></div>
+</div>
+
+<!-- ═══ RESULTS SCREEN ═══ -->
+<div id="results-screen" class="screen">
+  <div class="results-inner">
+    <div class="results-eyebrow" id="results-eyebrow"></div>
+    <div class="results-title" id="results-title"></div>
+    <div class="results-avg" id="results-avg"></div>
+    <div class="axis-results" id="axis-results"></div>
+    <div class="r-card">
+      <div class="r-label" id="r-label-1"></div>
+      <div class="r-text" id="summary-text"></div>
+    </div>
+    <div class="r-card">
+      <div class="r-label" id="r-label-2"></div>
+      <div class="r-text" id="focus-text"></div>
+    </div>
+    <button class="btn-restart" id="btn-restart" onclick="restartDeck()"></button>
+    <button class="btn-home" onclick="goHome()">← Back to Home</button>
+  </div>
+</div>
+
+<!-- ═══ ROLE GUIDE SCREEN ═══ -->
+<div id="guide-screen" class="screen">
+  <div class="ref-inner">
+    <div class="ref-header">
+      <button class="btn-back" onclick="navTo('home')">← Back</button>
+      <div class="ref-title">The Role, Plain English</div>
+    </div>
+
+    <div class="guide-callout">
+      <p>A Right-of-Way Agent is the person who gets the legal permission for a pipeline to cross private land — and manages the landowner relationship from first contact through construction and beyond. You are not a lawyer. You are not an engineer. You are the bridge between the company building the pipeline and the people who own the land it needs to cross.</p>
+    </div>
+
+    <div class="guide-section">
+      <div class="guide-section-title">What You Actually Do Every Day</div>
+      <div class="guide-block"><div class="guide-block-title">Research Parcels</div><div class="guide-block-text">Before you ever knock on a door, you research who owns the land the pipeline needs to cross. This means pulling county records, reading deeds, checking for liens, identifying mortgages, and confirming who has signing authority. You build a parcel file before you approach anyone.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Contact Landowners</div><div class="guide-block-text">You are usually the first — and only — person from the company a landowner ever meets. First impressions matter enormously. You explain the project, answer questions honestly, and build enough trust to move toward a signed agreement. You don't rush this.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Negotiate Easements</div><div class="guide-block-text">You negotiate the terms of the easement — the legal right to cross the land — including compensation, ROW width, temporary construction workspace, damage payments, and any special conditions. You work within your company's approved parameters and bring anything non-standard to legal.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Manage Landowner Relations During Construction</div><div class="guide-block-text">After the easement is signed, your job isn't over. You keep landowners updated as construction happens. You handle complaints, coordinate damage assessments, and make sure crews are honoring what was promised.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Document Everything</div><div class="guide-block-text">ROW work is paper-intensive. Every contact, every offer, every counteroffer, every agreement gets documented. Your files support the legal team, title team, and surveyors. Sloppy records create project-level problems.</div></div>
+    </div>
+
+    <div class="guide-section">
+      <div class="guide-section-title">Who You Work With</div>
+      <div class="guide-block"><div class="guide-block-title">Title Attorney / Title Team</div><div class="guide-block-text">They confirm legal ownership and clear title defects. You flag problems you find in research. They resolve them. You never attempt to resolve a title issue yourself.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Project Attorney</div><div class="guide-block-text">Reviews easement language, handles non-standard requests, and manages legal escalations. Any landowner request that deviates from the standard form goes through them first.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Surveyors</div><div class="guide-block-text">Establish legal boundaries. If there's a question about where a property line actually is — especially with older deeds — a surveyor resolves it. You don't estimate property boundaries.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Engineers &amp; Construction Crews</div><div class="guide-block-text">You provide the constructible corridor — legal access to every parcel on the route. Construction cannot proceed on any parcel without a signed easement. You are the gatekeeper for that.</div></div>
+    </div>
+
+    <div class="guide-section">
+      <div class="guide-section-title">The Non-Negotiable Rules</div>
+      <div class="guide-block"><div class="guide-block-title">You Are the Single Point of Contact</div><div class="guide-block-text">On most projects, you are the only company representative who communicates with landowners. Engineers, project managers, and legal teams do not contact landowners directly. This protects consistency and prevents conflicting messages.</div></div>
+      <div class="guide-block"><div class="guide-block-title">No Construction on Unsigned Parcels</div><div class="guide-block-text">No activity — staking, clearing, grading, or pipe — occurs on any parcel without a signed easement. Schedule pressure from the construction side never overrides this. Trespass creates legal liability and destroys landowner trust.</div></div>
+      <div class="guide-block"><div class="guide-block-title">You Identify Problems. Legal Resolves Them.</div><div class="guide-block-text">Your job is to find title issues, flag encumbrances, and document what you see. Deciding whether something matters legally is not your call. Attorneys make that determination. The faster you flag it, the better.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Honesty Is Not Optional</div><div class="guide-block-text">You don't make promises you can't keep, you don't misrepresent what the project does or doesn't do, and you don't use legal pressure as a negotiating tactic. Landowners talk to each other. Your reputation follows you through every county you work in.</div></div>
+    </div>
+    <div style="height:0.5rem"></div>
+  </div>
+</div>
+
+<!-- ═══ GLOSSARY SCREEN ═══ -->
+<div id="glossary-screen" class="screen">
+  <div class="ref-inner">
+    <div class="ref-header">
+      <button class="btn-back" onclick="navTo('home')">← Back</button>
+      <div class="ref-title">Field Glossary</div>
+    </div>
+
+    <div class="gloss-section-title">Ownership &amp; Title</div>
+    <div class="term-card"><div class="term-name">Fee Simple</div><div class="term-def">The most complete form of land ownership. The owner holds the land outright, forever, with the right to sell, lease, or transfer it. When you run title on a parcel, this is the ownership type you're confirming.</div></div>
+    <div class="term-card"><div class="term-name">Chain of Title</div><div class="term-def">The complete history of ownership transfers on a parcel, going back in time. A clean chain means each owner properly received it from the last. A break in the chain — a missing deed, an unresolved estate — is a title defect that must be resolved before you can get an easement signed.</div></div>
+    <div class="term-card"><div class="term-name">Deed</div><div class="term-def">The legal document that transfers ownership from one party to another. For ROW work, you need the recorded deed to confirm who currently owns the land and in what form (individual, LLC, trust, etc.).</div></div>
+    <div class="term-card"><div class="term-name">Grantor / Grantee</div><div class="term-def">On a deed, the Grantor is the seller (the one giving away the property) and the Grantee is the buyer (the one receiving it). Deed indexes are organized by both — critical for running title at the courthouse.</div></div>
+    <div class="term-card"><div class="term-name">Legal Description</div><div class="term-def">The formal language in a deed that precisely describes the land's boundaries — using metes and bounds (bearings and distances), or the Public Land Survey System (townships, ranges, sections). You'll need to confirm your easement falls within the described parcel.</div></div>
+    <div class="term-card"><div class="term-name">Tax Records / Parcel ID</div><div class="term-def">County tax records tell you who the county thinks owns a parcel and how they're taxed. They're a starting point but not definitive — the deed of record controls legal ownership, not the tax roll.</div></div>
+
+    <div class="gloss-section-title">Encumbrances &amp; Interests</div>
+    <div class="term-card"><div class="term-name">Easement</div><div class="term-def">The legal right to use someone else's land for a specific purpose — like running a pipeline across it — without owning the land itself. This is the core deliverable of your job. Easements are recorded in the county records and run with the land.</div></div>
+    <div class="term-card"><div class="term-name">Right-of-Way (ROW)</div><div class="term-def">The strip of land (or the legal right to use that strip) for infrastructure like pipelines, power lines, or roads. The ROW easement defines the width, permitted uses, and duration. Permanent ROW stays with the pipeline forever; temporary construction ROW expires.</div></div>
+    <div class="term-card"><div class="term-name">Lien</div><div class="term-def">A legal claim against a property, usually for unpaid debt — a mortgage, unpaid taxes, a contractor's mechanics lien, or a court judgment. A property with a lien can still be easement-signed, but the lienholders may also have to consent. Always flag liens to your title attorney.</div></div>
+    <div class="term-card"><div class="term-name">Mortgage / Deed of Trust</div><div class="term-def">When a lender finances a property purchase, they record a mortgage (or deed of trust in some states) as security. On pipeline projects, lenders with recorded mortgages often must subordinate or consent to the easement — your company's title team handles this.</div></div>
+    <div class="term-card"><div class="term-name">Mineral Rights</div><div class="term-def">The rights to oil, gas, coal, and other resources beneath the surface. These can be owned separately from the surface. On a pipeline project, surface ownership controls your ROW, but mineral rights owners may have separate interests — especially if the pipeline crosses their mineral lease.</div></div>
+    <div class="term-card"><div class="term-name">Encumbrance</div><div class="term-def">Any claim, lien, easement, or restriction that affects a property's title or use. Running title means finding all encumbrances and understanding which ones affect your project.</div></div>
+
+    <div class="gloss-section-title">Process &amp; Field Terms</div>
+    <div class="term-card"><div class="term-name">Title Search / Title Run</div><div class="term-def">The process of examining public records to determine the current owner of a parcel, the chain of title, and any recorded encumbrances. On large pipeline projects, this is done for every parcel the route crosses — often hundreds.</div></div>
+    <div class="term-card"><div class="term-name">Curative</div><div class="term-def">The process of fixing title defects. If title research finds a break in the chain, an old unresolved heir, or an improperly released lien, curative work is required before the easement can be finalized. This often requires attorneys and can take weeks or months.</div></div>
+    <div class="term-card"><div class="term-name">Eminent Domain / Condemnation</div><div class="term-def">The legal right of certain companies — those with FERC certification (interstate pipelines) or state common carrier status — to take private land for public use with just compensation. Not all pipeline companies have this authority. It is always a last resort, always involves attorneys and courts, and is never a negotiating tool.</div></div>
+    <div class="term-card"><div class="term-name">Just Compensation</div><div class="term-def">The fair market value payment owed to a landowner when an easement is taken — either by negotiation or condemnation. Your job in negotiation is to reach a fair agreement; appraisers establish the baseline value.</div></div>
+    <div class="term-card"><div class="term-name">Damage Payments</div><div class="term-def">Compensation paid beyond the easement value — for crop damage, timber removal, fence replacement, or disruption to operations. These are negotiated separately and must be documented carefully.</div></div>
+    <div class="term-card"><div class="term-name">Subordination Agreement</div><div class="term-def">A lender's consent to allow a pipeline easement to have priority over their mortgage — so the easement survives if the property is foreclosed on. Your company's legal team typically handles obtaining these.</div></div>
+
+    <div style="height:1rem"></div>
+  </div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-home" onclick="navTo('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </button>
+  <button class="nav-btn" id="nav-d1" onclick="startDeck('intro')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    Deck 01
+  </button>
+  <button class="nav-btn" id="nav-d2" onclick="startDeck('adv')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    Deck 02
+  </button>
+  <button class="nav-btn" id="nav-d3" onclick="startDeck('deck3')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    Deck 03
+  </button>
+  <button class="nav-btn" id="nav-guide" onclick="navTo('guide')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Guide
+  </button>
+  <button class="nav-btn" id="nav-glossary" onclick="navTo('glossary')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    Glossary
+  </button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DECK 01 — INTRO / ROLE ORIENTATION
+// axes: [roleClarity, judgment, integrity]
+// ═══════════════════════════════════════════════════════════
+const INTRO_SCENARIOS = [
+
+  {
+    id:"r1", type:"role", typeLabel:"The Role", typeClass:"type-role",
+    situation:"It's your first week. A project engineer emails asking you to go ahead and walk the pipeline corridor with the survey crew across three parcels on Tuesday — none of them have signed easements yet.",
+    context:"The survey crew wants to confirm the alignment. The engineer says it's just a quick walk-through, nobody will even know.",
+    concept:"<strong>Constructible Corridor:</strong> The ROW agent's core responsibility is to provide a legally authorized strip of land — parcel by parcel — for the pipeline to cross. No authorization means no access, regardless of what the activity is.",
+    question:"What do you tell the engineer?",
+    choices:[
+      {text:"Agree to the walk-through — it's just looking, not building, and it'll save the project time.",good:false,scores:[-15,-20,-20]},
+      {text:"Tell the engineer that walking the corridor on unsigned parcels is unauthorized entry — even with a survey crew. You need signed easements or temporary access agreements before anyone steps on those properties.",good:true,scores:[20,20,20]},
+      {text:"Ask the landowners quickly on the phone if it's okay, and proceed if they say yes.",good:false,scores:[-10,-15,-5]},
+      {text:"Join the walk-through but stay on the road and let the survey crew go in alone.",good:false,scores:[-10,-15,-15]}
+    ],
+    goodFeedback:"Correct from day one. Unauthorized entry is trespass regardless of purpose or who's doing it. 'Just a walk-through' creates real legal exposure and — just as damaging — if a landowner catches a survey crew on their property before you've even introduced yourself, you may never recover that relationship. Your job is to create the legal authorization first. The construction timeline comes second.",
+    badFeedback:"A verbal phone okay from a landowner is not a legal access agreement. Being the driver and not the trespasser doesn't insulate you from liability. And 'just looking' is still unauthorized entry. The rule is simple: nobody crosses a property line on an unsigned parcel.",
+    lesson:"Your job is to create legal access before anyone else enters a property. That's not bureaucratic caution — it's the foundation of everything else you do."
+  },
+
+  {
+    id:"r2", type:"role", typeLabel:"The Role", typeClass:"type-role",
+    situation:"A landowner you've been working with calls the project office directly and starts venting to the receptionist about his concerns. The receptionist takes notes and emails them to the project manager, who forwards them to you: 'Handle this.'",
+    context:"You have been his point of contact. The project manager now has landowner concerns on file that you weren't part of.",
+    concept:"<strong>Single Point of Contact:</strong> On pipeline projects, the ROW agent is typically the only company representative who communicates directly with landowners. This prevents conflicting messages, protects the company legally, and keeps the relationship consistent.",
+    question:"What went wrong here, and what do you do now?",
+    choices:[
+      {text:"Nothing went wrong — the landowner got through, his concerns are documented, and you'll follow up.",good:false,scores:[-15,-10,0]},
+      {text:"The landowner bypassed you, which is a problem. You call him directly, address his concerns, and work with the project office to ensure future calls from this landowner route back to you.",good:true,scores:[20,15,10]},
+      {text:"Ask the project manager to respond since they already have the notes.",good:false,scores:[-20,-10,-5]},
+      {text:"Let the receptionist know his name so she can put future calls straight through to you.",good:false,scores:[-5,-5,0]}
+    ],
+    goodFeedback:"Right response. The receptionist and project manager aren't equipped to handle landowner concerns — they don't know the project details, the negotiation status, or the landowner relationship. You call the landowner promptly, address his concerns directly, and make sure the office knows to route him back to you next time. Containing that communication channel is part of your job.",
+    badFeedback:"Having the project manager respond to landowner concerns is exactly the kind of inconsistency that creates problems. A routing note doesn't solve it — you need to re-establish yourself as the contact and follow up directly with the landowner.",
+    lesson:"You are the single voice to every landowner on your project. When that breaks down, fix it quickly and personally."
+  },
+
+  {
+    id:"r3", type:"role", typeLabel:"The Role", typeClass:"type-role",
+    situation:"Construction is wrapping up on a parcel you negotiated. The landowner calls you — the crew left a section of fence open and three of his cattle got out. He found them but he's upset.",
+    context:"You're technically finished with ROW duties on this parcel. A company construction inspector handles crew-related issues. The landowner has your number and called you first.",
+    concept:"<strong>Post-Construction Relations:</strong> ROW agents often remain the landowner's primary contact through construction. Damage issues and crew conduct problems affect the company's reputation and future projects in the same area.",
+    question:"How do you handle this?",
+    choices:[
+      {text:"Tell him it's a construction issue now and give him the inspector's number.",good:false,scores:[0,-5,-15]},
+      {text:"Acknowledge the issue, tell him you're personally making sure it gets to the right people today, then immediately contact the construction inspector and follow up with the landowner once it's resolved.",good:true,scores:[10,10,20]},
+      {text:"Apologize and tell him to document any damages for a future claim.",good:false,scores:[5,-5,-10]},
+      {text:"Drive out to the property to inspect the fence yourself and decide next steps.",good:false,scores:[5,-10,-5]}
+    ],
+    goodFeedback:"This is the right move. Passing him immediately to an inspector he's never met feels like a brush-off. You don't resolve construction issues yourself, but you own the relationship. Telling him you're on it personally, then actually following through with the inspector and looping back to the landowner, keeps the relationship intact. That landowner may be relevant to future projects in the same region.",
+    badFeedback:"Deflecting to the inspector or asking him to document damage for a future claim is the kind of response that makes landowners hostile. You didn't cause the fence problem, but you are the face of the company to him.",
+    lesson:"Your relationship with a landowner doesn't end when the ink dries. How you handle problems during construction determines whether the next project in that county goes smoothly."
+  },
+
+  {
+    id:"w1", type:"docs", typeLabel:"Working with Legal", typeClass:"type-docs",
+    situation:"You're reviewing a file and realize a cooperative landowner technically owns the parcel jointly with his brother, who lives in another state. The brother's name is on the original deed. The brother isn't listed in your notes at all.",
+    context:"Your scheduled signing meeting is in two days. The landowner says his brother will 'go along with whatever he decides.'",
+    concept:"<strong>All Interest Holders Must Sign:</strong> A legal easement requires a signature from every person who holds an ownership interest in the parcel. One co-owner's assurance that the other will agree has no legal force.",
+    question:"What do you do before the signing meeting?",
+    choices:[
+      {text:"Proceed — the cooperative landowner's assurance is enough for now, and you can get the brother later.",good:false,scores:[-15,-20,-10]},
+      {text:"Postpone the signing meeting until you've confirmed the brother's willingness to sign and made arrangements to get his signature.",good:true,scores:[20,20,10]},
+      {text:"Get the cooperative landowner to sign, then mail the easement to the brother for signature.",good:false,scores:[-10,-15,-5]},
+      {text:"Flag it to your title attorney and ask whether both signatures are required.",good:false,scores:[10,15,5]}
+    ],
+    goodFeedback:"Postponing is the right call. An easement signed by only one of two co-owners is a defective instrument — it may not be legally enforceable against the parcel. 'He'll go along with it' is not a signature. You need to reach the brother directly, confirm his agreement, and arrange for his signature. Flagging this to your title attorney should also happen in parallel.",
+    badFeedback:"Proceeding with a partial signature creates a defective easement. Mailing the easement without prior agreement from the brother is optimistic at best. A co-owner's verbal assurance about another co-owner's intentions has no legal standing.",
+    lesson:"Every interest holder on a deed must sign. Confirm this before the meeting, not after."
+  },
+
+  {
+    id:"w2", type:"docs", typeLabel:"Working with Legal", typeClass:"type-docs",
+    situation:"A title search shows the current owner inherited the property three years ago via a properly probated will. The probate is complete and recorded. Your supervisor asks why you're spending extra time on this file — the chain looks clean.",
+    context:"You've been cautious because of the inheritance. The supervisor says it's ready to move.",
+    concept:"<strong>Clean Chain of Title:</strong> When a transfer is complete — properly probated, recorded, and legally settled — the ownership is established. Not all inherited property has title problems. Over-researching settled title wastes project time.",
+    question:"How do you respond to your supervisor?",
+    choices:[
+      {text:"Explain that inherited property always needs extra legal review and you want to be thorough.",good:false,scores:[-15,-10,0]},
+      {text:"Acknowledge that the chain is clean — probate is recorded, ownership is clear — and you're ready to proceed to landowner contact.",good:true,scores:[20,15,10]},
+      {text:"Ask the title attorney to review it anyway before you move forward.",good:false,scores:[-5,-5,0]},
+      {text:"Request a title insurance commitment to cover any unknown issues.",good:false,scores:[-5,-5,-5]}
+    ],
+    goodFeedback:"Correct. A completed, recorded probate means the chain of title is established. Inherited property is only a problem when the transfer hasn't been legally resolved — unresolved heirship, unprobated estates, missing affidavits. When it's been properly handled, it's clean. Recognizing the difference keeps projects moving.",
+    badFeedback:"Inherited property isn't automatically a problem. Adding legal review steps for a clean, recorded chain wastes project time. Learn to distinguish between a real title flag and a settled transfer that happens to involve an inheritance.",
+    lesson:"Know when to flag and when to proceed. Over-escalating clean title wastes time. Under-escalating a real problem creates liability. Learn to tell the difference."
+  },
+
+  {
+    id:"d1", type:"day1", typeLabel:"Decision Making", typeClass:"type-day1",
+    situation:"You're wrapping up a long negotiation. As you prepare the easement documents, the landowner asks: 'Does this mean the pipeline company can ever come back and dig again without asking me?'",
+    context:"The easement is a standard permanent ROW form allowing the company to 'operate, maintain, repair, replace, and inspect' the pipeline. You've read the form but aren't certain exactly how future access works under it.",
+    concept:"<strong>Know Your Document:</strong> ROW agents must understand the key provisions of the easement they're presenting. When you don't know something, say so — don't guess.",
+    question:"What do you say?",
+    choices:[
+      {text:"Tell him yes, they can come back for maintenance without additional notice — that's standard.",good:false,scores:[-5,-15,-10]},
+      {text:"Tell him no, they'd need his permission each time — trying to reassure him.",good:false,scores:[-10,-20,-25]},
+      {text:"Tell him the easement does grant ongoing access rights for maintenance and operations, but you want to confirm the exact terms with your legal team and follow up before signing.",good:true,scores:[15,20,25]},
+      {text:"Hand him the easement document and tell him to read the operations clause himself.",good:false,scores:[5,-5,-15]}
+    ],
+    goodFeedback:"This is the right call. You're honest about what you know and honest about what you want to verify before committing to specifics. A landowner who signs based on an inaccurate answer has grounds for a later dispute. 'I'll confirm that and get back to you' is a professional answer that protects everyone.",
+    badFeedback:"Guessing at the legal provisions of your own easement document — in either direction — is a serious mistake. When you don't know the exact answer, say so.",
+    lesson:"Never guess at the legal terms of a document you're asking someone to sign. Know what you know, acknowledge what you don't, and get the right answer before the pen hits paper."
+  },
+
+  {
+    id:"d2", type:"day1", typeLabel:"Decision Making", typeClass:"type-day1",
+    situation:"You're offered a $500 bonus for every easement you close within 30 days. You have 18 parcels on your list, some with complicated title situations and a few landowners still processing the decision.",
+    context:"The offer is framed as an incentive for efficiency.",
+    concept:"<strong>Incentive Alignment:</strong> Per-parcel or performance-based compensation can create pressure to move faster than the facts — or the landowner — are ready for.",
+    question:"How does this incentive change how you approach your work?",
+    choices:[
+      {text:"It motivates you to work faster and close as many parcels as possible in 30 days.",good:false,scores:[-10,-15,-20]},
+      {text:"It doesn't change how you work the complex parcels — those get the time they need. But it helps you prioritize and move efficiently on the straightforward ones.",good:true,scores:[15,20,20]},
+      {text:"You push harder on the landowners who are still deciding — they just need a nudge.",good:false,scores:[-10,-15,-25]},
+      {text:"You skip the complicated title parcels and focus your 30 days entirely on easy closings.",good:false,scores:[-15,-10,-10]}
+    ],
+    goodFeedback:"The right instinct. Efficiency incentives reward agents who work organized and prepared. But they become a problem when they push you to pressure landowners, skip due diligence, or close agreements that aren't ready to be closed. Using the incentive to prioritize clean parcels is smart. Letting it rush your judgment is where things go wrong.",
+    badFeedback:"Incentives that push you to close faster than the situation allows produce defective easements, burned relationships, and sometimes legal liability. Pushing undecided landowners to sign before they're ready can result in challenges or rescissions later.",
+    lesson:"Production incentives are fine. Letting them override your judgment is not. Efficiency and integrity aren't opposites — rushing is where they collide."
+  },
+
+  {
+    id:"d3", type:"day1", typeLabel:"Decision Making", typeClass:"type-day1",
+    situation:"You've worked a difficult parcel for six weeks. The landowner has refused every offer, changed terms three times, and his attorney sent two threatening letters. The project manager says it's time to 'turn it over to the lawyers.'",
+    context:"You have some compensation flexibility you haven't fully used. But you're exhausted by this landowner and genuinely unsure if more negotiation will help.",
+    concept:"<strong>Escalation vs. Negotiation:</strong> Recognizing when you've genuinely reached an impasse — vs. giving up early — is a judgment call that comes with experience.",
+    question:"What's the right move?",
+    choices:[
+      {text:"Agree with the project manager. Six weeks of refusals is enough — turn it over to legal.",good:false,scores:[0,-10,-5]},
+      {text:"Before handing off, have a direct conversation with your supervisor and legal about whether there's anything untried — remaining compensation room, a different approach, or a route modification — then make a documented recommendation either way.",good:true,scores:[15,20,15]},
+      {text:"Use the remaining compensation flexibility immediately — make the highest offer and force a resolution.",good:false,scores:[-5,-10,-10]},
+      {text:"Request a meeting with the landowner and his attorney together for one final conversation.",good:false,scores:[5,0,5]}
+    ],
+    goodFeedback:"This is the right call. The professional move before handing off is to document what you've tried, identify anything genuinely untried, and make a recommendation to your team. Condemnation is expensive, time-consuming, and generates bad press. It should be a last resort with full documentation that it was.",
+    badFeedback:"Handing off without a documented summary leaves the legal team with an incomplete picture. Jumping to your maximum offer without a strategy conversation is a guess. A joint meeting with the landowner's attorney, without your own legal team present, puts you in a position you're not equipped to handle alone.",
+    lesson:"Before escalation, document what you tried, identify what's untried, and make a recommendation. Escalation is sometimes right — but it should be a deliberate call, not a surrender."
+  },
+
+  {
+    id:"e1", type:"ethics", typeLabel:"Ethics & Conduct", typeClass:"type-ethics",
+    situation:"A landowner offers to put in a good word with his difficult neighbor — who has a critical parcel on your route — if you give him a slightly better deal than what you've offered.",
+    context:"He frames it as helping the project. His own easement is nearly settled.",
+    concept:"<strong>Compensation Integrity:</strong> Easement compensation is based on land value, project impact, and company-approved rates — not on side arrangements. Paying more in exchange for influence over another landowner creates legal and ethical exposure.",
+    question:"How do you respond?",
+    choices:[
+      {text:"Take him up on it — any help with a difficult neighbor is worth a modest compensation bump.",good:false,scores:[-10,-20,-30]},
+      {text:"Thank him for the offer, but decline clearly — compensation is based on land and project terms, not outside factors. You'll reach his neighbor directly and professionally.",good:true,scores:[10,20,30]},
+      {text:"Tell him you'll think about it and report it to your supervisor before deciding.",good:false,scores:[5,5,-5]},
+      {text:"Accept the offer but don't document it — just adjust the compensation slightly.",good:false,scores:[-20,-25,-30]}
+    ],
+    goodFeedback:"Exactly right. What he's proposing is a quid pro quo — extra compensation in exchange for influence over a third party. Even if his intentions seem helpful, accepting it creates an undocumented side arrangement that could constitute a misrepresentation of your compensation basis. You thank him, decline clearly, and handle his neighbor yourself.",
+    badFeedback:"'Thinking about it' treats this as a gray area — it isn't. Accepting without documenting is the most serious version: an undisclosed arrangement with a landowner to influence another landowner's decision, which is an ethical violation that could affect your professional standing and your company's legal position.",
+    lesson:"Compensation is based on land and project — nothing else. Side arrangements, even well-intentioned ones, create ethical and legal exposure. Decline clearly and professionally."
+  },
+
+  {
+    id:"e2", type:"ethics", typeLabel:"Ethics & Conduct", typeClass:"type-ethics",
+    situation:"You realize you made an honest mistake — you told a landowner last week that her compensation offer was 'final,' but you've since learned there's an additional 10% available if needed. She hasn't signed yet.",
+    context:"Your supervisor says you don't have to correct it — she might take the old offer and you'd save the company money.",
+    concept:"<strong>Honesty with Landowners:</strong> Withholding material information — especially when you told a landowner something that was incorrect — creates both ethical liability and legal exposure if the discrepancy surfaces later.",
+    question:"What do you do?",
+    choices:[
+      {text:"Follow your supervisor's advice — if she signs the old offer, it's a valid agreement.",good:false,scores:[0,-20,-30]},
+      {text:"Go back to the landowner and correct the record — tell her you have some flexibility you didn't mention and you want to be straight with her.",good:true,scores:[10,20,30]},
+      {text:"Mention the new flexibility but frame it as a 'special consideration' you went to bat to get for her.",good:false,scores:[-5,-10,-15]},
+      {text:"Wait to see if she signs first. If she doesn't, use the additional 10% as a sweetener.",good:false,scores:[-5,-10,-15]}
+    ],
+    goodFeedback:"This is the right call, even though it's uncomfortable. You gave her incorrect information. Letting her sign based on that — when you know better — is misrepresentation. Going back to her, owning the correction professionally, and giving her the accurate picture protects you, the company, and the relationship.",
+    badFeedback:"A signed agreement based on materially incorrect information you knowingly allowed to stand is not on solid legal ground. Framing it as a special favor obscures the correction. Waiting to see if she signs first uses her incomplete information against her.",
+    lesson:"When you've given a landowner incorrect information, correct it. Your integrity is not a negotiating position."
+  },
+
+  {
+    id:"e3", type:"people", typeLabel:"People & Conduct", typeClass:"type-people",
+    situation:"A landowner tells you a previous agent — no longer with the company — promised him the pipeline company would 'never put a compressor station within a mile of his property.' There's nothing in the file about this.",
+    context:"You're picking up this parcel mid-project. The route potentially allows a compressor station in the general area. The landowner considers this promise binding.",
+    concept:"<strong>Undocumented Commitments:</strong> Promises made by agents that aren't in the signed easement or written documentation have uncertain legal standing — but they can create significant disputes.",
+    question:"How do you respond?",
+    choices:[
+      {text:"Tell him you can't speak to what a previous agent may have said, so it doesn't apply.",good:false,scores:[0,-15,-20]},
+      {text:"Acknowledge what he's told you, document it, and escalate it to your project manager and legal team for proper review — and tell him you won't make promises either way until that review is complete.",good:true,scores:[10,25,25]},
+      {text:"Assure him the pipeline company honors what their agents promise — just to keep things moving.",good:false,scores:[-5,-20,-25]},
+      {text:"Tell him verbal promises aren't enforceable and he should have gotten it in writing.",good:false,scores:[0,-10,-20]}
+    ],
+    goodFeedback:"Right call. You don't have enough information to confirm or deny the previous commitment, and you don't have authority to either ratify it or dismiss it. Documenting what he's told you and escalating it to legal is exactly right — this is a potential company liability that needs proper review.",
+    badFeedback:"Dismissing the previous agent's promise could expose the company legally if the promise was real. Assuring him it will be honored is a commitment you have no authority to make. Telling him verbal promises don't count is a legal argument you're not equipped to make — and will destroy the relationship.",
+    lesson:"Undocumented commitments by prior agents are a legal question, not a field decision. Document it, escalate it, and don't make the situation worse by improvising."
+  },
+
+  {
+    id:"f1", type:"people", typeLabel:"Landowner Relations", typeClass:"type-people",
+    situation:"You've called a landowner four times over two weeks. She hasn't returned a single call. Her property is in the middle of the route and can't be easily rerouted. The project needs access in 6 weeks.",
+    context:"You have her mailing address.",
+    concept:"<strong>Non-Responsive Landowners:</strong> The ROW process requires documented good-faith attempts to contact. How and when you escalate depends on the timeline.",
+    question:"What's your next move?",
+    choices:[
+      {text:"Send a certified letter, keep a record of all contact attempts in the file, and notify your supervisor of the non-response situation given the timeline.",good:true,scores:[15,20,10]},
+      {text:"Keep calling — leave more voicemails until she responds.",good:false,scores:[-10,-10,-5]},
+      {text:"Drive to the property unannounced to knock on the door.",good:false,scores:[5,-5,-5]},
+      {text:"Ask a neighbor or local contact if they know why she's not responding.",good:false,scores:[-5,-10,-15]}
+    ],
+    goodFeedback:"Certified mail creates documented proof of contact that supports any later legal process. Notifying your supervisor about a timeline-critical non-responsive parcel with 6 weeks to go is the right escalation timing. Your file documentation of all contact attempts is what protects the project if condemnation proceedings become necessary.",
+    badFeedback:"Leaving more voicemails doesn't advance the situation. Driving out unannounced can be perceived as intimidating and isn't the right step before certified mail. Asking neighbors about her is a privacy issue that will damage your credibility.",
+    lesson:"Non-responsive landowners require documented escalation — certified mail, supervisor notification, and a clear record of good-faith attempts. The file protects you and the project."
+  },
+
+  {
+    id:"f2", type:"people", typeLabel:"Landowner Relations", typeClass:"type-people",
+    situation:"You show up for a scheduled meeting with a landowner and discover he's brought an attorney you weren't expecting. The attorney immediately asks to see all documents related to the project.",
+    context:"You have the standard easement form with you. Your company's project attorney is available by phone.",
+    concept:"<strong>Landowner's Right to Legal Counsel:</strong> A landowner has every right to have an attorney present at any time. How you respond sets the tone for everything that follows.",
+    question:"How do you handle this?",
+    choices:[
+      {text:"Tell them you didn't know an attorney would be present and you need to reschedule.",good:false,scores:[0,-10,-20]},
+      {text:"Welcome the attorney, provide the standard easement form for review, and offer to have your project attorney available by phone if legal questions come up. Proceed professionally.",good:true,scores:[10,20,25]},
+      {text:"Provide the form but say you can't answer any legal questions — that's between the attorneys.",good:false,scores:[5,0,-10]},
+      {text:"Call your supervisor before doing anything — you don't want to say the wrong thing.",good:false,scores:[-5,-5,-10]}
+    ],
+    goodFeedback:"An attorney's presence is not a threat — it's the landowner's right and often a sign they're taking the process seriously and may be ready to negotiate. You welcome them professionally, provide the document they're entitled to review, and offer your project attorney for legal-to-legal questions. Staying calm and professional here is exactly what a good ROW agent does.",
+    badFeedback:"Rescheduling because an attorney appeared signals weakness and wastes everyone's time. Refusing to say anything until you call someone appears evasive. A landowner with an attorney still deals with you — the attorney advises them, but the conversation continues.",
+    lesson:"Landowners are entitled to legal counsel at any point. Welcome it professionally. Your project attorney handles legal questions. You handle the relationship."
+  }
+
+  ,{
+    id:"r4", type:"role", typeLabel:"The Role", typeClass:"type-role",
+    situation:"Your supervisor hands you 22 parcel files and says you have three weeks to make initial contact on all of them. Day one, you don't know where to start.",
+    context:"The parcels are spread across two counties. Some have clean title. Some have question marks. A few are large agricultural operations.",
+    concept:"<strong>Workload Triage:</strong> ROW agents manage many parcels simultaneously. Prioritizing by project schedule, complexity, and landowner difficulty is a core skill — not something your supervisor does for you.",
+    question:"How do you approach day one?",
+    choices:[
+      {text:"Start at the top of the stack and work through them in order.",good:false,scores:[-10,-5,0]},
+      {text:"Sort by project schedule priority first, then by title complexity — clear simple ones to build momentum while flagging complicated ones early.",good:true,scores:[20,15,10]},
+      {text:"Call your supervisor and ask which ones matter most.",good:false,scores:[-5,-5,0]},
+      {text:"Start with the largest landowners — they will be the hardest negotiations.",good:false,scores:[-5,0,-5]}
+    ],
+    goodFeedback:"This is how experienced agents work. Schedule-critical parcels that could hold up construction get attention first. But flagging complicated title early — before you have lost time — is equally important. An agent who is great at negotiations but lets a curative title issue sit undiscovered until week two has created a project problem.",
+    badFeedback:"Working in order or asking your supervisor to prioritize for you are both signs of someone who has not taken ownership of their pipeline. Starting with the biggest landowners ignores the schedule — the hardest negotiation on a non-critical parcel can wait.",
+    lesson:"Triage by schedule-criticality and title complexity simultaneously. Know which parcels hold the project hostage."
+  }
+  ,{
+    id:"d4", type:"day1", typeLabel:"Decision Making", typeClass:"type-day1",
+    situation:"You are doing a first meeting with a landowner on a 400-acre row crop farm. Fifteen minutes in, you realize he has been talking about a completely different pipeline project — one from eight years ago that had a bad outcome on his neighbor's land.",
+    context:"He is not hostile yet, but he is clearly operating on old information and bad assumptions about who you are and what you are proposing.",
+    concept:"<strong>Managing Misconceptions:</strong> Landowners often arrive with prior experiences that shape their expectations. Correcting the frame early is a skill.",
+    question:"What do you do?",
+    choices:[
+      {text:"Let him finish and then correct him at the end — it is rude to interrupt.",good:false,scores:[0,-5,-10]},
+      {text:"Interrupt politely, clarify that you are a different company on a different project, and ask what specifically concerned him about the prior situation — then address it directly.",good:true,scores:[10,15,25]},
+      {text:"Redirect to your project materials immediately — show him the maps so he knows this is different.",good:false,scores:[5,5,-10]},
+      {text:"Agree that pipelines have had problems in the past and that yours is different — keep it general.",good:false,scores:[5,0,-10]}
+    ],
+    goodFeedback:"The right move. Letting him build more emotional investment in the wrong narrative makes it harder to correct later. A polite interruption resets the frame professionally. And asking what specifically worried him gives you real intelligence about what this negotiation is actually about.",
+    badFeedback:"Waiting until the end lets the wrong frame calcify. Jumping immediately to maps feels dismissive. Vague agreement without substance sounds like deflection — experienced landowners hear it immediately.",
+    lesson:"Address mistaken frames early and directly. The longer a wrong assumption goes uncorrected, the harder it is to move."
+  }
+  ,{
+    id:"d5", type:"day1", typeLabel:"Decision Making", typeClass:"type-day1",
+    situation:"A landowner signs the easement and then calls you two days later saying he made a mistake and wants to back out. He says he felt pressured during the meeting.",
+    context:"You do not believe you pressured him — the meeting was calm and he asked several questions before signing. The easement has not been recorded yet.",
+    concept:"<strong>Rescission Requests:</strong> A signed easement is a contract. Rescission requests — especially ones mentioning pressure — are a legal matter, not a field decision.",
+    question:"What do you do?",
+    choices:[
+      {text:"Tell him the agreement is signed and binding — he had time to review it.",good:false,scores:[0,-15,-20]},
+      {text:"Apologize and tear up the agreement — you do not want unhappy landowners.",good:false,scores:[0,-10,-15]},
+      {text:"Listen carefully to his concern, document the call, and immediately escalate to your supervisor and project attorney — this is a legal question, not a field decision.",good:true,scores:[10,25,20]},
+      {text:"Offer him additional compensation to honor the agreement.",good:false,scores:[-5,-15,-20]}
+    ],
+    goodFeedback:"Correct. A rescission request mentioning the word pressured is a legal matter from the moment it is raised. You listen, document it carefully and accurately, and get it to your supervisor and attorney immediately. Do not make promises. Do not make threats. Do not offer money. The attorney determines the path forward.",
+    badFeedback:"Telling him it is binding closes a door the attorney may need open. Tearing up the agreement unilaterally is not your call. Offering additional compensation to honor a contract may constitute an acknowledgment that something went wrong. Every one of these responses bypasses the legal team on a matter that requires them.",
+    lesson:"Rescission requests with any hint of coercion language go straight to legal immediately. Document the call verbatim."
+  }
+  ,{
+    id:"e4", type:"ethics", typeLabel:"Ethics and Conduct", typeClass:"type-ethics",
+    situation:"You are wrapping up a negotiation and the landowner offers you a bottle of bourbon as a thank-you gift after signing.",
+    context:"It is a 50-dollar bottle. He is not trying to influence anything — the deal is done. Your company has a gifts policy but you do not remember the exact threshold.",
+    concept:"<strong>Gifts Policy:</strong> Most ROW companies have formal gifts and gratuities policies. Accepting gifts from landowners you have negotiated with creates real or perceived conflicts of interest.",
+    question:"What do you do?",
+    choices:[
+      {text:"Accept it — the deal is done and he is just being friendly. It would be rude to refuse.",good:false,scores:[0,-10,-20]},
+      {text:"Thank him genuinely, decline the gift, and explain briefly that your company has a policy about gifts from landowners — it is not personal.",good:true,scores:[5,15,25]},
+      {text:"Accept it but do not tell anyone.",good:false,scores:[-5,-15,-30]},
+      {text:"Tell him you cannot accept it until after the project is fully complete.",good:false,scores:[0,-5,-15]}
+    ],
+    goodFeedback:"The right call, even though it feels awkward. A friendly decline is professional and does not insult him. The policy exists because even well-intentioned gifts create the appearance of influence. Protect yourself.",
+    badFeedback:"Accepting and not disclosing is the most serious version — that is a policy violation. Timing it to after project completion does not resolve the conflict. The relationship is what matters, not when the project ends.",
+    lesson:"Decline gifts from landowners regardless of amount or intent. A gracious decline protects everyone."
+  }
+  ,{
+    id:"e5", type:"ethics", typeLabel:"Ethics and Conduct", typeClass:"type-ethics",
+    situation:"You overhear a senior agent telling a landowner that the company has never had a single complaint about how they handle ROW and that their pipeline has a perfect environmental record.",
+    context:"You know neither statement is accurate. There have been complaints on previous projects and at least one regulatory incident on a prior pipeline.",
+    concept:"<strong>Misrepresentation by Colleagues:</strong> When you witness another agent making materially false statements to a landowner, you have a professional obligation to address it through the right channels.",
+    question:"What do you do?",
+    choices:[
+      {text:"Nothing — it is not your conversation and you do not want to create conflict with a colleague.",good:false,scores:[0,-10,-25]},
+      {text:"Correct the senior agent in front of the landowner — the landowner deserves accurate information.",good:false,scores:[0,-5,-10]},
+      {text:"After the meeting, document what you heard and report it to your supervisor and project manager — this is a legal and ethical exposure for the company.",good:true,scores:[10,20,25]},
+      {text:"Mention it casually to the senior agent afterward and suggest they be more careful.",good:false,scores:[5,0,-10]}
+    ],
+    goodFeedback:"This is the right path. Correcting a colleague mid-conversation undermines the single-voice policy. But doing nothing when you have witnessed a material misrepresentation is an ethical failure. Document it precisely and escalate to your supervisor. This is a legal exposure, not an interpersonal conflict.",
+    badFeedback:"Staying silent makes you complicit. Correcting mid-conversation creates confusion for the landowner. A casual suggestion does not create a record or address the exposure. This needs to go up the chain.",
+    lesson:"Witnessed misrepresentations get documented and escalated. Not ignored, and not corrected on the fly."
+  }
+  ,{
+    id:"p1", type:"people", typeLabel:"Landowner Relations", typeClass:"type-people",
+    situation:"A landowner tells you he will not sign anything until he has spoken to his attorney. He is not hostile — he says it is his policy on any contract. He asks you to give him two weeks.",
+    context:"Two weeks fits within your project schedule. His parcel is moderately critical.",
+    concept:"<strong>Landowner Pace:</strong> A landowner right to seek legal counsel is absolute. An agent job is to accommodate it professionally.",
+    question:"How do you respond?",
+    choices:[
+      {text:"Tell him two weeks is fine, provide the easement document and your contact info, and offer to answer any questions his attorney may have.",good:true,scores:[10,15,25]},
+      {text:"Agree but tell him the project schedule is tight and you really need an answer sooner if possible.",good:false,scores:[5,5,-15]},
+      {text:"Ask if you can at least get a verbal commitment before he talks to his attorney.",good:false,scores:[-5,-10,-20]},
+      {text:"Tell him to have his attorney call your project attorney directly.",good:false,scores:[5,10,-5]}
+    ],
+    goodFeedback:"This is the professional response. You give him the document so his attorney can review it. You offer attorney-to-attorney access. You set a follow-up date. No pressure language. Landowners who use attorneys are often more informed and ultimately more reliable signers than ones who rush in.",
+    badFeedback:"Mentioning schedule pressure when he has asked for a reasonable amount of time is subtle coercion. Asking for a verbal commitment before legal review undermines his right to counsel.",
+    lesson:"A landowner seeking legal counsel is exercising a right, not creating an obstacle. Accommodate it fully and professionally."
+  }
+  ,{
+    id:"p2", type:"people", typeLabel:"Landowner Relations", typeClass:"type-people",
+    situation:"You visit a landowner and her adult son is present. He immediately starts answering your questions on her behalf and says he handles all of her business affairs.",
+    context:"The property is in her name alone based on your title research. She seems deferential to him but not unwilling to speak.",
+    concept:"<strong>Who You Are Dealing With:</strong> The person with legal authority to sign is the owner of record. A family member without formal power of attorney has no signing authority regardless of how they present themselves.",
+    question:"How do you handle the meeting?",
+    choices:[
+      {text:"Direct the conversation to the son since he says he handles her affairs — it will be more efficient.",good:false,scores:[-10,-20,-15]},
+      {text:"Address the landowner directly throughout, acknowledge the son professionally, and note in your file that you will verify whether a power of attorney exists if she is not capable of signing independently.",good:true,scores:[15,20,15]},
+      {text:"Ask the son to leave so you can speak with the owner privately.",good:false,scores:[5,0,-10]},
+      {text:"Direct your conversation to both of them equally and see who takes the lead.",good:false,scores:[0,-10,-5]}
+    ],
+    goodFeedback:"The owner of record is your legal counterpart. Acknowledging the son without ceding the conversation to him is the professional balance. And the note about power of attorney is important — if she genuinely cannot manage her own affairs, there may be a guardianship or POA document affecting signing authority.",
+    badFeedback:"Directing conversation to someone with no legal authority because it seems easier creates a defective easement. Asking him to leave may be unnecessarily confrontational.",
+    lesson:"Always address the owner of record directly. Family members have no signing authority without documented power of attorney verified by your title team."
+  }
+  ,{
+    id:"p3", type:"people", typeLabel:"Landowner Relations", typeClass:"type-people",
+    situation:"You are in a negotiation and a landowner asks: What did you pay my neighbor for his easement?",
+    context:"You know what his neighbor was paid. Your company has a policy of keeping individual compensation amounts confidential.",
+    concept:"<strong>Compensation Confidentiality:</strong> Most pipeline companies require agents to keep individual landowner compensation amounts confidential.",
+    question:"How do you respond?",
+    choices:[
+      {text:"Tell him — it is public information once the easement is recorded anyway.",good:false,scores:[0,-10,-20]},
+      {text:"Tell him you are not able to share what other landowners received, but you can explain exactly how compensation on his parcel was calculated.",good:true,scores:[10,15,20]},
+      {text:"Tell him you do not know what his neighbor received.",good:false,scores:[-5,-15,-20]},
+      {text:"Tell him his neighbor situation was different so the number would not mean anything anyway.",good:false,scores:[5,-5,-10]}
+    ],
+    goodFeedback:"Exactly right. You are honest — you are not sharing it, here is why, and here is what you can offer instead. Explaining your calculation methodology directly addresses the underlying question: Am I being treated fairly? That is usually what landowners are actually asking.",
+    badFeedback:"Policy matters regardless of whether records eventually become public. Lying about not knowing is an integrity violation. Dismissing his neighbor situation as different sounds evasive and patronizing.",
+    lesson:"Keep individual compensation confidential per company policy. Redirect to methodology — how your number was reached."
+  }
+  ,{
+    id:"r5", type:"role", typeLabel:"The Role", typeClass:"type-role",
+    situation:"A landowner tells you he will not sign anything until he sees the full environmental impact study for the pipeline project.",
+    context:"An environmental review has been conducted. It is a large document with proprietary sections. You have never provided one to a landowner before and are not sure what is appropriate.",
+    concept:"<strong>Information Requests:</strong> Landowners have legitimate interests in understanding project impacts. What you can and cannot share — and who decides — is a legal and company-policy question.",
+    question:"What do you do?",
+    choices:[
+      {text:"Tell him environmental studies are proprietary and not available to the public.",good:false,scores:[5,-5,-20]},
+      {text:"Tell him you want to give him a complete and accurate answer on what is available, escalate the request to your project manager and legal team, and get back to him before your next meeting.",good:true,scores:[10,20,20]},
+      {text:"Pull up whatever you can find online about the project and share it with him.",good:false,scores:[-5,-10,-10]},
+      {text:"Tell him the environmental review is done and the project is approved — that is all he needs to know.",good:false,scores:[0,-5,-25]}
+    ],
+    goodFeedback:"The right move. You do not know exactly what is shareable — proprietary sections, draft vs. final documents, what is publicly filed with regulatory agencies vs. internal. Your project manager and legal team know. Get the right answer before you either withhold something you could have shared or share something you should not have.",
+    badFeedback:"Dismissing the request as proprietary without checking may be wrong and will seem evasive. Sharing random online documents is unprofessional and possibly inaccurate. Telling him approval means he does not need more information is condescending and will end the negotiation.",
+    lesson:"Information requests from landowners go to your project manager and legal before you respond. Know what you can share before you decide what you will share."
+  }
+  ,{
+    id:"r6", type:"role", typeLabel:"The Role", typeClass:"type-role",
+    situation:"You have just wrapped up a project. Two months later, a landowner calls you about a drainage problem he believes was caused by the pipeline installation.",
+    context:"You are now on a different project in a different county. The prior project construction team has demobilized.",
+    concept:"<strong>Long-Tail Landowner Issues:</strong> ROW agents are often the only company contact a landowner ever had. Post-project calls are common even after files are officially closed.",
+    question:"What do you do?",
+    choices:[
+      {text:"Tell him the project is closed and give him the pipeline company main customer service number.",good:false,scores:[0,-5,-15]},
+      {text:"Listen to his concern, document it, and connect him with the right person at the pipeline company operations or landowner relations team — then confirm he made contact.",good:true,scores:[10,15,20]},
+      {text:"Tell him this sounds like a natural drainage issue unrelated to the pipeline.",good:false,scores:[-5,-10,-20]},
+      {text:"Visit the property yourself to assess the drainage issue.",good:false,scores:[5,-10,-5]}
+    ],
+    goodFeedback:"This is the right move even though the file is closed. He called you because you are the person he trusts. Listen, document, route him to the right team, and confirm he got through. That is how professional reputations are built.",
+    badFeedback:"Routing him to a generic customer service line feels like abandonment. Dismissing his concern as unrelated before anyone has looked at it is an integrity problem. Visiting yourself when you have no current authority on that project creates its own issues.",
+    lesson:"Post-project landowner contacts get the same professional treatment as active ones. Route them correctly, confirm they land, and protect the relationship."
+  }
+
+];
+
+// ═══════════════════════════════════════════════════════════
+// DECK 02 — TITLE, LEGAL & FIELD
+// axes: [titleIQ, legalInstinct, fieldJudgment]
+// ═══════════════════════════════════════════════════════════
+const ADV_SCENARIOS = [
+
+  {
+    id:"t1", type:"title", typeLabel:"Title Research", typeClass:"type-title",
+    situation:"You pull county records on a parcel. The tax records show \"John Harmon\" as owner — but the last recorded deed is from 1987, transferring to \"John & Mary Harmon, husband and wife.\" Mary's name isn't on anything after that.",
+    context:"You're preparing to contact the landowner and get an easement signed. The pipeline crosses the northwest corner of this parcel.",
+    concept:"<strong>Chain of Title:</strong> Every transfer of ownership must be recorded. If Mary Harmon is still alive, or passed away without a will being probated, her interest may still exist — meaning John alone may not be able to sign your easement.",
+    question:"What do you do before scheduling a landowner visit?",
+    choices:[
+      {text:"Call John Harmon and ask if he's the sole owner now, take his word for it, and proceed.",good:false,scores:[-20,-15,-5]},
+      {text:"Flag the title as having a potential ownership issue and ask your title attorney to research Mary Harmon's status before you approach anyone.",good:true,scores:[25,20,5]},
+      {text:"Check the obituaries online for Mary Harmon, and if she's listed, proceed with John.",good:false,scores:[-10,-20,0]},
+      {text:"Note it in the file and proceed anyway — title issues get resolved later.",good:false,scores:[-20,-15,-10]}
+    ],
+    goodFeedback:"Exactly right. This is a title defect — a potential break in the chain. You cannot get a valid easement from someone who doesn't own the whole interest. Flagging it now saves your project from a defective instrument later. Your title attorney will research probate records and determine if Mary's interest passed to John by law or if additional signatures are required.",
+    badFeedback:"A landowner signing an easement they don't have full authority to sign creates a defective instrument — the easement may not be legally enforceable. Obituaries aren't legal evidence. Your title attorney exists precisely for situations like this.",
+    lesson:"Never assume verbal confirmation of ownership is sufficient. The deed of record controls. When there's a title question, escalate to your title attorney before approaching the landowner."
+  },
+
+  {
+    id:"t2", type:"deed", typeLabel:"Deed Reading", typeClass:"type-deed",
+    situation:"A deed you're reviewing describes the parcel using metes and bounds. The description references a \"large oak tree at the southeast corner\" as a monument — from a 1952 deed. Your pipeline easement crosses the eastern edge of this 200-acre parcel in rural Oklahoma.",
+    context:"The tree likely no longer exists. Your pipeline easement crosses the eastern edge of this property.",
+    concept:"<strong>Metes and Bounds:</strong> An older boundary description method using compass directions, distances, and physical monuments. Monument-based descriptions create problems when the monument no longer exists.",
+    question:"The oak tree likely doesn't exist anymore. What's the concern?",
+    choices:[
+      {text:"No concern — descriptions like this are common and courts figure it out.",good:false,scores:[-15,-10,0]},
+      {text:"The boundary may be legally uncertain if the monument is gone and there's no survey. Flag it and recommend a survey to confirm your easement falls inside the property boundary.",good:true,scores:[20,15,10]},
+      {text:"GPS the general area where the oak would have been and estimate the boundary yourself.",good:false,scores:[-15,-20,-5]},
+      {text:"Ask the landowner where they think the property line is and use that.",good:false,scores:[-10,-15,-10]}
+    ],
+    goodFeedback:"Well reasoned. If a boundary monument is gone, the legal description may be ambiguous. If your easement is recorded using the wrong coordinates, you could end up with an easement on the wrong parcel or one that doesn't cover your actual pipeline path. A licensed surveyor resolves this.",
+    badFeedback:"Courts do not simply 'figure it out' quickly or cheaply. A missing monument creates genuine legal uncertainty about where the property boundary is. Estimating it yourself or taking the landowner's word has no legal standing.",
+    lesson:"Metes-and-bounds descriptions with missing monuments are a flag for survey needs. Never assume the boundary is obvious. Surveyors establish legal certainty; agents and landowners do not."
+  },
+
+  {
+    id:"t3", type:"title", typeLabel:"Title Research", typeClass:"type-title",
+    situation:"Your title search shows the parcel is owned by \"Clearwater Family Trust.\" There's no individual name attached — just the trust, established in 2014.",
+    context:"You need to get an easement signed. You have no other information.",
+    concept:"<strong>Trust Ownership:</strong> When land is held in a trust, the trustee (not the beneficiaries) has legal authority to sign documents. You must identify who the trustee is and confirm their authority before getting a signature.",
+    question:"How do you proceed?",
+    choices:[
+      {text:"Find who lives on the property and ask them to sign — they probably run the trust.",good:false,scores:[-20,-20,-10]},
+      {text:"Request a copy of the trust document (or at minimum a Certificate of Trust) to identify the trustee and confirm their signing authority before scheduling any meeting.",good:true,scores:[20,25,10]},
+      {text:"Call the county recorder and ask who to contact.",good:false,scores:[-5,-10,5]},
+      {text:"Send the easement agreement to the trust's address and see who responds.",good:false,scores:[-10,-15,-5]}
+    ],
+    goodFeedback:"Correct process. Trust documents control who can legally bind the trust. A beneficiary living on the property has no signing authority. The trustee — confirmed in writing — does. Many companies accept a Certificate of Trust, which summarizes the trustee's authority without disclosing private trust details.",
+    badFeedback:"Whoever lives on the property is likely a beneficiary — not the trustee — and has no legal authority to bind the trust. A signature from the wrong person is worthless.",
+    lesson:"Entity and trust ownership always requires verification of who has signing authority. Never assume. A defective signature is as bad as no signature."
+  },
+
+  {
+    id:"t4", type:"title", typeLabel:"Title Research", typeClass:"type-title",
+    situation:"A parcel on your route has six listed owners — four siblings inherited it from their parents ten years ago, and two of those siblings have since died. None of the deaths have been formally recorded against the property title.",
+    context:"You need all current interest holders to sign. The pipeline is a major transmission line and this parcel cannot be rerouted around.",
+    concept:"<strong>Heirship:</strong> When an owner dies without a will — or with one that wasn't probated — their interest passes to heirs, but isn't reflected in the deed records until probate or a legal proceeding occurs.",
+    question:"What's your move?",
+    choices:[
+      {text:"Get signatures from the four surviving siblings and note in the file that two are deceased.",good:false,scores:[-20,-20,-5]},
+      {text:"Flag this as a curative title issue requiring legal resolution — likely heirship affidavits or probate — before you can get a valid easement, and loop in your title attorney.",good:true,scores:[20,25,10]},
+      {text:"Track down the deceased siblings' spouses or children and ask them to sign as next of kin.",good:false,scores:[-10,-20,-5]},
+      {text:"Get a signed statement from the living siblings that they're the sole remaining owners.",good:false,scores:[-15,-20,-5]}
+    ],
+    goodFeedback:"This is a classic curative situation. The two deceased siblings' interests passed somewhere — to their spouses, their children, or back to other heirs — but that transfer isn't on record. Until it's legally established who inherited those interests, you don't know who needs to sign. This requires an attorney, potentially probate court, and heirship affidavits.",
+    badFeedback:"Signatures from living siblings don't cover the deceased siblings' interests — those interests still legally exist and are owned by their heirs. A statement from the living siblings has no legal effect on the deceased's shares.",
+    lesson:"Unresolved heirship is one of the most common and time-consuming title problems in ROW work. It always requires legal resolution — not creative workarounds."
+  },
+
+  {
+    id:"l1", type:"lien", typeLabel:"Liens & Encumbrances", typeClass:"type-lien",
+    situation:"Your title search on a prime agricultural parcel reveals a recorded mortgage with First National Bank — a $340,000 balance from 2019. The landowner, Carl Benton, is happy to sign your easement.",
+    context:"Carl has agreed to compensation and is ready to sign tomorrow. Your project schedule is tight.",
+    concept:"<strong>Mortgage / Deed of Trust:</strong> When a bank holds a mortgage on property, they have a recorded security interest. A pipeline easement recorded over their mortgage may require their consent — otherwise, if the landowner defaults, the bank's foreclosure could theoretically affect the easement.",
+    question:"Carl's ready to sign. What do you do?",
+    choices:[
+      {text:"Have Carl sign and record the easement today — you have a willing landowner.",good:false,scores:[-10,-25,-5]},
+      {text:"Flag the mortgage to your title attorney and legal team. The bank may need to subordinate or consent before you record. Get Carl's signature but hold recording until title is clear.",good:true,scores:[15,25,10]},
+      {text:"Ask Carl if the mortgage is a problem — if he says no, proceed.",good:false,scores:[-10,-20,-5]},
+      {text:"Reduce Carl's compensation slightly to offset the risk from the mortgage.",good:false,scores:[-5,-20,-20]}
+    ],
+    goodFeedback:"Smart move. Getting Carl's signature while notifying your title team is the right sequence. Carl's consent alone isn't enough — the bank is a third-party interest holder with rights in that land. Your legal team will contact First National to get a subordination agreement or confirm the bank's consent isn't required under your state's law.",
+    badFeedback:"A willing landowner is great, but it doesn't resolve a lienholder's interest. If you record over a mortgage without proper consent, your easement could be challenged in a foreclosure proceeding. Carl saying 'it's fine' has no legal effect on the bank's rights.",
+    lesson:"Mortgages and deeds of trust are encumbrances that affect title. Always flag them to your legal team. Your job is to identify them — not to decide whether they matter."
+  },
+
+  {
+    id:"l2", type:"lien", typeLabel:"Liens & Encumbrances", typeClass:"type-lien",
+    situation:"During title research, you find a mechanics lien filed against the property by a contractor — $18,000 for unpaid roofing work done two years ago. The property owner says 'that's resolved, I paid him.'",
+    context:"There's no release of lien recorded in the county records. The pipeline route must cross this parcel.",
+    concept:"<strong>Mechanics Lien:</strong> A legal claim filed by a contractor for unpaid work or materials. It attaches to the property. A verbal assurance that it's paid doesn't clear it — a formal lien release must be recorded.",
+    question:"The landowner insists it's settled. How do you handle this?",
+    choices:[
+      {text:"Take the landowner's word for it — if they say it's paid, move forward.",good:false,scores:[-15,-20,-5]},
+      {text:"Document the landowner's statement, note the unresolved lien in the file, and flag it for your title attorney — a recorded release is required before you can clear title.",good:true,scores:[15,25,5]},
+      {text:"Call the contractor directly to confirm payment and make a note in your file.",good:false,scores:[-5,-10,0]},
+      {text:"Proceed with the easement but reduce compensation to offset the lien risk.",good:false,scores:[-10,-15,-20]}
+    ],
+    goodFeedback:"Correct. The landowner's verbal assurance is good information but has no legal effect. Until a lien release is recorded at the county, the lien exists. Your title attorney will contact the contractor or work with the landowner to get a release recorded.",
+    badFeedback:"No verbal statement — from the landowner or the contractor — clears a recorded lien. Only a recorded release of lien does. Your job is to flag recorded encumbrances, not to assess whether they're 'really' a problem based on what people tell you.",
+    lesson:"Recorded encumbrances require recorded releases. Verbal assurances don't clear title. Flag it, document it, and let legal handle the resolution."
+  },
+
+  {
+    id:"lg1", type:"legal", typeLabel:"Legal Escalation", typeClass:"type-legal",
+    situation:"A landowner tells you he's willing to sign the easement, but only if you include a clause promising the pipeline company will 'never build any additional pipeline on this property without his personal approval' — in perpetuity.",
+    context:"He's a key landowner on the route. The project attorney is available.",
+    concept:"<strong>Non-Standard Easement Language:</strong> Every deviation from your company's standard easement form must be reviewed by a project attorney before you agree to it.",
+    question:"The landowner is waiting for an answer. What do you do?",
+    choices:[
+      {text:"Agree verbally to make him feel good, then see if legal will approve it later.",good:false,scores:[-5,-20,-25]},
+      {text:"Tell him you don't have authority to agree to non-standard terms, but you'll bring his request to your legal team and get back to him with an answer.",good:true,scores:[10,20,20]},
+      {text:"Decline the clause outright — take it or leave it.",good:false,scores:[0,-5,-20]},
+      {text:"Write the clause in by hand on the standard form and have him sign.",good:false,scores:[-20,-30,-20]}
+    ],
+    goodFeedback:"Exactly right. You don't have authority to create custom legal obligations on behalf of your company — even verbally. Telling him you'll bring it to legal is honest, professional, and gives him a real answer without committing to something you can't deliver.",
+    badFeedback:"A verbal promise to a landowner creates real legal exposure. Handwriting non-standard clauses into a legal instrument without attorney review is a serious error. Refusing outright without legal evaluation misses the chance at a deal that might actually be accommodatable.",
+    lesson:"You can negotiate, but you cannot create legal obligations. Any non-standard request goes to legal before you respond with a yes or a commitment."
+  },
+
+  {
+    id:"lg2", type:"legal", typeLabel:"Legal Escalation", typeClass:"type-legal",
+    situation:"A landowner brings up eminent domain unprompted — 'I know you can just take my land anyway, so I should get paid more.' He's not hostile. He's testing you.",
+    context:"The company you're representing holds common carrier status under state law and does have condemnation authority as a last resort — but you'd need to confirm this with your legal team for any specific project. Not every pipeline company has this authority.",
+    concept:"<strong>Eminent Domain:</strong> The legal right to take private land for public use with just compensation. In pipeline ROW, it applies only to companies with specific legal authority — FERC-certified interstate pipelines or state-designated common carriers. It always requires court proceedings and is never a negotiating tool.",
+    question:"How do you respond?",
+    choices:[
+      {text:"Confirm that yes, you have that authority, and suggest he should take your offer seriously.",good:false,scores:[0,-20,-25]},
+      {text:"Deny that any condemnation authority exists to avoid the topic.",good:false,scores:[-5,-15,-20]},
+      {text:"Acknowledge honestly that condemnation is a legal process that exists for qualified projects, but make clear your goal is to reach a fair agreement — and that condemnation is a last resort involving courts, not something you're pursuing.",good:true,scores:[5,20,25]},
+      {text:"Change the subject entirely and steer back to compensation.",good:false,scores:[0,-5,-10]}
+    ],
+    goodFeedback:"Well handled. Denying that condemnation authority ever exists is dishonest and will destroy your credibility with a landowner who's done their homework. Using it as a pressure tactic is an ethical violation. The honest answer acknowledges what's true — condemnation is a real legal mechanism for qualifying projects — while making clear you're here to negotiate fairly.",
+    badFeedback:"Using condemnation as a negotiating lever — even subtly — is a serious ethical violation in ROW practice. Denying that it ever exists is dishonest, and landowners often know more than agents expect.",
+    lesson:"Condemnation authority is real but project-specific — not universal. Never use it as a negotiating tactic. Be honest, not evasive. Your credibility with landowners is your most valuable professional asset."
+  },
+
+  {
+    id:"n1", type:"nego", typeLabel:"Negotiation", typeClass:"type-nego",
+    situation:"You arrive at a farm to discuss an easement. The landowner, an older woman named Ruth, meets you at the door. She seems friendly but guarded. She says her husband 'always handled this stuff' and he passed away three years ago.",
+    context:"You need approximately 0.8 acres of permanent ROW across her north field. She has no obvious legal representation.",
+    concept:"<strong>Landowner Relations:</strong> ROW agents are often the only face of the company a landowner ever meets. How you conduct yourself directly affects whether agreements are reached — and whether disputes follow.",
+    question:"Ruth hasn't said yes or no yet. She's just talking. What's your first move?",
+    choices:[
+      {text:"Lay out the compensation number quickly — people like knowing the money upfront.",good:false,scores:[0,0,-20]},
+      {text:"Listen. Let her talk. Learn about the farm, her history with the land, and her concerns before you discuss anything about the project.",good:true,scores:[5,5,25]},
+      {text:"Tell her you'd recommend she get an attorney before making any decisions.",good:false,scores:[0,5,-10]},
+      {text:"Show her the maps and walk her through the project details.",good:false,scores:[5,5,-5]}
+    ],
+    goodFeedback:"This is the right instinct. Ruth is telling you something important — she's unfamiliar with this process, possibly vulnerable, and trying to figure out if she can trust you. The biggest mistake here is rushing to business. Let her talk. People reveal their real concerns when they feel heard.",
+    badFeedback:"Leading with compensation numbers, maps, or legal recommendations before building even basic rapport is a common mistake. Ruth doesn't know you. She's guarded for a reason. The fastest path to a signed easement here runs through trust — and trust requires listening first.",
+    lesson:"The first meeting is rarely about the deal. It's about establishing trust. Listen more than you talk, especially with landowners who are new to this process."
+  },
+
+  {
+    id:"n2", type:"nego", typeLabel:"Negotiation", typeClass:"type-nego",
+    situation:"A commercial farmer counters your offer at 3x your initial number. He's clearly done his homework and mentions a neighbor got a higher rate from a different pipeline company last year.",
+    context:"Your compensation matrix has some flexibility. You're not at max. He says he'll sign today if you close the gap.",
+    concept:"<strong>Comparable Sales / ROW Rates:</strong> Landowners increasingly research what others have been paid. You should understand your company's compensation structure and have honest answers about what you can and cannot offer.",
+    question:"How do you respond to his counter?",
+    choices:[
+      {text:"Tell him his neighbor's deal is irrelevant and your offer is your offer.",good:false,scores:[0,0,-20]},
+      {text:"Jump immediately to your highest allowable offer to close quickly.",good:false,scores:[0,0,-10]},
+      {text:"Acknowledge his research, explain what drives your company's rate, and make a counter that moves toward him — with a clear explanation of where your ceiling is and why.",good:true,scores:[5,10,25]},
+      {text:"Tell him you'll need to check with your supervisor and get back to him tomorrow.",good:false,scores:[0,5,-10]}
+    ],
+    goodFeedback:"This is professional negotiation. You're not dismissing his research — you're engaging with it honestly. Explaining your rate structure shows competence and respect. A principled counter — not just 'I'll go up a bit' — builds credibility. And being honest about your ceiling prevents a second counter you can't meet.",
+    badFeedback:"Dismissing comparable sales information insults an informed landowner and shuts down conversation. Jumping to your ceiling immediately on the first counter leaves you nowhere to go and suggests your original offer wasn't genuine.",
+    lesson:"Informed landowners deserve informed responses. Know your rate rationale. Negotiate from principle, not position."
+  },
+
+  {
+    id:"n3", type:"field", typeLabel:"Field Situation", typeClass:"type-field",
+    situation:"You're driving the route to scout access points. A construction crew is already flagging stakes on a parcel where you have not yet obtained a signed easement. The project manager says 'we're running behind — just get us the signature.'",
+    context:"You have a meeting scheduled with the landowner in two days. The crew is working adjacent parcels and crossed into this one without authorization.",
+    concept:"<strong>Trespass / Unauthorized Entry:</strong> Accessing private property without legal authorization — including before an easement is signed — is trespass. It creates legal liability and destroys the negotiating relationship.",
+    question:"What do you do?",
+    choices:[
+      {text:"Let it go — it's just staking, not real construction, and you'll have the signature soon.",good:false,scores:[-5,-20,-20]},
+      {text:"Immediately notify the project manager and your supervisor that the crew is on an unsigned parcel and request they stop work there — then document the incident in writing.",good:true,scores:[10,25,20]},
+      {text:"Call the landowner now and offer extra compensation to smooth things over before they notice.",good:false,scores:[-5,-10,-15]},
+      {text:"Accelerate your meeting timeline and just show up today without the appointment.",good:false,scores:[-5,-5,-15]}
+    ],
+    goodFeedback:"This is the right call, even if it creates friction with the project manager. Unauthorized entry is trespass regardless of intent. If the landowner finds out — and they often do — your negotiating position collapses and the company may face legal liability. Documenting it protects you professionally. Stopping it protects the project.",
+    badFeedback:"Staking is construction activity and it's trespass when the easement isn't signed. Showing up unannounced, offering unsolicited compensation, or letting it slide all compound the problem.",
+    lesson:"No construction activity — including staking — occurs on unsigned parcels. Schedule pressure never justifies trespass. Document it and stop it."
+  },
+
+  {
+    id:"f1a", type:"field", typeLabel:"Field Situation", typeClass:"type-field",
+    situation:"You're reviewing a recorded easement from the 1970s that already crosses a parcel on your route. Your project wants to use the same corridor — but your pipeline specs are wider than the existing easement allows. The old easement was for a 20-foot ROW. You need 50 feet.",
+    context:"The landowner's family has owned this land for three generations.",
+    concept:"<strong>Existing Easements:</strong> A pipeline company can't simply expand a recorded easement. Additional land rights require a new agreement with the current landowner.",
+    question:"Can you just use the existing easement corridor for your new, wider pipeline?",
+    choices:[
+      {text:"Yes — pipelines use existing corridors all the time. It's industry standard.",good:false,scores:[-15,-15,-5]},
+      {text:"Only if the new pipeline fits within the existing 20-foot strip.",good:false,scores:[-10,-10,0]},
+      {text:"No. The existing easement grants specific rights for a specific width. A wider pipeline requires a new easement agreement with the current landowner for the additional footage.",good:true,scores:[20,20,10]},
+      {text:"Check with the project engineer — if they say it's the same corridor, it's probably fine.",good:false,scores:[-15,-20,-5]}
+    ],
+    goodFeedback:"Correct. An easement is a legally defined instrument — it grants specific rights of specific dimensions. Using more than it authorizes is trespass. Even if the physical corridor looks the same, you need legal authority to cross that additional 30 feet. That means approaching the current landowner and negotiating a new agreement for the expanded ROW.",
+    badFeedback:"Industry practice doesn't override property rights. An existing easement doesn't give you authority to expand it unilaterally. Building outside an easement's boundaries, even adjacent to your existing corridor, is trespass.",
+    lesson:"Easements are specific. Any use beyond their defined scope requires a new agreement. 'Same corridor' doesn't mean 'same authority.'"
+  },
+
+  {
+    id:"f2a", type:"field", typeLabel:"Field Situation", typeClass:"type-field",
+    situation:"During title research you discover the land is split — one party owns the surface rights, and a different party owns the mineral rights beneath it. Your pipeline is a natural gas gathering line.",
+    context:"The surface owner is cooperative. The mineral rights owner is an LLC out of Texas with no local contact listed.",
+    concept:"<strong>Split Estate:</strong> Surface and mineral rights can be owned separately. For pipeline ROW, you generally deal with the surface owner — but mineral rights owners may have concerns depending on state law and active mineral leases.",
+    question:"You have the surface owner's agreement. Is that enough to proceed?",
+    choices:[
+      {text:"Yes — pipelines are surface infrastructure, so surface rights are all you need.",good:false,scores:[-10,-10,5]},
+      {text:"Probably yes for the surface easement, but flag the split estate to your legal team — they'll determine whether the mineral rights owner requires notice or a separate agreement given your state's laws.",good:true,scores:[15,20,10]},
+      {text:"No — you need both owners to sign any pipeline easement.",good:false,scores:[-5,-10,5]},
+      {text:"Try to find the Texas LLC and get their signature anyway, just to be safe.",good:false,scores:[-5,5,-5]}
+    ],
+    goodFeedback:"Good instinct. Surface easements for pipelines are primarily a surface rights matter — but split estate situations can be legally complex, especially with active mineral leases, state-specific notice requirements, or gas gathering that interacts with subsurface activity. Your legal team determines what additional steps are required.",
+    badFeedback:"The answer here isn't binary — it depends on state law, active mineral leases, and your company's legal standards. That's not an agent call. The agent's job is to identify the split estate and flag it, not to decide whether it matters.",
+    lesson:"Split estates are a flag, not a dealbreaker — but they require legal evaluation. Identify them, document them, and let your legal team determine the required steps."
+  }
+
+  ,{
+    id:"t5", type:"title", typeLabel:"Title Research", typeClass:"type-title",
+    situation:"During title research on a rural parcel in Oklahoma, you discover that a portion of the route crosses land that was once part of a Dawes Act allotment assigned to a tribal member. The current county records show a non-Native individual as the owner.",
+    context:"The chain of title shows the land transferred out of tribal ownership in 1934. The pipeline crosses approximately 400 feet of this parcel.",
+    concept:"<strong>Tribal and Allotted Land:</strong> Land originally allotted to tribal members under the Dawes Act has a complex legal history. Even when it appears in county records as privately owned, there can be federal trust interests or BIA involvement depending on how and when the transfer occurred.",
+    question:"What do you do?",
+    choices:[
+      {text:"The county records show a private owner — proceed with normal title and landowner contact.",good:false,scores:[-15,-20,-5]},
+      {text:"Flag the allotment history immediately and escalate to your title attorney and project legal team — this requires specialized research into federal and tribal records, not just county records.",good:true,scores:[20,25,10]},
+      {text:"Contact the local tribal nation land office to ask if they have any claim.",good:false,scores:[-5,-5,5]},
+      {text:"Note it as historical and proceed — 1934 is a long time ago.",good:false,scores:[-20,-20,-10]}
+    ],
+    goodFeedback:"Correct escalation. Allotted land history — especially transfers from the early 20th century — can involve federal trust interests and jurisdictional questions that go well beyond county title research. This requires specialists. Your job is to recognize the flag, not to research federal Indian land law yourself.",
+    badFeedback:"County records are not definitive for land with allotment history. The transfer may have been improper or may involve interests that do not appear in county records. This is one of the most specialized areas in Western ROW work.",
+    lesson:"Any land with tribal allotment history requires specialist legal review — not standard title work. Flag it immediately."
+  }
+  ,{
+    id:"t6", type:"title", typeLabel:"Title Research", typeClass:"type-title",
+    situation:"You are running title on a parcel and find it was conveyed via a quit claim deed rather than a warranty deed. The quit claim transfers whatever interest the grantor had — with no guarantees about what that actually is.",
+    context:"The quit claim was recorded five years ago. Before it, the parcel had a clean chain with warranty deeds going back decades.",
+    concept:"<strong>Quit Claim Deed:</strong> A quit claim deed transfers only whatever interest the grantor actually has — it makes no warranty about the quality or completeness of that interest. It commonly appears in family transfers and estate settlements.",
+    question:"What does the quit claim deed mean for your title work?",
+    choices:[
+      {text:"Nothing special — quit claim deeds are common and the chain was clean before it.",good:false,scores:[-15,-10,0]},
+      {text:"Flag it for your title attorney — the quit claim does not guarantee a complete transfer and may indicate an estate settlement or other situation that needs verification.",good:true,scores:[20,20,5]},
+      {text:"Contact the grantor and ask why they used a quit claim instead of a warranty deed.",good:false,scores:[-10,-10,5]},
+      {text:"Order title insurance and proceed — that is what it is for.",good:false,scores:[-5,-5,0]}
+    ],
+    goodFeedback:"Right flag. A quit claim in an otherwise clean chain often signals an estate transfer, divorce settlement, or intra-family conveyance. Your title attorney will determine if the underlying interest was complete. It may resolve cleanly — but the flag is warranted.",
+    badFeedback:"A quit claim deed in a warranty-deed chain is always worth noting. The grantor can only convey what they had. Title insurance mitigates risk but does not clear title.",
+    lesson:"A quit claim deed in a warranty-deed chain is a flag worth escalating. It may be nothing — but your title attorney determines that, not you."
+  }
+  ,{
+    id:"reg1", type:"legal", typeLabel:"Permits and Regulatory", typeClass:"type-legal",
+    situation:"Your pipeline route crosses a navigable waterway. The project manager tells you the Army Corps of Engineers permit is being handled by the environmental team and you just need to get the landowner easements on both banks.",
+    context:"The crossing will require both private landowner easements and an Army Corps permit. Construction cannot start on the crossing until both are in hand.",
+    concept:"<strong>Water Crossing Permits:</strong> Crossing navigable waters requires federal permits from the Army Corps of Engineers in addition to landowner easements. These are separate tracks — one does not substitute for the other.",
+    question:"What is your role here?",
+    choices:[
+      {text:"Get the easements and let the environmental team handle the permit — they said it is covered.",good:false,scores:[0,-10,-5]},
+      {text:"Get the easements, confirm in your file that the Army Corps permit is being tracked by the environmental team, note the dependency, and flag to your supervisor that construction on this crossing cannot proceed until both are confirmed.",good:true,scores:[15,20,15]},
+      {text:"Contact the Army Corps directly to check on the permit status.",good:false,scores:[-5,-5,5]},
+      {text:"Ask the project manager for a copy of the permit application so you can track it yourself.",good:false,scores:[5,5,-5]}
+    ],
+    goodFeedback:"This is the right scope. You are not handling the Army Corps permit — that is the environmental team domain. But you are responsible for knowing this crossing has a regulatory dependency, documenting it, and making sure nobody assumes your easements alone authorize construction.",
+    badFeedback:"They said it is covered is not documentation. If the permit slips and construction gets held up, having it in your file that you did not raise it becomes a problem.",
+    lesson:"Water crossings have dual tracks — landowner easements and regulatory permits. You own the easement track. Confirm the permit track is covered and document the dependency."
+  }
+  ,{
+    id:"reg2", type:"legal", typeLabel:"Permits and Regulatory", typeClass:"type-legal",
+    situation:"Your pipeline route crosses a county road. The project manager says the construction crew will bore under it. You have been told to get the adjacent landowner easements but nothing about the road crossing.",
+    context:"County roads are public rights-of-way. Even a bore underneath them typically requires a permit from the county road department.",
+    concept:"<strong>Road Crossing Permits:</strong> Crossing public rights-of-way requires permits from the controlling authority, separate from any private landowner easements.",
+    question:"What do you do?",
+    choices:[
+      {text:"Focus on the private landowner easements — the construction crew knows what they are doing with the bore.",good:false,scores:[-10,-15,-5]},
+      {text:"Flag to your project manager and supervisor that the county road crossing likely requires a bore permit from the county — and that this should be tracked as a separate item before construction on that segment.",good:true,scores:[15,20,15]},
+      {text:"Call the county road department yourself to get the permit.",good:false,scores:[-5,-5,5]},
+      {text:"Ask the project engineer if a bore under a road requires a permit.",good:false,scores:[5,5,-5]}
+    ],
+    goodFeedback:"Correct flag. Public right-of-way crossings are a separate permission track from private easements. You are not obtaining the permit yourself, but you are the person who should recognize the dependency and make sure someone owns it.",
+    badFeedback:"Construction crews knowing how to bore does not mean they have obtained the permit. County road departments have real authority to stop work.",
+    lesson:"Public rights-of-way require separate permits from the controlling authority. Flag the dependency. Do not assume the construction crew has it handled."
+  }
+  ,{
+    id:"dmg1", type:"field", typeLabel:"Damage Settlement", typeClass:"type-field",
+    situation:"Construction is complete on a farm. The landowner has filed a damage claim for 12,000 dollars — crop loss, a damaged irrigation line the crew cut, and fence replacement. He has photos, receipts, and a written crop yield comparison from his agronomist.",
+    context:"You are handling the post-construction damage settlement.",
+    concept:"<strong>Damage Settlement:</strong> Post-construction damages are negotiated separately from the original easement compensation. Well-documented claims get item-by-item evaluation.",
+    question:"How do you approach this claim?",
+    choices:[
+      {text:"Tell him 12,000 seems high and start by offering half to see where he lands.",good:false,scores:[-5,-10,-20]},
+      {text:"Review his documentation item by item, assess what is substantiated, and make an offer based on actual documented losses — explaining your reasoning for each line item.",good:true,scores:[15,20,25]},
+      {text:"Accept the claim as submitted — he has documentation and it is not worth the dispute.",good:false,scores:[5,-5,-5]},
+      {text:"Tell him damage claims go through the company main claims line, not through you.",good:false,scores:[-5,-10,-20]}
+    ],
+    goodFeedback:"This is how damage settlement should work. He has done the work — photos, receipts, agronomist assessment. You review each item, determine what is substantiated, and make a documented offer you can explain line by line. That is fair to him and defensible for the company.",
+    badFeedback:"Opening with a lowball offer on a well-documented claim insults a prepared landowner. Accepting the full claim without review is not your job. Routing him to a claims line when you are his agent is an abdication.",
+    lesson:"Damage claims with documentation get item-by-item review. Your settlement offer should be explainable line by line."
+  }
+  ,{
+    id:"dmg2", type:"field", typeLabel:"Damage Settlement", typeClass:"type-field",
+    situation:"A landowner says construction crews drove across a section of his hay field outside the agreed ROW, leaving significant ruts. He has no photos, but he is showing you the damage in person. It is real — you can see it clearly.",
+    context:"The construction crew has left the area. There is no written record of the encroachment.",
+    concept:"<strong>Encroachment Damage:</strong> When construction goes outside the authorized ROW, the company is liable for the resulting damage regardless of whether it was documented in advance.",
+    question:"What do you do?",
+    choices:[
+      {text:"Tell him you cannot process a claim without documentation of the encroachment.",good:false,scores:[-5,-15,-25]},
+      {text:"Photograph the damage yourself, document your observations in writing, confirm the damage is outside the authorized ROW, and begin the damage settlement process with your supervisor.",good:true,scores:[15,20,25]},
+      {text:"Acknowledge the damage but tell him you will need to verify with the construction crew before committing to anything.",good:false,scores:[5,-5,-10]},
+      {text:"Ask him to get repair estimates and submit a formal claim.",good:false,scores:[5,0,-10]}
+    ],
+    goodFeedback:"You have eyes. You are standing in a field with obvious recent ruts outside the staked ROW. Your own documentation is valid evidence. Photograph it, note the location, document that it is outside the authorized ROW, and get your supervisor involved. The company is liable for encroachment damage.",
+    badFeedback:"Demanding prior documentation when you can see the damage yourself is evasive. Checking with the crew first before acknowledging visible damage looks like building a defense. Routing him to a formal process without personal acknowledgment is abandonment.",
+    lesson:"When you can see the damage, document it yourself. Field observation is evidence. The company owns encroachment damage."
+  }
+  ,{
+    id:"dmg3", type:"field", typeLabel:"Damage Settlement", typeClass:"type-field",
+    situation:"A landowner submits a damage claim six months after construction wrapped up, saying the pipeline installation caused subsidence in a section of his pasture and several fence posts are now leaning.",
+    context:"There are no pre-construction photos of that specific area in your file. The construction report does not mention any issues in that section.",
+    concept:"<strong>Late Damage Claims:</strong> Post-construction damage claims that emerge months later require careful assessment. Some damages genuinely manifest after settlement — subsidence over buried pipe is real. Pre-construction baseline documentation protects the company at the end.",
+    question:"How do you approach this?",
+    choices:[
+      {text:"Tell him the project closed six months ago and the claim is too late.",good:false,scores:[-5,-10,-20]},
+      {text:"Visit the property, assess the damage, check your pre-construction baseline records, and escalate to your supervisor — some post-construction subsidence is a legitimate project-caused damage.",good:true,scores:[15,20,15]},
+      {text:"Tell him subsidence happens naturally in pastures and this probably is not related to the pipeline.",good:false,scores:[-5,-10,-25]},
+      {text:"Offer him 2,000 dollars to settle quickly and avoid a dispute.",good:false,scores:[0,-10,-15]}
+    ],
+    goodFeedback:"Late claims require evaluation, not dismissal. Subsidence over buried pipeline is a known phenomenon — it can appear months after backfill as soil settles. Visit the property, check your baseline records, assess whether the damage is plausibly pipeline-related, and get your supervisor involved before you make any commitments.",
+    badFeedback:"Telling him it is too late without assessment creates legal exposure if the claim is legitimate. Dismissing subsidence as natural without investigation is a legal and ethical problem. A quick-settlement offer without evaluation may be paying a claim that is not valid.",
+    lesson:"Late damage claims get evaluated on the merits, not dismissed on timing. Subsidence and ground settlement are known post-construction phenomena. Document, assess, escalate."
+  }
+  ,{
+    id:"lg3", type:"legal", typeLabel:"Legal Escalation", typeClass:"type-legal",
+    situation:"A sophisticated landowner presents you with a printout showing comparable ROW rates from a pipeline project two counties over that paid significantly more per acre than your current offer.",
+    context:"His information appears accurate — it is from a publicly recorded easement. Your company rates are lower on this project.",
+    concept:"<strong>Rate Variance Between Projects:</strong> ROW compensation rates vary by project based on pipeline diameter, product type, land use, and regional norms. A higher rate on another project does not automatically entitle a landowner to the same.",
+    question:"How do you respond to his comparable?",
+    choices:[
+      {text:"Tell him every project is different and your rates are your rates.",good:false,scores:[0,0,-20]},
+      {text:"Acknowledge the comparable as legitimate research, tell him you want to give him an accurate explanation of why your project rates are structured the way they are, and commit to getting back to him with a clear answer before your next meeting.",good:true,scores:[10,15,20]},
+      {text:"Tell him the other project must have made a mistake or overpaid.",good:false,scores:[-5,-5,-25]},
+      {text:"Match the comparable rate to close the deal.",good:false,scores:[-5,-10,-10]}
+    ],
+    goodFeedback:"This is how you handle an informed landowner. You cannot explain rate variance on the spot if you do not know the answer — so do not try. Acknowledging the comparable, committing to get back to him with a real explanation, and following through is both honest and professional.",
+    badFeedback:"Rates are rates dismisses legitimate research and sounds defensive. Suggesting the other project overpaid is insulting. Immediately matching without evaluation bypasses your entire rate structure.",
+    lesson:"Informed landowners with documented comparables deserve real answers, not deflection. If you do not know the rate rationale, get it before you explain it."
+  }
+  ,{
+    id:"n4", type:"nego", typeLabel:"Negotiation", typeClass:"type-nego",
+    situation:"You have had three productive meetings with a landowner. At the fourth meeting, he shows up with a neighbor who owns an adjacent parcel also on your route. The neighbor immediately says they have decided to negotiate together.",
+    context:"Both parcels are on the route. They are adjacent but different sizes with different land uses.",
+    concept:"<strong>Joint Negotiation Attempts:</strong> Landowners sometimes attempt to negotiate as a group to increase leverage. Each parcel has its own compensation basis and commitments made in a joint conversation may be misapplied.",
+    question:"How do you handle this?",
+    choices:[
+      {text:"Go along with the joint meeting — it will be more efficient to handle them together.",good:false,scores:[-5,-10,-15]},
+      {text:"Welcome the neighbor, explain that each parcel is negotiated on its own terms and value, and offer to schedule a separate meeting with the neighbor — then continue your individual conversation with your original landowner if he is willing.",good:true,scores:[10,15,20]},
+      {text:"End the meeting and reschedule individually.",good:false,scores:[5,5,-10]},
+      {text:"Ask your supervisor how to handle it before proceeding.",good:false,scores:[5,5,-5]}
+    ],
+    goodFeedback:"This is the professional balance. You do not accommodate the joint negotiation — each parcel has its own basis. But you do not have to be rude. Welcome the neighbor, explain your process clearly, offer a separate meeting, and see if your original landowner wants to continue. Many will.",
+    badFeedback:"Joint meetings for separate parcels create a mess — what you say about one becomes an expectation for the other. Ending the meeting entirely is more confrontational than necessary.",
+    lesson:"Each parcel is negotiated individually on its own terms. Joint negotiation attempts get redirected professionally — separate meetings, separate conversations."
+  }
+  ,{
+    id:"f3", type:"field", typeLabel:"Field Situation", typeClass:"type-field",
+    situation:"You arrive at a property for a scheduled meeting and discover the landowner has posted No Trespassing signs along the entire fence line since your last visit. He is home but does not come to the door.",
+    context:"You have no signed easement. The parcel is critical and cannot be rerouted. Your previous two meetings were cordial.",
+    concept:"<strong>Escalating Landowner Resistance:</strong> A landowner who was cooperative and is now posting No Trespassing signs and refusing to answer the door is communicating something. How you respond shapes what options remain.",
+    question:"What do you do?",
+    choices:[
+      {text:"Wait in the driveway — he will come out eventually.",good:false,scores:[-5,-10,-15]},
+      {text:"Leave a note on the door with your contact information, document the visit including the new signage, and contact your supervisor — this is a significant change that needs to be discussed before your next contact.",good:true,scores:[10,20,15]},
+      {text:"Call him on his cell phone from the driveway.",good:false,scores:[-5,-5,-10]},
+      {text:"Send him a certified letter that day stating you need a response within five business days.",good:false,scores:[5,5,-10]}
+    ],
+    goodFeedback:"Leave the door open, document everything, and escalate. The No Trespassing signs and refusal to answer the door are communications — something changed. Your supervisor needs to know. There may be a reason that changes your approach entirely.",
+    badFeedback:"Waiting in the driveway is pressure. Calling from the driveway when he has clearly chosen not to answer the door is escalation he did not invite. A certified letter with a deadline after cordial prior meetings is disproportionate.",
+    lesson:"Escalating resistance is a signal — document it, report it, and adjust your approach before your next contact. Do not push into confrontation when a landowner is withdrawing."
+  }
+
+];
+
+
+// ═══════════════════════════════════════════════════════════
+// DECK 03 — ADVANCED FIELD
+// axes: [complexity, regulatory, professional]
+// ═══════════════════════════════════════════════════════════
+const DECK3_SCENARIOS = [
+
+  {
+    id:"x1", type:"legal", typeLabel:"Permits and Regulatory", typeClass:"type-legal",
+    situation:"Your interstate pipeline project requires a FERC Certificate of Public Convenience and Necessity before construction can begin. A landowner asks point-blank: Has your company been approved to build this yet?",
+    context:"The FERC certificate application is pending — approval has not yet been granted. Your company is acquiring ROW in advance of approval, which is standard practice.",
+    concept:"<strong>FERC Certification:</strong> Interstate natural gas pipelines regulated under the Natural Gas Act must obtain a Certificate of Public Convenience and Necessity from FERC before construction. ROW acquisition before certification is standard — but agents must be honest about the status.",
+    question:"How do you answer him?",
+    choices:[
+      {text:"Tell him yes, the company has all required approvals — you do not want to slow the negotiation.",good:false,scores:[0,-20,-30]},
+      {text:"Tell him the FERC application is pending and approval has not yet been issued — and that ROW acquisition proceeding in advance of certificate issuance is standard practice in the industry.",good:true,scores:[10,25,25]},
+      {text:"Tell him approvals are handled by other departments and you are just here to discuss the land.",good:false,scores:[0,-10,-20]},
+      {text:"Tell him the project is fully permitted because state and local approvals are in place.",good:false,scores:[-5,-20,-25]}
+    ],
+    goodFeedback:"Honest and professional. FERC certification status is material information. A landowner signing a pre-certification easement has the right to know the project has not been formally approved yet. Pre-certification ROW acquisition is industry-standard and legal, but it does not make the status question go away.",
+    badFeedback:"Misrepresenting the certification status in any direction is an integrity violation. Other departments handle approvals is evasive. State permits do not substitute for FERC certification on an interstate pipeline.",
+    lesson:"FERC certification status is material. Pre-certification ROW acquisition is standard practice — but the status must be honestly disclosed when asked."
+  },
+
+  {
+    id:"x2", type:"legal", typeLabel:"Permits and Regulatory", typeClass:"type-legal",
+    situation:"Your project route crosses land within 100 feet of a wetland area. The environmental team has flagged it for a Section 404 Nationwide Permit. The construction PM wants to start grading in that area next week.",
+    context:"The landowner easement for this parcel is signed. The Section 404 permit has been applied for but not yet granted. The PM says it will come through — it always does.",
+    concept:"<strong>Section 404 Permits:</strong> Discharging fill material into waters of the US including wetlands requires a permit under Section 404 of the Clean Water Act administered by the Army Corps of Engineers. Construction without this permit is a federal violation.",
+    question:"What do you do?",
+    choices:[
+      {text:"Stay out of it — you have your easement and this is the PM call.",good:false,scores:[0,-15,-10]},
+      {text:"Flag directly to your supervisor that construction on this segment cannot begin until the Section 404 permit is issued — regardless of the PM confidence — and document that you raised it.",good:true,scores:[10,25,20]},
+      {text:"Ask the environmental team how long the permit will take and relay the timeline to the PM.",good:false,scores:[5,5,5]},
+      {text:"Tell the PM you agree it will probably come through and let him proceed.",good:false,scores:[-5,-20,-20]}
+    ],
+    goodFeedback:"This is the right flag even if it creates friction. Section 404 violations are federal — fines are significant and stop-work orders are real. The PM confidence about approval does not authorize work. Your job is to make sure the project does not start on a segment with an unresolved federal permit requirement, and to document that you raised it.",
+    badFeedback:"Staying out of it when you know a federal permit is outstanding and construction is imminent is a failure of professional responsibility. Relaying the timeline is insufficient — the PM needs to know construction cannot start. Agreeing with optimism when you know the permit is not issued is complicity.",
+    lesson:"Federal permit requirements are hard stops. Confidence about approval is not authorization. Flag it, document it, and do not let schedule pressure override regulatory compliance."
+  },
+
+  {
+    id:"x3", type:"nego", typeLabel:"Complex Negotiation", typeClass:"type-nego",
+    situation:"A large landowner who controls four adjacent parcels on your route refuses to negotiate individually. He wants a single lump-sum payment for all four parcels together, plus a percentage of future pipeline revenue.",
+    context:"Your company standard practice is per-parcel compensation. Revenue-sharing provisions are not part of any standard easement form you have seen.",
+    concept:"<strong>Non-Standard Compensation Structures:</strong> Sophisticated landowners sometimes request compensation structures entirely outside standard practice. These require legal and business approval well above field-agent authority.",
+    question:"How do you respond?",
+    choices:[
+      {text:"Tell him revenue sharing is not something pipeline companies do and he should be realistic.",good:false,scores:[0,-5,-20]},
+      {text:"Tell him his requests are outside your authority to agree to, but you will bring them to the appropriate level of your company for a formal response — and get back to him with a real answer.",good:true,scores:[10,20,20]},
+      {text:"Negotiate the lump-sum piece yourself and tell him revenue sharing is a non-starter.",good:false,scores:[-5,-15,-10]},
+      {text:"Refer him directly to your project attorney.",good:false,scores:[5,10,5]}
+    ],
+    goodFeedback:"The right move. Revenue sharing and portfolio lump-sum deals are business decisions requiring legal review and possibly executive sign-off. You do not dismiss them outright and you do not attempt them yourself. You take them up the chain and get a real answer.",
+    badFeedback:"Telling him to be realistic may be accurate but kills the relationship before your company has evaluated the request. Negotiating partial terms improvises in a domain you are not authorized to work in.",
+    lesson:"Non-standard compensation requests go up the chain for legal and business evaluation. Do not dismiss them and do not attempt them. Get back with an answer."
+  },
+
+  {
+    id:"x4", type:"field", typeLabel:"Complex Field", typeClass:"type-field",
+    situation:"You have learned that a landowner you are about to approach recently went through a bitter divorce. The property is now jointly owned by both former spouses — joint tenancy survived the divorce — and they apparently do not speak to each other.",
+    context:"You need signatures from both. The pipeline crosses the northeast corner of their shared parcel.",
+    concept:"<strong>Estranged Co-Owners:</strong> Joint tenancy can survive divorce depending on state law. When co-owners are estranged, getting both signatures requires independent, careful outreach — not intermediaries.",
+    question:"How do you approach this?",
+    choices:[
+      {text:"Contact the friendlier-seeming spouse first, get their signature, then use their endorsement when approaching the other.",good:false,scores:[-5,-15,-20]},
+      {text:"Contact each separately, present the project independently, and get each to sign without referencing the other cooperation or position.",good:true,scores:[15,20,20]},
+      {text:"Ask one spouse if the other would be willing to sign.",good:false,scores:[-10,-10,-15]},
+      {text:"Wait to see if they resolve their ownership situation before you approach either.",good:false,scores:[-5,-10,-5]}
+    ],
+    goodFeedback:"Each co-owner is an independent negotiating party with the same legal interest. Contacting them separately and getting independent signatures is both professional and legally clean. Using one spouse cooperation to influence the other is manipulation.",
+    badFeedback:"Using one party endorsement to leverage another in an estranged co-ownership situation can destabilize both relationships. Asking one about the other intentions puts them in an awkward position.",
+    lesson:"Estranged co-owners are independent parties. Contact each separately. Never use one party position to influence the other."
+  },
+
+  {
+    id:"x5", type:"title", typeLabel:"Title Research", typeClass:"type-title",
+    situation:"Your title search reveals the parcel has an existing recorded pipeline easement from 1968 held by a company called Western Transco — which no longer exists. No release of easement is on record.",
+    context:"Your pipeline is a different company and a different line. The 1968 easement covers the same general corridor you are targeting.",
+    concept:"<strong>Abandoned and Orphaned Easements:</strong> Old easements from defunct companies remain on title until formally released. The successor to the company or its assets may still hold a valid interest.",
+    question:"What does this mean for your project?",
+    choices:[
+      {text:"The company is defunct — the easement is effectively abandoned and you can proceed with your own easement.",good:false,scores:[-15,-20,-5]},
+      {text:"Flag the existing easement to your title attorney — the successor company or its assets may still hold a valid interest and it needs to be researched and potentially released before your easement is clean.",good:true,scores:[20,25,10]},
+      {text:"Note it in the file as a historic easement and proceed — your easement is a separate grant.",good:false,scores:[-10,-15,-5]},
+      {text:"Ask the landowner if the old pipeline is still in the ground.",good:false,scores:[0,-10,5]}
+    ],
+    goodFeedback:"Correct escalation. A defunct company recorded easement does not automatically disappear — the rights may have been acquired in bankruptcy, assigned to a successor, or still technically valid. Your title attorney will research the corporate history and determine what curative step is needed.",
+    badFeedback:"Defunct company equals abandoned easement is not a legal principle. The interest may have survived through acquisition or corporate succession. Your easement and the 1968 easement are separate grants — having two does not clear the first.",
+    lesson:"Recorded easements from defunct companies require legal research to determine successor status. Never assume an old easement is abandoned without a title attorney determination."
+  },
+
+  {
+    id:"x6", type:"nego", typeLabel:"Complex Negotiation", typeClass:"type-nego",
+    situation:"A landowner agrees to sign but wants a provision that his neighboring land — which is not on the easement but is adjacent — will never be subject to ROW acquisition by your company without his consent.",
+    context:"That neighboring land is not currently on your route. The project attorney is available.",
+    concept:"<strong>Future-Use Restrictions:</strong> Landowners sometimes request that easements contain provisions restricting the company future rights on land not even part of the current transaction. These bind future projects.",
+    question:"What do you do?",
+    choices:[
+      {text:"Agree — it is not land you are acquiring now and it costs you nothing.",good:false,scores:[-5,-20,-20]},
+      {text:"Tell him you cannot agree to terms affecting land not part of this easement, but you will bring his request to the project attorney for a formal response before your next meeting.",good:true,scores:[10,25,20]},
+      {text:"Tell him that is not how easements work and suggest he drop it.",good:false,scores:[0,-5,-20]},
+      {text:"Write a separate letter confirming his concern — outside the easement document.",good:false,scores:[-10,-20,-25]}
+    ],
+    goodFeedback:"You cannot agree to this — and more importantly, you do not have the authority to agree to it. A provision restricting future ROW acquisition on land not part of this transaction could affect future projects and the company operational flexibility for years. That is a legal and business decision.",
+    badFeedback:"It costs you nothing ignores that you have no authority to make that commitment and no visibility into future projects. A separate letter outside the easement document is a legally questionable document that could be worse than the clause itself.",
+    lesson:"Provisions restricting the company future rights require legal and business evaluation — not field decisions regardless of how minor they seem."
+  },
+
+  {
+    id:"x7", type:"field", typeLabel:"Complex Field", typeClass:"type-field",
+    situation:"You are taking over a project where the previous ROW agent was fired mid-project. Several landowners are now refusing to meet with anyone from the company. One tells you: The last guy lied to us.",
+    context:"You do not know what the previous agent said or did. Your files on his parcels are incomplete.",
+    concept:"<strong>Inheriting Damaged Relationships:</strong> Taking over a damaged landowner relationship is one of the harder field assignments in ROW work. You cannot fix what you do not know, and you cannot pretend nothing happened.",
+    question:"How do you approach a landowner who says the previous agent lied to them?",
+    choices:[
+      {text:"Tell him you are a different person and ask him to give you a fresh start.",good:false,scores:[5,5,-10]},
+      {text:"Acknowledge that something clearly went wrong, ask him directly what he was told, listen fully, document it, and escalate the specific concern to your project manager and legal before making any commitments or denials.",good:true,scores:[10,20,25]},
+      {text:"Tell him you cannot speak to what someone else said and you can only discuss your current offer.",good:false,scores:[5,0,-15]},
+      {text:"Apologize on behalf of the company for whatever happened and try to rebuild goodwill with a higher offer.",good:false,scores:[0,-10,-15]}
+    ],
+    goodFeedback:"This is the right sequence. You acknowledge the damage without confirming or denying what happened — because you genuinely do not know. You ask him what he was told — specific and actionable information. You document it carefully and escalate before making any commitments.",
+    badFeedback:"A fresh-start request without acknowledging prior damage is tone-deaf. Refusing to engage with what he was told leaves his concern unresolved. Apologizing and offering more money before you know what happened creates legal exposure.",
+    lesson:"Inherited damaged relationships require acknowledgment, fact-gathering, and escalation — not fresh-start resets or compensatory apologies."
+  },
+
+  {
+    id:"x8", type:"legal", typeLabel:"Legal Escalation", typeClass:"type-legal",
+    situation:"A landowner during a meeting makes what sounds like a recorded statement on his phone. You are not certain — his phone is face-down on the table — but you notice it is on and suspect he is recording the conversation.",
+    context:"You are in a state whose recording consent laws you are not certain of. The conversation is routine.",
+    concept:"<strong>Recorded Conversations:</strong> Recording laws vary by state. Regardless of legality, recorded conversations become evidence if disputes arise — so what you say in every landowner meeting should be accurate and defensible.",
+    question:"How do you handle this?",
+    choices:[
+      {text:"Ask him directly if he is recording the conversation.",good:false,scores:[5,-5,-10]},
+      {text:"Say nothing about it and continue the meeting exactly as you would whether or not you were being recorded — because everything you say should be accurate and defensible anyway.",good:true,scores:[10,20,25]},
+      {text:"Stop the meeting and say you are not comfortable continuing without knowing if you are being recorded.",good:false,scores:[-5,-5,-15]},
+      {text:"Pick up your own phone and start recording as well.",good:false,scores:[-5,-10,-15]}
+    ],
+    goodFeedback:"This is the right mindset. If you are conducting yourself professionally — stating accurate information, not making promises you cannot keep, not misrepresenting the project — it does not matter whether he is recording. The recording concern is a signal to be precise and accurate, not to change what you are doing.",
+    badFeedback:"Directly asking if he is recording can come across as confrontational. Stopping the meeting makes you look like you have something to hide. Counter-recording without his knowledge may be illegal.",
+    lesson:"Conduct every landowner meeting as if it is being recorded — because it may be. Professional, accurate, and defensible at all times."
+  },
+
+  {
+    id:"x9", type:"field", typeLabel:"Complex Field", typeClass:"type-field",
+    situation:"A landowner tells you he will only sign if the company agrees to hire local contractors for his section of the pipeline. He frames it as a community benefit.",
+    context:"Contractor selection is outside your authority. The project construction contracts are already bid and awarded.",
+    concept:"<strong>Out-of-Scope Commitments:</strong> Landowners sometimes tie easement cooperation to requests having nothing to do with land compensation. These are business and policy decisions, not field-agent decisions.",
+    question:"How do you respond?",
+    choices:[
+      {text:"Tell him you will mention it to the project manager — implying it might happen.",good:false,scores:[0,-10,-20]},
+      {text:"Acknowledge his concern, explain honestly that contractor selection is outside your authority and outside the scope of easement negotiation, and bring his request formally to your project manager for a response — without implying an outcome.",good:true,scores:[10,20,20]},
+      {text:"Tell him contractor decisions are made long before you show up and there is nothing anyone can do.",good:false,scores:[5,0,-15]},
+      {text:"Agree that local hiring is a good idea and you will advocate for it.",good:false,scores:[0,-10,-20]}
+    ],
+    goodFeedback:"The right move. His concern is legitimate even if it is outside your scope. You acknowledge it, you are honest it is not your call, and you bring it up formally without implying a commitment. The project manager decides whether to engage.",
+    badFeedback:"Implying it might happen without authority is a promise you cannot back up. Dismissing it as impossible sounds indifferent. Personally advocating for something you have no authority over creates an expectation you cannot control.",
+    lesson:"Non-compensation requests get escalated formally without implied outcomes. You do not decide — you deliver the request and let the right level of the organization respond."
+  },
+
+  {
+    id:"x10", type:"nego", typeLabel:"Complex Negotiation", typeClass:"type-nego",
+    situation:"You have spent four weeks negotiating and finally reached a handshake agreement. The next day, your project manager calls and says the route has been realigned — the new route does not cross this parcel at all.",
+    context:"You have not yet had the landowner sign the paperwork. You were planning to meet tomorrow.",
+    concept:"<strong>Route Changes After Agreement:</strong> Route realignments happen on large pipeline projects. When they eliminate a parcel you have been negotiating, the landowner relationship — and how you handle the exit — still matters.",
+    question:"How do you handle the conversation with the landowner?",
+    choices:[
+      {text:"Call him, tell him the route changed and the project will not be crossing his land, and thank him for his time.",good:false,scores:[5,5,-10]},
+      {text:"Call him promptly, explain the route was realigned and his parcel is no longer needed, acknowledge the time he invested in the negotiation, and thank him genuinely — leaving the door open for future interactions.",good:true,scores:[10,10,25]},
+      {text:"Send a letter — it is more formal and gives him documentation.",good:false,scores:[5,5,-10]},
+      {text:"Wait for the project manager to notify him through official channels.",good:false,scores:[-5,-5,-15]}
+    ],
+    goodFeedback:"A personal call is owed. This landowner spent four weeks in good-faith negotiations and you shook hands yesterday. A phone call that acknowledges his time, explains honestly what happened, and thanks him genuinely preserves the relationship. ROW corridors get revisited. The agent who handles a project exit professionally is the agent landowners remember positively.",
+    badFeedback:"A bare route changed thanks call is technically correct but misses the relationship component. A letter is impersonal after a four-week negotiating relationship. Leaving notification to official channels after you shook hands yesterday is an abdication.",
+    lesson:"Professional exits matter as much as professional negotiations. A landowner you treated well on a deal that never closed may be your easiest call on the next project."
+  },
+
+  {
+    id:"x11", type:"title", typeLabel:"Title Research", typeClass:"type-title",
+    situation:"Title research reveals an oil, gas, and mineral reservation in a deed from 1952 — the surface owner grandparent retained all mineral rights when they sold the surface. The current surface owner does not know who holds the mineral rights today.",
+    context:"Your pipeline is a gathering line for natural gas produced in the area. The mineral reservation is recorded but there has been no recent activity identifying current mineral rights holders.",
+    concept:"<strong>Severed Minerals with Unknown Holders:</strong> When mineral rights were severed decades ago and have passed through multiple hands without being recorded, identifying current mineral rights owners requires specialized research — and the answer affects your project.",
+    question:"What do you do?",
+    choices:[
+      {text:"Focus on the surface easement — the surface owner signature is all you need for a pipeline.",good:false,scores:[-10,-15,-5]},
+      {text:"Flag the severed mineral reservation to your title attorney and let them determine whether the mineral rights holders need to be identified and notified given your pipeline type and state law.",good:true,scores:[20,25,10]},
+      {text:"Ask the surface owner if anyone has ever approached them about oil and gas leases.",good:false,scores:[-5,-5,5]},
+      {text:"Check the state oil and gas commission records for any active leases on the parcel.",good:false,scores:[5,5,5]}
+    ],
+    goodFeedback:"The right call. Whether mineral rights holders need to be notified or must consent to a gas gathering pipeline depends on state law and the specific rights reserved. For a gathering line specifically, mineral rights owners may have direct interests in the pipeline route. Your title attorney determines the legal requirements.",
+    badFeedback:"For a gas gathering line, surface signature is all you need may be true in some states for some pipeline types — but that determination belongs to your legal team, not to you.",
+    lesson:"Severed mineral reservations on a gas gathering project are a flag for your title attorney. The legal determination of who needs to sign depends on state law and pipeline type."
+  },
+
+  {
+    id:"x12", type:"field", typeLabel:"Complex Field", typeClass:"type-field",
+    situation:"Three months into a project, your company announces it has been acquired by a larger pipeline operator. Landowners start calling — several are worried their easements will not be honored or that the new company will behave differently.",
+    context:"You do not have detailed information about the acquisition impact on the project. Your supervisor has told you that existing contracts and easements will be honored.",
+    concept:"<strong>Corporate Changes During Projects:</strong> Mergers and acquisitions create uncertainty for landowners with existing or in-progress agreements. How agents handle these calls shapes the company reputation in the field.",
+    question:"What do you tell concerned landowners?",
+    choices:[
+      {text:"Tell them not to worry — everything will be fine.",good:false,scores:[0,-5,-15]},
+      {text:"Tell them you understand their concern, share what you have been officially told — existing easements will be honored — acknowledge you are still learning the details, and commit to following up as you get more information.",good:true,scores:[10,20,25]},
+      {text:"Tell them you cannot comment on the acquisition and they should call the company main line.",good:false,scores:[0,-5,-20]},
+      {text:"Tell them the acquisition is good news — it means more resources.",good:false,scores:[0,-5,-15]}
+    ],
+    goodFeedback:"This is the honest answer. You share what you know — existing easements honored — acknowledge what you do not know yet, and commit to a follow-up. Landowners do not need you to have all the answers; they need to trust that you will give them accurate information and keep them informed.",
+    badFeedback:"Generic reassurance without substance sounds hollow. Deflecting to a main line after a relationship you built is abandonment. Spinning the acquisition as good news without knowing whether it is, is presumptuous.",
+    lesson:"Corporate transitions create landowner anxiety. Share what you officially know, acknowledge what you do not, and commit to follow-up."
+  },
+
+  {
+    id:"x13", type:"legal", typeLabel:"Legal Escalation", typeClass:"type-legal",
+    situation:"A landowner during compensation negotiation mentions that he owns another parcel two counties over that might be in the path of your next project. He suggests that if you take care of him on this one, he will make the next one easy.",
+    context:"The other parcel may indeed be relevant to a future project.",
+    concept:"<strong>Implied Quid Pro Quos:</strong> When a landowner links current cooperation to future benefits, this creates an appearance of improper inducement that must be escalated even if nothing explicit was offered.",
+    question:"How do you handle this?",
+    choices:[
+      {text:"Play along informally — if it helps the current negotiation and a future one, everyone benefits.",good:false,scores:[-10,-25,-30]},
+      {text:"Acknowledge what he said without engaging with the implied arrangement, complete the current negotiation on its own merits, and document the conversation and escalate it to your supervisor.",good:true,scores:[10,25,30]},
+      {text:"Tell him you cannot discuss future projects.",good:false,scores:[5,5,-10]},
+      {text:"Ask him to clarify what he means by take care of him.",good:false,scores:[-5,-5,-15]}
+    ],
+    goodFeedback:"Document and escalate. Even if this was casual conversation, linking current compensation to future deal facilitation is an implied quid pro quo that creates legal and ethical exposure. You do not engage with it — you complete the current negotiation on its merits — but you document it precisely and report it.",
+    badFeedback:"Everyone benefits ignores that you have agreed to compensate one landowner in exchange for influence on a future transaction. Simply saying you cannot discuss future projects does not address the implied arrangement. Asking him to clarify invites a more explicit proposal.",
+    lesson:"Implied quid pro quos get documented and escalated immediately. Complete the current negotiation on its merits and let legal determine the exposure."
+  }
+
+];
+
+// ═══════════════════════════════════════════════════════════
+// ENGINE
+// ═══════════════════════════════════════════════════════════
+const DRAW_COUNT = 10;
+const DECK_CONFIG = {
+  intro: {
+    scenarios: INTRO_SCENARIOS,
+    label: "Deck 01 · Into the Field",
+    labelCls: "label-intro",
+    fillCls: "fill-intro",
+    ctxCls: "ctx-intro",
+    calloutAdv: false,
+    hoverCls: "intro-hover",
+    btnNextCls: "btn-next-intro",
+    ruleCls: "rule-intro",
+    rlCls: "rl-intro",
+    eyebrowCls: "re-intro",
+    avgCls: "ra-intro",
+    rl2Cls: "rl2-intro",
+    restartCls: "br-intro",
+    restartLabel: "Run Again — Different Cards",
+    axes: [
+      {name:"Role Clarity", key:"role",      cls:"ar-0i"},
+      {name:"Judgment",     key:"judgment",   cls:"ar-1i"},
+      {name:"Integrity",    key:"integrity",  cls:"ar-2i"}
+    ],
+    chips: [
+      {label:"Role Clarity", key:"role",      cls:"c-blue"},
+      {label:"Judgment",     key:"judgment",  cls:"c-amber"},
+      {label:"Integrity",    key:"integrity", cls:"c-green"}
+    ],
+    focusMap: {
+      "Role Clarity":  "Study what ROW agents are actually responsible for — and what they're not. The Role Guide tab covers this directly. Know your scope before you try to expand it.",
+      "Judgment":      "The judgment scenarios test when to act, when to escalate, and when to stop. When in doubt: document and escalate rather than improvise. Bring in the legal team early.",
+      "Integrity":     "Integrity scenarios test whether you act honestly even when it's inconvenient. In this field, your reputation follows you from county to county. Short-term gains from cutting corners always cost more long-term."
+    },
+    summaryHigh: "You're picking up the fundamentals quickly. You understand that ROW work is built on trust, documentation, and knowing when to act vs. when to escalate. That's the right foundation. Move on to Deck 02 — Title & Legal when you're ready.",
+    summaryMid:  "You're getting the shape of the role but some judgment calls are still developing. That's expected at this stage. Review the Role Guide tab — especially the non-negotiable rules — then run this deck again.",
+    summaryLow:  "The role has more nuance than it looks at first. The biggest takeaway: ROW agents create legal access, manage relationships, and escalate problems — they don't solve legal problems or cut corners on documentation. Start with the Role Guide tab."
+  },
+  adv: {
+    scenarios: ADV_SCENARIOS,
+    label: "Deck 02 · Title & Legal",
+    labelCls: "label-adv",
+    fillCls: "fill-adv",
+    ctxCls: "ctx-adv",
+    calloutAdv: true,
+    hoverCls: "adv-hover",
+    btnNextCls: "btn-next-adv",
+    ruleCls: "rule-adv",
+    rlCls: "rl-adv",
+    eyebrowCls: "re-adv",
+    avgCls: "ra-adv",
+    rl2Cls: "rl2-adv",
+    restartCls: "br-adv",
+    restartLabel: "Run Again — Different Cards",
+    axes: [
+      {name:"Title IQ",        key:"titleIQ", cls:"ar-0a"},
+      {name:"Legal Instinct",  key:"legal",   cls:"ar-1a"},
+      {name:"Field Judgment",  key:"field",   cls:"ar-2a"}
+    ],
+    chips: [
+      {label:"Title IQ",       key:"titleIQ", cls:"c-gold"},
+      {label:"Legal Instinct", key:"legal",   cls:"c-green"},
+      {label:"Field Judgment", key:"field",   cls:"c-amber"}
+    ],
+    focusMap: {
+      "Title IQ":       "Spend time with your county recorder's office. Learn to run a basic title search. Understand the difference between a deed, a lien, and a mortgage — and what each one means for getting a clean easement.",
+      "Legal Instinct": "Get familiar with when to escalate vs. when to proceed. Your rule of thumb: if something in the records is unexpected, unclear, or involves a third party's rights — it goes to legal. You identify it; attorneys resolve it.",
+      "Field Judgment": "The people skills in ROW work are as important as the technical ones. Study negotiation basics. Practice listening before presenting. Know what eminent domain actually is — and when it's appropriate to mention it as a tactic (almost never)."
+    },
+    summaryHigh: "You're showing the instincts this role requires. You understand that title questions are legal questions, that encumbrances need escalation, and that landowner trust is built — not assumed. Keep building on this.",
+    summaryMid:  "You're catching the important ideas but not yet applying them consistently. The right instinct is there — the goal now is to make it automatic. In ROW work, the stakes of a wrong call are high: a defective easement, a legal liability, a burned landowner relationship.",
+    summaryLow:  "You're at the start of a real learning curve — and that's fine, because this is the foundation level. Almost every mistake in ROW work comes from moving too fast or assuming something that needs to be verified. The field teaches patience. Let it."
+  }
+  ,deck3: {
+    scenarios: DECK3_SCENARIOS,
+    label: "Deck 03 \xb7 Advanced Field",
+    labelCls: "label-deck3",
+    fillCls: "fill-deck3",
+    ctxCls: "ctx-deck3",
+    calloutAdv: true,
+    hoverCls: "deck3-hover",
+    btnNextCls: "btn-next-deck3",
+    ruleCls: "rule-deck3",
+    rlCls: "rl-deck3",
+    eyebrowCls: "re-deck3",
+    avgCls: "ra-deck3",
+    rl2Cls: "rl2-deck3",
+    restartCls: "br-deck3",
+    restartLabel: "Run Again \u2014 Different Cards",
+    axes: [
+      {name:"Complexity",   key:"complexity",   cls:"ar-0d"},
+      {name:"Regulatory",   key:"regulatory",   cls:"ar-1d"},
+      {name:"Professional", key:"professional", cls:"ar-2d"}
+    ],
+    chips: [
+      {label:"Complexity",   key:"complexity",   cls:"c-teal"},
+      {label:"Regulatory",   key:"regulatory",   cls:"c-red"},
+      {label:"Professional", key:"professional", cls:"c-purple"}
+    ],
+    focusMap: {
+      "Complexity":   "The advanced scenarios test how you handle situations with no clean answer — estranged co-owners, damaged relationships, non-standard requests. Study the pattern: acknowledge, clarify, escalate. That sequence handles almost everything complex.",
+      "Regulatory":   "Permits and regulatory compliance are non-negotiable in pipeline ROW. Know the major permit types — FERC certificates, Section 404 Water Quality, road crossing permits, tribal consultations — and understand that your job is to flag dependencies, not to obtain or waive them.",
+      "Professional": "Professional conduct under pressure is what the Advanced deck tests most. Recorded conversations, gift policies, quid pro quo recognition, exit professionalism. The standard is simple: conduct yourself the same way whether anyone is watching or not."
+    },
+    summaryHigh: "You are operating at an advanced level. The complex scenarios — regulatory dependencies, non-standard requests, damaged relationships — require judgment that most beginners do not have. Build on this foundation as you accumulate real field experience.",
+    summaryMid:  "You are grasping the advanced concepts but not yet applying them consistently. The common thread in the scenarios you missed is likely the same: moving before you have authority, or not escalating when you should. That instinct gets sharper with repetition.",
+    summaryLow:  "The advanced deck is genuinely harder — that is by design. If you are still building your foundation, run Decks 01 and 02 again before coming back to this one. The scenarios here assume the basics are solid."
+  }
+
+};
+
+let activeDeck = null;
+let deck = [], currentIndex = 0, axes = {}, answered = false;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function clamp(v) { return Math.max(0, Math.min(100, v)); }
+
+function startDeck(which) {
+  activeDeck = DECK_CONFIG[which];
+  deck = shuffle(activeDeck.scenarios).slice(0, DRAW_COUNT);
+  currentIndex = 0;
+  axes = {};
+  activeDeck.axes.forEach(a => axes[a.key] = 50);
+  answered = false;
+
+  document.getElementById('header-deck-label').textContent = activeDeck.label;
+  document.getElementById('header-deck-label').className = 'header-deck-label ' + activeDeck.labelCls;
+  document.getElementById('progress-fill').className = 'progress-fill ' + activeDeck.fillCls;
+
+  showScreen('scenario-screen');
+  renderScenario();
+  setNav(which === 'intro' ? 'd1' : which === 'adv' ? 'd2' : 'd3');
+}
+
+function restartDeck() {
+  if (activeDeck) startDeck(activeDeck === DECK_CONFIG.intro ? 'intro' : 'adv');
+}
+
+function renderScenario() {
+  answered = false;
+  const s = deck[currentIndex];
+  const pct = Math.round(((currentIndex+1)/DRAW_COUNT)*100);
+  document.getElementById('progress-label').textContent = `${currentIndex+1} / ${DRAW_COUNT}`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const calloutCls = activeDeck.calloutAdv ? 'callout-box callout-adv' : 'callout-box';
+
+  document.getElementById('scenario-body').innerHTML = `
+    <div class="type-badge ${s.typeClass}">${s.typeLabel}</div>
+    <div class="scenario-situation">${s.situation}</div>
+    <div class="scenario-context ${activeDeck.ctxCls}">${s.context}</div>
+    <div class="${calloutCls}">${s.concept}</div>
+    <div class="q-label">— What do you do?</div>
+    <div class="choices">
+      ${s.choices.map((c,i) => `<button class="choice-btn ${activeDeck.hoverCls}" onclick="pick(${i})">${c.text}</button>`).join('')}
+    </div>
+    <div class="feedback-panel" id="fp"></div>
+  `;
+}
+
+function pick(idx) {
+  if (answered) return;
+  answered = true;
+  const s = deck[currentIndex];
+  const c = s.choices[idx];
+  const good = c.good;
+
+  activeDeck.axes.forEach((a, i) => {
+    axes[a.key] = clamp(axes[a.key] + c.scores[i]);
+  });
+
+  document.querySelectorAll('.choice-btn').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === idx) btn.classList.add(good ? 'sel-good' : 'sel-bad');
+    else if (s.choices[i].good) btn.classList.add('rev-good');
+  });
+
+  const fp = document.getElementById('fp');
+  fp.innerHTML = `
+    <div class="verdict ${good ? 'verdict-good' : 'verdict-bad'}">${good ? '✓ Right Call' : '✗ Not Quite'}</div>
+    <div class="feedback-text">${good ? s.goodFeedback : s.badFeedback}</div>
+    <div class="rule-box ${activeDeck.ruleCls}">
+      <div class="rule-label ${activeDeck.rlCls}">Remember This</div>
+      <div class="rule-text">${s.lesson}</div>
+    </div>
+    <div class="score-row">
+      ${activeDeck.chips.map((ch, i) => {
+        const val = c.scores[i];
+        const sign = val > 0 ? '+' : '';
+        const cls = val > 0 ? ch.cls : 'c-dim';
+        return `<div class="s-chip ${cls}">${ch.label} ${sign}${val}</div>`;
+      }).join('')}
+    </div>
+    <button class="btn-next ${activeDeck.btnNextCls}" onclick="next()">
+      ${currentIndex+1 < DRAW_COUNT ? 'Next Scenario →' : 'See Results →'}
+    </button>
+  `;
+  fp.classList.add('visible');
+  fp.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function next() {
+  currentIndex++;
+  if (currentIndex >= DRAW_COUNT) showResults();
+  else { renderScenario(); window.scrollTo(0,0); }
+}
+
+function showResults() {
+  showScreen('results-screen');
+  const cfg = activeDeck;
+  const vals = cfg.axes.map(a => axes[a.key]);
+  const avg = Math.round(vals.reduce((s,v) => s+v, 0) / vals.length);
+
+  document.getElementById('results-eyebrow').textContent = cfg.label + ' · Complete';
+  document.getElementById('results-eyebrow').className = 'results-eyebrow ' + cfg.eyebrowCls;
+
+  const titles = avg>=70 ? (cfg===DECK_CONFIG.intro ? "Ready to Learn More" : "Solid Foundation")
+               : avg>=50 ? "Getting There"
+               : (cfg===DECK_CONFIG.intro ? "Start with the Basics" : "Keep Digging");
+  document.getElementById('results-title').textContent = titles;
+
+  document.getElementById('results-avg').innerHTML = `Overall: <span>${avg}</span> / 100`;
+  document.getElementById('results-avg').className = 'results-avg ' + cfg.avgCls;
+
+  document.getElementById('axis-results').innerHTML = cfg.axes.map((a,i) => `
+    <div class="axis-row ${a.cls}">
+      <div class="axis-row-name">${a.name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${vals[i]}%"></div></div>
+      <div class="axis-pct">${vals[i]}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('r-label-1').textContent = 'Assessment';
+  document.getElementById('r-label-1').className = 'r-label ' + cfg.rl2Cls;
+  document.getElementById('summary-text').textContent = avg>=70 ? cfg.summaryHigh : avg>=50 ? cfg.summaryMid : cfg.summaryLow;
+
+  document.getElementById('r-label-2').textContent = 'Where to Focus Next';
+  document.getElementById('r-label-2').className = 'r-label ' + cfg.rl2Cls;
+
+  const low = Math.min(...vals);
+  const lowIdx = vals.indexOf(low);
+  const lowName = cfg.axes[lowIdx].name;
+  const high = Math.max(...vals);
+  const highIdx = vals.indexOf(high);
+  const highName = cfg.axes[highIdx].name;
+
+  let focusTxt = `Your lowest area is <strong>${lowName}</strong> (${low}/100). ${cfg.focusMap[lowName]}`;
+  if (high !== low) focusTxt += ` Your strongest area is <strong>${highName}</strong> (${high}/100) — lean on that while you build the rest.`;
+  document.getElementById('focus-text').innerHTML = focusTxt;
+
+  const br = document.getElementById('btn-restart');
+  br.textContent = cfg.restartLabel;
+  br.className = 'btn-restart ' + cfg.restartCls;
+}
+
+function goHome() { showScreen('home-screen'); setNav('home'); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function navTo(tab) {
+  const map = { home:'home-screen', guide:'guide-screen', glossary:'glossary-screen' };
+  if (map[tab]) { showScreen(map[tab]); setNav(tab); }
+}
+
+function setNav(active) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const map = { home:'nav-home', d1:'nav-d1', d2:'nav-d2', d3:'nav-d3', guide:'nav-guide', glossary:'nav-glossary' };
+  if (map[active]) { const el = document.getElementById(map[active]); if(el) el.classList.add('active'); }
+  else document.getElementById('nav-home').classList.add('active');
+}
+</script>
+</body>
+</html>
