@@ -252,6 +252,27 @@ body{
 .sit-color-bar.anchor{background:var(--anchor-rule)}
 .sit-color-bar.curveball{background:var(--curveball-rule)}
 
+/* Situation picker category groups */
+.sit-category-label{
+  font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-soft);padding:10px 4px 6px;margin-top:6px;
+}
+.sit-category-label:first-child{margin-top:0}
+.sit-list{display:flex;flex-direction:column;gap:0}
+.sit-group{
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow-card);margin-bottom:10px;
+}
+.sit-btn{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;cursor:pointer;
+  background:var(--paper);border:none;border-bottom:1px solid var(--rule);
+  text-align:left;width:100%;transition:background .12s;
+}
+.sit-btn:last-child{border-bottom:none}
+.sit-btn:hover{background:var(--cream)}
+.sit-btn:active{background:var(--cream-dark)}
+
 /* ═══════ PROGRESS ═══════ */
 .scenario-progress{display:flex;align-items:center;gap:10px;margin-bottom:20px}
 .prog-dots{display:flex;gap:5px}
@@ -438,6 +459,17 @@ body{
 .check-text{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
 .check-note{font-size:12px;color:var(--ink-soft);line-height:1.4}
 .check-item.checked .check-text{color:var(--ink-mid)}
+.arrive-timestamp{
+  font-size:11px;color:var(--ink-soft);text-align:center;
+  margin:-6px 0 14px;padding:6px;
+  background:var(--cream-dark);border-radius:var(--radius-sm);
+  display:none;
+}
+.arrive-timestamp.visible{display:block}
+.arrive-clear-hint{
+  font-size:11px;color:var(--ink-soft);text-align:center;
+  margin-top:6px;
+}
 .read-card{
   border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;
   border:1px solid var(--rule);
@@ -517,6 +549,9 @@ body{
 .emg-state-btn.flood{border-left:5px solid var(--warm)}
 .emg-state-btn.shutdown{border-left:5px solid var(--calm)}
 .emg-state-btn.after{border-left:5px solid var(--green)}
+.emg-state-btn.hitting{border-left:5px solid #8B1A1A}
+.emg-step-badge.hitting{background:#fdf0f0;color:#8B1A1A;border:1px solid #e8b4b4}
+.emg-progress-fill.hitting{background:#8B1A1A}
 .emg-state-icon{font-size:28px;flex-shrink:0}
 .emg-state-body{}
 .emg-state-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px}
@@ -1030,6 +1065,7 @@ body{
       <p class="section-sub">A quick read of his day. Takes 60 seconds. Changes everything.</p>
     </div>
     <p class="checklist-intro">Check off anything that's already happened today. The more boxes checked, the less runway he has — adjust your expectations accordingly.<br><br><em>These aren't predictions. They're inputs. Knowing the load helps you carry less of it.</em></p>
+    <div class="arrive-timestamp" id="arrive-timestamp"></div>
 
     <div class="check-group">
       <div class="check-group-label">Sleep & morning</div>
@@ -1323,104 +1359,108 @@ body{
       Most of this guide is for hard moments. This section is for before them. The conditions that produce good days are learnable. So is how to not accidentally break one.
     </div>
 
-    <div class="goodday-section">
-      <div class="goodday-section-label">Morning anchors</div>
-      <div class="goodday-item">
-        <div class="goodday-icon">☀️</div>
-        <div class="goodday-body">
-          <div class="goodday-text">A predictable start, even a loose one</div>
-          <div class="goodday-note">He doesn't need a rigid schedule — he needs the day to have a recognizable shape. Same rough sequence: wake, eat, transition to something absorbing. That pattern alone reduces morning friction.</div>
+    <!-- MORNING ANCHORS -->
+    <div class="kid-section open" id="gd-sec-0">
+      <div class="kid-section-head green" onclick="toggleWhois('gd-sec-0')">
+        <div class="kid-section-icon">☀️</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow green">Start here</div>
+          <div class="kid-section-title">Morning anchors</div>
         </div>
+        <div class="kid-section-arrow">▼</div>
       </div>
-      <div class="goodday-item">
-        <div class="goodday-icon">🍳</div>
-        <div class="goodday-body">
-          <div class="goodday-text">Something he actually likes to eat, without negotiation</div>
-          <div class="goodday-note">A good morning doesn't start with a food battle. A reliable breakfast that requires no decision energy is worth more than a nutritionally optimized one that costs a fight.</div>
+      <div class="kid-section-body">
+        <div class="goodday-item" style="background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px">
+          <div class="goodday-icon">☀️</div>
+          <div class="goodday-body">
+            <div class="goodday-text" style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">A predictable start, even a loose one</div>
+            <div class="goodday-note" style="font-size:12px;color:var(--ink-soft);line-height:1.4">He doesn't need a rigid schedule — he needs the day to have a recognizable shape. Same rough sequence: wake, eat, transition to something absorbing. That pattern alone reduces morning friction.</div>
+          </div>
         </div>
-      </div>
-      <div class="goodday-item">
-        <div class="goodday-icon">🎮</div>
-        <div class="goodday-body">
-          <div class="goodday-text">Early access to something absorbing</div>
-          <div class="goodday-note">An open loop in the morning — a Kirby level, a building project, a chapter of an audiobook — gives his brain a track. A brain with no track will find one, and it won't always be a good one.</div>
+        <div class="goodday-item" style="background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px">
+          <div class="goodday-icon">🍳</div>
+          <div class="goodday-body">
+            <div class="goodday-text" style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Something he actually likes to eat, without negotiation</div>
+            <div class="goodday-note" style="font-size:12px;color:var(--ink-soft);line-height:1.4">A good morning doesn't start with a food battle. A reliable breakfast that requires no decision energy is worth more than a nutritionally optimized one that costs a fight.</div>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <div class="goodday-section">
-      <div class="goodday-section-label">What fills the tank</div>
-      <div class="goodday-item">
-        <div class="goodday-icon">🌿</div>
-        <div class="goodday-body">
-          <div class="goodday-text">Time in his creative world with no interruptions</div>
-          <div class="goodday-note">Not screen time as a reward — deep-focus time as a genuine need. An uninterrupted hour in Treat Land or with his characters is regulation, not avoidance.</div>
-        </div>
-      </div>
-      <div class="goodday-item">
-        <div class="goodday-icon">🏃</div>
-        <div class="goodday-body">
-          <div class="goodday-text">Some physical movement, even low-key</div>
-          <div class="goodday-note">His body stores tension. Movement — outside time, jumping, building something physical — releases it in a way nothing else does. Days with movement are measurably better than days without.</div>
-        </div>
-      </div>
-      <div class="goodday-item">
-        <div class="goodday-icon">💬</div>
-        <div class="goodday-body">
-          <div class="goodday-text">One genuine conversation about something he cares about</div>
-          <div class="goodday-note">Not a check-in. Not "how was your day." A real question about his worlds, his projects, what he's been thinking about. Five minutes of genuine curiosity fills something that nothing else does.</div>
-        </div>
-      </div>
-      <div class="goodday-item">
-        <div class="goodday-icon">✅</div>
-        <div class="goodday-body">
-          <div class="goodday-text">At least one moment where he felt in control</div>
-          <div class="goodday-note">A choice that was genuinely his. Something he decided, built, or solved without being redirected. Autonomy is not optional for him — it's structural.</div>
+        <div class="goodday-item" style="background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px">
+          <div class="goodday-icon">🎮</div>
+          <div class="goodday-body">
+            <div class="goodday-text" style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Early access to something absorbing</div>
+            <div class="goodday-note" style="font-size:12px;color:var(--ink-soft);line-height:1.4">An open loop in the morning — a Kirby level, a building project, a chapter of an audiobook — gives his brain a track. A brain with no track will find one, and it won't always be a good one.</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="goodday-section">
-      <div class="goodday-section-label">Signals a good day is running</div>
-      <div class="goodday-signal">
-        <div class="goodday-signal-dot"></div>
-        <div class="goodday-signal-text"><strong>He's talking at length about his worlds</strong> without being prompted. That's the clearest green light there is.</div>
+    <!-- WHAT FILLS THE TANK -->
+    <div class="kid-section" id="gd-sec-1">
+      <div class="kid-section-head anchor" onclick="toggleWhois('gd-sec-1')">
+        <div class="kid-section-icon">🔋</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow anchor">Daily essentials</div>
+          <div class="kid-section-title">What fills the tank</div>
+        </div>
+        <div class="kid-section-arrow">▼</div>
       </div>
-      <div class="goodday-signal">
-        <div class="goodday-signal-dot"></div>
-        <div class="goodday-signal-text"><strong>He's accepting small redirects without digging in.</strong> Flexible compliance means the tank is full.</div>
-      </div>
-      <div class="goodday-signal">
-        <div class="goodday-signal-dot"></div>
-        <div class="goodday-signal-text"><strong>He's initiating — bringing you things, showing you things.</strong> When he seeks you out, the relationship feels safe to him right now.</div>
-      </div>
-      <div class="goodday-signal">
-        <div class="goodday-signal-dot"></div>
-        <div class="goodday-signal-text"><strong>He's making jokes or being silly.</strong> Humor requires spare capacity. Playfulness is a regulation signal, not just a mood.</div>
-      </div>
-    </div>
-
-    <div class="goodday-section">
-      <div class="goodday-section-label">How to not accidentally break a good day</div>
-      <div class="protect-item">
-        <div class="protect-x">✕</div>
-        <div class="protect-text"><strong>Don't stack a second exciting thing.</strong> One good event fills the tank. Two drains it. The second event spends what the first one built.</div>
-      </div>
-      <div class="protect-item">
-        <div class="protect-x">✕</div>
-        <div class="protect-text"><strong>Don't comment on how well it's going.</strong> "You've been so good today" raises the internal standard and makes the next normal moment feel like failure. Let it run quietly.</div>
-      </div>
-      <div class="protect-item">
-        <div class="protect-x">✕</div>
-        <div class="protect-text"><strong>Don't introduce a demand during deep focus.</strong> A good day with an uninterrupted creative window can absorb a demand afterward. Interrupting the window to make the demand is different.</div>
-      </div>
-      <div class="protect-item">
-        <div class="protect-x">✕</div>
-        <div class="protect-text"><strong>Don't assume the good day means he has more runway than usual.</strong> A full tank is a full tank — not a bigger tank. Treat it as a gift, not a credit line.</div>
+      <div class="kid-section-body">
+        <div class="goodday-item" style="background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px">
+          <div class="goodday-icon">🌿</div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Time in his creative world with no interruptions</div><div style="font-size:12px;color:var(--ink-soft);line-height:1.4">Not screen time as a reward — deep-focus time as a genuine need. An uninterrupted hour in Treat Land or with his characters is regulation, not avoidance.</div></div>
+        </div>
+        <div class="goodday-item" style="background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px">
+          <div class="goodday-icon">🏃</div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Some physical movement, even low-key</div><div style="font-size:12px;color:var(--ink-soft);line-height:1.4">His body stores tension. Movement — outside time, jumping, building something physical — releases it in a way nothing else does. Days with movement are measurably better than days without.</div></div>
+        </div>
+        <div class="goodday-item" style="background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px">
+          <div class="goodday-icon">💬</div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">One genuine conversation about something he cares about</div><div style="font-size:12px;color:var(--ink-soft);line-height:1.4">Not a check-in. Not "how was your day." A real question about his worlds, his projects, what he's been thinking about. Five minutes of genuine curiosity fills something that nothing else does.</div></div>
+        </div>
+        <div class="goodday-item" style="background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px">
+          <div class="goodday-icon">✅</div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">At least one moment where he felt in control</div><div style="font-size:12px;color:var(--ink-soft);line-height:1.4">A choice that was genuinely his. Something he decided, built, or solved without being redirected. Autonomy is not optional for him — it's structural.</div></div>
+        </div>
       </div>
     </div>
 
-    <button class="btn-secondary btn-full" onclick="showScreen('screen-title')">Back to Home</button>
+    <!-- SIGNALS -->
+    <div class="kid-section" id="gd-sec-2">
+      <div class="kid-section-head calm" onclick="toggleWhois('gd-sec-2')">
+        <div class="kid-section-icon">🟢</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow calm">Read the room</div>
+          <div class="kid-section-title">Signals a good day is running</div>
+        </div>
+        <div class="kid-section-arrow">▼</div>
+      </div>
+      <div class="kid-section-body">
+        <div class="goodday-signal"><div class="goodday-signal-dot"></div><div class="goodday-signal-text"><strong>He's talking at length about his worlds</strong> without being prompted. That's the clearest green light there is.</div></div>
+        <div class="goodday-signal"><div class="goodday-signal-dot"></div><div class="goodday-signal-text"><strong>He's accepting small redirects without digging in.</strong> Flexible compliance means the tank is full.</div></div>
+        <div class="goodday-signal"><div class="goodday-signal-dot"></div><div class="goodday-signal-text"><strong>He's initiating — bringing you things, showing you things.</strong> When he seeks you out, the relationship feels safe to him right now.</div></div>
+        <div class="goodday-signal"><div class="goodday-signal-dot"></div><div class="goodday-signal-text"><strong>He's making jokes or being silly.</strong> Humor requires spare capacity. Playfulness is a regulation signal, not just a mood.</div></div>
+      </div>
+    </div>
+
+    <!-- PROTECT -->
+    <div class="kid-section" id="gd-sec-3">
+      <div class="kid-section-head warm" onclick="toggleWhois('gd-sec-3')">
+        <div class="kid-section-icon">🛡️</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow warm">Watch out</div>
+          <div class="kid-section-title">How to not accidentally break a good day</div>
+        </div>
+        <div class="kid-section-arrow">▼</div>
+      </div>
+      <div class="kid-section-body">
+        <div class="protect-item"><div class="protect-x">✕</div><div class="protect-text"><strong>Don't stack a second exciting thing.</strong> One good event fills the tank. Two drains it. The second event spends what the first one built.</div></div>
+        <div class="protect-item"><div class="protect-x">✕</div><div class="protect-text"><strong>Don't comment on how well it's going.</strong> "You've been so good today" raises the internal standard and makes the next normal moment feel like failure. Let it run quietly.</div></div>
+        <div class="protect-item"><div class="protect-x">✕</div><div class="protect-text"><strong>Don't introduce a demand during deep focus.</strong> A good day with an uninterrupted creative window can absorb a demand afterward. Interrupting the window to make the demand is different.</div></div>
+        <div class="protect-item"><div class="protect-x">✕</div><div class="protect-text"><strong>Don't assume the good day means he has more runway than usual.</strong> A full tank is a full tank — not a bigger tank. Treat it as a gift, not a credit line.</div></div>
+      </div>
+    </div>
+
+    <button class="btn-secondary btn-full" style="margin-top:16px" onclick="showScreen('screen-title')">Back to Home</button>
   </div>
 </div>
 
@@ -1480,6 +1520,13 @@ body{
           <div class="emg-state-desc">The storm is over. How do we reconnect?</div>
         </div>
       </button>
+      <button class="emg-state-btn hitting" onclick="startEmergency('hitting')">
+        <div class="emg-state-icon">✋</div>
+        <div class="emg-state-body">
+          <div class="emg-state-title">He's hitting or slapping</div>
+          <div class="emg-state-desc">Physical aggression during a meltdown — what to do right now</div>
+        </div>
+      </button>
     </div>
   </div>
 
@@ -1517,16 +1564,63 @@ body{
 
 
 <script>
-// ═══════ CHECKLIST LOGIC ═══════
+// ═══════ CHECKLIST LOGIC — localStorage persistent ═══════
 const WARN_ITEMS = ['chk-sleep','chk-morning','chk-food','chk-transition','chk-social','chk-exciting','chk-activated'];
+const CHECKLIST_KEY = 'gg_checklist';
+const CHECKLIST_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+function saveChecklist() {
+  const checked = [];
+  document.querySelectorAll('.check-item').forEach(el => {
+    if (el.classList.contains('checked')) checked.push(el.id);
+  });
+  try {
+    localStorage.setItem(CHECKLIST_KEY, JSON.stringify({ checked, ts: Date.now() }));
+  } catch(e) {}
+}
+
+function loadChecklist() {
+  try {
+    const raw = localStorage.getItem(CHECKLIST_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (Date.now() - data.ts > CHECKLIST_TTL) {
+      localStorage.removeItem(CHECKLIST_KEY);
+      return;
+    }
+    data.checked.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('checked');
+    });
+    updateTimestamp(data.ts);
+  } catch(e) {}
+}
+
+function updateTimestamp(ts) {
+  const el = document.getElementById('arrive-timestamp');
+  if (!el) return;
+  if (!ts) { el.classList.remove('visible'); return; }
+  const checked = document.querySelectorAll('.check-item.checked').length;
+  if (checked === 0) { el.classList.remove('visible'); return; }
+  const d = new Date(ts);
+  const timeStr = d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+  const dateStr = d.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'});
+  el.textContent = `Last updated ${dateStr} at ${timeStr} — resets after 24 hours`;
+  el.classList.add('visible');
+}
 
 function toggleCheck(el) {
   el.classList.toggle('checked');
+  saveChecklist();
   updateArriveRead();
+  updateTimestamp(Date.now());
 }
 
 function resetChecklist() {
   document.querySelectorAll('.check-item').forEach(el => el.classList.remove('checked'));
+  try { localStorage.removeItem(CHECKLIST_KEY); } catch(e) {}
+  const tsEl = document.getElementById('arrive-timestamp');
+  if (tsEl) tsEl.classList.remove('visible');
   updateArriveRead();
 }
 
@@ -1587,6 +1681,7 @@ const SITUATIONS = [
   { id:'pain-acute',icon:'🤕', title:'Stubbed toe / sudden injury',       desc:'Unexpected pain hit without warning. The spike is real.',                      color:'warm',      scenarios:['s-pain-1','s-pain-2','s-pain-3'] },
   { id:'growing',   icon:'🌙', title:'Growing pains',                     desc:'His legs hurt at night and sleep isn\'t coming.',                              color:'anchor',    scenarios:['s-growing-1','s-growing-2','s-growing-3'] },
   { id:'soreness',  icon:'😣', title:'Residual pain / lingering soreness',desc:'It\'s "better" to everyone else. It\'s still real to him.',                   color:'calm',      scenarios:['s-sore-1','s-sore-2','s-sore-3'] },
+  { id:'hitting',   icon:'✋', title:'Hitting or slapping during a meltdown', desc:'Physical aggression during a flood — what happened, what it means, what comes next.', color:'warm', scenarios:['s-hitting-1','s-hitting-2','s-hitting-3'] },
 ];
 
 const SCENARIOS = {
@@ -3867,6 +3962,98 @@ SCENARIOS['s-sore-3'] = {
 };
 
 
+// ════════════════════════════════
+// HITTING DURING A MELTDOWN
+// ════════════════════════════════
+SCENARIOS['s-hitting-1'] = {
+  type:'warm', category:'Hitting During a Meltdown',
+  context:'He\'s mid-flood and he hit you — a slap or a hit, impulsive, in the middle of the meltdown. It hurt. You\'re shocked and hurt and now you have to decide what to do in the next ten seconds.',
+  question:'He just hit you. You\'re in the moment. What do you do right now?',
+  choices:[
+    { icon:'🚶', text:'Create distance immediately — step back, say one sentence, go quiet',
+      sub:'"Hitting hurts me. I\'m giving us both space." Then stop.',
+      outcome:'good', scores:{presence:9,timing:10,connection:7,control:10,regulation:9},
+      feedback:'Distance is not punishment and it is not abandonment. It is the only practical response to being hit. One step back removes you from the situation without escalating it. One sentence — flat, calm, not angry — names what happened without launching into a consequence. Then silence. You have protected yourself and you have not poured fuel on the flood.',
+      key_moves:['Move your body away first — no words while you do it.','One sentence, flat voice: "Hitting hurts me. I\'m giving us both space."','Then leave the immediate space or go quiet.','Do not return to the conversation until he is fully calm.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🛑', text:'Address it immediately — he needs to know right now that this isn\'t okay',
+      sub:'The message has to land in the moment.',
+      outcome:'wrong', scores:{presence:2,timing:-4,connection:1,control:-2,regulation:-5},
+      feedback:'His prefrontal cortex is offline. The part of his brain that processes consequence, feels remorse, and can receive a lesson is not available right now. A consequence or lecture delivered during a flood does not land as intended — it lands as more noise, more pressure, more input on a system that is already past capacity. It will extend the meltdown, not end it.',
+      key_moves:['Create distance.','One sentence.','The consequence comes later — in a calm window, after connection is repaired.'],
+      warning:'Consequences delivered during a flood escalate rather than correct.',
+      consequence:'The meltdown intensifies. He may hit again. The lesson is completely lost.',
+      cascade_inject:'s-flood-1' },
+    { icon:'🤝', text:'Stay present — leaving feels like rejection when he\'s already flooded',
+      sub:'He needs to know you\'re not abandoning him.',
+      outcome:'wrong', scores:{presence:3,timing:-2,connection:4,control:-3,regulation:-3},
+      feedback:'Staying within hitting range after being hit is not presence — it is availability for more harm. Your physical safety is not optional. Creating distance is not rejection. You can stay in earshot, stay in the building, stay available — while also not being in arm\'s reach.',
+      key_moves:['Distance is not abandonment.','Earshot, not arm\'s reach.','Your safety is part of this.'],
+      warning:'Remaining in hitting range after being hit places you in harm\'s way and removes the natural consequence of the distance.',
+      consequence:'He hits again. Each subsequent hit without a boundary response teaches that the boundary doesn\'t exist.',
+      cascade_inject:'s-flood-1' }
+  ]
+};
+
+SCENARIOS['s-hitting-2'] = {
+  type:'warm', category:'Hitting During a Meltdown',
+  context:'The meltdown has passed. He\'s calm. He came back sweet and close — a repair bid. You haven\'t addressed the hitting yet. You\'re deciding when and how.',
+  question:'He\'s calm and reaching toward you. The hitting hasn\'t been addressed yet. What do you do?',
+  choices:[
+    { icon:'💛', text:'Receive the repair bid fully first — then address the hitting separately',
+      sub:'Connection before consequence. Always in this order.',
+      outcome:'good', scores:{presence:10,timing:10,connection:10,control:9,regulation:10},
+      feedback:'The repair bid is him reaching back toward you after the storm. Receiving it — warmly, without attaching the consequence to it — tells him the relationship survived the meltdown. That is the most important message he can receive right now. The consequence is real and it will come. But it comes in a separate, calm moment after the connection is confirmed. Attaching it to the repair bid closes the door he just opened.',
+      key_moves:['Receive the repair bid.','Warmth, closeness, no lesson attached.','After genuine reconnection — 20-30 minutes minimum — have the brief calm conversation about hitting.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📋', text:'Address the hitting now while it\'s fresh — he\'s calm enough to hear it',
+      sub:'This is the window. Use it.',
+      outcome:'risky', scores:{presence:5,timing:4,connection:3,control:6,regulation:5},
+      feedback:'He is calm — but he has just come out of a meltdown and made a repair bid. Moving immediately to the consequence converts the repair moment into a consequence moment. He may receive it, or he may feel that reaching toward you resulted in correction. The window for the consequence is real — but it is 20-30 minutes after genuine reconnection, not immediately.',
+      key_moves:['Receive the bid first.','Let the connection fully land.','Then — in a separate, calm moment — have the brief conversation.'],
+      warning:'Delivering consequence immediately after a repair bid risks closing the repair window.',
+      consequence:null, cascade_inject:null },
+    { icon:'🌊', text:'Let it go — he was flooded and didn\'t mean it',
+      sub:'Consequences during dysregulation aren\'t fair.',
+      outcome:'wrong', scores:{presence:3,timing:2,connection:5,control:-2,regulation:3},
+      feedback:'Not addressing it at all is the other error. He hit you. That is real and it requires a clear, calm response — not a punishment, not shame, but a brief honest statement about what happened and what the boundary is. Without it, he has no framework for what hitting means or what follows. The absence of a response teaches him that the boundary doesn\'t exist.',
+      key_moves:['Receive the repair bid.','Then address it — briefly, clearly, without shame.','Both things happen. In the right order.'],
+      warning:'Not addressing hitting at all removes the boundary and the learning opportunity.',
+      consequence:'He has no framework for what hitting costs. The pattern is more likely to repeat.',
+      cascade_inject:null }
+  ]
+};
+
+SCENARIOS['s-hitting-3'] = {
+  type:'anchor', category:'Hitting During a Meltdown',
+  context:'In the calm window — an hour after the meltdown, connection repaired — you\'re sitting with him and you want to address what happened. You need to say something about the hitting without shaming him or re-opening the flood.',
+  question:'You\'re in the calm window. How do you have this conversation?',
+  choices:[
+    { icon:'🧭', text:'Brief, honest, two parts — what happened and what\'s true about you two',
+      sub:'Name it. Then name the relationship.',
+      outcome:'good', scores:{presence:10,timing:10,connection:10,control:9,regulation:9},
+      feedback:'The conversation has exactly two parts. First: what happened and why it isn\'t okay. Second: the relationship is intact. Both parts matter and neither works without the other. "When you hit me, it hurts. That\'s not okay, and when it happens there will be a consequence. And I love you. Those are both true." Then stop. Don\'t extend it. Don\'t require a response. Let it land.',
+      key_moves:['"When you hit me, it hurts. That\'s not okay."','Name the consequence clearly and specifically.','Then: "I love you. That doesn\'t change."','One pass. Then done. Don\'t revisit it in the same conversation.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔍', text:'Ask him why he hit — help him understand what triggered it',
+      sub:'Understanding the trigger helps prevent it next time.',
+      outcome:'risky', scores:{presence:6,timing:5,connection:6,control:5,regulation:5},
+      feedback:'The trigger conversation is valuable — but it is a separate conversation from the consequence conversation. Mixing "why did you hit me" with "hitting isn\'t okay" conflates two things: his internal experience and your boundary. Do the boundary conversation first and cleanly. The trigger conversation can happen another time, or later in the same calm window.',
+      key_moves:['Boundary first.','Trigger conversation separately if he\'s open to it.','Don\'t require him to explain himself as part of receiving the consequence.'],
+      warning:'Mixing trigger exploration with consequence delivery can feel like he needs to justify the hit before you\'ll name the boundary.',
+      consequence:null, cascade_inject:null },
+    { icon:'💬', text:'Ask him how he feels about what happened',
+      sub:'His perspective matters. Start there.',
+      outcome:'wrong', scores:{presence:4,timing:2,connection:5,control:2,regulation:3},
+      feedback:'Starting with his feelings before naming the boundary inverts the conversation. He may feel bad — or he may not yet have access to the feelings around it. Either way, the first job of this conversation is to establish the boundary clearly: hitting hurts, it isn\'t okay, and here is what follows when it happens. His feelings about it are real and matter — but they come after the boundary is stated, not before.',
+      key_moves:['State the boundary first.','Then, if he has feelings about it: receive them.','Don\'t require him to feel remorse. The boundary stands regardless.'],
+      warning:'Starting with his feelings before stating the boundary can feel like the boundary is conditional on his remorse.',
+      consequence:'The boundary never gets clearly stated. He leaves the conversation without knowing what hitting costs.',
+      cascade_inject:null }
+  ]
+};
+
+
 // ═══════ STATE ═══════
 let run = { queue:[], index:0, history:[], situationId:'', situationColor:'' };
 
@@ -3875,23 +4062,49 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
-  if (id === 'screen-arrive') updateArriveRead();
+  if (id === 'screen-arrive') {
+    updateArriveRead();
+    try {
+      const raw = localStorage.getItem(CHECKLIST_KEY);
+      if (raw) {
+        const data = JSON.parse(raw);
+        updateTimestamp(data.ts);
+      }
+    } catch(e) {}
+  }
   if (id !== 'screen-emergency') resetEmergency();
 }
 
 // ═══════ SIT GRID ═══════
 function buildSitGrid() {
   const grid = document.getElementById('sit-grid');
-  grid.innerHTML = SITUATIONS.map(s => `
-    <button class="sit-btn" onclick="startRun('${s.id}')">
-      <div class="sit-color-bar ${s.color}"></div>
-      <span class="sit-icon">${s.icon}</span>
-      <div class="sit-body">
-        <div class="sit-name">${s.title}</div>
-        <div class="sit-desc">${s.desc}</div>
-      </div>
-    </button>
-  `).join('');
+  const categories = [
+    { label: '🌋 In the moment — dysregulation', ids: ['building','flood','shutdown','repair','hitting'] },
+    { label: '🔔 Behavior & demands',            ids: ['demand','correct','curveball','cascade'] },
+    { label: '🏠 Visits & social situations',    ids: ['visit','newface','peer','group','playground','public'] },
+    { label: '📱 Screen, structure & transitions', ids: ['screen','bed','summer','wait'] },
+    { label: '🎨 Creative & emotional',           ids: ['create','bored','praise','overheard','disclosure'] },
+    { label: '🌿 Out & about',                    ids: ['outing','food'] },
+    { label: '🤒 Health & body',                  ids: ['sick','tooth','pain-acute','growing','soreness'] },
+  ];
+  grid.innerHTML = categories.map(cat => {
+    const sits = cat.ids.map(id => SITUATIONS.find(s => s.id === id)).filter(Boolean);
+    if (!sits.length) return '';
+    return `
+      <div class="sit-category-label">${cat.label}</div>
+      <div class="sit-group">
+        ${sits.map(s => `
+          <button class="sit-btn" onclick="startRun('${s.id}')">
+            <div class="sit-color-bar ${s.color}"></div>
+            <span class="sit-icon">${s.icon}</span>
+            <div class="sit-body">
+              <div class="sit-name">${s.title}</div>
+              <div class="sit-desc">${s.desc}</div>
+            </div>
+          </button>
+        `).join('')}
+      </div>`;
+  }).join('');
 }
 
 // ═══════ RUN ENGINE ═══════
@@ -4507,6 +4720,39 @@ const EMG_DATA = {
       'Require an apology',
       'Act like everything is fine before it is'
     ]
+  },
+
+  hitting: {
+    label: '✋ Hitting / Slapping',
+    color: 'hitting',
+    steps: [
+      { action: 'Create distance — move your body away',
+        why: 'Not as punishment and not with anger. Just move. You cannot be hit if you are not within reach. A step back or moving to the other side of a table is enough. Do it calmly and say nothing while you do it.',
+        say: null },
+      { action: 'Say one sentence. Then stop talking.',
+        why: 'He needs to hear that hitting isn\'t okay — once. Not a lecture, not repeated. One clear sentence in a flat, calm voice. Then silence. More words add fuel.',
+        say: 'Hitting hurts me. I\'m going to give us both space.' },
+      { action: 'Leave the room if you need to — that is allowed',
+        why: 'Protecting yourself is not abandonment. If he is hitting and the distance isn\'t working, leaving the immediate space is the right move. Stay in earshot. Don\'t slam anything. Your safety matters.',
+        say: null },
+      { action: 'Let the flood run from a safe distance',
+        why: 'The hitting is a discharge, not a weapon. He is not trying to hurt you. His system is overwhelmed and his body found the nearest exit for the pressure. This is a nervous system event. It will pass. Your job now is to not be in the path of it while it does.',
+        say: null },
+      { action: 'When he\'s calm — connection before consequence',
+        why: 'The consequence is real and it comes. But it comes after the connection is repaired, not before. A consequence delivered into the repair window closes the door he just opened. Connection first. Always.',
+        say: null },
+      { action: 'Address it in a calm window — briefly, clearly, without shame',
+        why: 'He needs to know that hitting is not okay and that there is a consequence. He also needs to know that you still love him and the relationship is intact. Both things are true. Say both things.',
+        say: 'When you hit me, it hurts. That\'s not okay, and here\'s what happens when it does. And I love you. Both of those are true.' }
+    ],
+    never: [
+      'Hit back — ever, for any reason',
+      'Grab or physically restrain in anger',
+      'Deliver the consequence while he\'s still flooded',
+      'Say "you hurt me" to produce guilt during the flood — it will land as ammunition against himself',
+      'Pretend it didn\'t happen — it did, and it needs a calm clear response',
+      'Make him apologize before he\'s actually ready — a coerced apology teaches nothing'
+    ]
   }
 };
 
@@ -4609,7 +4855,17 @@ function emgNav(dir) {
 function emgFinish() {
   document.getElementById('emg-step-nav').innerHTML = '';
   document.getElementById('emg-never').style.display = 'none';
-  document.getElementById('emg-done').style.display = 'block';
+  const doneEl = document.getElementById('emg-done');
+  const doneTitle = document.getElementById('emg-done-title');
+  const doneSub = document.getElementById('emg-done-sub');
+  if (emgState === 'hitting') {
+    doneTitle.textContent = 'You held it together.';
+    doneSub.textContent = 'That was hard. You protected yourself and you stayed calm. The conversation about what happened comes later — in a quiet window, after connection is repaired. Not now.';
+  } else {
+    doneTitle.textContent = 'You made it through.';
+    doneSub.textContent = 'The hard part is behind you. He needs space and warmth right now — nothing else.';
+  }
+  doneEl.style.display = 'block';
   document.getElementById('emg-step-view').scrollTop = 9999;
 }
 
@@ -4625,6 +4881,7 @@ buildSitGrid();
 buildRefSections();
 buildDisclosureSections();
 updateArriveRead();
+loadChecklist();
 </script>
 </body>
 </html>
