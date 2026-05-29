@@ -10,39 +10,257 @@
    TOKENS
 ═══════════════════════════════════════ */
 :root {
-  --ink:        #1a1410;
-  --ink2:       #251d17;
-  --ink3:       #312720;
-  --wood2:      #4e3a25;
-  --copper:     #c8722a;
-  --copper2:    #e08840;
-  --copper-glow:rgba(200,114,42,0.18);
-  --copper-dim: rgba(200,114,42,0.08);
-  --amber:      #e8b84a;
-  --foam:       #f5ede0;
-  --parchment:  #c4a882;
-  --parchment2: #a08060;
-  --muted:      #7a6650;
-  --muted2:     #9a8468;
-  --good:       #7ec850;
-  --good-dim:   rgba(126,200,80,0.12);
-  --bad:        #e05040;
-  --bad-dim:    rgba(224,80,64,0.12);
-  --warn:       #e8b030;
-  --warn-dim:   rgba(232,176,48,0.12);
-  --rad:  10px;
-  --rad2: 18px;
+  /* ── Base darks ── */
+  --ink:         #0f0b08;
+  --ink2:        #1c1410;
+  --ink3:        #281a12;
+  --ink4:        #342214;
+  --mahogany:    #3d2415;
+  --wood2:       #604020;
+  /* ── Copper/amber ── */
+  --copper:      #c8722a;
+  --copper2:     #e08840;
+  --copper3:     #f0a060;
+  --copper-glow: rgba(200,114,42,0.20);
+  --copper-dim:  rgba(200,114,42,0.08);
+  --brass:       #b8941c;
+  --amber:       #e8b84a;
+  --amber-dim:   rgba(232,184,74,0.12);
+  /* ── Hop green (new — intermediate tier) ── */
+  --hop-green:   #5a8030;
+  --hop2:        #7aaa48;
+  /* ── Text ── */
+  --foam:        #f5ede0;
+  --parchment:   #c4a882;
+  --parchment2:  #9a7858;
+  --muted:       #7a6650;
+  --muted2:      #9a8468;
+  /* ── Feedback ── */
+  --good:        #7ec850;
+  --good-dim:    rgba(126,200,80,0.12);
+  --bad:         #e05040;
+  --bad-dim:     rgba(224,80,64,0.12);
+  --warn:        #e8b030;
+  --warn-dim:    rgba(232,176,48,0.12);
+  --rad:   10px;
+  --rad2:  18px;
+  --rad3:  28px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--foam);min-height:100dvh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6;}
-body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(200,114,42,0.07) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 10% 0%,rgba(232,184,74,0.04) 0%,transparent 50%);pointer-events:none;z-index:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--foam);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.7;mix-blend-mode:overlay;
+}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(200,114,42,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(184,148,28,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 50% at 100% 50%, rgba(232,184,74,0.04) 0%, transparent 50%);
+  pointer-events:none;z-index:0;
+}
 
 /* ── SCREENS ── */
 .screen{display:none;min-height:100dvh;flex-direction:column;position:relative;z-index:1;}
 .screen.active{display:flex;}
 .app{max-width:460px;margin:0 auto;padding:0 16px 100px;min-height:100dvh;display:flex;flex-direction:column;width:100%;}
+
+/* ══════════════════════════════════
+   HOME SCREEN V3
+══════════════════════════════════ */
+#screen-home{padding:0;}
+
+.home-hero{
+  position:relative;min-height:44vh;max-height:310px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  padding-bottom:22px;overflow:hidden;
+  background:
+    radial-gradient(ellipse 120% 100% at 50% -10%, rgba(200,114,42,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 50% 50%, rgba(184,148,28,0.06) 0%, transparent 70%),
+    linear-gradient(180deg, var(--ink) 0%, var(--ink2) 100%);
+}
+.home-hero::after{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+/* Floating bubble particles */
+.bubble-field{position:absolute;inset:0;pointer-events:none;z-index:1;}
+.bubble-field span{
+  position:absolute;bottom:0;border-radius:50%;
+  background:radial-gradient(circle, rgba(200,114,42,0.22) 0%, transparent 70%);
+  animation:bubRise var(--dur,4s) ease-in var(--del,0s) infinite;
+}
+@keyframes bubRise{
+  0%{transform:translateY(0) scale(1);opacity:0;}
+  15%{opacity:1;}85%{opacity:0.3;}
+  100%{transform:translateY(-180px) scale(0.3);opacity:0;}
+}
+
+/* Hop watermark */
+.hop-watermark{
+  position:absolute;right:-18px;top:8px;opacity:0.07;
+  animation:hopDrift 8s ease-in-out infinite;z-index:1;
+}
+@keyframes hopDrift{
+  0%,100%{transform:rotate(-8deg) scale(1);}
+  50%{transform:rotate(-5deg) scale(1.04);}
+}
+
+/* Hero glass */
+.hero-glass-stage{
+  position:relative;z-index:2;
+  display:flex;align-items:flex-end;justify-content:center;
+  animation:glassFloat 4.5s ease-in-out infinite;
+}
+@keyframes glassFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.hero-glass-glow{
+  position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+  width:130px;height:28px;border-radius:50%;
+  background:radial-gradient(ellipse, rgba(200,114,42,0.42) 0%, transparent 70%);
+  filter:blur(10px);
+  animation:glowPulse 4.5s ease-in-out infinite;
+}
+@keyframes glowPulse{
+  0%,100%{opacity:0.5;transform:translateX(-50%) scaleX(1);}
+  50%{opacity:0.85;transform:translateX(-50%) scaleX(1.2);}
+}
+
+/* Wordmark section */
+.home-wordmark-section{
+  padding:16px 20px 0;text-align:center;
+  background:var(--ink);position:relative;z-index:2;
+}
+.home-pre{
+  font-family:'DM Mono',monospace;font-size:0.58rem;
+  letter-spacing:4px;text-transform:uppercase;
+  color:var(--copper);margin-bottom:5px;opacity:0.8;
+}
+.home-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.4rem,8vw,3rem);
+  font-weight:900;line-height:0.9;
+  color:var(--foam);margin-bottom:10px;letter-spacing:-1px;
+}
+.home-title em{
+  font-style:italic;color:var(--copper2);
+  display:block;font-size:1.12em;
+}
+
+/* Version block — prominent v3 display */
+.home-version-block{
+  display:inline-flex;align-items:center;gap:14px;
+  margin:10px auto 16px;
+  padding:10px 18px 10px 10px;
+  background:rgba(200,114,42,0.08);
+  border:1px solid rgba(200,114,42,0.28);
+  border-radius:var(--rad2);
+  animation:stripPulse 3s ease-in-out infinite;
+}
+@keyframes stripPulse{
+  0%,100%{border-color:rgba(200,114,42,0.28);box-shadow:none;}
+  50%{border-color:rgba(200,114,42,0.55);box-shadow:0 0 20px rgba(200,114,42,0.15);}
+}
+.home-v3-badge{
+  width:46px;height:46px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--copper),var(--copper2));
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 14px rgba(200,114,42,0.35);
+  animation:badgePulse 3s ease-in-out infinite;
+}
+@keyframes badgePulse{
+  0%,100%{box-shadow:0 3px 14px rgba(200,114,42,0.35);}
+  50%{box-shadow:0 4px 22px rgba(200,114,42,0.55);}
+}
+.home-v3-num{
+  font-family:'Playfair Display',serif;
+  font-size:1.3rem;font-weight:900;
+  color:var(--ink);line-height:1;
+  font-style:italic;
+  letter-spacing:-0.5px;
+}
+.home-v3-text{
+  display:flex;flex-direction:column;gap:3px;text-align:left;
+}
+.home-v3-label{
+  font-family:'DM Mono',monospace;font-size:0.72rem;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--copper2);font-weight:500;
+}
+.home-v3-sub{
+  display:flex;align-items:center;gap:6px;
+  font-family:'DM Mono',monospace;font-size:0.6rem;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted2);
+}
+.home-version-dot{width:5px;height:5px;border-radius:50%;background:var(--copper);animation:dotBlink 2s ease-in-out infinite;}
+@keyframes dotBlink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+
+/* Stats row */
+.home-stats-row{
+  display:flex;align-items:center;justify-content:center;
+  padding:0 20px 14px;background:var(--ink);
+}
+.home-stat{flex:1;text-align:center;padding:6px 4px;}
+.home-stat-val{
+  font-family:'DM Mono',monospace;font-size:1.35rem;font-weight:500;
+  color:var(--copper2);line-height:1;margin-bottom:3px;transition:color 0.3s;
+}
+.home-stat-label{font-size:0.56rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);}
+.home-stat-divider{
+  width:1px;height:30px;flex-shrink:0;
+  background:linear-gradient(180deg, transparent, rgba(200,114,42,0.25), transparent);
+}
+
+/* Mode tiles */
+.home-modes{
+  padding:0 16px 100px;display:flex;flex-direction:column;gap:10px;
+  background:var(--ink);
+}
+.home-mode-tile{
+  width:100%;background:var(--ink2);
+  border:1px solid rgba(200,114,42,0.14);
+  border-radius:var(--rad2);padding:17px 16px 17px 0;
+  cursor:pointer;text-align:left;
+  display:flex;align-items:center;gap:12px;
+  transition:all 0.22s;position:relative;overflow:hidden;
+}
+.home-mode-tile::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--copper),var(--amber));
+  opacity:0.65;transition:opacity 0.2s,width 0.2s;
+}
+.home-mode-tile:hover::before,.home-mode-tile:active::before{opacity:1;width:4px;}
+.home-mode-tile::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg, rgba(200,114,42,0.06) 0%, transparent 40%);
+  opacity:0;transition:opacity 0.2s;
+}
+.home-mode-tile:hover::after,.home-mode-tile:active::after{opacity:1;}
+.home-mode-tile:active{transform:scale(0.986);}
+.home-mode-icon{
+  width:50px;height:50px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.55rem;padding-left:16px;position:relative;z-index:1;
+}
+.home-mode-info{flex:1;position:relative;z-index:1;}
+.home-mode-title{font-family:'Playfair Display',serif;font-size:1.04rem;font-weight:700;color:var(--foam);margin-bottom:3px;}
+.home-mode-desc{font-size:0.68rem;color:var(--muted2);line-height:1.4;}
+.home-mode-arrow{
+  color:var(--copper);font-size:1rem;padding-right:4px;
+  flex-shrink:0;position:relative;z-index:1;
+  opacity:0.55;transition:opacity 0.2s,transform 0.2s;
+}
+.home-mode-tile:hover .home-mode-arrow{opacity:1;transform:translateX(3px);}
+.home-mode-tile.secondary{border-color:rgba(255,255,255,0.07);background:var(--ink3);}
+.home-mode-tile.secondary::before{background:linear-gradient(180deg,var(--muted),var(--parchment2));opacity:0.35;}
 
 /* ── TOPBAR ── */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0 14px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:20px;position:sticky;top:0;background:var(--ink);z-index:10;}
@@ -53,7 +271,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .back-btn{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:0.8rem;display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;padding:4px 0;}
 
 /* ── BOTTOM NAV ── */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink2);border-top:1px solid rgba(255,255,255,0.07);display:flex;z-index:20;padding-bottom:env(safe-area-inset-bottom,0);}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,8,5,0.96);border-top:1px solid rgba(200,114,42,0.12);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;z-index:20;padding-bottom:env(safe-area-inset-bottom,0);}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px 10px;background:none;border:none;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.6rem;font-weight:500;letter-spacing:0.8px;text-transform:uppercase;transition:color 0.2s;position:relative;}
 .nav-btn.active{color:var(--copper2);}
 .nav-btn.active::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--copper);border-radius:0 0 2px 2px;box-shadow:0 0 12px var(--copper-glow);}
@@ -246,49 +464,49 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .recipe-grid{display:flex;flex-direction:column;gap:16px;}
 
 /* ── FLIP CARDS ── */
-.flip-card-outer{cursor:pointer;position:relative;}
-/* Cross-browser flip: no 3D transforms at all.
-   Front and back both sit in the same space via absolute positioning.
-   Swap is driven by opacity + pointer-events.
-   A subtle scale pulse gives the feel of a physical flip without WebKit bugs. */
+.flip-card-outer{cursor:pointer;}
+/* Flip system: both faces sit in normal document flow, stacked vertically.
+   The back face uses a negative margin-top equal to its own height to sit
+   exactly on top of the front face. Visibility (not display, not position)
+   controls which face is seen — so the container height is always correct
+   and neither face can bleed outside the card boundary. */
 .flip-card-inner{
-  position:relative;
   width:100%;
-  min-height:148px;
   border-radius:var(--rad2);
+  overflow:hidden;
 }
-/* Both faces stack in the same space */
 .card-face{
   width:100%;
   border-radius:var(--rad2);
   overflow:hidden;
-  transition:opacity 0.28s ease, transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  transition:opacity 0.25s ease, visibility 0s linear 0.25s;
 }
+/* Back face: rendered in flow below front, then pulled up by JS-set margin.
+   Hidden by default. */
 .card-back{
-  position:absolute;
-  top:0;left:0;right:0;
   opacity:0;
+  visibility:hidden;
   pointer-events:none;
-  transform:scale(0.97);
 }
 .card-front{
   background:var(--ink2);
   border:1px solid rgba(255,255,255,0.08);
   display:flex;align-items:stretch;
-  min-height:148px;position:relative;overflow:hidden;
-  opacity:1;
-  transform:scale(1);
+  min-height:148px;
+  position:relative;overflow:hidden;
 }
-/* Flipped state: hide front, show back */
+/* Flipped: front hides instantly after fade, back shows */
 .flip-card-outer.flipped .card-front{
   opacity:0;
+  visibility:hidden;
   pointer-events:none;
-  transform:scale(0.97);
+  transition:opacity 0.25s ease, visibility 0s linear 0.25s;
 }
 .flip-card-outer.flipped .card-back{
   opacity:1;
+  visibility:visible;
   pointer-events:auto;
-  transform:scale(1);
+  transition:opacity 0.25s ease, visibility 0s linear 0s;
 }
 .card-front::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.025) 0%,transparent 50%);pointer-events:none;}
 .card-glass-panel{width:100px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:16px 8px;position:relative;}
@@ -299,7 +517,16 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .card-tag{font-size:0.62rem;font-family:'DM Mono',monospace;padding:3px 8px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);color:var(--parchment2);background:rgba(255,255,255,0.04);}
 .card-tag.highlight{border-color:rgba(200,114,42,0.4);color:var(--copper2);background:rgba(200,114,42,0.08);}
 .card-hint{font-size:0.63rem;color:var(--muted);display:flex;align-items:center;gap:4px;letter-spacing:0.5px;}
-.card-back-inner{background:var(--ink3);border:1px solid rgba(200,114,42,0.25);padding:20px;min-height:130px;}
+.card-back-inner{
+  background:var(--ink3);border:1px solid rgba(200,114,42,0.22);
+  padding:18px;min-height:130px;
+  position:relative;overflow:hidden;
+}
+.card-back-inner::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--copper),var(--amber),var(--copper));
+  opacity:0.55;
+}
 .card-back-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
 .card-back-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--foam);}
 .card-back-close{font-size:0.7rem;color:var(--muted);letter-spacing:1px;}
@@ -332,7 +559,8 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .recipe-section-title{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--copper);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
 .recipe-section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(200,114,42,0.3),transparent);}
 .ingredient-list{display:flex;flex-direction:column;gap:8px;}
-.ingredient-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--ink2);border-radius:var(--rad);border-left:3px solid transparent;}
+.ingredient-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--ink2);border-radius:var(--rad);border-left:3px solid transparent;transition:background 0.18s,transform 0.18s;}
+.ingredient-row:hover{background:rgba(255,255,255,0.04);transform:translateX(2px);}
 .ingredient-row.malt{border-left-color:#c8a040;}
 .ingredient-row.hops{border-left-color:#7aaa30;}
 .ingredient-row.yeast{border-left-color:#c8722a;}
@@ -459,6 +687,28 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .unlock-desc{font-size:0.7rem;color:var(--muted2);}
 
 /* ── UTILS ── */
+.card-tag.intermediate{
+  border-color:rgba(90,128,48,0.45);
+  color:var(--hop2);background:rgba(90,128,48,0.08);
+}
+.tier-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:0.58rem;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--hop2);background:rgba(90,128,48,0.10);
+  border:1px solid rgba(90,128,48,0.25);border-radius:4px;
+  padding:2px 8px;margin-bottom:10px;
+}
+.ingredient-row .int-badge{
+  font-size:0.54rem;font-family:'DM Mono',monospace;
+  padding:2px 6px;border-radius:4px;
+  background:rgba(90,128,48,0.12);border:1px solid rgba(90,128,48,0.28);
+  color:var(--hop2);letter-spacing:1px;text-transform:uppercase;flex-shrink:0;
+}
+.sim-recipe-btn.intermediate{border-color:rgba(90,128,48,0.25);}
+.sim-recipe-btn.intermediate:hover{border-color:rgba(90,128,48,0.5);background:rgba(90,128,48,0.05);}
+.abv-chip.int{border-color:rgba(90,128,48,0.3);color:var(--hop2);}
+.unlock-card.int-tier{border-color:rgba(90,128,48,0.2);}
 .fade-in{animation:fadeUp 0.4s ease both;}
 .fade-in-d1{animation-delay:0.05s;}
 .fade-in-d2{animation-delay:0.10s;}
@@ -488,45 +738,123 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 
 <!-- ═══════════════ HOME ═══════════════ -->
 <div class="screen active" id="screen-home">
-  <div class="app">
-    <nav class="topbar">
-      <div class="wordmark">The <em>Brew</em> Deck</div>
-      <div class="xp-badge"><div class="xp-dot"></div><span class="xp-val">0 XP</span></div>
-    </nav>
-    <div class="splash-hero">
-      <div class="hero-glass-wrap fade-in">
-        <svg width="110" height="150" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 18 L12 138 Q12 144 18 144 L92 144 Q98 144 98 138 L88 18 Z" fill="url(#hg-g)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+
+  <!-- HERO — no topbar, full bleed -->
+  <div class="home-hero">
+    <!-- Floating bubble particles -->
+    <div class="bubble-field" aria-hidden="true">
+      <span style="--dur:3.8s;--del:0s;left:12%;width:7px;height:7px;"></span>
+      <span style="--dur:5.2s;--del:0.8s;left:26%;width:4px;height:4px;"></span>
+      <span style="--dur:4.5s;--del:1.4s;left:44%;width:6px;height:6px;"></span>
+      <span style="--dur:3.2s;--del:0.3s;left:60%;width:3px;height:3px;"></span>
+      <span style="--dur:5.8s;--del:2.0s;left:72%;width:5px;height:5px;"></span>
+      <span style="--dur:4.1s;--del:0.6s;left:84%;width:4px;height:4px;"></span>
+      <span style="--dur:6.0s;--del:1.8s;left:20%;width:3px;height:3px;"></span>
+      <span style="--dur:3.5s;--del:2.4s;left:66%;width:7px;height:7px;"></span>
+    </div>
+    <!-- Hop watermark decoration -->
+    <div class="hop-watermark" aria-hidden="true">
+      <svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="65" cy="65" rx="26" ry="36" fill="rgba(90,128,48,0.55)" stroke="rgba(90,128,48,0.35)" stroke-width="1"/>
+        <path d="M65 29 Q42 18 28 37 Q47 35 65 51" fill="rgba(90,128,48,0.45)"/>
+        <path d="M65 29 Q88 18 102 37 Q83 35 65 51" fill="rgba(90,128,48,0.45)"/>
+        <path d="M65 101 Q42 112 28 93 Q47 95 65 79" fill="rgba(90,128,48,0.35)"/>
+        <path d="M65 101 Q88 112 102 93 Q83 95 65 79" fill="rgba(90,128,48,0.35)"/>
+        <path d="M39 65 Q28 42 39 28 Q41 47 54 65" fill="rgba(90,128,48,0.35)"/>
+        <path d="M91 65 Q102 42 91 28 Q89 47 76 65" fill="rgba(90,128,48,0.35)"/>
+        <line x1="65" y1="101" x2="65" y2="145" stroke="rgba(90,128,48,0.28)" stroke-width="1.5"/>
+        <path d="M65 124 Q52 119 47 109 Q61 112 65 122" fill="rgba(90,128,48,0.28)"/>
+        <path d="M65 124 Q78 119 83 109 Q69 112 65 122" fill="rgba(90,128,48,0.28)"/>
+      </svg>
+    </div>
+    <!-- Hero glass -->
+    <div class="hero-glass-stage">
+      <svg width="110" height="150" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="hg-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(255,255,255,0.10)"/><stop offset="50%" stop-color="rgba(255,255,255,0.02)"/><stop offset="100%" stop-color="rgba(255,255,255,0.08)"/></linearGradient>
+          <linearGradient id="hg-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4880a" stop-opacity="0.92"/><stop offset="60%" stop-color="#a05808" stop-opacity="0.96"/><stop offset="100%" stop-color="#7a3e06" stop-opacity="1.0"/></linearGradient>
+          <radialGradient id="hg-f" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(250,243,228,0.99)"/><stop offset="100%" stop-color="rgba(205,185,155,0.88)"/></radialGradient>
           <clipPath id="hg-c"><path d="M22 18 L12 138 Q12 144 18 144 L92 144 Q98 144 98 138 L88 18 Z"/></clipPath>
-          <rect x="10" y="48" width="90" height="100" fill="url(#hg-b)" clip-path="url(#hg-c)"/>
-          <ellipse cx="55" cy="48" rx="37" ry="12" fill="url(#hg-f)"/>
-          <ellipse cx="38" cy="44" rx="12" ry="8" fill="rgba(245,237,224,0.9)"/>
-          <ellipse cx="68" cy="43" rx="10" ry="7" fill="rgba(245,237,224,0.85)"/>
-          <ellipse cx="55" cy="40" rx="14" ry="9" fill="rgba(245,237,224,0.95)"/>
-          <circle cx="40" cy="110" r="2" fill="rgba(255,255,255,0.15)"><animate attributeName="cy" values="120;50" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.2;0" dur="2.5s" repeatCount="indefinite"/></circle>
-          <circle cx="55" cy="125" r="1.5" fill="rgba(255,255,255,0.12)"><animate attributeName="cy" values="130;55" dur="3s" repeatCount="indefinite" begin="0.8s"/><animate attributeName="opacity" values="0.2;0" dur="3s" repeatCount="indefinite" begin="0.8s"/></circle>
-          <path d="M26 28 L20 128" stroke="rgba(255,255,255,0.18)" stroke-width="3" stroke-linecap="round"/>
-          <defs>
-            <linearGradient id="hg-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(255,255,255,0.06)"/><stop offset="50%" stop-color="rgba(255,255,255,0.02)"/><stop offset="100%" stop-color="rgba(255,255,255,0.08)"/></linearGradient>
-            <linearGradient id="hg-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4880a" stop-opacity="0.9"/><stop offset="100%" stop-color="#7a3e08" stop-opacity="0.95"/></linearGradient>
-            <radialGradient id="hg-f" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(245,237,224,0.98)"/><stop offset="100%" stop-color="rgba(200,180,155,0.85)"/></radialGradient>
-          </defs>
-        </svg>
-        <div class="hero-glow"></div>
+        </defs>
+        <path d="M22 18 L12 138 Q12 144 18 144 L92 144 Q98 144 98 138 L88 18 Z" fill="url(#hg-g)" stroke="rgba(255,255,255,0.13)" stroke-width="1.5"/>
+        <rect x="10" y="48" width="90" height="98" fill="url(#hg-b)" clip-path="url(#hg-c)"/>
+        <ellipse cx="55" cy="48" rx="38" ry="13" fill="url(#hg-f)"/>
+        <ellipse cx="38" cy="43" rx="13" ry="9" fill="rgba(250,243,228,0.92)"/>
+        <ellipse cx="70" cy="42" rx="11" ry="8" fill="rgba(248,240,222,0.88)"/>
+        <ellipse cx="55" cy="39" rx="15" ry="10" fill="rgba(252,246,232,0.97)"/>
+        <circle cx="36" cy="108" r="2" fill="rgba(255,255,255,0.18)"><animate attributeName="cy" values="122;52" dur="2.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.25;0" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="55" cy="124" r="1.5" fill="rgba(255,255,255,0.14)"><animate attributeName="cy" values="130;54" dur="3.1s" repeatCount="indefinite" begin="0.9s"/><animate attributeName="opacity" values="0.2;0" dur="3.1s" repeatCount="indefinite" begin="0.9s"/></circle>
+        <circle cx="72" cy="100" r="2.5" fill="rgba(255,255,255,0.11)"><animate attributeName="cy" values="114;56" dur="2.3s" repeatCount="indefinite" begin="1.6s"/><animate attributeName="opacity" values="0.2;0" dur="2.3s" repeatCount="indefinite" begin="1.6s"/></circle>
+        <path d="M26 28 L20 128" stroke="rgba(255,255,255,0.20)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M30 28 L25 120" stroke="rgba(255,255,255,0.07)" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Condensation drops -->
+        <ellipse cx="80" cy="72" rx="1.8" ry="3" fill="rgba(255,255,255,0.08)"/>
+        <ellipse cx="76" cy="92" rx="1.4" ry="2.2" fill="rgba(255,255,255,0.06)"/>
+      </svg>
+      <div class="hero-glass-glow"></div>
+    </div>
+  </div>
+
+  <!-- WORDMARK + VERSION + STATS -->
+  <div class="home-wordmark-section">
+    <div class="home-pre">Craft Training System</div>
+    <h1 class="home-title">The<em>Brew Deck</em></h1>
+    <div class="home-version-block">
+      <div class="home-v3-badge">
+        <span class="home-v3-num">V3</span>
       </div>
-      <h1 class="splash-title fade-in fade-in-d1">The<em>Brew Deck</em></h1>
-      <p class="splash-sub fade-in fade-in-d2">Homebrew Training System</p>
-      <div class="version-badge fade-in fade-in-d2">
-        <span class="version-dot"></span>
-        Homebrewer Review Edition · v2
-      </div>
-      <div class="hop-divider fade-in fade-in-d2"><div class="hop-line"></div><div class="hop-icon">✿</div><div class="hop-line"></div></div>
-      <div class="mode-cards fade-in fade-in-d3">
-        <button class="mode-card" onclick="goTo('screen-book')"><span class="mode-card-icon">📖</span><div class="mode-card-title">Brew Book</div><div class="mode-card-desc">Browse styles, explore recipes, read the full brew guide for any beer.</div><div class="mode-card-arrow">→</div></button>
-        <button class="mode-card" onclick="goTo('screen-sim')"><span class="mode-card-icon">🧪</span><div class="mode-card-title">Brew Sim</div><div class="mode-card-desc">Pick a recipe and work through a full simulated brew day. Your choices shape the final pint.</div><div class="mode-card-arrow">→</div></button>
-        <button class="mode-card" onclick="goTo('screen-progress')"><span class="mode-card-icon">🏆</span><div class="mode-card-title">Your Cellar</div><div class="mode-card-desc">XP, unlocks, and the batches you've brewed so far.</div><div class="mode-card-arrow">→</div></button>
+      <div class="home-v3-text">
+        <div class="home-v3-label">Intermediate Edition</div>
+        <div class="home-v3-sub">
+          <div class="home-version-dot"></div>
+          Homebrewer Review
+        </div>
       </div>
     </div>
+    <div class="home-stats-row">
+      <div class="home-stat">
+        <div class="home-stat-val" id="home-xp">0</div>
+        <div class="home-stat-label">XP</div>
+      </div>
+      <div class="home-stat-divider"></div>
+      <div class="home-stat">
+        <div class="home-stat-val" id="home-recipes">3</div>
+        <div class="home-stat-label">Recipes</div>
+      </div>
+      <div class="home-stat-divider"></div>
+      <div class="home-stat">
+        <div class="home-stat-val" id="home-runs">0</div>
+        <div class="home-stat-label">Brewed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODE TILES -->
+  <div class="home-modes">
+    <button class="home-mode-tile" onclick="goTo('screen-book')">
+      <div class="home-mode-icon">📖</div>
+      <div class="home-mode-info">
+        <div class="home-mode-title">Brew Book</div>
+        <div class="home-mode-desc">8 styles &middot; beginner &amp; intermediate &middot; full recipe guides</div>
+      </div>
+      <div class="home-mode-arrow">→</div>
+    </button>
+    <button class="home-mode-tile" onclick="goTo('screen-sim')">
+      <div class="home-mode-icon">🧪</div>
+      <div class="home-mode-info">
+        <div class="home-mode-title">Brew Sim</div>
+        <div class="home-mode-desc">6 playable sims &middot; curveballs &middot; XP unlocks</div>
+      </div>
+      <div class="home-mode-arrow">→</div>
+    </button>
+    <button class="home-mode-tile secondary" onclick="goTo('screen-progress')">
+      <div class="home-mode-icon">🏆</div>
+      <div class="home-mode-info">
+        <div class="home-mode-title">Your Cellar</div>
+        <div class="home-mode-desc">XP &middot; unlocks &middot; brew history</div>
+      </div>
+      <div class="home-mode-arrow" style="opacity:0.3">→</div>
+    </button>
   </div>
 </div>
 
@@ -542,10 +870,11 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
     <p class="screen-subtitle fade-in fade-in-d1">Tap a card · flip for notes · open for the full recipe</p>
     <div class="family-tabs fade-in fade-in-d2">
       <button class="family-tab active" onclick="setFamily(this,'all')">All Styles</button>
-      <button class="family-tab" onclick="setFamily(this,'light')">🌾 Light &amp; Easy</button>
-      <button class="family-tab" onclick="setFamily(this,'hoppy')">🌿 Hoppy &amp; Bold</button>
-      <button class="family-tab" onclick="setFamily(this,'dark')">🌑 Dark &amp; Rich</button>
-      <button class="family-tab" onclick="setFamily(this,'specialty')">⭐ Specialty</button>
+      <button class="family-tab" onclick="setFamily(this,'beginner')">🌾 Beginner</button>
+      <button class="family-tab" onclick="setFamily(this,'light')">💛 Light</button>
+      <button class="family-tab" onclick="setFamily(this,'hoppy')">🌿 Hoppy</button>
+      <button class="family-tab" onclick="setFamily(this,'dark')">🌑 Dark</button>
+      <button class="family-tab" onclick="setFamily(this,'intermediate')">⚗️ Intermediate</button>
     </div>
     <div class="recipe-grid fade-in fade-in-d3" id="recipe-grid"></div>
   </div>
@@ -583,6 +912,8 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
         <div class="unlock-card" id="unlock-ipa" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">West Coast IPA</div><div class="unlock-desc">Complete 2 Sim runs</div></div><div class="lock-icon" style="color:var(--muted)">🔒</div></div>
         <div class="unlock-card" id="unlock-hefe" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">Hefeweizen</div><div class="unlock-desc">Earn 150 XP</div></div><div class="lock-icon" style="color:var(--muted)">🔒</div></div>
         <div class="unlock-card" id="unlock-oat" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">Oatmeal Stout</div><div class="unlock-desc">Score 80+ on any Sim run</div></div><div class="lock-icon" style="color:var(--muted)">🔒</div></div>
+        <div class="unlock-card int-tier" id="unlock-neipa" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">New England IPA ⚗️</div><div class="unlock-desc">Reach Journeyman level (200 XP) · Intermediate</div></div><div class="lock-icon" style="color:var(--muted)">🔒</div></div>
+        <div class="unlock-card int-tier" id="unlock-kveik" style="opacity:0.45"><div class="unlock-dot" style="background:var(--muted)"></div><div class="unlock-text"><div class="unlock-name">Kveik IPA ⚗️</div><div class="unlock-desc">Score 80+ on WCIPA sim · Intermediate</div></div><div class="lock-icon" style="color:var(--muted)">🔒</div></div>
       </div>
     </div>
   </div>
@@ -809,6 +1140,81 @@ const RECIPES = [
       'The Oatmeal Stout is a great first all-grain recipe — the process is forgiving and results are dramatically better than extract.',
     ],
     simId:null,
+  },
+
+  // ── NEIPA (New England IPA) ──
+  { id:'neipa', name:'New England IPA', family:'hoppy', tier:'intermediate',
+    subtitle:'Hazy, Juicy & Unfiltered',
+    tags:['Intermediate','Hazy','5-Gal'], highlight:'ABV 6.0–8.0%', locked:false,
+    glass:'pint_amber', glassW:80, glassH:110, bgColor:'#704010', flavorColor:'#e8a820',
+    description:'{e("The NEIPA redefined modern craft beer. Thick, hazy, tropical, pillowy soft. Almost no perceived bitterness despite moderate IBUs. The yeast is everything. London Ale III or Verdant IPA. Water mineral balance is the opposite of a West Coast IPA. High chloride, not sulfate.")}',
+    flavor:{bitter:20,malt:65,sweet:80,aroma:98}, abv:'6.0–8.0%', ibu:'40–60', difficulty:'Intermediate', time:'{e("~5 weeks")}',
+    ingredients:[
+      {type:'malt',icon:'🌾',name:'Extra Light DME',amount:'8 lbs',role:'Clean fermentable base'},
+      {type:'malt',icon:'🌾',name:'Flaked Oats',amount:'1.5 lbs',role:'{e("Thick hazy body · soft mouthfeel · essential for style")}',int:true},
+      {type:'malt',icon:'🌾',name:'Flaked Wheat',amount:'0.75 lbs',role:'{e("Haze-positive proteins · soft body")}',int:true},
+      {type:'hops',icon:'🌿',name:'Citra (flameout)',amount:'1.5 oz',role:'{e("0 min only · no bittering additions · lime/passion fruit/tropical")}',int:true},
+      {type:'hops',icon:'🌿',name:'Mosaic (flameout)',amount:'1.5 oz',role:'{e("0 min · blueberry/tropical/earthy · pairs with Citra")}',int:true},
+      {type:'hops',icon:'🌿',name:'Citra + Mosaic (biotransformation)',amount:'1 oz each',role:'{e("Day 2–3 DURING active fermentation · enzymatic conversion creates new tropical compounds")}',int:true},
+      {type:'hops',icon:'🌿',name:'Citra + Mosaic (finishing dry hop)',amount:'1 oz each',role:'{e("After fermentation complete · 3–4 days at ferment temp")}',int:true},
+      {type:'yeast',icon:'🔬',name:'London Ale III (Omega OYL-011)',amount:'1 packet',role:'{e("Defines NEIPA · thick, tropical, biotransformation-positive")}',int:true},
+      {type:'yeast',icon:'🔬',name:'Alt: Verdant IPA (Lallemand)',amount:'1 packet',role:'{e("Dry yeast option · similar tropical esters, more accessible")}',int:true},
+      {type:'other',icon:'💧',name:'Water + Calcium Chloride',amount:'5 gal + 2 tsp CaCl2',role:'{e("HIGH chloride (200–400 ppm) · OPPOSITE of WCIPA water · creates soft, round bitterness")}',int:true},
+      {type:'other',icon:'🧪',name:'Campden tablet (optional)',amount:'¼ tablet',role:'{e("Oxygen scavenger at transfer · critical for NEIPA longevity")}',int:true},
+      {type:'other',icon:'🍬',name:'Priming Sugar',amount:'¾ cup',role:'Medium carbonation'},
+    ],
+    steps:[
+      {title:'Water Chemistry — Chloride Forward',time:'5 min',body:'{e("Add 2 teaspoons calcium chloride (CaCl2) to brewing water. Target 200–300 ppm chloride. High chloride creates soft, round, low-perceived-bitterness character that defines NEIPA.")}',warning:'{e("This is OPPOSITE of WCIPA water. WCIPA = sulfate (sharp). NEIPA = chloride (soft). Using sulfate in a NEIPA is the most common intermediate mistake.")}'},
+      {title:'Sanitize Obsessively',time:'30 min',body:'{e("NEIPA oxidizes faster than any other style. Oxygen at any point post-fermentation destroys the tropical character within days. Sanitize every contact surface.")}'},
+      {title:'Steep Oats and Wheat',time:'30 min',body:'{e("Heat 2.5 gallons to 154°F. Steep flaked oats and flaked wheat together for 30 minutes. These don\'t convert fully in an extract steep but release haze-positive proteins essential for the style.")}'},
+      {title:'No Bittering Hops',time:'60 min boil',body:'{e("Add nothing during the boil. NEIPA gets zero bittering additions. Off heat, add 1.5 oz Citra and 1.5 oz Mosaic at flameout. Cover and steep 20 minutes before chilling.")}',warning:'{e("If you add bittering hops to a NEIPA you are making a different beer. Restraint in the boil is required.")}'},
+      {title:'Cool and Pitch at 64–66°F',time:'30–45 min',body:'{e("Cool to 64–66°F. Pitch London Ale III or Verdant IPA. These yeasts perform best between 64–68°F.")}'},
+      {title:'Biotransformation Dry Hop — Day 2–3',time:'5 min',body:'{e("When fermentation is active, add 1 oz Citra and 1 oz Mosaic. Active yeast enzymes convert hop precursor compounds into new tropical aromatic molecules. This is biotransformation and it is intentional.")}',warning:'{e("This addition is made DURING active fermentation deliberately. It is not a mistake. It is the technique.")}'},
+      {title:'Finishing Dry Hop — After FG',time:'Day 7–10',body:'{e("Once fermentation is complete (confirm with gravity reading), add 1 oz each Citra and Mosaic. 3–4 days at fermentation temperature.")}'},
+      {title:'Oxygen-Free Transfer',time:'2 hrs',body:'{e("Move the beer as gently as possible. No splashing. Consider adding 1/4 campden tablet crushed into the bottling bucket as an oxygen scavenger. NEIPA oxidizes in hours.")}',warning:'{e("If your finished NEIPA tastes like cardboard at 2 weeks, that is oxidation. It happened during transfer.")}'},
+    ],
+    tips:[
+      '{e("London Ale III has a positive charge on its cell wall that attracts hop oils, producing biotransformation that no other yeast replicates.")}',
+      '{e("Do not fine this beer. Do not cold crash aggressively. The haze is hop-protein complexes and yeast in suspension. It is the style.")}',
+      '{e("NEIPA is the most oxygen-sensitive style in homebrewing. Treat every transfer like surgery.")}',
+      '{e("Citra and Mosaic are complementary: Citra is sharp lime/citrus, Mosaic is soft tropical/blueberry. Together they are more complex than either alone.")}',
+    ],
+    simId:'neipa',
+  },
+
+  // ── Kveik IPA ──
+  { id:'kveikipa', name:'Kveik IPA', family:'hoppy', tier:'intermediate',
+    subtitle:'Done in 72 Hours',
+    tags:['Intermediate','Fast','5-Gal'], highlight:'ABV 6.0–7.0%', locked:false,
+    glass:'pint_amber', glassW:80, glassH:110, bgColor:'#703010', flavorColor:'#e87820',
+    description:'{e("Voss Kveik is a Norwegian farmhouse yeast that ferments at 85–95°F and produces citrus/orange esters naturally, with no off-flavors. A batch that normally takes a month is done in 3 days. It changes everything you thought you knew about fermentation timing.")}',
+    flavor:{bitter:65,malt:40,sweet:30,aroma:85}, abv:'6.0–7.0%', ibu:'45–65', difficulty:'Intermediate', time:'{e("~10 days total")}',
+    ingredients:[
+      {type:'malt',icon:'🌾',name:'Pale DME',amount:'8 lbs',role:'Clean fermentable base'},
+      {type:'malt',icon:'🌾',name:'Crystal 10L',amount:'0.25 lbs',role:'Minimal sweetness'},
+      {type:'hops',icon:'🌿',name:'Magnum (bittering)',amount:'0.75 oz',role:'60 min · clean bitterness'},
+      {type:'hops',icon:'🌿',name:'Citra (flameout)',amount:'1 oz',role:'{e("0 min · lime/tropical")}',int:true},
+      {type:'hops',icon:'🌿',name:'Mosaic (flameout)',amount:'1 oz',role:'{e("0 min · blueberry/tropical")}',int:true},
+      {type:'hops',icon:'🌿',name:'Citra + Galaxy (dry hop)',amount:'0.75 oz each',role:'{e("Day 2–3 · fermentation may already be nearly complete")}',int:true},
+      {type:'yeast',icon:'🔬',name:'Voss Kveik',amount:'1 packet',role:'{e("Ferments at 85–95°F in 24–48 hrs · produces natural orange/tangerine esters")}',int:true},
+      {type:'other',icon:'💧',name:'Water',amount:'5 gallons',role:'Standard · Kveik is mineral-forgiving'},
+      {type:'other',icon:'🍬',name:'Priming Sugar',amount:'¾ cup',role:'Standard carbonation'},
+    ],
+    steps:[
+      {title:'Do Not Cool the Ferment Space',time:'Setup',body:'{e("Kveik needs 85–95°F. In summer this may need no equipment. In winter, ferment near a heat source. The yeast produces no off-flavors at these temperatures. This is genuinely unusual.")}'},
+      {title:'Brew Normally',time:'3 hrs',body:'{e("Standard 60-minute boil. Steep Crystal 10L briefly. Add Magnum at 60 min. Add Citra and Mosaic at flameout with a 15-minute steep.")}'},
+      {title:'Pitch at 80–90°F',time:'immediate',body:'{e("Cool to 80–90°F. Pitch Voss Kveik. Place fermenter somewhere warm.")}',warning:'{e("Other ale yeasts at 90°F would be ruined. Kveik at 90°F is ideal. The mechanism is different. Trust the process.")}'},
+      {title:'Check at 24 Hours',time:'Day 1',body:'{e("Kveik may be visibly slowing fermentation after just 24 hours. This is normal. It does in 24–48 hours what US-05 does in 5–7 days.")}'},
+      {title:'Gravity Check Day 2 — Dry Hop',time:'Day 2–3',body:'{e("Take a gravity reading. If at or near FG, add 0.75 oz each Citra and Galaxy. Because Kveik ferments so fast, the dry hop window opens much earlier.")}'},
+      {title:'Package at Day 5–7',time:'Day 5–7',body:'{e("Confirm gravity is stable with two readings 24 hours apart. Package. This beer is ready days after most batches are just entering fermentation.")}'},
+    ],
+    tips:[
+      '{e("Voss Kveik naturally produces orange/tangerine ester at high temperatures. This is not contamination — it is a flavor contribution from the yeast itself.")}',
+      '{e("Galaxy is an Australian hop with intense passion fruit and peach character. It amplifies the fruity ester character Kveik already produces.")}',
+      '{e("Kveik does not need extended conditioning. It is clean and finished fast. Do not wait out of habit.")}',
+      '{e("The yeast can be dried and reused for many generations. Pour off the yeast cake, dry it on parchment paper at room temperature, store dry. Norwegian farmhouse brewers have done this for centuries.")}',
+    ],
+    simId:'kveikipa',
   },
 ];
 
@@ -1058,6 +1464,118 @@ const SIM_RECIPES = {
       ]},
     ],
   },
+
+  neipa: {
+    name:'New England IPA', glassColor:'#e8a820',
+    scenarios:[
+      { id:'ne1', step:'Water Chemistry', type:'normal',
+        context:'You just brewed a West Coast IPA using gypsum (sulfate). Now you are brewing your first NEIPA. You have both gypsum and calcium chloride. A friend says use the same water profile as the WCIPA.',
+        question:'Which mineral do you add to hit the NEIPA water profile?',
+        choices:[
+          { text:'Calcium chloride — high chloride for soft, round bitterness.', scores:{quality:+10,technique:+10,knowledge:+10}, outcome:'good', feedback:'Exactly right. NEIPA water is chloride-forward (200-400 ppm). Chloride creates soft, pillowy perceived bitterness. The actual IBUs may match a WCIPA but the perception is completely different.', tip:'WCIPA = sulfate (sharp, dry). NEIPA = chloride (soft, round). Two styles, opposite mineral profiles.' },
+          { text:'Gypsum — it worked great for the WCIPA.', scores:{quality:-8,technique:-6,knowledge:-8}, outcome:'bad', feedback:'Sulfate in a NEIPA sharpens bitterness and makes it aggressive — the opposite of what you want. High-sulfate NEIPA tastes harsh and one-dimensional.', tip:'This is one of the most common intermediate mistakes: assuming water chemistry is the same across IPA styles.' },
+          { text:'Neither — skip water chemistry to isolate the yeast variable.', scores:{quality:+2,technique:+3,knowledge:+4}, outcome:'mid', feedback:'Reasonable experimental logic but misses the point. Chloride is part of what makes NEIPA taste the way it does.', tip:'Think of the mineral profile as part of the recipe, not an optional modifier.' },
+        ]
+      },
+      { id:'ne2', step:'Biotransformation Dry Hop', type:'normal',
+        context:'You have just pitched London Ale III. Active fermentation starts 12 hours later. The NEIPA technique calls for adding dry hops during active fermentation. This contradicts everything you learned about dry hopping for WCIPA.',
+        question:'Do you add the first dry hop charge during active fermentation?',
+        choices:[
+          { text:'Yes — add the biotransformation charge at day 2-3 during active fermentation.', scores:{quality:+10,technique:+10,knowledge:+10}, outcome:'good', feedback:'Correct and intentional. London Ale III enzymes convert hop precursor compounds into new aromatic molecules. It makes the hops taste different than they would in a WCIPA.', tip:'Biotransformation with Citra and Mosaic plus London Ale III produces the iconic thick tropical fruit character. It is not achievable any other way.' },
+          { text:'No — wait until fermentation is complete. CO2 will destroy the aroma.', scores:{quality:+3,technique:+4,knowledge:-4}, outcome:'mid', feedback:'You will still get good dry hop aroma from the post-fermentation addition. But you have missed the biotransformation window — the enzymatic conversion that makes NEIPA uniquely tropical.', tip:'In NEIPA, the biotransformation dry hop and the finishing dry hop serve different purposes. Both contribute, but differently.' },
+          { text:'Add all the hops at flameout and skip dry hopping entirely.', scores:{quality:-4,technique:-3,knowledge:-5}, outcome:'bad', feedback:'Flameout hops and dry hops produce different aroma compounds. You cannot substitute one for the other.', tip:'The three-stage hop schedule (flameout, biotransformation, finishing dry hop) produces the most complex NEIPA aroma.' },
+        ]
+      },
+      { id:'ne3', step:'Clarity Check', type:'normal',
+        context:'After cold crashing 24 hours, your NEIPA is still heavily hazy — bright orange and completely opaque. Your friend who helped with the WCIPA says you should add gelatin to clear it up.',
+        question:'Do you fine the beer?',
+        choices:[
+          { text:'No. The haze is the style. Do not fine it.', scores:{quality:+10,technique:+8,knowledge:+10}, outcome:'good', feedback:'Correct. NEIPA haze is composed of hop-protein complexes and the characteristic yeast of London Ale III in suspension. Removing it removes the style.', tip:'A clear NEIPA is a different beer — it is called a Filtered IPA. If you wanted that you would use a different yeast and process.' },
+          { text:'Add gelatin — the haze looks like poor technique.', scores:{quality:-10,technique:-6,knowledge:-10}, outcome:'bad', feedback:'This would clear the beer, remove the hop-protein complexes that define the style, strip body from London Ale III, and produce a thin, clear IPA that misses the entire point.', tip:'NEIPA haze is legitimate and intentional. It is not a flaw to fix.' },
+          { text:'Bottle some fined and some unfined to compare.', scores:{quality:+4,technique:+6,knowledge:+6}, outcome:'mid', feedback:'Excellent experimental instinct. The comparison will be informative. The unfined version will likely win.', tip:'If you do this experiment, taste them side by side at the same temperature from the same age of conditioning.' },
+        ]
+      },
+      { id:'ne-cb1', step:'Transfer', type:'curveball',
+        context:'During transfer to your bottling bucket, your auto-siphon loses suction. You restart it and there is some splashing before you get the flow going again. NEIPA is the most oxygen-sensitive style in homebrewing.',
+        question:'What do you do?',
+        choices:[
+          { text:'Crush a quarter campden tablet into the bottling bucket as an oxygen scavenger before proceeding.', scores:{quality:+10,technique:+10,knowledge:+10}, outcome:'good', feedback:'Perfect response. Campden scavenges dissolved oxygen immediately. At this dose it leaves no perceptible flavor.', tip:'One quarter tablet per 5 gallons is the standard dose. Crush into the empty bottling bucket, then transfer on top of it.' },
+          { text:'Just proceed — a little oxygen exposure won\\\'t ruin the whole batch.', scores:{quality:-6,technique:-4,knowledge:-6}, outcome:'bad', feedback:'NEIPA oxidizes within days of exposure. The tropical hop character converts to wet cardboard within 2 weeks. Even small oxygen exposures matter significantly.', tip:'If you have tasted a NEIPA that tastes like cardboard at 3 weeks in the bottle, that is what happened.' },
+          { text:'Dump the beer — oxidized NEIPA is undrinkable.', scores:{quality:-3,technique:0,knowledge:-4}, outcome:'bad', feedback:'Premature. You have had some oxygen exposure, not a guaranteed ruined batch. The campden tablet treatment can mitigate most damage from a brief exposure.', tip:'React first, evaluate second. Campden tablet, proceed, then taste at 1 week to assess.' },
+        ]
+      },
+      { id:'ne4', step:'Attenuation', type:'normal',
+        context:'It is day 10. You expected London Ale III to finish around 1.012. Your reading is 1.018. You have never used this yeast before.',
+        question:'What do you do?',
+        choices:[
+          { text:'Take another reading in 48 hours. London Ale III has lower attenuation than US-05 — 1.018 might be final gravity.', scores:{quality:+10,technique:+10,knowledge:+10}, outcome:'good', feedback:'Correct diagnostic approach. London Ale III has 72-76 percent apparent attenuation — lower than US-05. It intentionally leaves more unfermented sugars contributing to the thick, full body NEIPA requires.', tip:'Attenuation varies by yeast strain. Always check the manufacturer spec sheet before concluding a fermentation is stuck.' },
+          { text:'Pitch more yeast — it is clearly stuck.', scores:{quality:-4,technique:-3,knowledge:-6}, outcome:'bad', feedback:'Pitching more yeast when you are actually at FG will over-attenuate the beer, stripping the body and thick mouthfeel that London Ale III is selected to produce.', tip:'London Ale III high-gravity thick-body character is a design feature, not a flaw.' },
+          { text:'Raise fermentation temperature to 72F to push attenuation.', scores:{quality:-2,technique:-2,knowledge:-4}, outcome:'mid', feedback:'Warming a finished fermentation won\\\'t change FG significantly if London Ale III is already done. And warming mid-fermentation can produce more ester.', tip:'Before adjusting anything, verify that two readings 48 hours apart are the same.' },
+        ]
+      },
+      { id:'ne-cb2', step:'Tasting', type:'curveball',
+        context:'Your NEIPA is at 1 week in the bottle. Carbonation is right, haze is beautiful, but it tastes like wet cardboard with a faint tropical note underneath. The aroma that was incredible at dry hop is almost gone.',
+        question:'What happened?',
+        choices:[
+          { text:'Oxidation. Something introduced oxygen during transfer or bottling.', scores:{quality:+2,technique:+4,knowledge:+10}, outcome:'good', feedback:'Correct diagnosis. Wet cardboard flavor in NEIPA at 1 week is classic oxidation. The tropical hop character degrades rapidly when exposed to oxygen.', tip:'For next batch: slow siphon, no splashing, campden tablet in the bottling bucket, fill bottles from the bottom up.' },
+          { text:'The hops were old or low quality.', scores:{quality:0,technique:0,knowledge:-4}, outcome:'bad', feedback:'Old hops produce cheesy or grassy character, not cardboard. Cardboard at 1 week in a fresh batch is almost always oxidation.', tip:'Know your off-flavor descriptors. Cardboard = oxidation. Cheesy = old hops. Buttery = acetaldehyde.' },
+          { text:'The beer just needs more time to condition.', scores:{quality:-2,technique:0,knowledge:-6}, outcome:'bad', feedback:'Oxidized NEIPA does not improve with conditioning. It gets worse. The tropical character window is 2-4 weeks from packaging.', tip:'NEIPA is a fresh beer. Drink it young, drink it fast.' },
+        ]
+      },
+    ],
+  },
+
+  kveikipa: {
+    name:'Kveik IPA', glassColor:'#e87820',
+    scenarios:[
+      { id:'kv1', step:'Fermentation Temperature', type:'normal',
+        context:'The recipe says ferment Voss Kveik at 85-95F. Your other yeasts need 65-70F. This seems dangerously high.',
+        question:'Do you follow the recipe and pitch at 85-90F?',
+        choices:[
+          { text:'Yes — Kveik genuinely thrives at high temperatures.', scores:{quality:+10,technique:+10,knowledge:+10}, outcome:'good', feedback:'Correct. Voss Kveik is a Norwegian farmhouse yeast with fundamentally different thermal tolerance. At 90F it produces clean citrus/orange esters with no fusel alcohols. This is genuinely unusual.', tip:'Kveik temperature tolerance comes from centuries of farmhouse fermentation without temperature control. It evolved for these conditions.' },
+          { text:'Pitch at 70F to be safe.', scores:{quality:-6,technique:-4,knowledge:-6}, outcome:'bad', feedback:'Kveik pitched at normal ale temperatures produces a flat, characterless beer with minimal ester production. The citrus character requires the high temperature to develop.', tip:'Kveik at 70F: technically ferments, tastes bland. Kveik at 90F: finishes in 48 hours, tastes of orange.' },
+          { text:'Pitch at 75F as a compromise.', scores:{quality:-2,technique:-2,knowledge:-4}, outcome:'mid', feedback:'Still well below optimal range. You will get some ester development but miss the characteristic orange intensity.', tip:'There is no benefit to a conservative approach with Kveik. The whole point is to go hot.' },
+        ]
+      },
+      { id:'kv2', step:'Fermentation Day 1', type:'normal',
+        context:'8 hours after pitching Voss Kveik at 90F, fermentation is already roaring. A rich orange smell is coming from the fermenter. This happened in 8 hours, not 24-48.',
+        question:'Is this normal?',
+        choices:[
+          { text:'Yes — Kveik at high temperature starts fast and ferments hard. This is exactly what it should look like.', scores:{quality:+8,technique:+6,knowledge:+10}, outcome:'good', feedback:'Correct. Kveik at 90F can show vigorous fermentation within 4-8 hours of pitching. The orange smell is the natural ester profile developing — citrus esters from Voss Kveik.', tip:'The orange/tangerine aroma from Kveik is not from any added fruit or hops — it is entirely from yeast metabolism at high temperature.' },
+          { text:'Reduce temperature immediately — something is wrong.', scores:{quality:-6,technique:-4,knowledge:-8}, outcome:'bad', feedback:'Reducing temperature at this stage causes thermal shock and disrupts fermentation. The speed and orange smell are both normal Kveik behavior.', tip:'With Kveik, fast is good and the orange smell is the point.' },
+          { text:'Take a gravity reading to see what is happening.', scores:{quality:+4,technique:+6,knowledge:+6}, outcome:'good', feedback:'Reasonable scientific instinct. A reading at 8 hours would confirm active fermentation — you would see a measurable gravity drop already.', tip:'Kveik at 90F can drop 10-15 gravity points in the first 12 hours.' },
+        ]
+      },
+      { id:'kv-cb1', step:'Gravity Check Day 2', type:'curveball',
+        context:'You take a gravity reading at day 2. Your OG was 1.062. Your reading is 1.014 — very close to expected FG of 1.012. After only 2 days. You have never seen this before.',
+        question:'What do you conclude?',
+        choices:[
+          { text:'Take another reading in 24 hours to confirm stability. Kveik really can finish in 48-72 hours.', scores:{quality:+10,technique:+10,knowledge:+10}, outcome:'good', feedback:'Best answer. Confirm with a second reading. Kveik at 90F really does finish in 48-72 hours. This is its defining characteristic.', tip:'When the second reading confirms stability, proceed to dry hopping. Do not wait out of habit.' },
+          { text:'This is impossible. The hydrometer must be broken.', scores:{quality:-2,technique:0,knowledge:-8}, outcome:'bad', feedback:'The hydrometer is not broken. Voss Kveik at 90F fermenting to near-FG in 48 hours is documented, reproducible, and expected.', tip:'Kveik defies the assumptions you have built around fermentation timing. Embrace the difference.' },
+          { text:'Bottle immediately — the fermentation is done.', scores:{quality:-6,technique:-4,knowledge:-4}, outcome:'bad', feedback:'Even with Kveik, confirm with two readings. A single reading showing near-FG at day 2 is encouraging, not confirmation.', tip:'Best practice never changes: two gravity readings 24 hours apart confirm completion, regardless of yeast strain.' },
+        ]
+      },
+      { id:'kv3', step:'The Orange Character', type:'normal',
+        context:'Your Kveik IPA sample at day 3 tastes distinctly of orange and tangerine. You are positive you didn\\\'t add any fruit. The recipe only has malt, hops, and Voss Kveik.',
+        question:'Is this a contamination or a flaw?',
+        choices:[
+          { text:'It is Voss Kveik naturally producing citrus esters at high fermentation temperature. It is a feature.', scores:{quality:+6,technique:+6,knowledge:+10}, outcome:'good', feedback:'Exactly right. Voss Kveik at 85-95F produces specific citrus ester compounds naturally. The orange character is one of the most distinctive and beloved properties of this yeast.', tip:'When paired with Citra (which produces lime/citrus), the orange from the yeast and the lime from the hops create a layered citrus complexity neither could produce alone.' },
+          { text:'Contamination — dump it.', scores:{quality:-5,technique:0,knowledge:-10}, outcome:'bad', feedback:'Citrus/orange ester character from Kveik at high temperature is one of the cleanest and most intentional flavor contributions in all of homebrewing. Contamination produces sour, vinegary, or medicinal notes — not clean orange.', tip:'Know your yeast profile before you brew with it.' },
+          { text:'The Citra hops are more powerful than expected.', scores:{quality:+2,technique:0,knowledge:-4}, outcome:'mid', feedback:'Citra does produce lime/citrus character, but this level of orange intensity at day 3 — before dry hopping is even complete — is coming from the yeast, not the hops.', tip:'Yeast flavor contributions can be just as significant as hop contributions. Kveik is proof.' },
+        ]
+      },
+      { id:'kv4', step:'Packaging', type:'checkin',
+        context:'Gravity is stable. The beer is ready at day 5. Your friend says condition it for 3 weeks like your other beers. You have read that Kveik doesn\\\'t need extended conditioning.',
+        question:'Do you wait 3 weeks or package now?',
+        choices:[
+          { text:'Package now — Kveik doesn\\\'t need extended conditioning. The beer is ready.', scores:{quality:+8,technique:+8,knowledge:+8}, outcome:'good', feedback:'Correct. Kveik produces very few fermentation byproducts that require conditioning. The off-flavor compounds that normally need time to clean up are simply not produced in significant quantities.', tip:'The 3-week conditioning habit exists because most yeasts need it. Kveik doesn\\\'t. Trust the process.' },
+          { text:'Wait 3 weeks — rushing fermentation is always a mistake.', scores:{quality:-1,technique:-2,knowledge:-4}, outcome:'mid', feedback:'Not harmful, just unnecessary. The beer won\\\'t improve significantly. Kveik hop character is most vibrant fresh.', tip:'Rules from other yeasts don\\\'t automatically apply to Kveik.' },
+          { text:'Wait 1 week as a compromise.', scores:{quality:+4,technique:+4,knowledge:+4}, outcome:'mid', feedback:'Cautious but fine. Extra time won\\\'t hurt.', tip:'With Kveik, you can confidently package as soon as two gravity readings confirm stability.' },
+        ]
+      },
+    ],
+  },
+
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -1098,6 +1616,7 @@ function goTo(id) {
   if(id === 'screen-sim') renderSimScreen();
   if(id === 'screen-progress') renderCellar();
   updateXP();
+  updateHomeStats();
   window.scrollTo(0,0);
 }
 
@@ -1117,10 +1636,16 @@ function setFamily(el, family) {
   state.currentFamily = family;
   renderRecipeGrid();
 }
+function recipeFamilyMatch(r, family) {
+  if(family === 'all') return true;
+  if(family === 'beginner') return r.tier === 'beginner';
+  if(family === 'intermediate') return r.tier === 'intermediate';
+  return r.family === family;
+}
 function renderRecipeGrid() {
   const grid = document.getElementById('recipe-grid');
   if(!grid) return;
-  const filtered = state.currentFamily === 'all' ? RECIPES : RECIPES.filter(r => r.family === state.currentFamily);
+  const filtered = RECIPES.filter(r => recipeFamilyMatch(r, state.currentFamily));
   if(!filtered.length) { grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);font-size:0.8rem;">No styles in this family yet.</div>`; return; }
   grid.innerHTML = filtered.map(r => buildCardHTML(r)).join('');
 }
@@ -1171,8 +1696,28 @@ function buildCardHTML(r) {
 function flipCard(id) {
   const card = document.getElementById('card-'+id);
   if(!card) return;
-  if(state.flippedCards.has(id)) { state.flippedCards.delete(id); card.classList.remove('flipped'); }
-  else { state.flippedCards.add(id); card.classList.add('flipped'); }
+
+  const backFace = card.querySelector('.card-back');
+  const frontFace = card.querySelector('.card-front');
+
+  if(state.flippedCards.has(id)) {
+    // Unflip: remove negative margin so back goes back below front in flow
+    state.flippedCards.delete(id);
+    card.classList.remove('flipped');
+    if(backFace) backFace.style.marginTop = '';
+  } else {
+    // Flip: measure back face height and pull it up by that amount
+    // so it visually overlaps the front face without being absolute
+    state.flippedCards.add(id);
+    card.classList.add('flipped');
+    if(backFace) {
+      // Let it render for one frame to get real height, then pull up
+      requestAnimationFrame(() => {
+        const h = backFace.offsetHeight;
+        if(h > 0) backFace.style.marginTop = '-' + h + 'px';
+      });
+    }
+  }
 }
 function launchSimFromBook(simId) {
   state.flippedCards.clear();
@@ -1189,7 +1734,8 @@ function openModal(id) {
   const ingredientsHTML = recipe.ingredients.map(ing => `
     <div class="ingredient-row ${ing.type}">
       <span class="ingredient-icon">${ing.icon}</span>
-      <div><div class="ingredient-name">${ing.name}</div><div class="ingredient-role">${ing.role}</div></div>
+      <div style="flex:1;"><div class="ingredient-name">${ing.name}</div><div class="ingredient-role">${ing.role}</div></div>
+      ${ing.int ? '<span class="int-badge">INT</span>' : ''}
       <div class="ingredient-amount">${ing.amount}</div>
     </div>`).join('');
   const stepsHTML = recipe.steps.map((step, i) => `
@@ -1215,7 +1761,7 @@ function openModal(id) {
       <div class="modal-abv-row">
         <div class="abv-chip">ABV ${recipe.abv}</div>
         <div class="abv-chip">IBU ${recipe.ibu}</div>
-        <div class="abv-chip">${recipe.difficulty}</div>
+        <div class="abv-chip ${recipe.tier === 'intermediate' ? 'int' : ''}">${recipe.difficulty}</div>
         <div class="abv-chip">⏱ ${recipe.time}</div>
       </div>
       ${hasSim ? '<button class="sim-launch-btn" style="margin-top:16px;max-width:300px;" onclick="closeModal(); launchSimFromBook(\'' + recipe.simId + '\')">🧪 Start Brew Sim for This Recipe</button>' : ''}
@@ -1245,6 +1791,11 @@ function renderSimPick() {
   const hefeUnlocked = state.xp >= 150;
   const wcipaOnclick = 'onclick="startSim(\'wcipa\')"';
   const hefeOnclick = 'onclick="startSim(\'hefe\')"';
+  const neipaOnclick = 'onclick="startSim(\'neipa\')"';
+  const kveikOnclick = 'onclick="startSim(\'kveikipa\')"';
+  const neipaUnlocked = state.xp >= 200;
+  const bestWcipa = Math.max(0, ...state.runs.filter(r => r.recipeId === 'wcipa').map(r => r.finalScore));
+  const kveikUnlocked = bestWcipa >= 80;
   app.innerHTML = `
     <nav class="topbar">
       <button class="back-btn" onclick="goTo('screen-home')">← Home</button>
@@ -1273,6 +1824,16 @@ function renderSimPick() {
         <div class="sim-recipe-icon">${!hefeUnlocked ? '🔒' : '🍺'}</div>
         <div class="sim-recipe-info"><div class="sim-recipe-name">Hefeweizen</div><div class="sim-recipe-meta">${!hefeUnlocked ? 'Earn 150 XP to unlock · ' + state.xp + '/150 XP' : '6 decisions · 2 curveballs · Intermediate'}</div></div>
         ${hefeUnlocked ? '<div class="sim-recipe-arrow">→</div>' : ''}
+      </button>
+      <button class="sim-recipe-btn intermediate ${!neipaUnlocked ? 'locked' : ''}" ${!neipaUnlocked ? '' : neipaOnclick}>
+        <div class="sim-recipe-icon">${!neipaUnlocked ? '🔒' : '🌫️'}</div>
+        <div class="sim-recipe-info"><div class="sim-recipe-name">New England IPA <span style="font-size:0.6rem;color:var(--hop2)">⚗️</span></div><div class="sim-recipe-meta ${!neipaUnlocked ? '' : 'int'}">${!neipaUnlocked ? 'Reach Journeyman (200 XP) · ' + state.xp + '/200 XP' : '6 decisions · 2 curveballs · Intermediate'}</div></div>
+        ${neipaUnlocked ? '<div class="sim-recipe-arrow" style="color:var(--hop2)">→</div>' : ''}
+      </button>
+      <button class="sim-recipe-btn intermediate ${!kveikUnlocked ? 'locked' : ''}" ${!kveikUnlocked ? '' : kveikOnclick}>
+        <div class="sim-recipe-icon">${!kveikUnlocked ? '🔒' : '🔥'}</div>
+        <div class="sim-recipe-info"><div class="sim-recipe-name">Kveik IPA <span style="font-size:0.6rem;color:var(--hop2)">⚗️</span></div><div class="sim-recipe-meta ${!kveikUnlocked ? '' : 'int'}">${!kveikUnlocked ? 'Score 80+ on WCIPA sim · best: ' + bestWcipa + '/80' : '5 decisions · 1 curveball · Intermediate'}</div></div>
+        ${kveikUnlocked ? '<div class="sim-recipe-arrow" style="color:var(--hop2)">→</div>' : ''}
       </button>
     </div>`;
 }
@@ -1460,7 +2021,15 @@ function getTastingNotes(recipeId, scores, log) {
     notes.push(t >= 70 ? `<strong>Flavor:</strong> Coffee and dark chocolate with a dry finish. The roasted barley did its job.` : `<strong>Flavor:</strong> Slightly harsh on the finish. Steep temperature may have been too high.`);
     notes.push(k >= 70 ? `<strong>Mouthfeel:</strong> Silky and smooth — the flaked barley extracted well.` : `<strong>Mouthfeel:</strong> Thinner than expected.`);
   }
-  if(recipeId === 'hefe') {
+  if(recipeId === 'neipa') {
+    notes.push(q >= 75 ? '<strong>Aroma:</strong> Thick tropical — Citra lime, Mosaic blueberry, biotransformation magic. The WY definition of NEIPA.' : '<strong>Aroma:</strong> Muted hop aroma. Oxidation or early dry hopping likely compromised the tropical character.');
+    notes.push(t >= 70 ? '<strong>Appearance:</strong> Beautifully hazy — opaque golden-orange. London Ale III in suspension, just as intended.' : '<strong>Appearance:</strong> Clearer than expected for a NEIPA, or darker, suggesting process issues.');
+    notes.push(k >= 70 ? '<strong>Bitterness:</strong> Soft and low-perceived despite moderate IBUs. The chloride water is working.' : '<strong>Bitterness:</strong> Harsher than expected. Water chemistry or a bittering hop addition may have thrown off the balance.');
+  } else if(recipeId === 'kveikipa') {
+    notes.push(q >= 75 ? '<strong>Aroma:</strong> Orange and tangerine from the Kveik, citrus from Citra, tropical from Mosaic. Layered and complex.' : '<strong>Aroma:</strong> Muted aroma. Temperature may have been too low for full Kveik ester expression.');
+    notes.push(t >= 70 ? '<strong>Fermentation:</strong> Kveik did its job — clean, fast, and characterful. No off-flavors.' : '<strong>Fermentation:</strong> Possible temperature issues. Kveik needs 85-95°F to produce its signature character.');
+    notes.push(k >= 70 ? '<strong>Overall:</strong> Fresh, bright, citrus-forward. Best consumed within 4 weeks.' : '<strong>Overall:</strong> Some roughness — process adjustments needed for next batch.');
+  } else if(recipeId === 'hefe') {
     notes.push(q >= 75 ? '<strong>Aroma:</strong> Banana and clove in balance — WY3068 did what it promised.' : '<strong>Aroma:</strong> One-dimensional. Fermentation ran too warm (banana) or too cold (clove only).');
     notes.push(t >= 70 ? '<strong>Appearance:</strong> Properly cloudy — yeast in suspension, just as intended.' : '<strong>Appearance:</strong> Clearer than expected.');
     notes.push(k >= 70 ? '<strong>Mouthfeel:</strong> Soft and creamy from the wheat malt. Carbonation lifts the head beautifully.' : '<strong>Mouthfeel:</strong> Thinner than expected, or over-carbonated.');
@@ -1473,9 +2042,29 @@ function getTastingNotes(recipeId, scores, log) {
   return notes;
 }
 function buildResultGlass(recipeId, score) {
+  if(recipeId === 'neipa') {
+    // Hazy pint — opaque golden-orange
+    const fill = 0.55 + (score/100)*0.4;
+    const foam = score >= 70 ? 13 : score >= 50 ? 7 : 3;
+    return '<svg width="90" height="120" viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rg-ne" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8a020" stop-opacity="' + fill + '"/><stop offset="100%" stop-color="#a06010" stop-opacity="' + fill + '"/></linearGradient><linearGradient id="rg-ne-h" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(255,180,40,0.3)"/><stop offset="100%" stop-color="rgba(255,160,20,0.12)"/></linearGradient><clipPath id="rg-nec"><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z"/></clipPath></defs><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.13)" stroke-width="1.2"/><rect x="6" y="' + (38-(score/100)*12) + '" width="68" height="74" fill="url(#rg-ne)" clip-path="url(#rg-nec)"/><rect x="6" y="' + (38-(score/100)*12) + '" width="68" height="74" fill="url(#rg-ne-h)" clip-path="url(#rg-nec)"/><ellipse cx="40" cy="' + (38-(score/100)*12) + '" rx="' + Math.min(26,8+score*0.18) + '" ry="' + Math.round(foam/2) + '" fill="rgba(252,244,228,0.93)"/><path d="M18 18 L12 96" stroke="rgba(255,255,255,0.18)" stroke-width="2.5" stroke-linecap="round"/></svg>';
+  }
+  if(recipeId === 'kveikipa') {
+    // Orange-amber pint
+    const fill = 0.55 + (score/100)*0.4;
+    const foam = score >= 70 ? 13 : score >= 50 ? 7 : 3;
+    return '<svg width="90" height="120" viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rg-kv" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e87020" stop-opacity="' + fill + '"/><stop offset="100%" stop-color="#903010" stop-opacity="' + fill + '"/></linearGradient><clipPath id="rg-kvc"><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z"/></clipPath></defs><path d="M16 12 L8 100 Q8 106 14 106 L66 106 Q72 106 72 100 L64 12 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.13)" stroke-width="1.2"/><rect x="6" y="' + (38-(score/100)*12) + '" width="68" height="74" fill="url(#rg-kv)" clip-path="url(#rg-kvc)"/><ellipse cx="40" cy="' + (38-(score/100)*12) + '" rx="' + Math.min(26,8+score*0.18) + '" ry="' + Math.round(foam/2) + '" fill="rgba(245,235,210,0.92)"/><circle cx="30" cy="80" r="1.5" fill="rgba(255,255,255,0.15)"><animate attributeName="cy" values="95;42" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.25;0" dur="2.8s" repeatCount="indefinite"/></circle><path d="M18 18 L12 96" stroke="rgba(255,255,255,0.18)" stroke-width="2.5" stroke-linecap="round"/></svg>';
+  }
   const fill = 0.55 + (score/100)*0.4;
   const foam = score >= 70 ? 14 : score >= 50 ? 8 : 4;
-  if(recipeId === 'hefe') {
+  if(recipeId === 'neipa') {
+    notes.push(q >= 75 ? '<strong>Aroma:</strong> Thick tropical — Citra lime, Mosaic blueberry, biotransformation magic. The WY definition of NEIPA.' : '<strong>Aroma:</strong> Muted hop aroma. Oxidation or early dry hopping likely compromised the tropical character.');
+    notes.push(t >= 70 ? '<strong>Appearance:</strong> Beautifully hazy — opaque golden-orange. London Ale III in suspension, just as intended.' : '<strong>Appearance:</strong> Clearer than expected for a NEIPA, or darker, suggesting process issues.');
+    notes.push(k >= 70 ? '<strong>Bitterness:</strong> Soft and low-perceived despite moderate IBUs. The chloride water is working.' : '<strong>Bitterness:</strong> Harsher than expected. Water chemistry or a bittering hop addition may have thrown off the balance.');
+  } else if(recipeId === 'kveikipa') {
+    notes.push(q >= 75 ? '<strong>Aroma:</strong> Orange and tangerine from the Kveik, citrus from Citra, tropical from Mosaic. Layered and complex.' : '<strong>Aroma:</strong> Muted aroma. Temperature may have been too low for full Kveik ester expression.');
+    notes.push(t >= 70 ? '<strong>Fermentation:</strong> Kveik did its job — clean, fast, and characterful. No off-flavors.' : '<strong>Fermentation:</strong> Possible temperature issues. Kveik needs 85-95°F to produce its signature character.');
+    notes.push(k >= 70 ? '<strong>Overall:</strong> Fresh, bright, citrus-forward. Best consumed within 4 weeks.' : '<strong>Overall:</strong> Some roughness — process adjustments needed for next batch.');
+  } else if(recipeId === 'hefe') {
     return '<svg width="75" height="130" viewBox="0 0 70 130" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rg-h" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8d060" stop-opacity="' + fill + '"/><stop offset="100%" stop-color="#c09020" stop-opacity="' + fill + '"/></linearGradient><clipPath id="rg-hc"><path d="M28 8 Q22 40 18 70 Q15 85 14 100 Q13 112 16 118 Q19 124 24 124 L46 124 Q51 124 54 118 Q57 112 56 100 Q55 85 52 70 Q48 40 42 8 Z"/></clipPath></defs><path d="M28 8 Q22 40 18 70 Q15 85 14 100 Q13 112 16 118 Q19 124 24 124 L46 124 Q51 124 54 118 Q57 112 56 100 Q55 85 52 70 Q48 40 42 8 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/><rect x="12" y="38" width="46" height="90" fill="url(#rg-h)" clip-path="url(#rg-hc)"/><ellipse cx="35" cy="38" rx="' + Math.min(22,8+score*0.14) + '" ry="' + (foam/2) + '" fill="rgba(252,246,234,0.95)"/><circle cx="27" cy="95" r="1.5" fill="rgba(255,255,255,0.2)"><animate attributeName="cy" values="110;42" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.3;0" dur="3s" repeatCount="indefinite"/></circle><path d="M20 20 Q17 60 16 100" stroke="rgba(255,255,255,0.18)" stroke-width="2" stroke-linecap="round" fill="none"/></svg>';
   }
   if(recipeId === 'wcipa') {
@@ -1512,9 +2101,15 @@ function renderCellar() {
   const ipaCard = document.getElementById('unlock-ipa');
   const hefeCard = document.getElementById('unlock-hefe');
   const oatCard = document.getElementById('unlock-oat');
-  if(ipaCard && state.runs.length >= 2) { ipaCard.style.opacity='1'; ipaCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = ipaCard.querySelector('.lock-icon'); if(lock) lock.textContent='✓'; }
-  if(hefeCard && state.xp >= 150) { hefeCard.style.opacity='1'; hefeCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = hefeCard.querySelector('.lock-icon'); if(lock) lock.textContent='✓'; }
-  if(oatCard && state.runs.some(r => r.finalScore >= 80)) { oatCard.style.opacity='1'; oatCard.querySelector('.unlock-dot').style.background='var(--copper)'; const lock = oatCard.querySelector('.lock-icon'); if(lock) lock.textContent='✓'; }
+  const neipaCard = document.getElementById('unlock-neipa');
+  const kveikCard = document.getElementById('unlock-kveik');
+  function unlockCard(el) { if(el) { el.style.opacity='1'; el.querySelector('.unlock-dot').style.background='var(--copper)'; const lk = el.querySelector('.lock-icon'); if(lk) lk.textContent='✓'; } }
+  if(state.runs.length >= 2) unlockCard(ipaCard);
+  if(state.xp >= 150) unlockCard(hefeCard);
+  if(state.runs.some(r => r.finalScore >= 80)) unlockCard(oatCard);
+  if(state.xp >= 200) unlockCard(neipaCard);
+  const bestWcipa = Math.max(0, ...state.runs.filter(r => r.recipeId === 'wcipa').map(r => r.finalScore));
+  if(bestWcipa >= 80) unlockCard(kveikCard);
   if(runHistory) {
     if(!state.runs.length) { runHistory.innerHTML = '<em style="font-size:0.78rem;color:var(--muted2)">No runs yet. Head to Brew Sim to start your first batch.</em>'; return; }
     runHistory.innerHTML = state.runs.slice().reverse().map(r => `
@@ -1538,6 +2133,17 @@ function updateXP() {
   document.querySelectorAll('.xp-badge').forEach(badge => {
     badge.classList.toggle('has-xp', state.xp > 0);
   });
+}
+function updateHomeStats() {
+  const xpEl = document.getElementById('home-xp');
+  const runsEl = document.getElementById('home-runs');
+  const recipesEl = document.getElementById('home-recipes');
+  if(xpEl) xpEl.textContent = state.xp;
+  if(runsEl) runsEl.textContent = state.runs.length;
+  if(recipesEl) {
+    const unlocked = RECIPES.filter(r => !r.locked).length;
+    recipesEl.textContent = unlocked;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1578,6 +2184,7 @@ function checkOnboard() {
 // ═══════════════════════════════════════════════════════════
 renderSimPick();
 updateXP();
+updateHomeStats();
 checkOnboard();
 </script>
 </body>
