@@ -656,6 +656,30 @@ body{
 .emg-done-title{font-family:var(--font-head);font-size:1.2rem;color:var(--ink);margin-bottom:6px}
 .emg-done-sub{font-size:13px;color:var(--ink-soft);line-height:1.55;margin-bottom:14px}
 
+/* ═══════ SITUATION SEARCH ═══════ */
+.sit-search-wrap{margin-bottom:14px;position:relative}
+.sit-search{
+  width:100%;padding:11px 16px 11px 40px;
+  font-family:var(--font-body);font-size:14px;color:var(--ink);
+  background:var(--paper);border:1px solid var(--rule-strong);
+  border-radius:var(--radius);outline:none;
+  box-sizing:border-box;
+  transition:border-color .15s,box-shadow .15s;
+  -webkit-appearance:none;
+}
+.sit-search:focus{border-color:var(--anchor-rule);box-shadow:0 0 0 3px var(--anchor-bg)}
+.sit-search-wrap::before{
+  content:'🔍';font-size:14px;
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  pointer-events:none;
+}
+.sit-no-results{
+  text-align:center;padding:24px 16px;
+  font-size:13px;color:var(--ink-soft);
+  background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);
+  margin-bottom:10px;
+}
+
 /* ═══════ MISC ═══════ */
 .divider{height:1px;background:var(--rule);margin:14px 0}
 .mt-12{margin-top:12px}
@@ -932,9 +956,24 @@ body{
   </div>
   <div class="screen-inner">
     <div class="section-head">
-      <div class="section-eyebrow">Step 1 of 3</div>
+      <div class="section-eyebrow">Practice</div>
       <h2 class="section-title">What's happening?</h2>
-      <p class="section-sub">Pick the closest situation. You'll work through 3 real scenarios.</p>
+      <p class="section-sub">Pick the closest situation. You'll work through 3 real scenarios with scoring and coaching.</p>
+    </div>
+    <div class="sit-search-wrap">
+      <input
+        type="search"
+        id="sit-search"
+        class="sit-search"
+        placeholder="Search situations..."
+        oninput="filterSituations(this.value)"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+      />
+    </div>
+    <div id="sit-no-results" class="sit-no-results" style="display:none">
+      No situations match. Try a different word.
     </div>
     <div class="sit-list" id="sit-grid"></div>
     <div style="text-align:center;margin-top:16px">
@@ -1187,6 +1226,32 @@ body{
       </div>
     </div>
 
+    <!-- IEP FINDINGS -->
+    <div class="kid-section" id="whois-sec-iep">
+      <div class="kid-section-head anchor" onclick="toggleWhois('whois-sec-iep')">
+        <div class="kid-section-icon">📄</div>
+        <div class="kid-section-meta">
+          <div class="kid-section-eyebrow anchor">IEP — June 2026</div>
+          <div class="kid-section-title">What his formal education plan documents</div>
+        </div>
+        <div class="kid-section-arrow">▼</div>
+      </div>
+      <div class="kid-section-body">
+        <div class="diag-badge official">📄 TRECA Digital Academy · Active IEP</div>
+        <p>Garrett has an active Individualized Education Program through TRECA Digital Academy, effective June 2026. He qualifies for special education services under the category of Autism, with supports in social skills, executive functioning, communication, and fine motor skills.</p>
+
+        <p><strong>Academic picture:</strong> His teacher places him at grade 4.3 in reading, grade 2.6 in math, and grade 3 in early literacy — as a kindergartener. She explicitly noted he would likely succeed under grade acceleration. None of his IEP goals address enrichment or challenge. This is a gap worth raising at future IEP meetings.</p>
+
+        <p><strong>Working memory is a documented weak spot.</strong> Compared to his other cognitive abilities — which are high — working memory is the weak link. In plain terms: his mental whiteboard runs out of space under multi-step instructions. He may only catch part of a spoken instruction and fill the rest in himself. This is not defiance. It is how his brain processes sequential information. The IEP recommends pairing verbal instructions with visual ones — show him the steps, don't only say them.</p>
+
+        <p><strong>Speech and language goals are active.</strong> He is working on /sh/ and /th/ articulation and grammatical forms (plurals, verb tenses) at sentence level. What this means practically: when he is dysregulated, his speech clarity drops further than it does when he is calm. Do not ask him to repeat himself during a flood. Do not interpret unclear speech as defiance. Give him time.</p>
+
+        <p><strong>Fine motor is a qualifying area.</strong> Things he loves — drawing, building, writing — can be physically fatiguing in ways that aren't visible. A long creative session costs more than it looks like it costs. Watch for fatigue-driven frustration in hands-on work.</p>
+
+        <p><strong>Behavior function assessment (FBA):</strong> The formal assessment identified the primary function of his harder behaviors as attention-seeking. The more accurate read, observed over time, is connection-seeking — bids for engagement and relationship that haven't found a better path yet. He is not performing for an audience. He is reaching for someone. The behaviors that look like attention-seeking are almost always happening in the absence of felt connection.</p>
+      </div>
+    </div>
+
     <!-- WORKING PICTURE -->
     <div class="kid-section" id="whois-sec-1">
       <div class="kid-section-head curveball" onclick="toggleWhois('whois-sec-1')">
@@ -1279,6 +1344,18 @@ body{
           <div class="obs-item">
             <div class="obs-dot green"></div>
             <div class="obs-text"><strong>Self-directed creative projects function as natural regulation.</strong> He built a handwriting font unprompted. He invented Mismageus through sound play and pivoted fluidly. When he is creating, he is regulating. Protect that space.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot anchor"></div>
+            <div class="obs-text"><strong>Multi-step verbal instructions often only partially land.</strong> His working memory is documented as a relative weakness. He may hear the first two steps of a four-step instruction and fill the rest in himself. When he does an assignment wrong it is frequently this, not defiance. Show him steps visually when possible. Correct one piece at a time, not the whole thing at once.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot calm"></div>
+            <div class="obs-text"><strong>Speech clarity drops during dysregulation.</strong> He has active speech therapy goals around articulation. When he is flooded or overloaded, clarity drops further. Don't ask him to repeat himself during a hard moment. Don't interpret unclear speech as attitude.</div>
+          </div>
+          <div class="obs-item">
+            <div class="obs-dot warm"></div>
+            <div class="obs-text"><strong>Harder behaviors are often connection bids without a better path.</strong> The FBA labeled this attention-seeking. The more accurate read is connection-seeking. When he is acting out, he is almost always reaching for someone. The behavior is the loudest available signal that something is missing, not evidence of manipulation.</div>
           </div>
         </div>
       </div>
@@ -1682,6 +1759,7 @@ const SITUATIONS = [
   { id:'growing',   icon:'🌙', title:'Growing pains',                     desc:'His legs hurt at night and sleep isn\'t coming.',                              color:'anchor',    scenarios:['s-growing-1','s-growing-2','s-growing-3'] },
   { id:'soreness',  icon:'😣', title:'Residual pain / lingering soreness',desc:'It\'s "better" to everyone else. It\'s still real to him.',                   color:'calm',      scenarios:['s-sore-1','s-sore-2','s-sore-3'] },
   { id:'hitting',   icon:'✋', title:'Hitting or slapping during a meltdown', desc:'Physical aggression during a flood — what happened, what it means, what comes next.', color:'warm', scenarios:['s-hitting-1','s-hitting-2','s-hitting-3'] },
+  { id:'homework',  icon:'📚', title:'Schoolwork resistance & correction cascade', desc:'He won\'t do it the right way. Correcting him lit the fuse. Now it\'s a meltdown.', color:'warm', scenarios:['s-homework-1','s-homework-2','s-homework-3'] },
 ];
 
 const SCENARIOS = {
@@ -4054,6 +4132,94 @@ SCENARIOS['s-hitting-3'] = {
 };
 
 
+// ════════════════════════════════
+// SCHOOLWORK RESISTANCE & CORRECTION CASCADE
+// ════════════════════════════════
+SCENARIOS['s-homework-1'] = {
+  type:'warm', category:'Schoolwork Resistance',
+  context:'He won\'t listen to the instructions for the assignment. He starts doing it his own way. You try to redirect him to the actual directions. He digs in.',
+  question:'He\'s doing the assignment wrong and won\'t listen to the instructions. What do you do before this tips?',
+  choices:[
+    { icon:'🔍', text:'Find out what he thinks the task is before correcting it',
+      sub:'His version might tell you where the breakdown happened.',
+      outcome:'good', scores:{presence:9,timing:9,connection:8,control:9,regulation:8},
+      feedback:'When he does it his own way and won\'t listen to instructions, there\'s almost always a reason — he didn\'t process the instruction fully, he misheard it, or he decided his version was better and committed to it. Asking what he thinks the task is — genuinely, not as a trap — tells you which problem you\'re actually dealing with before you correct anything.',
+      key_moves:['"Can you tell me what you think you\'re supposed to do?"','Listen fully.','If his version is close: build from it. If it\'s off: correct one piece at a time, not all at once.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🧩', text:'Break the instruction into one step at a time — give him just the first piece',
+      sub:'The full instruction may have been too much at once.',
+      outcome:'good', scores:{presence:8,timing:8,connection:7,control:8,regulation:8},
+      feedback:'Working memory is flagged as a relative weakness in his profile. A multi-step instruction delivered all at once may not fully land. Giving him step one only — and waiting for it to complete before step two — removes the processing load that\'s driving the wrong execution.',
+      key_moves:['One instruction.','Wait for it.','Then the next one.','Don\'t repeat all of them when one goes wrong.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'📋', text:'Restate the full instructions clearly — he needs to hear them again',
+      sub:'He didn\'t do it right because he wasn\'t listening the first time.',
+      outcome:'wrong', scores:{presence:2,timing:-3,connection:2,control:-2,regulation:-4},
+      feedback:'Restating the full instructions when he\'s already in resistance mode adds load to a system that has already decided it knows what it\'s doing. It also positions you as the authority correcting him, which activates the demand-sensitive pattern. The more you explain, the more he digs in.',
+      key_moves:['Don\'t repeat the whole instruction.','Find the one piece that went wrong.','Correct only that piece.'],
+      warning:'Full instruction restatement during resistance escalates rather than redirects.',
+      consequence:'He shuts down on the instruction entirely. The task is now about the power dynamic, not the assignment.',
+      cascade_inject:'s-demand-1' }
+  ]
+};
+
+SCENARIOS['s-homework-2'] = {
+  type:'warm', category:'Schoolwork Resistance',
+  context:'He did the assignment wrong. You\'re trying to get him to redo it the correct way. He\'s insisting his version is right or refusing to change it. The correction itself has become the flashpoint.',
+  question:'The correction is the trigger. He won\'t accept that his version is wrong. How do you handle this?',
+  choices:[
+    { icon:'🌿', text:'Separate the work from his worth — validate the effort before addressing the error',
+      sub:'He heard "you did it wrong." You need him to hear something else first.',
+      outcome:'good', scores:{presence:9,timing:9,connection:9,control:8,regulation:9},
+      feedback:'When a correction lands as "you failed," a gifted kid with demand sensitivity will defend the work because he\'s defending himself. The correction can\'t land until the effort is acknowledged. "You worked on that — I can see what you were going for" opens a door. Then: "The instructions want it done this one different way." Small adjustment, not a verdict.',
+      key_moves:['"I can see what you were going for."','Then one specific correction — not a list.','Frame it as the instructions wanting something, not you wanting something.','Never: "That\'s wrong."'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'⏸️', text:'Stop the schoolwork entirely — come back to it when he\'s regulated',
+      sub:'The correction can\'t happen right now. The window has closed.',
+      outcome:'good', scores:{presence:8,timing:10,connection:7,control:8,regulation:9},
+      feedback:'Once the correction itself has become the flashpoint, continuing to push the correction will produce a meltdown. The assignment is not worth the cost of what comes next. Stopping is not giving up — it\'s recognizing that a regulated Garrett can fix one thing in three minutes and a flooded Garrett cannot fix it at all.',
+      key_moves:['Stop clearly and without drama.','Don\'t say "we\'ll do it later" as a threat.','Just: "Let\'s take a break from this."','Come back in 30 minutes or the next day.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'🔁', text:'Hold the line — he needs to learn that corrections are part of learning',
+      sub:'Letting him stop teaches him he can opt out of hard things.',
+      outcome:'wrong', scores:{presence:1,timing:-5,connection:1,control:-3,regulation:-5},
+      feedback:'He already knows corrections are part of learning. What he cannot do right now is access that knowledge because his nervous system is defending itself. Holding the line at this point does not teach resilience — it produces a meltdown that will end the schoolwork anyway, cost the relationship, and leave everyone worse off. The lesson cannot land during a flood.',
+      key_moves:['Stop.','The assignment will still exist tomorrow.','The relationship is more important than today\'s worksheet.'],
+      warning:'Holding the correction line past the regulation threshold produces a meltdown that ends the work anyway — but with significant additional cost.',
+      consequence:'Full meltdown. Work doesn\'t get done. Hitting is likely. The words that follow will be aimed at whoever is in the room.',
+      cascade_inject:'s-hitting-1' }
+  ]
+};
+
+SCENARIOS['s-homework-3'] = {
+  type:'warm', category:'Schoolwork Resistance',
+  context:'The correction cascade went too far. He\'s flooded. He\'s saying "you\'re a bad mom" or "I want a new mommy who\'s nicer." The words are aimed directly at the relationship. The person in the room is being told she is not wanted.',
+  question:'He is attacking the relationship with words during a flood. These are the sharpest words he has. How do you receive them?',
+  choices:[
+    { icon:'🧭', text:'Name what the words are — not what they say',
+      sub:'The words are volume. Not content.',
+      outcome:'good', scores:{presence:10,timing:10,connection:10,control:9,regulation:9},
+      feedback:'"Bad mom" and "I want a new mommy" are not reports about Kathy. They are the largest, sharpest words he has available for how full and overwhelmed his system is right now. He reached for the thing he knew would feel biggest — which means he knows the relationship matters. That\'s not cruelty. That\'s a flooded six-year-old finding the loudest exit for unbearable pressure. The words are the size of the feeling. They are not the content of it.\n\nDo not respond to the words. Do not correct them, debate them, or cry about them in front of him. Create distance, say nothing, and let it pass.',
+      key_moves:['Do not respond to the words.','Leave the room if you can.','Do not let him see that they landed — not because they don\'t matter, but because seeing it escalates him further.','When he comes back sweet: receive it. No reference to what he said.','Later, privately: feel what you need to feel. Those words are hard. They are supposed to be.'],
+      warning:null, consequence:null, cascade_inject:null },
+    { icon:'💬', text:'Tell him calmly that those words are hurtful and not okay',
+      sub:'He needs to know the impact of what he\'s saying.',
+      outcome:'wrong', scores:{presence:2,timing:-4,connection:2,control:2,regulation:-4},
+      feedback:'He cannot receive the impact lesson during a flood. His prefrontal cortex — the part that processes cause and effect, feels remorse, and can receive feedback — is offline. Telling him the words hurt during the flood does not produce remorse. It produces more ammunition. He now knows exactly which words found the target and that they are powerful enough to produce a visible response.',
+      key_moves:['Don\'t address the words during the flood.','The impact conversation belongs in a calm window.','Even then: briefly, once, without requiring him to perform guilt.'],
+      warning:'Responding to the content of relationship-attack language during a flood confirms the words are effective weapons.',
+      consequence:'He escalates. The words get louder and more targeted. He has found what works.',
+      cascade_inject:'s-flood-1' },
+    { icon:'🌊', text:'Leave the room without saying anything',
+      sub:'Remove yourself from the situation.',
+      outcome:'good', scores:{presence:8,timing:9,connection:7,control:9,regulation:8},
+      feedback:'Leaving without a word is one of the cleanest responses available. It removes you from the target zone, doesn\'t confirm that the words found the mark, and doesn\'t add fuel. Stay in earshot. Don\'t slam anything. The flood will pass faster without a visible reaction to sustain it.',
+      key_moves:['Leave quietly.','Stay within earshot.','Don\'t slam anything.','Be somewhere warm and visible when he comes back.'],
+      warning:null, consequence:null, cascade_inject:null }
+  ]
+};
+
+
 // ═══════ STATE ═══════
 let run = { queue:[], index:0, history:[], situationId:'', situationColor:'' };
 
@@ -4072,15 +4238,59 @@ function showScreen(id) {
       }
     } catch(e) {}
   }
+  if (id !== 'screen-pick') {
+    const s = document.getElementById('sit-search');
+    if (s) { s.value = ''; buildSitGrid(); }
+    const nr = document.getElementById('sit-no-results');
+    if (nr) nr.style.display = 'none';
+  }
   if (id !== 'screen-emergency') resetEmergency();
 }
 
 // ═══════ SIT GRID ═══════
+function filterSituations(query) {
+  const q = query.trim().toLowerCase();
+  const grid = document.getElementById('sit-grid');
+  const noResults = document.getElementById('sit-no-results');
+
+  if (!q) {
+    buildSitGrid();
+    noResults.style.display = 'none';
+    return;
+  }
+
+  const matches = SITUATIONS.filter(s =>
+    s.title.toLowerCase().includes(q) ||
+    s.desc.toLowerCase().includes(q) ||
+    s.id.toLowerCase().includes(q)
+  );
+
+  if (!matches.length) {
+    grid.innerHTML = '';
+    noResults.style.display = 'block';
+    return;
+  }
+
+  noResults.style.display = 'none';
+  grid.innerHTML = `<div class="sit-group">` +
+    matches.map(s => `
+      <button class="sit-btn" onclick="startRun('${s.id}')">
+        <div class="sit-color-bar ${s.color}"></div>
+        <span class="sit-icon">${s.icon}</span>
+        <div class="sit-body">
+          <div class="sit-name">${s.title}</div>
+          <div class="sit-desc">${s.desc}</div>
+        </div>
+      </button>
+    `).join('') +
+  `</div>`;
+}
+
 function buildSitGrid() {
   const grid = document.getElementById('sit-grid');
   const categories = [
     { label: '🌋 In the moment — dysregulation', ids: ['building','flood','shutdown','repair','hitting'] },
-    { label: '🔔 Behavior & demands',            ids: ['demand','correct','curveball','cascade'] },
+    { label: '🔔 Behavior & demands',            ids: ['demand','correct','curveball','cascade','homework'] },
     { label: '🏠 Visits & social situations',    ids: ['visit','newface','peer','group','playground','public'] },
     { label: '📱 Screen, structure & transitions', ids: ['screen','bed','summer','wait'] },
     { label: '🎨 Creative & emotional',           ids: ['create','bored','praise','overheard','disclosure'] },
@@ -4658,6 +4868,9 @@ const EMG_DATA = {
       { action: 'Wait. Actually wait.',
         why: 'This will pass. It always passes. Your job is not to fix it — it\'s to not make it worse. That means waiting longer than feels comfortable.',
         say: null },
+      { action: 'If he uses relationship-attack language — don\'t respond to the words',
+        why: '"Bad mom," "I want a new mommy," "I hate you" — these are the largest words he has for how full he is right now. He reached for whatever he knew would feel sharpest. That is not cruelty. It is a flooded child finding the loudest available exit for unbearable pressure. The words are volume, not content. Do not correct them, debate them, or let him see they landed. Leave the room if you need to. Feel what you need to feel — privately, later. The words are not true.',
+        say: null },
       { action: 'If you need to leave, name it first',
         why: 'Then go to the next room. Stay in earshot. Don\'t slam anything.',
         say: 'I\'m going to give us both some space. I\'m right here when you\'re ready.' }
@@ -4667,7 +4880,8 @@ const EMG_DATA = {
       'Issue a consequence',
       'Ask him why he did it',
       'Tell him to calm down',
-      'Bring up what he said in anger',
+      'Respond to relationship-attack words as if they are true — they are not',
+      'Bring up what he said in anger once the flood passes',
       'Make him apologize before he\'s ready'
     ]
   },
