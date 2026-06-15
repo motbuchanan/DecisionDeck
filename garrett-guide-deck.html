@@ -133,9 +133,9 @@ body::after{
 }
 .home-card:active{transform:scale(.985)}
 .home-card .hc-ic{width:50px;height:50px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px}
-.home-card .hc-bd{flex:1;min-width:0}
-.home-card .hc-ti{font-family:var(--font-head);font-size:1.22rem;font-weight:600;line-height:1.15;margin-bottom:3px}
-.home-card .hc-su{font-size:12.5px;line-height:1.4;font-weight:400}
+.home-card .hc-bd{flex:1;min-width:0;display:flex;flex-direction:column}
+.home-card .hc-ti{display:block;font-family:var(--font-head);font-size:1.22rem;font-weight:600;line-height:1.15;margin-bottom:3px}
+.home-card .hc-su{display:block;font-size:12.5px;line-height:1.4;font-weight:400}
 .home-card .hc-arr{flex-shrink:0;font-size:19px;transition:transform .18s;align-self:center}
 .home-card:hover .hc-arr{transform:translateX(4px)}
 .home-card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.13) 48%,transparent 62%);transform:translateX(-120%);transition:transform .7s ease}
