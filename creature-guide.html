@@ -163,6 +163,8 @@
   .ccustom{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.4px}
   #customcolor{width:46px;height:46px;border:3px solid #fff;border-radius:14px;box-shadow:0 2px 5px rgba(58,46,72,.18);padding:0;background:none;cursor:pointer}
   .emoji-pick{display:flex;flex-wrap:wrap;gap:8px}
+  .topgroup-label{font-size:11px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.5px;margin:13px 0 7px;opacity:.85}
+  .sublab-note{text-transform:none;letter-spacing:0;font-weight:600;color:var(--soft);opacity:.8}
   .emo{width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:#FFFCF4;font-size:24px;display:grid;place-items:center;transition:transform .12s;box-shadow:var(--hl)}
   .emo:active{transform:scale(.88)}
   .emo.sel{border-color:var(--berry);background:color-mix(in srgb,var(--berry) 12%,#fff);transform:scale(1.08);box-shadow:0 0 0 2px color-mix(in srgb,var(--berry) 30%,transparent)}
@@ -217,7 +219,14 @@
 /* ---------- data ---------- */
 const KEY = 'garrett_creature_guide_v1';
 const DEFAULT_TRAITS = ['Shy','Bouncy','Brave','Sleepy','Curious','Gentle','Silly','Bossy','Cuddly','Grumpy','Sweet','Wild','Clever','Loud','Calm','Proud'];
-const DEFAULT_TOPPINGS = ['\u{1F353}','\u{1FAD0}','\u2B50','\u{1F497}','\u{1F340}','\u{1F338}','\u{1F380}','\u{1F352}','\u{1F34B}','\u{1F319}','\u{1F344}','\u{1F41A}','\u{1F31F}','\u{1F9C1}','\u{1F369}','\u{1F36A}','\u{1F308}','\u{1F525}','\u{1F4A7}','\u26A1','\u{1F41D}'];
+const TOPPING_GROUPS = [
+  ['Fruit', ['🍓','🫐','🍒','🍇','🍉','🍑','🍋','🍊','🍌','🍍','🥭','🍏','🍎','🍐','🥝','🥥','🍈','🍅']],
+  ['Sweets', ['🧁','🍪','🍩','🍫','🍰','🎂','🥧','🍮','🍯','🥞','🧇','🍦','🍧','🍨']],
+  ['Candy & gumballs', ['🍬','🍭','🔴','🟠','🟡','🟢','🔵','🟣','🟤','⚪','⚫']],
+  ['Drinks', ['🧃','🥤','🧋','☕','🍵','🥛']],
+  ['Nature', ['⭐','🌙','☀️','⚡','🔥','💧','❄️','🌈','🌸','🌼','🌺','🍀','🌿','🍄','🐚','☁️']],
+  ['Shapes & sparkle', ['💎','✨','🌟','💗','🫧','🎀','💖']]
+];
 const DEFAULT_SKILLS = ['Take a shower','Brush teeth','Wash hands','Get dressed','Clean up','Share toys','Say please','Wait my turn','Listen','Eat veggies','Make friends','Be brave','Take a nap','Tie shoes'];
 const COLORS = [
   ['Vanilla','#F6EFD8'],['Strawberry','#F4B8C4'],['Ruby','#E2607A'],['Matcha','#C7D89B'],
@@ -259,7 +268,8 @@ function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e
 function uid(){ return 'c_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 
 function allTraits(){ return [...DEFAULT_TRAITS, ...state.customTraits]; }
-function allToppings(){ return [...DEFAULT_TOPPINGS, ...state.customToppings]; }
+function allToppings(){ return [...TOPPING_GROUPS.flatMap(g=>g[1]), ...state.customToppings]; }
+function emoBtn(e){ return '<button type="button" class="emo '+(draft.topping===e?'sel':'')+'" data-emo="'+e+'">'+e+'</button>'; }
 function allSkills(){ return [...DEFAULT_SKILLS.filter(s=>!state.skills.includes(s)), ...state.skills]; }
 function byId(id){ return state.creatures.find(c=>c.id===id); }
 function esc(s){ return (s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
@@ -339,7 +349,6 @@ function bodySVG(cr, opts){
   const c = cr.color || '#F4B8C4';
   const begin = (opts.blinkBegin!=null) ? opts.blinkBegin : 0;
   const bodyId = opts.bodyId ? ' id="'+opts.bodyId+'"' : '';
-  const topId = opts.topId ? ' id="'+opts.topId+'"' : '';
   const shy = (cr.traits||[]).includes('Shy');
   const blush = shy ? '.5' : '.3';
   const g = nextGid();
@@ -365,9 +374,8 @@ function bodySVG(cr, opts){
     +mouthSVG(cr.mouth||'smile')
     +'<ellipse cx="41" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/><ellipse cx="79" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/>'
     +accessorySVG(cr.accessory||'none')
-    +'<text'+topId+' x="60" y="38" font-size="26" text-anchor="middle" dominant-baseline="middle">'
-      +'<animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.8s" repeatCount="indefinite"/>'
-      +(cr.topping||'')+'</text></svg>';
+    +'<text class="ctop" x="51" y="34" font-size="21" text-anchor="middle" dominant-baseline="middle"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="2.8s" repeatCount="indefinite"/>'+(cr.topping||'')+'</text>'
+    +'<text class="ctop" x="69" y="34" font-size="21" text-anchor="middle" dominant-baseline="middle"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="2.8s" begin="0.45s" repeatCount="indefinite"/>'+(cr.topping||'')+'</text></svg>';
 }
 function motesHTML(n){
   n=n||6; let s='';
@@ -534,9 +542,10 @@ function formHTML(c){
     +COLORS.map(p=>'<div class="sw '+(draft.color===p[1]?'sel':'')+'" data-color="'+p[1]+'" title="'+p[0]+'" style="background:'+p[1]+'"><span class="tick">\u2713</span></div>').join('')
     +'<label class="ccustom">Any<br>color<input type="color" id="customcolor" value="'+draft.color+'"></label></div>'
     +optRow('Body shape','shape',SHAPES)+optRow('Eyes','eyes',EYESET)+optRow('Mouth','mouth',MOUTHS)+optRow('Arms','arms',ARMSET)+optRow('Markings','pattern',PATTERNS)+optRow('Accessory','accessory',ACCESSORIES)
-    +'<div class="sublab">Topping</div><div class="emoji-pick" id="emoji">'
-    +allToppings().map(e=>'<button type="button" class="emo '+(draft.topping===e?'sel':'')+'" data-emo="'+e+'">'+e+'</button>').join('')
-    +'</div><div class="addrow"><input type="text" id="add_topping" maxlength="4" placeholder="Add an emoji topping"><button type="button" class="btn small" data-act="add-topping">Add</button></div>'
+    +'<div class="sublab">Toppings <span class="sublab-note">they get two</span></div>'
+    +TOPPING_GROUPS.map(g=>'<div class="topgroup-label">'+g[0]+'</div><div class="emoji-pick">'+g[1].map(e=>emoBtn(e)).join('')+'</div>').join('')
+    +(state.customToppings.length?'<div class="topgroup-label">Yours</div><div class="emoji-pick">'+state.customToppings.map(e=>emoBtn(e)).join('')+'</div>':'')
+    +'<div class="addrow"><input type="text" id="add_topping" maxlength="4" placeholder="Add an emoji topping"><button type="button" class="btn small" data-act="add-topping">Add</button></div>'
     +'</div></div></div>';
   const personality = '<div class="section'+oc('personality')+'"><button type="button" class="sec-head" data-toggle="personality"><span class="sec-title">Personality</span><span class="sec-sum" id="sum-personality">'+(draft.traits.length?'('+draft.traits.length+')':'')+'</span>'+chev+'</button><div class="sec-body"><div class="sec-inner">'
     +'<div class="fgroup"><label class="flab">Life stage</label><select id="f_stage">'+STAGES.map(s=>'<option '+(draft.stage===s?'selected':'')+'>'+s+'</option>').join('')+'</select></div>'
@@ -582,9 +591,9 @@ function pvColor(c, doPop){
   if(doPop) pvPop();
   updateSummaries();
 }
-function pvTopping(e){ const t=document.getElementById('pv-topping'); if(t) t.textContent=e; pvPop(); updateSummaries(); }
+function pvTopping(e){ document.querySelectorAll('#pv-stage .ctop').forEach(t=>t.textContent=e); pvPop(); updateSummaries(); }
 function updateSummaries(){
-  const a=document.getElementById('sum-looks'); if(a) a.innerHTML='<span class="dot" style="background:'+draft.color+'"></span>'+(draft.topping||'');
+  const a=document.getElementById('sum-looks'); if(a) a.innerHTML='<span class="dot" style="background:'+draft.color+'"></span>'+(draft.topping||'')+(draft.topping||'');
   const b=document.getElementById('sum-personality'); if(b) b.textContent=draft.traits.length?('('+draft.traits.length+')'):'';
   const c=document.getElementById('sum-skills'); if(c) c.textContent=draft.knowledge.length?('('+draft.knowledge.length+')'):'';
 }
@@ -643,9 +652,9 @@ function wire(){
     b.classList.add('sel'); rebuildCreature();
   }));
   // toppings
-  document.querySelectorAll('#emoji .emo').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.emo[data-emo]').forEach(b=>b.addEventListener('click',()=>{
     draft.topping=b.getAttribute('data-emo');
-    document.querySelectorAll('#emoji .emo').forEach(x=>x.classList.remove('sel'));
+    document.querySelectorAll('.emo[data-emo]').forEach(x=>x.classList.remove('sel'));
     b.classList.add('sel'); pvTopping(draft.topping);
   }));
   // personality
