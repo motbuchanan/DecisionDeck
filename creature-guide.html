@@ -285,6 +285,16 @@ const PATTERNS = [['None','none'],['Spots','spots'],['Stripes','stripes'],['Spar
 const ACCESSORIES = [['None','none'],['Glasses','glasses'],['Bow','bow'],['Scarf','scarf'],['Headphones','phones']];
 const HAIR_STYLES = [['None','none'],['Tuft','tuft'],['Bowl','bowl'],['Spiky','spiky'],['Mohawk','mohawk'],['Bangs','bangs'],['Swoosh','swoosh'],['Curly','curly'],['Long','long'],['Wavy','wavy'],['Braids','braids'],['Pigtails','pigtails'],['Buns','buns'],['Pony','pony']];
 const HAIR_COLORS = ['#3B2F2E','#6B4A2B','#C68A4E','#E8C268','#D9712B','#E64B4B','#E86FB0','#9B5DE5','#5D8CE5','#3FB6A0','#5BBF5B','#EDE6DA','#9AA0A6'];
+const HAIR_PRESETS = {
+  puff:[48,47,45,44,40,34,28,34,40,44,45,47],
+  tall:[55,47,39,35,34,33,30,33,34,35,39,47],
+  wide:[40,45,51,53,49,40,30,40,49,53,51,45],
+  spiky:[54,34,52,34,48,30,28,30,48,34,52,34],
+  wavy:[47,42,49,42,47,40,30,40,47,42,49,42],
+  long:[44,47,49,51,53,49,34,49,53,51,49,47],
+  heart:[34,53,49,42,38,33,27,33,38,42,49,53],
+  lumpy:[49,38,51,40,47,36,30,45,40,51,38,47]
+};
 const ACCENTS = {Sleepy:'\u{1F4A4}',Sweet:'\u{1F497}',Cuddly:'\u{1F497}',Gentle:'\u{1F338}',Brave:'\u2728',Curious:'\u2753',Silly:'\u{1F61D}',Grumpy:'\u{1F4A2}',Wild:'\u26A1',Bossy:'\u2757',Loud:'\u{1F4E3}',Calm:'\u{1F33F}',Proud:'\u{1F451}',Clever:'\u{1F4A1}'};
 const IDLE_PRIORITY = ['Sleepy','Bouncy','Silly','Wild','Shy'];
 
@@ -305,7 +315,7 @@ function load(){
     if(typeof c.shape!=='object'||!c.shape||!Array.isArray(c.shape.r)) c.shape=shapeObj(c.shape);
     c.eyes=c.eyes||'dots'; c.mouth=c.mouth||'smile';
     c.arms=c.arms||'paws'; if(c.arms==='nubs') c.arms='open'; c.feet=c.feet||'blocky'; c.emblem=c.emblem||'none'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none';
-    c.hair=c.hair||'none'; c.hairColor=c.hairColor||'#6B4A2B'; if(c.hairTip===undefined) c.hairTip=null;
+    if(typeof c.hairShape!=='object'||!c.hairShape||!Array.isArray(c.hairShape.r)) c.hairShape={r:HAIR_PRESETS.puff.slice(),w:1,h:1}; c.hair=(c.hair==='none'||c.hair==='off')?'off':'on'; if(c.hairTip===undefined) c.hairTip=null;
     if(c.birthday===undefined) c.birthday=null;
     delete c.ability; delete c.teacherId; delete c.firstOfKind;
   });
@@ -511,6 +521,7 @@ function bodySVG(cr, opts){
   const g = nextGid();
   const d = blobPath(cr.shape);
   const cpId = opts.clipPathId ? ' id="'+opts.clipPathId+'"' : '';
+  const hairId = opts.hairId ? ' id="'+opts.hairId+'"' : '';
   const topY = shapeTopY(cr.shape);
   const hairDy = Math.max(-6, Math.min(10, topY-35));
   return '<svg class="portrait" viewBox="0 0 120 120" aria-hidden="true">'
@@ -524,7 +535,7 @@ function bodySVG(cr, opts){
     +'<ellipse cx="60" cy="113" rx="19" ry="5" fill="url(#ct'+g+')"><animate attributeName="rx" values="19;16;19" dur="3.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.62;1" dur="3.4s" repeatCount="indefinite"/></ellipse>'
     +legsSVG(cr.feet||'blocky', c)
     +'<g transform="translate(60 46) scale(0.78) translate(-60 -62)">'
-      +'<g transform="translate(0 '+hairDy+')">'+hairBack(cr)+'</g>'
+      +(cr.hair!=='off' ? '<path'+hairId+' class="hairbase" d="'+blobPath(cr.hairShape)+'" fill="'+darkenHex(c,0.16)+'" stroke="rgba(0,0,0,.06)" stroke-width="1.5"/>' : '')
       +'<path'+bodyId+' class="cbody" d="'+d+'" fill="'+c+'" stroke="rgba(0,0,0,.05)" stroke-width="2"/>'
       +'<g clip-path="url(#clip'+g+')">'
         +'<rect x="0" y="0" width="120" height="120" fill="url(#sh'+g+')"/>'
@@ -533,7 +544,6 @@ function bodySVG(cr, opts){
         +'<circle cx="40" cy="43" r="2.6" fill="#fff" opacity=".85"/>'
         +patternSVG(cr.pattern||'none')
       +'</g>'
-      +'<g transform="translate(0 '+hairDy+')" filter="url(#hsh'+g+')">'+hairFront(cr)+'</g>'
       +eyesSVG(cr.eyes||'dots', begin)
       +mouthSVG(cr.mouth||'smile')
       +'<ellipse cx="41" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/><ellipse cx="79" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/>'
@@ -673,7 +683,7 @@ let draft = null;
 let openSections = new Set(['looks']);
 function blankDraft(){
   return {id:null,name:'',flavor:'',stage:'Newborn',birthday:null,traits:[],loves:'',dislikes:'',sound:'',story:'',
-          color:'#F4B8C4',shape:{r:SHAPE_PRESETS.dollop.slice(),w:1,h:1},eyes:'dots',mouth:'smile',arms:'paws',feet:'blocky',emblem:'none',pattern:'none',accessory:'none',hair:'none',hairColor:'#6B4A2B',hairTip:null,topping:'\u{1F353}',knowledge:[]};
+          color:'#F4B8C4',shape:{r:SHAPE_PRESETS.dollop.slice(),w:1,h:1},eyes:'dots',mouth:'smile',arms:'paws',feet:'blocky',emblem:'none',pattern:'none',accessory:'none',hair:'on',hairShape:{r:HAIR_PRESETS.puff.slice(),w:1,h:1},hairTip:null,topping:'\u{1F353}',knowledge:[]};
 }
 function knows(skill){ return draft.knowledge.find(k=>k.skill===skill); }
 function teacherSelect(skill){
@@ -703,6 +713,48 @@ function shapeEditorHTML(){
     +'<div class="slider-row"><label>Height</label><input type="range" id="sh-h" min="0.6" max="1.45" step="0.01" value="'+h+'"></div>'
     +'<div class="shape-tools"><button type="button" class="btn small" data-act="round-shape">Round out</button></div>';
 }
+function hairEditorHTML(){
+  const on = draft.hair!=='off';
+  const pts=shapePts(draft.hairShape);
+  const handles=pts.map((p,i)=>'<g class="sh-handle" data-idx="'+i+'" transform="translate('+p[0].toFixed(2)+' '+p[1].toFixed(2)+')"><circle class="sh-hit" r="10"/><circle class="sh-dot" r="4.5"/></g>').join('');
+  const presets=Object.keys(HAIR_PRESETS).map(k=>'<button type="button" class="trait" data-hairpreset="'+k+'">'+k.charAt(0).toUpperCase()+k.slice(1)+'</button>').join('');
+  const w=draft.hairShape.w||1, h=draft.hairShape.h||1;
+  return '<div class="sublab">Hair <span class="sublab-note">tap a start, then drag the dots</span></div>'
+    +'<div class="preset-row"><button type="button" class="trait'+(on?' sel':'')+'" data-hairon="on">Hair on</button><button type="button" class="trait'+(!on?' sel':'')+'" data-hairon="off">No hair</button></div>'
+    +'<div id="hair-edwrap" style="'+(on?'':'display:none')+'">'
+      +'<div class="preset-row">'+presets+'</div>'
+      +'<svg id="hair-editor" viewBox="0 0 120 120"><path d="'+blobPath(draft.shape)+'" fill="#000" opacity="0.08"/><path id="hair-blob" class="sh-blob" d="'+blobPath(draft.hairShape)+'" fill="'+darkenHex(draft.color,0.16)+'"/>'+handles+'</svg>'
+      +'<div class="slider-row"><label>Width</label><input type="range" id="hair-w" min="0.6" max="1.5" step="0.01" value="'+w+'"></div>'
+      +'<div class="slider-row"><label>Height</label><input type="range" id="hair-h" min="0.6" max="1.5" step="0.01" value="'+h+'"></div>'
+    +'</div>';
+}
+function renderHairEditor(){
+  const blob=document.getElementById('hair-blob'); if(!blob) return;
+  const pts=shapePts(draft.hairShape);
+  blob.setAttribute('d', catmullRomClosed(pts));
+  blob.setAttribute('fill', darkenHex(draft.color,0.16));
+  const svg=document.getElementById('hair-editor');
+  svg.querySelectorAll('.sh-handle').forEach(g=>{ const i=+g.getAttribute('data-idx'); g.setAttribute('transform','translate('+pts[i][0].toFixed(2)+' '+pts[i][1].toFixed(2)+')'); });
+}
+function updateHairPreview(){ const h=document.getElementById('pv-hair'); if(h) h.setAttribute('d', blobPath(draft.hairShape)); }
+let hairDrag=null;
+function hairEditorWire(){
+  const svg=document.getElementById('hair-editor'); if(!svg) return;
+  const toSvg=(e)=>{ const r=svg.getBoundingClientRect(); return [ (e.clientX-r.left)/r.width*120, (e.clientY-r.top)/r.height*120 ]; };
+  const onMove=(e)=>{
+    if(hairDrag==null) return; e.preventDefault();
+    const xy=toSvg(e); const i=hairDrag; const ang=-Math.PI/2+i*(2*Math.PI/12);
+    const w=draft.hairShape.w||1, h=draft.hairShape.h||1;
+    const ux=(xy[0]-60)/w, uy=(xy[1]-62)/h;
+    let rr=ux*Math.cos(ang)+uy*Math.sin(ang); rr=Math.max(14,Math.min(58,rr));
+    draft.hairShape.r[i]=rr; renderHairEditor(); updateHairPreview();
+  };
+  const onUp=()=>{ if(hairDrag!=null){ hairDrag=null; rebuildCreature(); window.removeEventListener('pointermove',onMove); window.removeEventListener('pointerup',onUp); window.removeEventListener('pointercancel',onUp); } };
+  svg.querySelectorAll('.sh-handle').forEach(g=>g.addEventListener('pointerdown',(e)=>{
+    e.preventDefault(); hairDrag=parseInt(g.getAttribute('data-idx'),10);
+    window.addEventListener('pointermove',onMove); window.addEventListener('pointerup',onUp); window.addEventListener('pointercancel',onUp);
+  }));
+}
 function formHTML(c){
   draft = c ? JSON.parse(JSON.stringify(c)) : blankDraft();
   if(!draft.knowledge) draft.knowledge=[];
@@ -711,7 +763,7 @@ function formHTML(c){
   const chev = '<span class="chev">\u203A</span>';
   const preview = '<div class="preview" id="preview" style="--accent:'+draft.color+'">'
     +motesHTML(6)
-    +creatureStage(draft,{stageId:'pv-stage',animId:'pv-anim',bodyId:'pv-body',clipPathId:'pv-clippath',accents:true,idle:true})
+    +creatureStage(draft,{stageId:'pv-stage',animId:'pv-anim',bodyId:'pv-body',clipPathId:'pv-clippath',hairId:'pv-hair',accents:true,idle:true})
     +'<div class="pv-name" id="pv-name">'+(esc(draft.name)||'Your new creature')+'</div>'
     +'<div class="pv-flav" id="pv-flav">'+esc(draft.flavor)+'</div>'
     +'<div class="pv-age" id="pv-age">'+ageLabel(draft.birthday)+'</div>'
@@ -725,10 +777,7 @@ function formHTML(c){
     +COLORS.map(p=>'<div class="sw '+(draft.color===p[1]?'sel':'')+'" data-color="'+p[1]+'" title="'+p[0]+'" style="background:'+p[1]+'"><span class="tick">\u2713</span></div>').join('')
     +'<label class="ccustom">Any<br>color<input type="color" id="customcolor" value="'+draft.color+'"></label></div>'
     +shapeEditorHTML()+optRow('Eyes','eyes',EYESET)+optRow('Mouth','mouth',MOUTHS)+optRow('Arms','arms',ARMSET)+optRow('Feet','feet',FEETSET)+optRow('Emblem','emblem',EMBLEMSET)+optRow('Markings','pattern',PATTERNS)+optRow('Accessory','accessory',ACCESSORIES)
-      +optRow('Hair','hair',HAIR_STYLES)
-      +'<div class="sublab">Hair tips <span class="sublab-note">base matches the body — add a tip color</span></div><div class="swatches" id="tipswatches">'
-      +'<div class="sw sw-same '+(!draft.hairTip?'sel':'')+'" data-hairtip="same">=</div>'
-      +HAIR_COLORS.map(hex=>'<div class="sw '+(draft.hairTip===hex?'sel':'')+'" data-hairtip="'+hex+'" style="background:'+hex+'"><span class="tick">✓</span></div>').join('')+'</div>'
+      +hairEditorHTML()
     +'<div class="sublab">Toppings <span class="sublab-note">they get two</span></div>'
     +TOPPING_GROUPS.map(g=>'<div class="topgroup-label">'+g[0]+'</div><div class="emoji-pick">'+g[1].map(e=>emoBtn(e)).join('')+'</div>').join('')
     +(state.customToppings.length?'<div class="topgroup-label">Yours</div><div class="emoji-pick">'+state.customToppings.map(e=>emoBtn(e)).join('')+'</div>':'')
@@ -899,6 +948,21 @@ function wire(){
     else { openSections.add(key); sec.classList.add('open'); }
   }));
   shapeEditorWire();
+  hairEditorWire();
+  document.querySelectorAll('[data-hairon]').forEach(b=>b.addEventListener('click',()=>{
+    draft.hair = b.getAttribute('data-hairon')==='off'?'off':'on';
+    const wrap=document.getElementById('hair-edwrap'); if(wrap) wrap.style.display=draft.hair==='off'?'none':'';
+    document.querySelectorAll('[data-hairon]').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); rebuildCreature();
+  }));
+  document.querySelectorAll('[data-hairpreset]').forEach(b=>b.addEventListener('click',()=>{
+    draft.hairShape={r:HAIR_PRESETS[b.getAttribute('data-hairpreset')].slice(),w:1,h:1};
+    const hw=document.getElementById('hair-w'); if(hw) hw.value=1; const hh=document.getElementById('hair-h'); if(hh) hh.value=1;
+    renderHairEditor(); rebuildCreature();
+  }));
+  const hw=document.getElementById('hair-w');
+  if(hw){ hw.addEventListener('input',()=>{ draft.hairShape.w=parseFloat(hw.value); renderHairEditor(); updateHairPreview(); }); hw.addEventListener('change',()=>rebuildCreature()); }
+  const hh=document.getElementById('hair-h');
+  if(hh){ hh.addEventListener('input',()=>{ draft.hairShape.h=parseFloat(hh.value); renderHairEditor(); updateHairPreview(); }); hh.addEventListener('change',()=>rebuildCreature()); }
   reWireBday();
   document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{
     draft.shape={r:SHAPE_PRESETS[b.getAttribute('data-preset')].slice(),w:1,h:1};
@@ -941,11 +1005,6 @@ function wire(){
     draft[f]=v;
     document.querySelectorAll('[data-optfield="'+f+'"]').forEach(x=>x.classList.remove('sel'));
     b.classList.add('sel'); rebuildCreature();
-  }));
-  document.querySelectorAll('#tipswatches .sw').forEach(s=>s.addEventListener('click',()=>{
-    const v=s.getAttribute('data-hairtip'); draft.hairTip=(v==='same'?null:v);
-    document.querySelectorAll('#tipswatches .sw').forEach(x=>x.classList.remove('sel'));
-    s.classList.add('sel'); rebuildCreature();
   }));
   // toppings
   document.querySelectorAll('.emo[data-emo]').forEach(b=>b.addEventListener('click',()=>{
@@ -1078,7 +1137,7 @@ function doImport(){
           state=data;
           if(!state.skills) state.skills=[]; if(!state.customTraits) state.customTraits=[]; if(!state.customToppings) state.customToppings=[];
           if(!state.nextNum) state.nextNum=state.creatures.length+1;
-          state.creatures.forEach(c=>{ if(!c.knowledge) c.knowledge=[]; if(typeof c.shape!=='object'||!c.shape||!Array.isArray(c.shape.r)) c.shape=shapeObj(c.shape); c.eyes=c.eyes||'dots'; c.mouth=c.mouth||'smile'; c.arms=c.arms||'paws'; if(c.arms==='nubs') c.arms='open'; c.feet=c.feet||'blocky'; c.emblem=c.emblem||'none'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none'; c.hair=c.hair||'none'; c.hairColor=c.hairColor||'#6B4A2B'; if(c.hairTip===undefined) c.hairTip=null; if(c.birthday===undefined) c.birthday=null; });
+          state.creatures.forEach(c=>{ if(!c.knowledge) c.knowledge=[]; if(typeof c.shape!=='object'||!c.shape||!Array.isArray(c.shape.r)) c.shape=shapeObj(c.shape); c.eyes=c.eyes||'dots'; c.mouth=c.mouth||'smile'; c.arms=c.arms||'paws'; if(c.arms==='nubs') c.arms='open'; c.feet=c.feet||'blocky'; c.emblem=c.emblem||'none'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none'; if(typeof c.hairShape!=='object'||!c.hairShape||!Array.isArray(c.hairShape.r)) c.hairShape={r:HAIR_PRESETS.puff.slice(),w:1,h:1}; c.hair=(c.hair==='none'||c.hair==='off')?'off':'on'; if(c.hairTip===undefined) c.hairTip=null; if(c.birthday===undefined) c.birthday=null; });
           save(); go('gallery');
         }else alert('That file does not look like a creature backup.');
       }catch(e){ alert('Could not read that file.'); }
