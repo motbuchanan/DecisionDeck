@@ -40,7 +40,9 @@ WHAT'S IN IT
 - Maker with a live creature that reacts as he builds it.
 - Body Shape editor: drag the 12 dots to sculpt the silhouette, plus width/height
   sliders and starting shapes. Stays a smooth creature no matter what.
-- Colors, eyes, mouth, arms, markings, accessories.
+- Colors, eyes, mouth, markings, accessories.
+- Arms: clasped paws in front, arms out, or arms up (defined little arms with hands).
+- Feet: blocky or round feet so the creature stands, or none.
 - Hairstyles (14 styles: bowl, braids, spiky, pigtails, curly, mohawk, long, buns,
   bangs, pony, tuft, swoosh, wavy) the hair base always matches the body color, with a separate tip color for combos
   like purple braids with yellow tips. A soft shadow keeps the hair readable.

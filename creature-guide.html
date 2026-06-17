@@ -265,6 +265,7 @@ const COLORS = [
 ];
 const STAGES = ['Newborn','Young','Grown','Elder'];
 const SHAPE_PRESETS = {
+  dollop:[33,31,33,37,41,44,45,44,41,37,33,31],
   blob:[33,32,34,36,38,37,39,37,38,36,34,32],
   round:[37,37,37,37,37,37,37,37,37,37,37,37],
   tall:[46,40,30,27,30,40,46,40,30,27,30,40],
@@ -277,7 +278,9 @@ const SHAPE_PRESETS = {
 };
 const EYESET = [['Dots','dots'],['Big','big'],['Sleepy','sleepy'],['Sparkle','sparkle'],['One eye','one'],['Wink','wink'],['Happy','happy']];
 const MOUTHS = [['Smile','smile'],['Grin','grin'],['Tiny','tiny'],['Wobbly','wobble'],['Oh','oh'],['Tongue','tongue'],['Cat','cat']];
-const ARMSET = [['Nubs','nubs'],['Up','up'],['None','none']];
+const ARMSET = [['Paws','paws'],['Open','open'],['Up','up'],['None','none']];
+const FEETSET = [['Feet','blocky'],['Round','round'],['None','none']];
+const EMBLEMSET = [['None','none'],['Crown','crown'],['Heart','heart'],['Star','star'],['Tulip','tulip'],['Flower','flower'],['Gem','gem'],['Moon','moon'],['Note','note'],['Bow','bow']];
 const PATTERNS = [['None','none'],['Spots','spots'],['Stripes','stripes'],['Sparkles','sparkles'],['Hearts','hearts'],['Swirl','swirl']];
 const ACCESSORIES = [['None','none'],['Glasses','glasses'],['Bow','bow'],['Scarf','scarf'],['Headphones','phones']];
 const HAIR_STYLES = [['None','none'],['Tuft','tuft'],['Bowl','bowl'],['Spiky','spiky'],['Mohawk','mohawk'],['Bangs','bangs'],['Swoosh','swoosh'],['Curly','curly'],['Long','long'],['Wavy','wavy'],['Braids','braids'],['Pigtails','pigtails'],['Buns','buns'],['Pony','pony']];
@@ -301,7 +304,7 @@ function load(){
     }
     if(typeof c.shape!=='object'||!c.shape||!Array.isArray(c.shape.r)) c.shape=shapeObj(c.shape);
     c.eyes=c.eyes||'dots'; c.mouth=c.mouth||'smile';
-    c.arms=c.arms||'nubs'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none';
+    c.arms=c.arms||'paws'; if(c.arms==='nubs') c.arms='open'; c.feet=c.feet||'blocky'; c.emblem=c.emblem||'none'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none';
     c.hair=c.hair||'none'; c.hairColor=c.hairColor||'#6B4A2B'; if(c.hairTip===undefined) c.hairTip=null;
     if(c.birthday===undefined) c.birthday=null;
     delete c.ability; delete c.teacherId; delete c.firstOfKind;
@@ -400,10 +403,17 @@ function mouthSVG(m){
 }
 function armsSVG(a, color){
   if(a==='none') return '';
-  if(a==='up') return '<ellipse cx="30" cy="64" rx="6" ry="10" fill="'+color+'" stroke="rgba(0,0,0,.06)" stroke-width="1.5" transform="rotate(28 30 64)"/>'
-    +'<ellipse cx="90" cy="64" rx="6" ry="10" fill="'+color+'" stroke="rgba(0,0,0,.06)" stroke-width="1.5" transform="rotate(-28 90 64)"/>';
-  return '<ellipse cx="29" cy="84" rx="7" ry="9" fill="'+color+'" stroke="rgba(0,0,0,.06)" stroke-width="1.5"/>'
-    +'<ellipse cx="91" cy="84" rx="7" ry="9" fill="'+color+'" stroke="rgba(0,0,0,.06)" stroke-width="1.5"/>';
+  const g='<g class="bodypart" fill="'+color+'" stroke="rgba(0,0,0,.07)" stroke-width="1.4">';
+  if(a==='paws') return g+'<path d="M47 84 C42 90 44 96 50 97 L57 94 C56 89 53 86 52 83 Z"/><path d="M73 84 C78 90 76 96 70 97 L63 94 C64 89 67 86 68 83 Z"/><circle cx="55" cy="96" r="5"/><circle cx="65" cy="96" r="5"/></g>';
+  if(a==='open') return g+'<path d="M28 80 C22 86 22 92 26 95 L33 92 C32 87 32 83 33 79 Z"/><circle cx="27" cy="95" r="5"/><path d="M92 80 C98 86 98 92 94 95 L87 92 C88 87 88 83 87 79 Z"/><circle cx="93" cy="95" r="5"/></g>';
+  if(a==='up') return g+'<path d="M30 78 C23 74 21 67 24 63 L31 67 C31 71 32 75 34 78 Z"/><circle cx="24" cy="62" r="5"/><path d="M90 78 C97 74 99 67 96 63 L89 67 C89 71 88 75 86 78 Z"/><circle cx="96" cy="62" r="5"/></g>';
+  return '';
+}
+function feetSVG(f, color){
+  const st='stroke="rgba(0,0,0,.07)" stroke-width="1.4"';
+  if(f==='none') return '';
+  if(f==='round') return '<ellipse cx="50" cy="105" rx="9" ry="6.5" fill="'+color+'" '+st+'/><ellipse cx="70" cy="105" rx="9" ry="6.5" fill="'+color+'" '+st+'/>';
+  return '<rect x="42" y="99" width="16" height="11" rx="5.5" fill="'+color+'" '+st+'/><rect x="62" y="99" width="16" height="11" rx="5.5" fill="'+color+'" '+st+'/>';
 }
 function patternSVG(p){
   if(p==='spots') return '<g fill="rgba(0,0,0,.08)"><circle cx="50" cy="82" r="4"/><circle cx="72" cy="86" r="3.4"/><circle cx="60" cy="94" r="3"/></g>';
@@ -460,6 +470,38 @@ function hairFront(cr){
 }
 let _gid=0;
 function nextGid(){ return 'g'+(_gid++); }
+function lightenHex(hex,amt){ hex=hex||'#F4B8C4'; const n=hex.replace('#',''); const r=parseInt(n.substr(0,2),16),g=parseInt(n.substr(2,2),16),b=parseInt(n.substr(4,2),16); const to=v=>('0'+Math.round(v+(255-v)*amt).toString(16)).slice(-2); return '#'+to(r)+to(g)+to(b); }
+function emblemSVG(e){
+  if(!e||e==='none') return '';
+  const g='<g fill="#E9B84B" stroke="#C9972F" stroke-width="0.8">';
+  switch(e){
+    case 'crown': return g+'<path d="M53 95 L53 87 L57 90 L60 85 L63 90 L67 87 L67 95 Z"/></g>';
+    case 'heart': return g+'<path d="M60 95 C53 90 54 85 57.5 85 C59 85 60 86.4 60 88 C60 86.4 61 85 62.5 85 C66 85 67 90 60 95 Z"/></g>';
+    case 'star': return g+'<path d="M60 84.8 L61.2 88.3 L64.9 88.4 L62 90.7 L63.1 94.2 L60 92.1 L56.9 94.2 L58 90.7 L55.1 88.4 L58.8 88.3 Z"/></g>';
+    case 'tulip': return g+'<path d="M55 92 C55 87 58 86 60 89 C62 86 65 87 65 92 C65 94 62 95 60 94 C58 95 55 94 55 92 Z"/></g>';
+    case 'gem': return g+'<path d="M60 84 L66 89 L60 96 L54 89 Z"/></g>';
+    case 'moon': return g+'<path d="M63 84.5 A6 6 0 1 0 63 95.5 A4.6 4.6 0 1 1 63 84.5 Z"/></g>';
+    case 'bow': return g+'<path d="M60 90 L53.5 86 L53.5 94 Z"/><path d="M60 90 L66.5 86 L66.5 94 Z"/><circle cx="60" cy="90" r="2.1"/></g>';
+    case 'flower': return '<g fill="#E9B84B" stroke="#C9972F" stroke-width="0.7"><circle cx="60" cy="86.8" r="2.7"/><circle cx="63" cy="89" r="2.7"/><circle cx="61.9" cy="92.6" r="2.7"/><circle cx="58.1" cy="92.6" r="2.7"/><circle cx="57" cy="89" r="2.7"/></g><circle cx="60" cy="90" r="2.2" fill="#C9972F"/>';
+    case 'note': return '<g fill="#E9B84B" stroke="#C9972F" stroke-width="0.7"><ellipse cx="57.5" cy="93" rx="2.6" ry="2.1"/><rect x="59.4" y="84" width="1.5" height="9"/><path d="M59.4 84 L64 85.4 L64 88 L59.4 86.6 Z"/></g>';
+    default: return '';
+  }
+}
+function dressSVG(cr, color){
+  const dress=lightenHex(color,0.55);
+  const body='<g class="dresspart" fill="'+dress+'" stroke="rgba(0,0,0,.06)" stroke-width="1.3"><path d="M52 74 C45 79 41 89 41 99 Q44 103 47 99 Q50 103 53 99 Q56 103 59 99 Q62 103 65 99 Q68 103 71 99 Q75 103 79 99 C79 89 75 79 68 74 Z"/></g>';
+  const collar='<path d="M52 75 Q60 81 68 75" fill="none" stroke="rgba(0,0,0,.06)" stroke-width="1.2"/>';
+  return body+collar+emblemSVG(cr.emblem);
+}
+function legsSVG(f, color){
+  if(f==='none') return '';
+  const g='<g class="bodypart" fill="'+color+'" stroke="rgba(0,0,0,.07)" stroke-width="1.4">';
+  const legs='<rect x="51" y="96" width="7" height="11" rx="3"/><rect x="62" y="96" width="7" height="11" rx="3"/>';
+  let feet;
+  if(f==='round') feet='<ellipse cx="53" cy="108" rx="6" ry="3.9"/><ellipse cx="67" cy="108" rx="6" ry="3.9"/>';
+  else feet='<rect x="47" y="105" width="12" height="7" rx="3"/><rect x="61" y="105" width="12" height="7" rx="3"/>';
+  return g+legs+feet+'</g>';
+}
 function bodySVG(cr, opts){
   opts = opts || {};
   const c = cr.color || '#F4B8C4';
@@ -480,24 +522,29 @@ function bodySVG(cr, opts){
       +'<radialGradient id="ct'+g+'" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#3A2E48" stop-opacity=".30"/><stop offset="68%" stop-color="#3A2E48" stop-opacity="0"/></radialGradient>'
       +'<filter id="hsh'+g+'" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="1.3" stdDeviation="0.9" flood-color="#3A2E48" flood-opacity="0.45"/></filter>'
     +'</defs>'
-    +'<ellipse cx="66" cy="110" rx="34" ry="7" fill="url(#ct'+g+')"><animate attributeName="rx" values="34;29;34" dur="3.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.62;1" dur="3.4s" repeatCount="indefinite"/></ellipse>'
-    +armsSVG(cr.arms||'nubs', c)
-    +'<g transform="translate(0 '+hairDy+')">'+hairBack(cr)+'</g>'
-    +'<path'+bodyId+' class="cbody" d="'+d+'" fill="'+c+'" stroke="rgba(0,0,0,.05)" stroke-width="2"/>'
-    +'<g clip-path="url(#clip'+g+')">'
-      +'<rect x="0" y="0" width="120" height="120" fill="url(#sh'+g+')"/>'
-      +'<rect x="0" y="0" width="120" height="120" fill="url(#hi'+g+')"/>'
-      +'<ellipse cx="44" cy="47" rx="12" ry="7.5" fill="#FFF8EC" opacity=".5" transform="rotate(-22 44 47)"/>'
-      +'<circle cx="40" cy="43" r="2.6" fill="#fff" opacity=".85"/>'
-      +patternSVG(cr.pattern||'none')
+    +'<ellipse cx="60" cy="113" rx="19" ry="5" fill="url(#ct'+g+')"><animate attributeName="rx" values="19;16;19" dur="3.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.62;1" dur="3.4s" repeatCount="indefinite"/></ellipse>'
+    +legsSVG(cr.feet||'blocky', c)
+    +'<g transform="translate(60 46) scale(0.78) translate(-60 -62)">'
+      +'<g transform="translate(0 '+hairDy+')">'+hairBack(cr)+'</g>'
+      +'<path'+bodyId+' class="cbody" d="'+d+'" fill="'+c+'" stroke="rgba(0,0,0,.05)" stroke-width="2"/>'
+      +'<g clip-path="url(#clip'+g+')">'
+        +'<rect x="0" y="0" width="120" height="120" fill="url(#sh'+g+')"/>'
+        +'<rect x="0" y="0" width="120" height="120" fill="url(#hi'+g+')"/>'
+        +'<ellipse cx="44" cy="47" rx="12" ry="7.5" fill="#FFF8EC" opacity=".5" transform="rotate(-22 44 47)"/>'
+        +'<circle cx="40" cy="43" r="2.6" fill="#fff" opacity=".85"/>'
+        +patternSVG(cr.pattern||'none')
+      +'</g>'
+      +'<g transform="translate(0 '+hairDy+')" filter="url(#hsh'+g+')">'+hairFront(cr)+'</g>'
+      +eyesSVG(cr.eyes||'dots', begin)
+      +mouthSVG(cr.mouth||'smile')
+      +'<ellipse cx="41" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/><ellipse cx="79" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/>'
+      +accessorySVG(cr.accessory||'none')
+      +'<text class="ctop" x="42" y="'+(topY-9)+'" font-size="22" text-anchor="middle" dominant-baseline="middle"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="2.8s" repeatCount="indefinite"/>'+(cr.topping||'')+'</text>'
+      +'<text class="ctop" x="78" y="'+(topY-9)+'" font-size="22" text-anchor="middle" dominant-baseline="middle"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="2.8s" begin="0.45s" repeatCount="indefinite"/>'+(cr.topping||'')+'</text>'
     +'</g>'
-    +'<g transform="translate(0 '+hairDy+')" filter="url(#hsh'+g+')">'+hairFront(cr)+'</g>'
-    +eyesSVG(cr.eyes||'dots', begin)
-    +mouthSVG(cr.mouth||'smile')
-    +'<ellipse cx="41" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/><ellipse cx="79" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/>'
-    +accessorySVG(cr.accessory||'none')
-    +'<text class="ctop" x="42" y="'+(topY-9)+'" font-size="22" text-anchor="middle" dominant-baseline="middle"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="2.8s" repeatCount="indefinite"/>'+(cr.topping||'')+'</text>'
-    +'<text class="ctop" x="78" y="'+(topY-9)+'" font-size="22" text-anchor="middle" dominant-baseline="middle"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="2.8s" begin="0.45s" repeatCount="indefinite"/>'+(cr.topping||'')+'</text></svg>';
+    +dressSVG(cr, c)
+    +armsSVG(cr.arms||'paws', c)
+    +'</svg>';
 }
 function motesHTML(n){
   n=n||6; let s='';
@@ -627,7 +674,7 @@ let draft = null;
 let openSections = new Set(['looks']);
 function blankDraft(){
   return {id:null,name:'',flavor:'',stage:'Newborn',birthday:null,traits:[],loves:'',dislikes:'',sound:'',story:'',
-          color:'#F4B8C4',shape:{r:SHAPE_PRESETS.blob.slice(),w:1,h:1},eyes:'dots',mouth:'smile',arms:'nubs',pattern:'none',accessory:'none',hair:'none',hairColor:'#6B4A2B',hairTip:null,topping:'\u{1F353}',knowledge:[]};
+          color:'#F4B8C4',shape:{r:SHAPE_PRESETS.dollop.slice(),w:1,h:1},eyes:'dots',mouth:'smile',arms:'paws',feet:'blocky',emblem:'none',pattern:'none',accessory:'none',hair:'none',hairColor:'#6B4A2B',hairTip:null,topping:'\u{1F353}',knowledge:[]};
 }
 function knows(skill){ return draft.knowledge.find(k=>k.skill===skill); }
 function teacherSelect(skill){
@@ -660,7 +707,7 @@ function shapeEditorHTML(){
 function formHTML(c){
   draft = c ? JSON.parse(JSON.stringify(c)) : blankDraft();
   if(!draft.knowledge) draft.knowledge=[];
-  ['shape','eyes','mouth','arms','pattern','accessory','hair'].forEach(f=>{ if(!draft[f]) draft[f]=blankDraft()[f]; });
+  ['shape','eyes','mouth','arms','feet','emblem','pattern','accessory','hair'].forEach(f=>{ if(!draft[f]) draft[f]=blankDraft()[f]; });
   const oc = key => openSections.has(key) ? ' open' : '';
   const chev = '<span class="chev">\u203A</span>';
   const preview = '<div class="preview" id="preview" style="--accent:'+draft.color+'">'
@@ -678,7 +725,7 @@ function formHTML(c){
     +'<div class="sublab">Body color</div><div class="swatches" id="swatches">'
     +COLORS.map(p=>'<div class="sw '+(draft.color===p[1]?'sel':'')+'" data-color="'+p[1]+'" title="'+p[0]+'" style="background:'+p[1]+'"><span class="tick">\u2713</span></div>').join('')
     +'<label class="ccustom">Any<br>color<input type="color" id="customcolor" value="'+draft.color+'"></label></div>'
-    +shapeEditorHTML()+optRow('Eyes','eyes',EYESET)+optRow('Mouth','mouth',MOUTHS)+optRow('Arms','arms',ARMSET)+optRow('Markings','pattern',PATTERNS)+optRow('Accessory','accessory',ACCESSORIES)
+    +shapeEditorHTML()+optRow('Eyes','eyes',EYESET)+optRow('Mouth','mouth',MOUTHS)+optRow('Arms','arms',ARMSET)+optRow('Feet','feet',FEETSET)+optRow('Emblem','emblem',EMBLEMSET)+optRow('Markings','pattern',PATTERNS)+optRow('Accessory','accessory',ACCESSORIES)
       +optRow('Hair','hair',HAIR_STYLES)
       +'<div class="sublab">Hair tips <span class="sublab-note">base matches the body — add a tip color</span></div><div class="swatches" id="tipswatches">'
       +'<div class="sw sw-same '+(!draft.hairTip?'sel':'')+'" data-hairtip="same">=</div>'
@@ -734,6 +781,8 @@ function pvColor(c, doPop){
   const b=document.getElementById('pv-body'); if(b) b.setAttribute('fill',c);
   const eb=document.getElementById('sh-blob'); if(eb) eb.setAttribute('fill',c);
   const _hc=darkenHex(c,0.16); document.querySelectorAll('#pv-stage .hairbase').forEach(el=>el.setAttribute('fill',_hc));
+  document.querySelectorAll('#pv-stage .bodypart').forEach(el=>el.setAttribute('fill',c));
+  const _dp=lightenHex(c,0.55); document.querySelectorAll('#pv-stage .dresspart').forEach(el=>el.setAttribute('fill',_dp));
   if(doPop) pvPop();
   updateSummaries();
 }
@@ -1030,7 +1079,7 @@ function doImport(){
           state=data;
           if(!state.skills) state.skills=[]; if(!state.customTraits) state.customTraits=[]; if(!state.customToppings) state.customToppings=[];
           if(!state.nextNum) state.nextNum=state.creatures.length+1;
-          state.creatures.forEach(c=>{ if(!c.knowledge) c.knowledge=[]; if(typeof c.shape!=='object'||!c.shape||!Array.isArray(c.shape.r)) c.shape=shapeObj(c.shape); c.eyes=c.eyes||'dots'; c.mouth=c.mouth||'smile'; c.arms=c.arms||'nubs'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none'; c.hair=c.hair||'none'; c.hairColor=c.hairColor||'#6B4A2B'; if(c.hairTip===undefined) c.hairTip=null; if(c.birthday===undefined) c.birthday=null; });
+          state.creatures.forEach(c=>{ if(!c.knowledge) c.knowledge=[]; if(typeof c.shape!=='object'||!c.shape||!Array.isArray(c.shape.r)) c.shape=shapeObj(c.shape); c.eyes=c.eyes||'dots'; c.mouth=c.mouth||'smile'; c.arms=c.arms||'paws'; if(c.arms==='nubs') c.arms='open'; c.feet=c.feet||'blocky'; c.emblem=c.emblem||'none'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none'; c.hair=c.hair||'none'; c.hairColor=c.hairColor||'#6B4A2B'; if(c.hairTip===undefined) c.hairTip=null; if(c.birthday===undefined) c.birthday=null; });
           save(); go('gallery');
         }else alert('That file does not look like a creature backup.');
       }catch(e){ alert('Could not read that file.'); }
