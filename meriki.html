@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>the main meriki — color · cuts · creative · cleveland</title>
+<meta name="description" content="Lived-in color, dialed-in blonding, and award-winning creative color by Meriki at Studio Vasi, Strongsville OH. Take the quiz, find your look, book your chair.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   BRAND TOKENS
+   ============================================================ */
+:root{
+  --noir:#16100f;
+  --noir-2:#221619;
+  --taupe:#9c8a7d;
+  --taupe-deep:#6f5d52;
+  --coral:#dd7d63;
+  --coral-bright:#ec9079;
+  --bone:#f4efe8;
+  --bone-dim:#e7ddd0;
+  --ink:#1a1417;
+  --ink-soft:#5c4f49;
+
+  /* the colors she loves — her award spectrum */
+  --s1:#e0785f; --s2:#e9b15a; --s3:#5ec5b6; --s4:#6fa8e0; --s5:#9a7bd8;
+  --spectrum:linear-gradient(95deg,var(--s1) 0%,var(--s2) 28%,var(--s3) 55%,var(--s4) 78%,var(--s5) 100%);
+
+  --display:"Bodoni Moda", Georgia, serif;
+  --body:"Hanken Grotesk", system-ui, sans-serif;
+  --maxw:1100px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bone);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+:focus-visible{outline:2px solid var(--coral);outline-offset:3px;border-radius:2px}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;font-weight:600;color:var(--coral)}
+
+/* shimmering spectrum text/line */
+.spectrum-text{background:var(--spectrum);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:flow 8s linear infinite}
+.seam{display:block;margin:0;height:3px;background:var(--spectrum);background-size:240% 100%;border:none;animation:flow 8s linear infinite}
+@keyframes flow{to{background-position:240% 0}}
+
+/* ---- aurora light field (injected into dark sections) ---- */
+.aurora{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.aurora span{position:absolute;width:62vmax;height:62vmax;border-radius:50%;opacity:.42;will-change:transform;filter:saturate(1.2)}
+.aurora span:nth-child(1){background:radial-gradient(circle at 50% 50%,var(--s1),transparent 62%);top:-22%;left:-12%;animation:drift1 26s ease-in-out infinite}
+.aurora span:nth-child(2){background:radial-gradient(circle at 50% 50%,var(--s3),transparent 62%);top:-10%;right:-18%;animation:drift2 32s ease-in-out infinite}
+.aurora span:nth-child(3){background:radial-gradient(circle at 50% 50%,var(--s5),transparent 62%);bottom:-26%;left:8%;animation:drift3 29s ease-in-out infinite}
+.aurora span:nth-child(4){background:radial-gradient(circle at 50% 50%,var(--s2),transparent 60%);bottom:-22%;right:-6%;animation:drift4 35s ease-in-out infinite}
+.aurora span:nth-child(5){background:radial-gradient(circle at 50% 50%,var(--s4),transparent 60%);top:24%;left:30%;animation:drift2 38s ease-in-out infinite reverse}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(14%,10%) scale(1.18)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1.05)}50%{transform:translate(-12%,12%) scale(.9)}}
+@keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(16%,-10%) scale(1.15)}}
+@keyframes drift4{0%,100%{transform:translate(0,0) scale(.95)}50%{transform:translate(-14%,-12%) scale(1.12)}}
+
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;gap:.55em;font-weight:600;font-size:.95rem;letter-spacing:.02em;padding:15px 30px;border-radius:999px;background:var(--coral);color:#231215;overflow:hidden;transition:transform .25s var(--ease),background .25s var(--ease),box-shadow .25s var(--ease);box-shadow:0 8px 26px -10px rgba(221,125,99,.85),0 1px 0 rgba(255,255,255,.25) inset}
+.btn span{position:relative;z-index:1}
+.btn::after{content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);transition:left .6s var(--ease)}
+.btn:hover{transform:translateY(-2px);background:var(--coral-bright);box-shadow:0 16px 34px -12px rgba(221,125,99,.95)}
+.btn:hover::after{left:120%}
+.btn--ghost{background:transparent;color:var(--bone);border:1px solid rgba(244,239,232,.4);box-shadow:none}
+.btn--ghost::after{display:none}
+.btn--ghost:hover{background:rgba(244,239,232,.08);border-color:var(--coral);color:var(--coral-bright)}
+.btn--dark{background:var(--noir);color:var(--bone);box-shadow:0 10px 24px -14px rgba(0,0,0,.7)}
+.btn--dark::after{background:linear-gradient(105deg,transparent,rgba(255,255,255,.18),transparent)}
+.btn--dark:hover{background:var(--noir-2)}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:rgba(22,16,15,0);transition:background .35s var(--ease),padding .35s var(--ease),backdrop-filter .35s var(--ease)}
+header.scrolled{background:rgba(22,16,15,.92);backdrop-filter:blur(12px);padding:10px 24px;box-shadow:0 1px 0 rgba(244,239,232,.06)}
+.brandmark{font-family:var(--display);font-size:1.35rem;font-weight:500;letter-spacing:.02em;color:var(--bone)}
+.brandmark small{display:block;font-family:var(--body);font-size:.55rem;letter-spacing:.34em;text-transform:uppercase;color:var(--coral);margin-top:-2px;font-weight:600}
+header .btn{padding:10px 22px;font-size:.82rem}
+
+/* HERO */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px 24px 84px;background:linear-gradient(160deg,var(--noir),#241417);color:var(--bone);overflow:hidden}
+.hero .strands{position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;opacity:.5}
+.hero .spotlight{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(460px circle at var(--mx,72%) var(--my,28%),rgba(255,255,255,.12),rgba(255,255,255,.04) 28%,transparent 60%);transition:background .12s linear}
+.hero::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,transparent 60%,rgba(22,16,15,.55));pointer-events:none}
+.hero-inner{max-width:var(--maxw);margin:0 auto;width:100%;position:relative;z-index:3}
+.hero .eyebrow{opacity:0;animation:rise .8s var(--ease) .15s forwards}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(3.4rem,14vw,8.6rem);line-height:.9;letter-spacing:-.01em;margin:.18em 0 .34em}
+.hero h1 .line{display:block;opacity:0;animation:rise .9s var(--ease) forwards}
+.hero h1 .line:nth-child(1){animation-delay:.28s;font-size:.42em;letter-spacing:.04em}
+.hero h1 .line:nth-child(2){animation-delay:.42s;font-style:italic;filter:drop-shadow(0 6px 26px rgba(154,123,216,.35))}
+.hero .promise{font-size:clamp(1rem,2.4vw,1.22rem);max-width:34ch;color:rgba(244,239,232,.85);margin-bottom:1.8em;opacity:0;animation:rise .9s var(--ease) .58s forwards}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;opacity:0;animation:rise .9s var(--ease) .72s forwards}
+.creds{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:30px;opacity:0;animation:rise .9s var(--ease) .9s forwards}
+.cred{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,239,232,.66);display:flex;align-items:center;gap:8px}
+.cred::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--spectrum);background-size:200%;animation:flow 6s linear infinite}
+.scroll-cue{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--coral);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:3;opacity:0;animation:rise 1s var(--ease) 1.1s forwards}
+.scroll-cue span{width:1px;height:32px;background:linear-gradient(var(--coral),transparent);animation:cue 1.8s var(--ease) infinite}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cue{0%,100%{transform:scaleY(.4);opacity:.4}50%{transform:scaleY(1);opacity:1}}
+
+/* SECTIONS */
+section{padding:96px 0;position:relative;isolation:isolate;background:var(--bone)}
+.hero,footer{isolation:isolate}
+.section-head{margin-bottom:48px;max-width:660px}
+.section-head h2{font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,6vw,3.4rem);line-height:1.04;letter-spacing:-.01em;margin:.3em 0}
+.section-head h2 em{color:var(--coral);font-style:italic}
+.section-head p{color:var(--ink-soft);font-size:1.05rem;max-width:52ch}
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.stagger>*{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.stagger.in>*{opacity:1;transform:none}
+.stagger.in>*:nth-child(2){transition-delay:.08s}
+.stagger.in>*:nth-child(3){transition-delay:.16s}
+.stagger.in>*:nth-child(4){transition-delay:.24s}
+.stagger.in>*:nth-child(5){transition-delay:.32s}
+.stagger.in>*:nth-child(6){transition-delay:.4s}
+
+/* QUIZ */
+.quiz{background:linear-gradient(165deg,#1d1316,var(--noir));color:var(--bone);position:relative;overflow:hidden}
+.quiz .wrap{position:relative;z-index:3}
+.quiz .section-head h2{color:var(--bone)}
+.quiz .section-head h2 em{color:var(--coral-bright)}
+.quiz .section-head p{color:rgba(244,239,232,.75)}
+.quiz-stage{max-width:680px;margin:0 auto;position:relative}
+.burst{position:absolute;top:38%;left:50%;width:120px;height:120px;transform:translate(-50%,-50%) scale(.2);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.9),rgba(224,120,95,.5) 30%,rgba(154,123,216,.25) 55%,transparent 70%);opacity:0;pointer-events:none;z-index:1}
+.burst.go{animation:burst 1s var(--ease) forwards}
+@keyframes burst{0%{opacity:.95;transform:translate(-50%,-50%) scale(.2)}70%{opacity:.5}100%{opacity:0;transform:translate(-50%,-50%) scale(6)}}
+.progress{display:flex;gap:8px;margin-bottom:34px;position:relative;z-index:2}
+.progress i{flex:1;height:3px;background:rgba(244,239,232,.18);border-radius:2px;overflow:hidden}
+.progress i::after{content:"";display:block;height:100%;width:0;background:var(--spectrum);background-size:240%;transition:width .5s var(--ease);animation:flow 6s linear infinite}
+.progress i.done::after{width:100%}
+.q-card{display:none;position:relative;z-index:2}
+.q-card.active{display:block;animation:qin .5s var(--ease)}
+@keyframes qin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.q-card h3{font-family:var(--display);font-weight:400;font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.1;margin-bottom:28px}
+.options{display:grid;gap:12px}
+@media(min-width:560px){.options{grid-template-columns:1fr 1fr}}
+.opt{text-align:left;padding:20px 22px;border-radius:16px;background:rgba(244,239,232,.06);border:1px solid rgba(244,239,232,.14);color:var(--bone);font-size:1.02rem;font-weight:500;transition:all .25s var(--ease)}
+.opt:hover{background:rgba(221,125,99,.16);border-color:var(--coral);transform:translateY(-2px);box-shadow:0 12px 30px -16px rgba(224,120,95,.8)}
+.opt small{display:block;font-weight:400;color:rgba(244,239,232,.6);font-size:.85rem;margin-top:4px}
+.q-result{display:none;text-align:center;position:relative;z-index:2}
+.q-result.active{display:block;animation:spin-in 1.05s var(--ease)}
+@keyframes spin-in{0%{opacity:0;transform:perspective(1000px) rotateY(92deg) scale(.82)}55%{opacity:1}100%{opacity:1;transform:perspective(1000px) rotateY(0) scale(1)}}
+.q-result .tag{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--coral)}
+.q-result h3{font-family:var(--display);font-style:italic;font-weight:500;font-size:clamp(2.6rem,9vw,4.5rem);line-height:1;margin:.18em 0;color:var(--coral-bright);filter:drop-shadow(0 8px 30px rgba(224,120,95,.4))}
+.q-result .blurb{max-width:48ch;margin:0 auto 14px;color:rgba(244,239,232,.85);font-size:1.08rem}
+.q-result .svc{display:inline-block;margin:18px 0 26px;padding:8px 18px;border-radius:999px;border:1px solid rgba(221,125,99,.45);font-size:.9rem;color:var(--coral)}
+.q-result .svc b{color:var(--bone);font-weight:600}
+.q-again{display:block;margin:22px auto 0;color:rgba(244,239,232,.55);font-size:.85rem;text-decoration:underline;text-underline-offset:3px}
+.q-again:hover{color:var(--coral)}
+
+/* WORK */
+.gallery{display:grid;gap:14px;grid-template-columns:repeat(2,1fr);perspective:1200px}
+@media(min-width:760px){.gallery{grid-template-columns:repeat(3,1fr)}}
+.shot{position:relative;aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:var(--bone-dim);transition:transform .3s var(--ease),box-shadow .3s var(--ease);transform-style:preserve-3d;box-shadow:0 10px 30px -20px rgba(26,20,23,.6)}
+.shot:nth-child(6n+1){background:linear-gradient(150deg,#2f2226,#6f5d52)}
+.shot:nth-child(6n+2){background:linear-gradient(150deg,#7a5b45,#c9a98c)}
+.shot:nth-child(6n+3){background:var(--spectrum);background-size:200%;animation:flow 9s linear infinite}
+.shot:nth-child(6n+4){background:linear-gradient(150deg,#3a2a2e,#9c8a7d)}
+.shot:nth-child(6n+5){background:linear-gradient(150deg,#8a6a52,#dd7d63)}
+.shot:nth-child(6n+6){background:linear-gradient(150deg,#2a2030,#9a7bd8)}
+.shot::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.22) 50%,transparent 65%);transform:translateX(-100%);transition:transform .7s var(--ease);z-index:2}
+.shot:hover::before{transform:translateX(100%)}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.shot:hover{box-shadow:0 26px 50px -24px rgba(26,20,23,.7)}
+.shot:hover img{transform:scale(1.06)}
+.shot .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:16px;color:rgba(255,255,255,.82);font-size:.78rem;letter-spacing:.04em;text-shadow:0 1px 10px rgba(0,0,0,.5);z-index:1}
+.gallery-note{margin-top:18px;font-size:.9rem;color:var(--ink-soft);text-align:center}
+.gallery-note a{border-bottom:1.5px solid var(--coral);padding-bottom:1px}
+
+/* SERVICES */
+.services{background:var(--bone-dim)}
+.menu{display:grid;gap:16px}
+@media(min-width:700px){.menu{grid-template-columns:1fr 1fr}}
+.svc-card{position:relative;background:var(--bone);border-radius:18px;padding:26px 26px 24px;border:1px solid rgba(26,20,23,.08);display:flex;flex-direction:column;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s var(--ease);box-shadow:0 12px 34px -26px rgba(26,20,23,.6)}
+.svc-card:hover{transform:translateY(-5px);box-shadow:0 26px 50px -26px rgba(221,125,99,.55)}
+.svc-card.feature{border:1px solid transparent;background:linear-gradient(var(--bone),var(--bone)) padding-box,var(--spectrum) border-box;background-size:auto,220%;animation:flow 9s linear infinite}
+.svc-card .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.svc-card h3{font-family:var(--display);font-weight:500;font-size:1.45rem}
+.svc-card .price{font-weight:600;color:var(--taupe-deep);white-space:nowrap;font-size:.92rem}
+.svc-card p{color:var(--ink-soft);font-size:.95rem;margin:10px 0 18px;flex:1}
+.svc-card .book-link{font-size:.85rem;font-weight:600;color:var(--noir);letter-spacing:.04em;align-self:flex-start;border-bottom:1.5px solid var(--coral);padding-bottom:2px;display:inline-flex;gap:.4em;transition:color .2s}
+.svc-card .book-link:hover{color:var(--coral)}
+.menu-foot{margin-top:18px;font-size:.9rem;color:var(--ink-soft);text-align:center}
+
+/* ABOUT */
+.about{display:grid;gap:40px;align-items:center}
+@media(min-width:820px){.about{grid-template-columns:1fr 1.1fr}}
+.about-photo{aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:linear-gradient(155deg,#2f2226,#dd7d63);position:relative;box-shadow:0 30px 60px -34px rgba(221,125,99,.6)}
+.about-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.14) 50%,transparent 60%);transform:translateX(-100%);animation:sheen 6s var(--ease) 1.5s infinite}
+@keyframes sheen{0%{transform:translateX(-100%)}45%,100%{transform:translateX(100%)}}
+.about-photo .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:18px;color:rgba(255,255,255,.82);font-size:.8rem;text-shadow:0 1px 10px rgba(0,0,0,.5);z-index:1}
+.about-text h2{font-family:var(--display);font-weight:400;font-size:clamp(2rem,5.5vw,3rem);line-height:1.05;margin-bottom:18px}
+.about-text h2 em{font-style:italic;color:var(--coral)}
+.about-text p{color:var(--ink-soft);margin-bottom:16px;font-size:1.05rem}
+
+/* TESTIMONIALS */
+.words{background:linear-gradient(165deg,var(--noir),#1d1316);color:var(--bone);position:relative;overflow:hidden}
+.words .wrap{position:relative;z-index:3}
+.words .section-head h2{color:var(--bone)}
+.words .section-head h2 em{color:var(--coral-bright)}
+.quotes{display:grid;gap:18px}
+@media(min-width:760px){.quotes{grid-template-columns:repeat(3,1fr)}}
+.quote{background:rgba(244,239,232,.05);border:1px solid rgba(244,239,232,.12);border-radius:16px;padding:26px;backdrop-filter:blur(6px);box-shadow:0 20px 50px -34px rgba(0,0,0,.8)}
+.quote p{font-family:var(--display);font-style:italic;font-size:1.15rem;line-height:1.45;margin-bottom:14px}
+.quote cite{font-style:normal;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--coral)}
+
+/* BOOK */
+.book{text-align:center}
+.book h2{font-family:var(--display);font-weight:400;font-size:clamp(2.4rem,8vw,4.4rem);line-height:1.02;margin-bottom:.3em}
+.book h2 em{font-style:italic;color:var(--coral)}
+.book p{color:var(--ink-soft);max-width:44ch;margin:0 auto 30px;font-size:1.08rem}
+.details{display:grid;gap:20px;margin:48px auto 0;max-width:780px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));text-align:left}
+.detail h4{font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--coral);margin-bottom:8px}
+.detail p{margin:0;color:var(--ink);font-size:.98rem}
+.detail a{border-bottom:1px solid rgba(221,125,99,.5)}
+
+/* FOOTER */
+footer{background:var(--noir);color:var(--bone);padding:64px 24px 40px;text-align:center;position:relative;overflow:hidden}
+footer .wrap{position:relative;z-index:3}
+.f-brand{font-family:var(--display);font-size:2.4rem;font-weight:400;letter-spacing:.02em}
+.f-brand small{display:block;font-family:var(--body);font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:var(--coral);margin-top:2px;font-weight:600}
+.socials{display:flex;justify-content:center;flex-wrap:wrap;gap:18px 26px;margin:26px 0 22px;font-size:.85rem;letter-spacing:.06em}
+.socials a{color:rgba(244,239,232,.72);transition:color .2s}
+.socials a:hover{color:var(--coral-bright)}
+.f-fine{font-size:.75rem;color:rgba(244,239,232,.42);letter-spacing:.04em;line-height:1.7}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .reveal,.stagger>*{opacity:1;transform:none}
+  .aurora{opacity:.5}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="hdr">
+  <a class="brandmark" href="#top">meriki<small>the main</small></a>
+  <a class="btn" data-book><span>Book the chair</span></a>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="hero" id="top" data-spot>
+  <div class="aurora" data-aurora></div>
+  <svg class="strands" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#e0785f"/><stop offset=".3" stop-color="#e9b15a"/>
+        <stop offset=".6" stop-color="#5ec5b6"/><stop offset=".8" stop-color="#6fa8e0"/>
+        <stop offset="1" stop-color="#9a7bd8"/>
+      </linearGradient>
+    </defs>
+    <g fill="none" stroke="url(#sg)" stroke-width="1.5" stroke-linecap="round">
+      <path d="M-50,160 C300,60 700,300 1260,120" opacity=".55" stroke-dasharray="6 14"><animate attributeName="stroke-dashoffset" from="0" to="220" dur="9s" repeatCount="indefinite"/></path>
+      <path d="M-50,360 C320,260 760,520 1260,320" opacity=".4" stroke-dasharray="4 18"><animate attributeName="stroke-dashoffset" from="0" to="260" dur="13s" repeatCount="indefinite"/></path>
+      <path d="M-50,560 C300,500 720,700 1260,540" opacity=".3" stroke-dasharray="8 20"><animate attributeName="stroke-dashoffset" from="0" to="300" dur="17s" repeatCount="indefinite"/></path>
+    </g>
+  </svg>
+  <div class="spotlight" id="spot"></div>
+  <div class="hero-inner">
+    <p class="eyebrow">Color · cuts · creative · Cleveland</p>
+    <h1>
+      <span class="line">the main</span>
+      <span class="line spectrum-text">meriki</span>
+    </h1>
+    <p class="promise">Lived-in color that grows out beautiful — and creative color that wins awards. Your hair, the main character.</p>
+    <div class="hero-cta">
+      <a class="btn" data-book><span>Book the chair</span></a>
+      <a class="btn btn--ghost" href="#quiz">Find your look ↓</a>
+    </div>
+    <div class="creds">
+      <span class="cred">One Shot Global Hair Awards</span>
+      <span class="cred">Based at Studio Vasi · Strongsville</span>
+    </div>
+  </div>
+  <div class="scroll-cue">scroll<span></span></div>
+</div>
+<hr class="seam" aria-hidden="true">
+
+<!-- ============ QUIZ ============ -->
+<section class="quiz" id="quiz">
+  <div class="aurora" data-aurora></div>
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-inline:auto;text-align:center">
+      <p class="eyebrow">2 minutes · no wrong answers</p>
+      <h2>Find your <em>look</em></h2>
+      <p style="margin-inline:auto">Four quick questions and the chair spins around to reveal where your hair wants to go. Then book it.</p>
+    </div>
+    <div class="quiz-stage reveal">
+      <div class="burst" id="burst" aria-hidden="true"></div>
+      <div class="progress" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+      <div class="q-card active" data-q="0">
+        <h3>Where's your head at right now?</h3>
+        <div class="options">
+          <button class="opt" data-w="lived">Keep it easy<small>low-key, grows out soft</small></button>
+          <button class="opt" data-w="bomb">Go brighter<small>more light, more blonde</small></button>
+          <button class="opt" data-w="gloss">Just refresh me<small>shine + a clean shape</small></button>
+          <button class="opt" data-w="statement">Total change<small>bold color, surprise me</small></button>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="1">
+        <h3>Pick the look you keep saving on your phone.</h3>
+        <div class="options">
+          <button class="opt" data-w="lived">Sun-kissed & natural<small>balayage, beachy</small></button>
+          <button class="opt" data-w="bomb">Bright & blonde<small>cool, expensive, lit-up</small></button>
+          <button class="opt" data-w="gloss">Rich & glossy<small>deep, shiny, dimensional</small></button>
+          <button class="opt" data-w="statement">Vivid & unreal<small>color you can't buy in a box</small></button>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="2">
+        <h3>How much time do you actually give your hair?</h3>
+        <div class="options">
+          <button class="opt" data-w="lived">Basically none<small>wash and go</small></button>
+          <button class="opt" data-w="gloss">Five minutes<small>quick and done</small></button>
+          <button class="opt" data-w="bomb">Fifteen-ish<small>I like to style it</small></button>
+          <button class="opt" data-w="statement">Whatever it takes<small>the look is worth it</small></button>
+        </div>
+      </div>
+
+      <div class="q-card" data-q="3">
+        <h3>Your dream result, in one word.</h3>
+        <div class="options">
+          <button class="opt" data-w="lived">Effortless</button>
+          <button class="opt" data-w="bomb">Glow</button>
+          <button class="opt" data-w="gloss">Shine</button>
+          <button class="opt" data-w="statement">Showstopper</button>
+        </div>
+      </div>
+
+      <div class="q-result" data-r="lived">
+        <p class="tag">The chair spins around…</p>
+        <h3>The Lived-In</h3>
+        <p class="blurb">Soft, sun-grown color that looks like you were born with it and never makes you panic at the grow-out. Low effort, high payoff.</p>
+        <span class="svc">Best start: <b>Balayage + lived-in cut</b></span><br>
+        <a class="btn" data-book data-look="The Lived-In"><span>Book this look</span></a>
+        <a class="q-again" data-again>Take it again</a>
+      </div>
+
+      <div class="q-result" data-r="bomb">
+        <p class="tag">The chair spins around…</p>
+        <h3>The Bombshell</h3>
+        <p class="blurb">Bright, cool, expensive-looking blonde with dimension that turns heads in a parking lot. Built to be styled and shown off.</p>
+        <span class="svc">Best start: <b>Full highlight + toner + gloss</b></span><br>
+        <a class="btn" data-book data-look="The Bombshell"><span>Book this look</span></a>
+        <a class="q-again" data-again>Take it again</a>
+      </div>
+
+      <div class="q-result" data-r="gloss">
+        <p class="tag">The chair spins around…</p>
+        <h3>The Glossed</h3>
+        <p class="blurb">Deep, glassy, dimensional color and a shape that does the work for you. The "what does she use on her hair?" result.</p>
+        <span class="svc">Best start: <b>Gloss + dimensional color + cut</b></span><br>
+        <a class="btn" data-book data-look="The Glossed"><span>Book this look</span></a>
+        <a class="q-again" data-again>Take it again</a>
+      </div>
+
+      <div class="q-result" data-r="statement">
+        <p class="tag">The chair spins around…</p>
+        <h3 class="spectrum-text">The Statement</h3>
+        <p class="blurb">This is the award-winning lane — custom vivid color, money-pieces, full creative work. You came to look unforgettable, and you will.</p>
+        <span class="svc">Best start: <b>Creative color consult</b></span><br>
+        <a class="btn" data-book data-look="The Statement (creative color)"><span>Book this look</span></a>
+        <a class="q-again" data-again>Take it again</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORK ============ -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">The work</p>
+      <h2>Receipts, not <em>promises</em></h2>
+      <p>Real heads of hair, real grow-outs, real award-stage color. Swap these tiles for her best shots — lead with the One Shot piece.</p>
+    </div>
+    <div class="gallery stagger reveal">
+      <!-- Replace each tile with: <div class="shot"><img src="IMG.jpg" alt="..."></div> -->
+      <div class="shot"><span class="ph">lived-in brunette</span></div>
+      <div class="shot"><span class="ph">blonding</span></div>
+      <div class="shot"><span class="ph">★ One Shot vivid piece</span></div>
+      <div class="shot"><span class="ph">dimensional color</span></div>
+      <div class="shot"><span class="ph">money-piece</span></div>
+      <div class="shot"><span class="ph">creative color</span></div>
+    </div>
+    <p class="gallery-note reveal">More day-to-day on Instagram → <a data-ig>@the.main.meriki</a></p>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">The menu</p>
+      <h2>What I'm <em>known for</em></h2>
+      <p>Final quote comes after a quick consult — color pricing depends on your length, history, and goal. Set these to her real Studio Vasi pricing.</p>
+    </div>
+    <div class="menu stagger reveal">
+      <div class="svc-card">
+        <div class="top"><h3>Lived-In Color</h3><span class="price">consult for pricing</span></div>
+        <p>Hand-painted balayage and soft, grown-out dimension. Includes toner, gloss, and a finishing style.</p>
+        <a class="book-link" data-book data-look="Lived-In Color">Book →</a>
+      </div>
+      <div class="svc-card">
+        <div class="top"><h3>Blonding</h3><span class="price">consult for pricing</span></div>
+        <p>Bright, cool, expensive blonding — highlights, toner, and gloss tuned to your skin tone.</p>
+        <a class="book-link" data-book data-look="Blonding">Book →</a>
+      </div>
+      <div class="svc-card">
+        <div class="top"><h3>Gloss &amp; Cut</h3><span class="price">consult for pricing</span></div>
+        <p>Glassy shine, richer color, and a shape built around your texture and real morning routine.</p>
+        <a class="book-link" data-book data-look="Gloss & Cut">Book →</a>
+      </div>
+      <div class="svc-card feature">
+        <div class="top"><h3>Creative Color</h3><span class="price">consult for pricing</span></div>
+        <p>Custom vivids, color corrections, and statement work — the award-stage lane. Always starts with a consult.</p>
+        <a class="book-link" data-book data-look="Creative Color">Book a consult →</a>
+      </div>
+    </div>
+    <p class="menu-foot reveal">Also at Studio Vasi: extensions, curl work, smoothing, and bridal — ask in your consult.</p>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="wrap about reveal">
+    <div class="about-photo"><span class="ph">photo of Meriki</span></div>
+    <div class="about-text">
+      <h2>Hi, I'm <em>Meriki</em></h2>
+      <p>I'm a Cleveland-area colorist at Studio Vasi in Strongsville, a little obsessed with color that fits your real life — not just one photo, but the eight weeks after it.</p>
+      <p>I live in two worlds: expensive, lived-in color you'll wear every day, and the bold, creative work that's taken me to award stages like the One Shot Global Hair Awards. Whatever lane you're in, I'll teach you exactly what we're doing and why.</p>
+      <p><em>Swap this for her real words</em> — how long she's been doing hair, what she specializes in, what makes sitting in her chair different.</p>
+      <a class="btn btn--dark" data-book style="margin-top:8px"><span>Book with me</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="words" id="words">
+  <div class="aurora" data-aurora></div>
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-inline:auto;text-align:center">
+      <p class="eyebrow">In their words</p>
+      <h2>People who <em>switched</em> and stayed</h2>
+    </div>
+    <div class="quotes stagger reveal">
+      <div class="quote"><p>"First time I've grown out my color without a single panic text."</p><cite>— real client name</cite></div>
+      <div class="quote"><p>"She explained every step — I finally understood my own hair."</p><cite>— real client name</cite></div>
+      <div class="quote"><p>"I show people my hair like it's a personality trait now."</p><cite>— real client name</cite></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOK ============ -->
+<section class="book" id="book">
+  <div class="wrap reveal">
+    <p class="eyebrow">Your chair is waiting</p>
+    <h2>Let's make it <em>main character</em> hair.</h2>
+    <p>Booking takes two minutes through Studio Vasi. New clients welcome — mention your quiz look and we'll plan from there.</p>
+    <a class="btn" data-book style="font-size:1.05rem;padding:18px 40px"><span>Book the chair</span></a>
+    <div class="details">
+      <div class="detail"><h4>Where</h4><p>Studio Vasi<br>13325 Pearl Road<br>Strongsville, OH 44136</p></div>
+      <div class="detail"><h4>Reach the salon</h4><p><a href="tel:+14408098788">(440) 809-8788</a><br><a href="mailto:info@studiovasi.com">info@studiovasi.com</a></p></div>
+      <div class="detail"><h4>Good to know</h4><p>Consults welcome<br>Studio Vasi cancellation policy applies</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="aurora" data-aurora style="opacity:.7"></div>
+  <div class="wrap">
+    <div class="f-brand">meriki<small>the main</small></div>
+    <div class="socials">
+      <a data-ig>Instagram</a>
+      <a data-book>Book</a>
+      <a data-salon>Studio Vasi</a>
+      <a href="tel:+14408098788">Call</a>
+    </div>
+    <div class="seam" style="max-width:220px;margin:0 auto 22px"></div>
+    <p class="f-fine">© <span id="yr"></span> the main meriki · stylist at Studio Vasi · Strongsville, OH<br>Independent personal page — not the official Studio Vasi website.</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   CONFIG — wired to her real salon
+   ============================================================ */
+const BOOKING_URL  = "https://booking.mangomint.com/studiovasi";
+const INSTAGRAM_URL = "https://www.instagram.com/the.main.meriki";
+const SALON_URL    = "https://studiovasi.com/";
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+document.querySelectorAll("[data-book]").forEach(el=>{
+  el.style.cursor="pointer";
+  if(el.tagName==="A"){el.href=BOOKING_URL;el.target="_blank";el.rel="noopener";}
+  el.addEventListener("click",()=>window.open(BOOKING_URL,"_blank","noopener"));
+});
+document.querySelectorAll("[data-ig]").forEach(el=>{el.href=INSTAGRAM_URL;el.target="_blank";el.rel="noopener";el.style.cursor="pointer";});
+document.querySelectorAll("[data-salon]").forEach(el=>{el.href=SALON_URL;el.target="_blank";el.rel="noopener";el.style.cursor="pointer";});
+
+/* inject aurora light blobs */
+document.querySelectorAll("[data-aurora]").forEach(a=>{a.innerHTML="<span></span><span></span><span></span><span></span><span></span>";});
+
+/* header + year */
+const hdr=document.getElementById("hdr");
+addEventListener("scroll",()=>hdr.classList.toggle("scrolled",scrollY>40),{passive:true});
+document.getElementById("yr").textContent=new Date().getFullYear();
+
+/* reveals */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.12});
+document.querySelectorAll(".reveal,.stagger").forEach(el=>io.observe(el));
+
+/* pointer spotlight + gentle auto-drift (hero) */
+(function(){
+  if(reduce) return;
+  const hero=document.querySelector("[data-spot]");
+  const spot=document.getElementById("spot");
+  if(!hero||!spot) return;
+  let tx=72,ty=28,cx=72,cy=28,manual=false,t=0,raf;
+  hero.addEventListener("pointermove",e=>{
+    const r=hero.getBoundingClientRect();
+    tx=((e.clientX-r.left)/r.width)*100;
+    ty=((e.clientY-r.top)/r.height)*100;
+    manual=true;
+  },{passive:true});
+  hero.addEventListener("pointerleave",()=>manual=false);
+  function loop(){
+    if(!manual){t+=0.006;tx=60+Math.sin(t)*26;ty=30+Math.cos(t*0.8)*16;}
+    cx+=(tx-cx)*0.08;cy+=(ty-cy)*0.08;
+    spot.style.setProperty("--mx",cx.toFixed(2)+"%");
+    spot.style.setProperty("--my",cy.toFixed(2)+"%");
+    raf=requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* gallery + service card pointer tilt (hover-capable devices only) */
+(function(){
+  if(reduce||!matchMedia("(hover:hover)").matches) return;
+  document.querySelectorAll(".shot,.svc-card").forEach(card=>{
+    const max= card.classList.contains("shot")?8:4;
+    card.addEventListener("pointermove",e=>{
+      const r=card.getBoundingClientRect();
+      const rx=((e.clientY-r.top)/r.height-0.5)*-max;
+      const ry=((e.clientX-r.left)/r.width-0.5)*max;
+      card.style.transform="translateY(-5px) perspective(900px) rotateX("+rx+"deg) rotateY("+ry+"deg)";
+    });
+    card.addEventListener("pointerleave",()=>card.style.transform="");
+  });
+})();
+
+/* QUIZ ENGINE + cinematic reveal */
+(function(){
+  const cards=[...document.querySelectorAll(".q-card")];
+  const results=[...document.querySelectorAll(".q-result")];
+  const bars=[...document.querySelectorAll(".progress i")];
+  const burst=document.getElementById("burst");
+  let step=0;
+  const tally={lived:0,bomb:0,gloss:0,statement:0};
+  const order=["lived","bomb","gloss","statement"];
+  function show(i){cards.forEach(c=>c.classList.remove("active"));results.forEach(r=>r.classList.remove("active"));if(cards[i])cards[i].classList.add("active");}
+  function finish(){
+    let best=order[0];order.forEach(k=>{if(tally[k]>tally[best])best=k;});
+    cards.forEach(c=>c.classList.remove("active"));
+    bars.forEach(b=>b.classList.add("done"));
+    if(burst&&!reduce){burst.classList.remove("go");void burst.offsetWidth;burst.classList.add("go");}
+    results.forEach(r=>r.classList.toggle("active",r.dataset.r===best));
+  }
+  document.querySelectorAll(".opt").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      tally[btn.dataset.w]++;
+      bars[step]&&bars[step].classList.add("done");
+      step++;
+      if(step<cards.length){show(step);}
+      else{finish();document.querySelector(".quiz-stage").scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});}
+    });
+  });
+  document.querySelectorAll("[data-again]").forEach(a=>{
+    a.addEventListener("click",()=>{
+      Object.keys(tally).forEach(k=>tally[k]=0);
+      step=0;bars.forEach(b=>b.classList.remove("done"));
+      results.forEach(r=>r.classList.remove("active"));
+      show(0);
+      document.getElementById("quiz").scrollIntoView({behavior:reduce?"auto":"smooth"});
+    });
+  });
+})();
+</script>
+</body>
+</html>
