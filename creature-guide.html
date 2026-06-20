@@ -167,7 +167,7 @@
   .topgroup-label{font-size:11px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.5px;margin:13px 0 7px;opacity:.85}
   .sublab-note{text-transform:none;letter-spacing:0;font-weight:600;color:var(--soft);opacity:.8}
   .preset-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
-  #sh-editor{width:100%;max-width:280px;aspect-ratio:1;display:block;margin:2px auto;touch-action:none;background:radial-gradient(circle at 34% 28%, #FFFDF6, #F1E7D0);border-radius:18px;border:1px solid var(--line);box-shadow:var(--hl)}
+  #sh-editor,#hair-editor{width:100%;max-width:280px;aspect-ratio:1;display:block;margin:2px auto;touch-action:none;background:radial-gradient(circle at 34% 28%, #FFFDF6, #F1E7D0);border-radius:18px;border:1px solid var(--line);box-shadow:var(--hl)}
   .sh-blob{stroke:rgba(0,0,0,.08);stroke-width:1.5;transition:fill .35s ease}
   .sh-hit{fill:transparent}
   .sh-dot{fill:#fff;stroke:var(--berry);stroke-width:2;filter:drop-shadow(0 1px 1px rgba(58,46,72,.3))}
@@ -249,13 +249,16 @@
 const KEY = 'garrett_creature_guide_v1';
 const DEFAULT_TRAITS = ['Shy','Bouncy','Brave','Sleepy','Curious','Gentle','Silly','Bossy','Cuddly','Grumpy','Sweet','Wild','Clever','Loud','Calm','Proud'];
 const TOPPING_GROUPS = [
-  ['Fruit', ['🍓','🫐','🍒','🍇','🍉','🍑','🍋','🍊','🍌','🍍','🥭','🍏','🍎','🍐','🥝','🥥','🍈','🍅']],
-  ['Sweets', ['🧁','🍪','🍩','🍫','🍰','🎂','🥧','🍮','🍯','🥞','🧇','🍦','🍧','🍨']],
+  ['Fruit', ['🍓','🫐','🍒','🍇','🍉','🍑','🍋','🍊','🍌','🍍','🥭','🍏','🍎','🍐','🥝','🥥','🍈','🍅','🫛','🥑']],
+  ['Sweets', ['🧁','🍪','🍩','🍫','🍰','🎂','🥧','🍮','🍯','🥞','🧇','🍦','🍧','🍨','🍡','🍢','🥮','🥠','🍥','🍬','🍭']],
+  ['Food', ['🍕','🍔','🌭','🥪','🌮','🌯','🥙','🧆','🍳','🥓','🥨','🥐','🥖','🥯','🧀','🍞','🥗','🍿','🍱','🍙','🍚','🍛','🍜','🍝','🍠','🍣','🍤','🥟','🥡']],
+  ['Veggies', ['🥕','🌽','🥦','🥬','🥒','🧄','🧅','🥔','🍆','🌶️','🫑']],
   ['Candy & gumballs', ['🍬','🍭','🔴','🟠','🟡','🟢','🔵','🟣','🟤','⚪','⚫']],
-  ['Drinks', ['🧃','🥤','🧋','☕','🍵','🥛']],
+  ['Drinks', ['🧃','🥤','🧋','☕','🍵','🥛','🧉','🫖']],
   ['Nature', ['⭐','🌙','☀️','⚡','🔥','💧','❄️','🌈','🌸','🌼','🌺','🍀','🌿','🍄','🐚','☁️']],
   ['Shapes & sparkle', ['💎','✨','🌟','💗','🫧','🎀','💖']]
 ];
+const JELLY_COLORS = ['#F48FB1','#EC5C72','#FF8FA3','#C9A8E8','#9B5DE5','#5D8CE5','#7FD1C1','#7BC86C','#F6C445','#FF9E6B','#7A5C9E','#FFFFFF'];
 const DEFAULT_SKILLS = ['Take a shower','Brush teeth','Wash hands','Get dressed','Clean up','Share toys','Say please','Wait my turn','Listen','Eat veggies','Make friends','Be brave','Take a nap','Tie shoes'];
 const COLORS = [
   ['Vanilla','#F6EFD8'],['Strawberry','#F4B8C4'],['Ruby','#E2607A'],['Matcha','#C7D89B'],
@@ -285,6 +288,7 @@ const PATTERNS = [['None','none'],['Spots','spots'],['Stripes','stripes'],['Spar
 const ACCESSORIES = [['None','none'],['Glasses','glasses'],['Bow','bow'],['Scarf','scarf'],['Headphones','phones']];
 const HAIR_STYLES = [['None','none'],['Tuft','tuft'],['Bowl','bowl'],['Spiky','spiky'],['Mohawk','mohawk'],['Bangs','bangs'],['Swoosh','swoosh'],['Curly','curly'],['Long','long'],['Wavy','wavy'],['Braids','braids'],['Pigtails','pigtails'],['Buns','buns'],['Pony','pony']];
 const HAIR_COLORS = ['#3B2F2E','#6B4A2B','#C68A4E','#E8C268','#D9712B','#E64B4B','#E86FB0','#9B5DE5','#5D8CE5','#3FB6A0','#5BBF5B','#EDE6DA','#9AA0A6'];
+const HAIREXTRA = [['None','none'],['Bangs','bangs'],['Pigtails','pigtails'],['Braids','braids'],['Pony','pony']];
 const HAIR_PRESETS = {
   puff:[48,47,45,44,40,34,28,34,40,44,45,47],
   tall:[55,47,39,35,34,33,30,33,34,35,39,47],
@@ -315,7 +319,7 @@ function load(){
     if(typeof c.shape!=='object'||!c.shape||!Array.isArray(c.shape.r)) c.shape=shapeObj(c.shape);
     c.eyes=c.eyes||'dots'; c.mouth=c.mouth||'smile';
     c.arms=c.arms||'paws'; if(c.arms==='nubs') c.arms='open'; c.feet=c.feet||'blocky'; c.emblem=c.emblem||'none'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none';
-    if(typeof c.hairShape!=='object'||!c.hairShape||!Array.isArray(c.hairShape.r)) c.hairShape={r:HAIR_PRESETS.puff.slice(),w:1,h:1}; c.hair=(c.hair==='none'||c.hair==='off')?'off':'on'; if(c.hairTip===undefined) c.hairTip=null;
+    if(typeof c.hairShape!=='object'||!c.hairShape||!Array.isArray(c.hairShape.r)) c.hairShape={r:HAIR_PRESETS.puff.slice(),w:1,h:1}; c.hair=(c.hair==='none'||c.hair==='off')?'off':'on'; c.hairExtra=c.hairExtra||'none'; c.treatCount=c.treatCount||2; c.treatColor=c.treatColor||'#F48FB1'; if(c.hairTip===undefined) c.hairTip=null;
     if(c.birthday===undefined) c.birthday=null;
     delete c.ability; delete c.teacherId; delete c.firstOfKind;
   });
@@ -511,6 +515,38 @@ function legsSVG(f, color){
   else feet='<rect x="47" y="105" width="12" height="7" rx="3"/><rect x="61" y="105" width="12" height="7" rx="3"/>';
   return g+legs+feet+'</g>';
 }
+function jellyShape(x,y,color,delay){
+  const dk=darkenHex(color,0.30), lt=lightenHex(color,0.55);
+  const body='M'+(x-9)+' '+(y-6)
+    +' Q'+(x-7)+' '+(y-10.5)+' '+(x-4.5)+' '+(y-8)
+    +' Q'+(x-2)+' '+(y-11)+' '+x+' '+(y-9)
+    +' Q'+(x+2)+' '+(y-11)+' '+(x+4.5)+' '+(y-8)
+    +' Q'+(x+7)+' '+(y-10.5)+' '+(x+9)+' '+(y-6)
+    +' C'+(x+12)+' '+(y-1)+' '+(x+12)+' '+(y+5)+' '+(x+10)+' '+(y+9)
+    +' Q'+(x+7)+' '+(y+11.5)+' '+(x+5)+' '+(y+9)
+    +' Q'+(x+2.5)+' '+(y+11.5)+' '+x+' '+(y+9)
+    +' Q'+(x-2.5)+' '+(y+11.5)+' '+(x-5)+' '+(y+9)
+    +' Q'+(x-7)+' '+(y+11.5)+' '+(x-10)+' '+(y+9)
+    +' C'+(x-12)+' '+(y+5)+' '+(x-12)+' '+(y-1)+' '+(x-9)+' '+(y-6)+' Z';
+  const fl=(fx,t,b)=>'<path d="M'+fx+' '+t+' Q'+(fx+0.4)+' '+y+' '+fx+' '+b+'" stroke="'+dk+'" stroke-width="1" fill="none" opacity="0.35"/>';
+  return '<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.2;0 0" dur="2.8s" begin="'+delay+'" repeatCount="indefinite"/>'
+    +'<path d="'+body+'" fill="'+color+'" stroke="'+dk+'" stroke-width="1"/>'
+    +fl(x-5,y-7,y+9)+fl(x,y-8.5,y+9.5)+fl(x+5,y-7,y+9)
+    +'<ellipse cx="'+(x-4)+'" cy="'+(y-3)+'" rx="3" ry="6" fill="'+lt+'" opacity="0.6" transform="rotate(-8 '+(x-4)+' '+(y-3)+')"/>'
+    +'<path d="M'+(x+3)+' '+(y-6)+' Q'+(x+4)+' '+y+' '+(x+3.5)+' '+(y+7)+'" stroke="#fff" stroke-width="1.3" fill="none" opacity="0.55" stroke-linecap="round"/>'
+    +'<path d="M'+(x-1.5)+' '+(y-7)+' Q'+(x-1)+' '+(y-2)+' '+(x-1.5)+' '+(y+4)+'" stroke="#fff" stroke-width="1" fill="none" opacity="0.4" stroke-linecap="round"/>'
+    +'<ellipse cx="'+x+'" cy="'+(y-8.5)+'" rx="4" ry="1.6" fill="#fff" opacity="0.35"/>'
+    +'</g>';
+}
+function treatSVG(cr,x,y,delay){
+  if(cr.topping==='__jelly__') return jellyShape(x,y,cr.treatColor||'#F48FB1',delay);
+  return '<text class="ctop" x="'+x+'" y="'+y+'" font-size="22" text-anchor="middle" dominant-baseline="middle"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="2.8s" begin="'+delay+'" repeatCount="indefinite"/>'+(cr.topping||'')+'</text>';
+}
+function treatsSVG(cr,topY){
+  const n=(cr.treatCount===1)?1:2; const y=topY-9;
+  if(n===1) return treatSVG(cr,60,y,'0s');
+  return treatSVG(cr,42,y,'0s')+treatSVG(cr,78,y,'0.45s');
+}
 function bodySVG(cr, opts){
   opts = opts || {};
   const c = cr.color || '#F4B8C4';
@@ -522,6 +558,7 @@ function bodySVG(cr, opts){
   const d = blobPath(cr.shape);
   const cpId = opts.clipPathId ? ' id="'+opts.clipPathId+'"' : '';
   const hairId = opts.hairId ? ' id="'+opts.hairId+'"' : '';
+  const hx = hairExtraSVG(cr);
   const topY = shapeTopY(cr.shape);
   const hairDy = Math.max(-6, Math.min(10, topY-35));
   return '<svg class="portrait" viewBox="0 0 120 120" aria-hidden="true">'
@@ -534,6 +571,7 @@ function bodySVG(cr, opts){
     +'</defs>'
     +'<ellipse cx="60" cy="113" rx="19" ry="5" fill="url(#ct'+g+')"><animate attributeName="rx" values="19;16;19" dur="3.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.62;1" dur="3.4s" repeatCount="indefinite"/></ellipse>'
     +legsSVG(cr.feet||'blocky', c)
+    +hx.back
     +'<g transform="translate(60 46) scale(0.78) translate(-60 -62)">'
       +(cr.hair!=='off' ? '<path'+hairId+' class="hairbase" d="'+blobPath(cr.hairShape)+'" fill="'+darkenHex(c,0.16)+'" stroke="rgba(0,0,0,.06)" stroke-width="1.5"/>' : '')
       +'<path'+bodyId+' class="cbody" d="'+d+'" fill="'+c+'" stroke="rgba(0,0,0,.05)" stroke-width="2"/>'
@@ -548,9 +586,9 @@ function bodySVG(cr, opts){
       +mouthSVG(cr.mouth||'smile')
       +'<ellipse cx="41" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/><ellipse cx="79" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/>'
       +accessorySVG(cr.accessory||'none')
-      +'<text class="ctop" x="42" y="'+(topY-9)+'" font-size="22" text-anchor="middle" dominant-baseline="middle"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="2.8s" repeatCount="indefinite"/>'+(cr.topping||'')+'</text>'
-      +'<text class="ctop" x="78" y="'+(topY-9)+'" font-size="22" text-anchor="middle" dominant-baseline="middle"><animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="2.8s" begin="0.45s" repeatCount="indefinite"/>'+(cr.topping||'')+'</text>'
+      +treatsSVG(cr, topY)
     +'</g>'
+    +hx.front
     +dressSVG(cr, c)
     +armsSVG(cr.arms||'paws', c)
     +'</svg>';
@@ -683,7 +721,7 @@ let draft = null;
 let openSections = new Set(['looks']);
 function blankDraft(){
   return {id:null,name:'',flavor:'',stage:'Newborn',birthday:null,traits:[],loves:'',dislikes:'',sound:'',story:'',
-          color:'#F4B8C4',shape:{r:SHAPE_PRESETS.dollop.slice(),w:1,h:1},eyes:'dots',mouth:'smile',arms:'paws',feet:'blocky',emblem:'none',pattern:'none',accessory:'none',hair:'on',hairShape:{r:HAIR_PRESETS.puff.slice(),w:1,h:1},hairTip:null,topping:'\u{1F353}',knowledge:[]};
+          color:'#F4B8C4',shape:{r:SHAPE_PRESETS.dollop.slice(),w:1,h:1},eyes:'dots',mouth:'smile',arms:'paws',feet:'blocky',emblem:'none',pattern:'none',accessory:'none',hair:'on',hairShape:{r:HAIR_PRESETS.puff.slice(),w:1,h:1},hairExtra:'none',hairTip:null,topping:'\u{1F353}',treatCount:2,treatColor:'#F48FB1',knowledge:[]};
 }
 function knows(skill){ return draft.knowledge.find(k=>k.skill===skill); }
 function teacherSelect(skill){
@@ -713,6 +751,17 @@ function shapeEditorHTML(){
     +'<div class="slider-row"><label>Height</label><input type="range" id="sh-h" min="0.6" max="1.45" step="0.01" value="'+h+'"></div>'
     +'<div class="shape-tools"><button type="button" class="btn small" data-act="round-shape">Round out</button></div>';
 }
+function hairExtraSVG(cr){
+  const e=cr.hairExtra||'none'; if(e==='none') return {back:'',front:''};
+  const col=darkenHex(cr.color||'#F4B8C4',0.16);
+  const st='stroke="rgba(0,0,0,.06)" stroke-width="1.4"';
+  const cls='class="hairbase"';
+  if(e==='bangs') return {back:'', front:'<path '+cls+' d="M35 41 C35 33 85 33 85 41 C81 51 76 44 71 51 C66 44 61 51 60 43 C59 51 54 44 49 51 C44 44 39 51 35 41 Z" fill="'+col+'" '+st+'/>'};
+  if(e==='pigtails') return {back:'<path '+cls+' d="M32 44 C14 50 12 76 22 92 C30 100 40 94 37 82 C31 70 35 56 42 50 Z" fill="'+col+'" '+st+'/><path '+cls+' d="M88 44 C106 50 108 76 98 92 C90 100 80 94 83 82 C89 70 85 56 78 50 Z" fill="'+col+'" '+st+'/>', front:''};
+  if(e==='braids'){ let L='',R=''; for(let i=0;i<6;i++){ const rr=(6-i*0.45).toFixed(1); L+='<circle '+cls+' cx="'+(25-i*0.4)+'" cy="'+(52+i*8)+'" r="'+rr+'" fill="'+col+'" '+st+'/>'; R+='<circle '+cls+' cx="'+(95+i*0.4)+'" cy="'+(52+i*8)+'" r="'+rr+'" fill="'+col+'" '+st+'/>'; } return {back:L+R, front:''}; }
+  if(e==='pony') return {back:'<path '+cls+' d="M86 44 C108 46 112 74 102 92 C96 100 88 96 89 84 C95 70 88 54 80 50 Z" fill="'+col+'" '+st+'/>', front:''};
+  return {back:'',front:''};
+}
 function hairEditorHTML(){
   const on = draft.hair!=='off';
   const pts=shapePts(draft.hairShape);
@@ -741,24 +790,27 @@ let hairDrag=null;
 function hairEditorWire(){
   const svg=document.getElementById('hair-editor'); if(!svg) return;
   const toSvg=(e)=>{ const r=svg.getBoundingClientRect(); return [ (e.clientX-r.left)/r.width*120, (e.clientY-r.top)/r.height*120 ]; };
+  let raf=0, pend=null;
+  const apply=()=>{ raf=0; if(pend==null) return; const i=pend[0], rr=pend[1]; pend=null; draft.hairShape.r[i]=rr; renderHairEditor(); updateHairPreview(); };
   const onMove=(e)=>{
     if(hairDrag==null) return; e.preventDefault();
     const xy=toSvg(e); const i=hairDrag; const ang=-Math.PI/2+i*(2*Math.PI/12);
     const w=draft.hairShape.w||1, h=draft.hairShape.h||1;
     const ux=(xy[0]-60)/w, uy=(xy[1]-62)/h;
     let rr=ux*Math.cos(ang)+uy*Math.sin(ang); rr=Math.max(14,Math.min(58,rr));
-    draft.hairShape.r[i]=rr; renderHairEditor(); updateHairPreview();
+    pend=[i,rr]; if(!raf) raf=requestAnimationFrame(apply);
   };
-  const onUp=()=>{ if(hairDrag!=null){ hairDrag=null; rebuildCreature(); window.removeEventListener('pointermove',onMove); window.removeEventListener('pointerup',onUp); window.removeEventListener('pointercancel',onUp); } };
+  const onUp=()=>{ if(hairDrag!=null){ hairDrag=null; if(raf){cancelAnimationFrame(raf);raf=0;} apply(); rebuildCreature(); window.removeEventListener('pointermove',onMove); window.removeEventListener('pointerup',onUp); window.removeEventListener('pointercancel',onUp); } };
   svg.querySelectorAll('.sh-handle').forEach(g=>g.addEventListener('pointerdown',(e)=>{
     e.preventDefault(); hairDrag=parseInt(g.getAttribute('data-idx'),10);
+    try{ g.setPointerCapture(e.pointerId); }catch(_){}
     window.addEventListener('pointermove',onMove); window.addEventListener('pointerup',onUp); window.addEventListener('pointercancel',onUp);
   }));
 }
 function formHTML(c){
   draft = c ? JSON.parse(JSON.stringify(c)) : blankDraft();
   if(!draft.knowledge) draft.knowledge=[];
-  ['shape','eyes','mouth','arms','feet','emblem','pattern','accessory','hair'].forEach(f=>{ if(!draft[f]) draft[f]=blankDraft()[f]; });
+  ['shape','eyes','mouth','arms','feet','emblem','pattern','accessory','hair','hairExtra'].forEach(f=>{ if(!draft[f]) draft[f]=blankDraft()[f]; });
   const oc = key => openSections.has(key) ? ' open' : '';
   const chev = '<span class="chev">\u203A</span>';
   const preview = '<div class="preview" id="preview" style="--accent:'+draft.color+'">'
@@ -777,10 +829,13 @@ function formHTML(c){
     +COLORS.map(p=>'<div class="sw '+(draft.color===p[1]?'sel':'')+'" data-color="'+p[1]+'" title="'+p[0]+'" style="background:'+p[1]+'"><span class="tick">\u2713</span></div>').join('')
     +'<label class="ccustom">Any<br>color<input type="color" id="customcolor" value="'+draft.color+'"></label></div>'
     +shapeEditorHTML()+optRow('Eyes','eyes',EYESET)+optRow('Mouth','mouth',MOUTHS)+optRow('Arms','arms',ARMSET)+optRow('Feet','feet',FEETSET)+optRow('Emblem','emblem',EMBLEMSET)+optRow('Markings','pattern',PATTERNS)+optRow('Accessory','accessory',ACCESSORIES)
-      +hairEditorHTML()
-    +'<div class="sublab">Toppings <span class="sublab-note">they get two</span></div>'
+      +hairEditorHTML()+optRow('Hanging hair','hairExtra',HAIREXTRA)
+    +'<div class="sublab">Toppings <span class="sublab-note">one or two on top</span></div>'
     +TOPPING_GROUPS.map(g=>'<div class="topgroup-label">'+g[0]+'</div><div class="emoji-pick">'+g[1].map(e=>emoBtn(e)).join('')+'</div>').join('')
     +(state.customToppings.length?'<div class="topgroup-label">Yours</div><div class="emoji-pick">'+state.customToppings.map(e=>emoBtn(e)).join('')+'</div>':'')
+    +'<div class="topgroup-label">Special</div><div class="emoji-pick"><button type="button" class="emo'+(draft.topping==="__jelly__"?" sel":"")+'" data-treat="jelly" style="font-size:13px;font-weight:700;color:var(--berry)">Jelly</button></div>'
+    +'<div class="sublab">Jelly color</div><div class="swatches" id="jellyswatches">'+JELLY_COLORS.map(hex=>'<div class="sw '+((draft.treatColor||"#F48FB1")===hex?"sel":"")+'" data-jellycolor="'+hex+'" style="background:'+hex+'"><span class="tick">\u2713</span></div>').join('')+'<label class="ccustom">Any<br>color<input type="color" id="jellycolor" value="'+(draft.treatColor||"#F48FB1")+'"></label></div>'
+    +'<div class="sublab">How many treats</div><div class="preset-row"><button type="button" class="trait'+(((draft.treatCount||2)===1)?" sel":"")+'" data-treatcount="1">One</button><button type="button" class="trait'+(((draft.treatCount||2)===2)?" sel":"")+'" data-treatcount="2">Two</button></div>'
     +'<div class="addrow"><input type="text" id="add_topping" maxlength="4" placeholder="Add an emoji topping"><button type="button" class="btn small" data-act="add-topping">Add</button></div>'
     +'</div></div></div>';
   const personality = '<div class="section'+oc('personality')+'"><button type="button" class="sec-head" data-toggle="personality"><span class="sec-title">Personality</span><span class="sec-sum" id="sum-personality">'+(draft.traits.length?'('+draft.traits.length+')':'')+'</span>'+chev+'</button><div class="sec-body"><div class="sec-inner">'
@@ -1009,9 +1064,14 @@ function wire(){
   // toppings
   document.querySelectorAll('.emo[data-emo]').forEach(b=>b.addEventListener('click',()=>{
     draft.topping=b.getAttribute('data-emo');
-    document.querySelectorAll('.emo[data-emo]').forEach(x=>x.classList.remove('sel'));
-    b.classList.add('sel'); pvTopping(draft.topping);
+    document.querySelectorAll('.emo').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); rebuildCreature();
   }));
+  const jbtn=document.querySelector('[data-treat="jelly"]');
+  if(jbtn) jbtn.addEventListener('click',()=>{ draft.topping='__jelly__'; document.querySelectorAll('.emo').forEach(x=>x.classList.remove('sel')); jbtn.classList.add('sel'); rebuildCreature(); });
+  document.querySelectorAll('#jellyswatches .sw').forEach(s=>s.addEventListener('click',()=>{ draft.treatColor=s.getAttribute('data-jellycolor'); document.querySelectorAll('#jellyswatches .sw').forEach(x=>x.classList.remove('sel')); s.classList.add('sel'); rebuildCreature(); }));
+  const jc=document.getElementById('jellycolor'); if(jc) jc.addEventListener('input',()=>{ draft.treatColor=jc.value; rebuildCreature(); });
+  document.querySelectorAll('[data-treatcount]').forEach(b=>b.addEventListener('click',()=>{ draft.treatCount=parseInt(b.getAttribute('data-treatcount'),10); document.querySelectorAll('[data-treatcount]').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); rebuildCreature(); }));
   // personality
   document.querySelectorAll('#traits .trait').forEach(b=>b.addEventListener('click',()=>{
     const t=b.getAttribute('data-trait');
@@ -1137,7 +1197,7 @@ function doImport(){
           state=data;
           if(!state.skills) state.skills=[]; if(!state.customTraits) state.customTraits=[]; if(!state.customToppings) state.customToppings=[];
           if(!state.nextNum) state.nextNum=state.creatures.length+1;
-          state.creatures.forEach(c=>{ if(!c.knowledge) c.knowledge=[]; if(typeof c.shape!=='object'||!c.shape||!Array.isArray(c.shape.r)) c.shape=shapeObj(c.shape); c.eyes=c.eyes||'dots'; c.mouth=c.mouth||'smile'; c.arms=c.arms||'paws'; if(c.arms==='nubs') c.arms='open'; c.feet=c.feet||'blocky'; c.emblem=c.emblem||'none'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none'; if(typeof c.hairShape!=='object'||!c.hairShape||!Array.isArray(c.hairShape.r)) c.hairShape={r:HAIR_PRESETS.puff.slice(),w:1,h:1}; c.hair=(c.hair==='none'||c.hair==='off')?'off':'on'; if(c.hairTip===undefined) c.hairTip=null; if(c.birthday===undefined) c.birthday=null; });
+          state.creatures.forEach(c=>{ if(!c.knowledge) c.knowledge=[]; if(typeof c.shape!=='object'||!c.shape||!Array.isArray(c.shape.r)) c.shape=shapeObj(c.shape); c.eyes=c.eyes||'dots'; c.mouth=c.mouth||'smile'; c.arms=c.arms||'paws'; if(c.arms==='nubs') c.arms='open'; c.feet=c.feet||'blocky'; c.emblem=c.emblem||'none'; c.pattern=c.pattern||'none'; c.accessory=c.accessory||'none'; if(typeof c.hairShape!=='object'||!c.hairShape||!Array.isArray(c.hairShape.r)) c.hairShape={r:HAIR_PRESETS.puff.slice(),w:1,h:1}; c.hair=(c.hair==='none'||c.hair==='off')?'off':'on'; c.hairExtra=c.hairExtra||'none'; c.treatCount=c.treatCount||2; c.treatColor=c.treatColor||'#F48FB1'; if(c.hairTip===undefined) c.hairTip=null; if(c.birthday===undefined) c.birthday=null; });
           save(); go('gallery');
         }else alert('That file does not look like a creature backup.');
       }catch(e){ alert('Could not read that file.'); }
