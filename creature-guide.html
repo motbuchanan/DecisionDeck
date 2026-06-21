@@ -288,16 +288,17 @@ const PATTERNS = [['None','none'],['Spots','spots'],['Stripes','stripes'],['Spar
 const ACCESSORIES = [['None','none'],['Glasses','glasses'],['Bow','bow'],['Scarf','scarf'],['Headphones','phones']];
 const HAIR_STYLES = [['None','none'],['Tuft','tuft'],['Bowl','bowl'],['Spiky','spiky'],['Mohawk','mohawk'],['Bangs','bangs'],['Swoosh','swoosh'],['Curly','curly'],['Long','long'],['Wavy','wavy'],['Braids','braids'],['Pigtails','pigtails'],['Buns','buns'],['Pony','pony']];
 const HAIR_COLORS = ['#3B2F2E','#6B4A2B','#C68A4E','#E8C268','#D9712B','#E64B4B','#E86FB0','#9B5DE5','#5D8CE5','#3FB6A0','#5BBF5B','#EDE6DA','#9AA0A6'];
+const TIP_COLORS = ['#FFD83B','#F6A53B','#FF8FA3','#EC5C72','#C9A8E8','#9B5DE5','#5D8CE5','#7FD1C1','#7BC86C','#FFFFFF','#3B2F2E'];
 const HAIREXTRA = [['None','none'],['Bangs','bangs'],['Pigtails','pigtails'],['Braids','braids'],['Pony','pony']];
 const HAIR_PRESETS = {
-  puff:[48,47,45,44,40,34,28,34,40,44,45,47],
-  tall:[55,47,39,35,34,33,30,33,34,35,39,47],
-  wide:[40,45,51,53,49,40,30,40,49,53,51,45],
-  spiky:[54,34,52,34,48,30,28,30,48,34,52,34],
-  wavy:[47,42,49,42,47,40,30,40,47,42,49,42],
-  long:[44,47,49,51,53,49,34,49,53,51,49,47],
-  heart:[34,53,49,42,38,33,27,33,38,42,49,53],
-  lumpy:[49,38,51,40,47,36,30,45,40,51,38,47]
+  puff:[50,49,49,48,46,42,34,42,46,48,49,49],
+  tall:[60,55,49,47,45,43,36,43,45,47,49,55],
+  wide:[44,50,57,59,55,46,36,46,55,59,57,50],
+  spiky:[60,40,58,40,54,40,34,40,54,40,58,40],
+  wavy:[52,47,55,47,53,45,36,45,53,47,55,47],
+  long:[50,53,56,59,61,55,40,55,61,59,56,53],
+  heart:[40,59,55,49,46,43,35,43,46,49,55,59],
+  lumpy:[55,44,57,47,53,44,35,50,47,57,44,53]
 };
 const ACCENTS = {Sleepy:'\u{1F4A4}',Sweet:'\u{1F497}',Cuddly:'\u{1F497}',Gentle:'\u{1F338}',Brave:'\u2728',Curious:'\u2753',Silly:'\u{1F61D}',Grumpy:'\u{1F4A2}',Wild:'\u26A1',Bossy:'\u2757',Loud:'\u{1F4E3}',Calm:'\u{1F33F}',Proud:'\u{1F451}',Clever:'\u{1F4A1}'};
 const IDLE_PRIORITY = ['Sleepy','Bouncy','Silly','Wild','Shy'];
@@ -547,6 +548,22 @@ function treatsSVG(cr,topY){
   if(n===1) return treatSVG(cr,60,y,'0s');
   return treatSVG(cr,42,y,'0s')+treatSVG(cr,78,y,'0.45s');
 }
+function creatureViewBox(cr){
+  const T=(px,py)=>[60+0.78*(px-60), 46+0.78*(py-62)];
+  const xs=[], ys=[]; const add=p=>{xs.push(p[0]);ys.push(p[1]);};
+  shapePts(cr.shape).forEach(p=>add(T(p[0],p[1])));
+  if(cr.hair!=='off') shapePts(cr.hairShape).forEach(p=>add(T(p[0],p[1])));
+  const topY=shapeTopY(cr.shape);
+  add(T(30,topY-22)); add(T(90,topY-22)); add(T(30,topY+12)); add(T(90,topY+12));
+  add([30,68]); add([90,68]); add([30,118]); add([90,118]);
+  if(cr.hairExtra==='pigtails'||cr.hairExtra==='braids'){ add([10,44]); add([110,44]); add([10,95]); add([110,95]); }
+  if(cr.hairExtra==='pony'){ add([80,44]); add([114,44]); add([114,95]); }
+  let minX=Math.min.apply(null,xs), maxX=Math.max.apply(null,xs), minY=Math.min.apply(null,ys), maxY=Math.max.apply(null,ys);
+  const pad=8; minX-=pad; minY-=pad; maxX+=pad; maxY+=pad;
+  const w=maxX-minX, h=maxY-minY, side=Math.max(w,h,120);
+  const cx=(minX+maxX)/2, cy=(minY+maxY)/2;
+  return [(cx-side/2).toFixed(1),(cy-side/2).toFixed(1),side.toFixed(1),side.toFixed(1)].join(' ');
+}
 function bodySVG(cr, opts){
   opts = opts || {};
   const c = cr.color || '#F4B8C4';
@@ -558,22 +575,33 @@ function bodySVG(cr, opts){
   const d = blobPath(cr.shape);
   const cpId = opts.clipPathId ? ' id="'+opts.clipPathId+'"' : '';
   const hairId = opts.hairId ? ' id="'+opts.hairId+'"' : '';
-  const hx = hairExtraSVG(cr);
+  const hairRoot = darkenHex(c,0.16);
+  const hasTip = !!cr.hairTip;
+  const hangFill = hasTip ? 'url(#hgl'+g+')' : hairRoot;
+  const hairCls = hasTip ? '' : ' class="hairbase"';
+  const hairGrad = hasTip ? ('<linearGradient id="hgl'+g+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+hairRoot+'"/><stop offset="0.3" stop-color="'+hairRoot+'"/><stop offset="1" stop-color="'+cr.hairTip+'"/></linearGradient>') : '';
+  const hairBlobD = blobPath(cr.hairShape);
+  const hairLayer = hasTip
+    ? '<path'+hairId+' d="'+hairBlobD+'" fill="'+cr.hairTip+'" stroke="rgba(0,0,0,.06)" stroke-width="1.5"/><path d="'+hairBlobD+'" fill="'+hairRoot+'" transform="translate(60 62) scale(0.85) translate(-60 -62)"/>'
+    : '<path'+hairId+' class="hairbase" d="'+hairBlobD+'" fill="'+hairRoot+'" stroke="rgba(0,0,0,.06)" stroke-width="1.5"/>';
+  const hx = hairExtraSVG(cr, hangFill, hairCls);
   const topY = shapeTopY(cr.shape);
   const hairDy = Math.max(-6, Math.min(10, topY-35));
-  return '<svg class="portrait" viewBox="0 0 120 120" aria-hidden="true">'
+  return '<svg class="portrait" viewBox="'+creatureViewBox(cr)+'" aria-hidden="true">'
     +'<defs>'
       +'<clipPath id="clip'+g+'"><path'+cpId+' d="'+d+'"/></clipPath>'
       +'<radialGradient id="hi'+g+'" cx="33%" cy="22%" r="60%"><stop offset="0" stop-color="#FFF6E2" stop-opacity=".62"/><stop offset="58%" stop-color="#FFF6E2" stop-opacity="0"/></radialGradient>'
       +'<radialGradient id="sh'+g+'" cx="73%" cy="100%" r="78%"><stop offset="0" stop-color="#3A2E48" stop-opacity=".32"/><stop offset="72%" stop-color="#3A2E48" stop-opacity="0"/></radialGradient>'
       +'<radialGradient id="ct'+g+'" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#3A2E48" stop-opacity=".30"/><stop offset="68%" stop-color="#3A2E48" stop-opacity="0"/></radialGradient>'
       +'<filter id="hsh'+g+'" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="1.3" stdDeviation="0.9" flood-color="#3A2E48" flood-opacity="0.45"/></filter>'
+      +((cr.hair!=='off'&&cr.hairTip) ? '<linearGradient id="htip'+g+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+cr.hairTip+'"/><stop offset="0.38" stop-color="'+cr.hairTip+'" stop-opacity="0.7"/><stop offset="0.72" stop-color="'+cr.hairTip+'" stop-opacity="0"/></linearGradient>' : '')
     +'</defs>'
     +'<ellipse cx="60" cy="113" rx="19" ry="5" fill="url(#ct'+g+')"><animate attributeName="rx" values="19;16;19" dur="3.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.62;1" dur="3.4s" repeatCount="indefinite"/></ellipse>'
     +legsSVG(cr.feet||'blocky', c)
     +hx.back
     +'<g transform="translate(60 46) scale(0.78) translate(-60 -62)">'
-      +(cr.hair!=='off' ? '<path'+hairId+' class="hairbase" d="'+blobPath(cr.hairShape)+'" fill="'+darkenHex(c,0.16)+'" stroke="rgba(0,0,0,.06)" stroke-width="1.5"/>' : '')
+      +(cr.hair!=='off' ? hairLayer : '')
+      +((cr.hair!=='off'&&cr.hairTip) ? '<path class="hairtip" d="'+blobPath(cr.hairShape)+'" fill="url(#htip'+g+')"/>' : '')
       +'<path'+bodyId+' class="cbody" d="'+d+'" fill="'+c+'" stroke="rgba(0,0,0,.05)" stroke-width="2"/>'
       +'<g clip-path="url(#clip'+g+')">'
         +'<rect x="0" y="0" width="120" height="120" fill="url(#sh'+g+')"/>'
@@ -586,9 +614,9 @@ function bodySVG(cr, opts){
       +mouthSVG(cr.mouth||'smile')
       +'<ellipse cx="41" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/><ellipse cx="79" cy="80" rx="6" ry="4" fill="rgba(226,96,122,'+blush+')"/>'
       +accessorySVG(cr.accessory||'none')
+      +hx.front
       +treatsSVG(cr, topY)
     +'</g>'
-    +hx.front
     +dressSVG(cr, c)
     +armsSVG(cr.arms||'paws', c)
     +'</svg>';
@@ -751,30 +779,39 @@ function shapeEditorHTML(){
     +'<div class="slider-row"><label>Height</label><input type="range" id="sh-h" min="0.6" max="1.45" step="0.01" value="'+h+'"></div>'
     +'<div class="shape-tools"><button type="button" class="btn small" data-act="round-shape">Round out</button></div>';
 }
-function hairExtraSVG(cr){
+function hairExtraSVG(cr, fill, klass){
   const e=cr.hairExtra||'none'; if(e==='none') return {back:'',front:''};
-  const col=darkenHex(cr.color||'#F4B8C4',0.16);
+  const f = fill || darkenHex(cr.color||'#F4B8C4',0.16);
+  const k = (klass==null) ? ' class="hairbase"' : klass;
   const st='stroke="rgba(0,0,0,.06)" stroke-width="1.4"';
-  const cls='class="hairbase"';
-  if(e==='bangs') return {back:'', front:'<path '+cls+' d="M35 41 C35 33 85 33 85 41 C81 51 76 44 71 51 C66 44 61 51 60 43 C59 51 54 44 49 51 C44 44 39 51 35 41 Z" fill="'+col+'" '+st+'/>'};
-  if(e==='pigtails') return {back:'<path '+cls+' d="M32 44 C14 50 12 76 22 92 C30 100 40 94 37 82 C31 70 35 56 42 50 Z" fill="'+col+'" '+st+'/><path '+cls+' d="M88 44 C106 50 108 76 98 92 C90 100 80 94 83 82 C89 70 85 56 78 50 Z" fill="'+col+'" '+st+'/>', front:''};
-  if(e==='braids'){ let L='',R=''; for(let i=0;i<6;i++){ const rr=(6-i*0.45).toFixed(1); L+='<circle '+cls+' cx="'+(25-i*0.4)+'" cy="'+(52+i*8)+'" r="'+rr+'" fill="'+col+'" '+st+'/>'; R+='<circle '+cls+' cx="'+(95+i*0.4)+'" cy="'+(52+i*8)+'" r="'+rr+'" fill="'+col+'" '+st+'/>'; } return {back:L+R, front:''}; }
-  if(e==='pony') return {back:'<path '+cls+' d="M86 44 C108 46 112 74 102 92 C96 100 88 96 89 84 C95 70 88 54 80 50 Z" fill="'+col+'" '+st+'/>', front:''};
+  if(e==='bangs'){
+    const p='M40 50 Q60 33 80 50 Q78 58 74 60 Q71 55 70 51 Q67 58 64 60 Q61 55 60 52 Q59 55 56 60 Q53 58 50 51 Q49 55 46 60 Q42 58 40 50 Z';
+    return {back:'', front:'<path'+k+' d="'+p+'" fill="'+f+'" '+st+'/>'};
+  }
+  if(e==='pigtails') return {back:'<path'+k+' d="M32 44 C14 50 12 76 22 92 C30 100 40 94 37 82 C31 70 35 56 42 50 Z" fill="'+f+'" '+st+'/><path'+k+' d="M88 44 C106 50 108 76 98 92 C90 100 80 94 83 82 C89 70 85 56 78 50 Z" fill="'+f+'" '+st+'/>', front:''};
+  if(e==='braids'){ let L='',R=''; for(let i=0;i<6;i++){ const rr=(6-i*0.45).toFixed(1); L+='<circle'+k+' cx="'+(25-i*0.4)+'" cy="'+(52+i*8)+'" r="'+rr+'" fill="'+f+'" '+st+'/>'; R+='<circle'+k+' cx="'+(95+i*0.4)+'" cy="'+(52+i*8)+'" r="'+rr+'" fill="'+f+'" '+st+'/>'; } return {back:L+R, front:''}; }
+  if(e==='pony') return {back:'<path'+k+' d="M86 44 C108 46 112 74 102 92 C96 100 88 96 89 84 C95 70 88 54 80 50 Z" fill="'+f+'" '+st+'/>', front:''};
   return {back:'',front:''};
 }
 function hairEditorHTML(){
   const on = draft.hair!=='off';
   const pts=shapePts(draft.hairShape);
-  const handles=pts.map((p,i)=>'<g class="sh-handle" data-idx="'+i+'" transform="translate('+p[0].toFixed(2)+' '+p[1].toFixed(2)+')"><circle class="sh-hit" r="10"/><circle class="sh-dot" r="4.5"/></g>').join('');
+  const handles=pts.map((p,i)=>'<g class="sh-handle" data-idx="'+i+'" transform="translate('+p[0].toFixed(2)+' '+p[1].toFixed(2)+')"><circle class="sh-hit" r="13"/><circle class="sh-dot" r="5.5"/></g>').join('');
   const presets=Object.keys(HAIR_PRESETS).map(k=>'<button type="button" class="trait" data-hairpreset="'+k+'">'+k.charAt(0).toUpperCase()+k.slice(1)+'</button>').join('');
   const w=draft.hairShape.w||1, h=draft.hairShape.h||1;
   return '<div class="sublab">Hair <span class="sublab-note">tap a start, then drag the dots</span></div>'
     +'<div class="preset-row"><button type="button" class="trait'+(on?' sel':'')+'" data-hairon="on">Hair on</button><button type="button" class="trait'+(!on?' sel':'')+'" data-hairon="off">No hair</button></div>'
     +'<div id="hair-edwrap" style="'+(on?'':'display:none')+'">'
       +'<div class="preset-row">'+presets+'</div>'
-      +'<svg id="hair-editor" viewBox="0 0 120 120"><path d="'+blobPath(draft.shape)+'" fill="#000" opacity="0.08"/><path id="hair-blob" class="sh-blob" d="'+blobPath(draft.hairShape)+'" fill="'+darkenHex(draft.color,0.16)+'"/>'+handles+'</svg>'
-      +'<div class="slider-row"><label>Width</label><input type="range" id="hair-w" min="0.6" max="1.5" step="0.01" value="'+w+'"></div>'
-      +'<div class="slider-row"><label>Height</label><input type="range" id="hair-h" min="0.6" max="1.5" step="0.01" value="'+h+'"></div>'
+      +'<svg id="hair-editor" viewBox="-38 -42 196 196"><path d="'+blobPath(draft.shape)+'" fill="#000" opacity="0.08"/><path id="hair-blob" class="sh-blob" d="'+blobPath(draft.hairShape)+'" fill="'+darkenHex(draft.color,0.16)+'"/>'+handles+'</svg>'
+      +'<div class="slider-row"><label>Width</label><input type="range" id="hair-w" min="0.65" max="1.4" step="0.01" value="'+w+'"></div>'
+      +'<div class="slider-row"><label>Height</label><input type="range" id="hair-h" min="0.65" max="1.4" step="0.01" value="'+h+'"></div>'
+      +'<div class="sublab">Hair tips <span class="sublab-note">color the top of the hair</span></div>'
+      +'<div class="swatches" id="tipswatches">'
+        +'<div class="sw sw-same '+(!draft.hairTip?'sel':'')+'" data-hairtip="none">none</div>'
+        +TIP_COLORS.map(hex=>'<div class="sw '+(draft.hairTip===hex?'sel':'')+'" data-hairtip="'+hex+'" style="background:'+hex+'"><span class="tick">\u2713</span></div>').join('')
+        +'<label class="ccustom">Any<br>color<input type="color" id="tipcolor" value="'+(draft.hairTip||'#FFD83B')+'"></label>'
+      +'</div>'
     +'</div>';
 }
 function renderHairEditor(){
@@ -789,15 +826,16 @@ function updateHairPreview(){ const h=document.getElementById('pv-hair'); if(h) 
 let hairDrag=null;
 function hairEditorWire(){
   const svg=document.getElementById('hair-editor'); if(!svg) return;
-  const toSvg=(e)=>{ const r=svg.getBoundingClientRect(); return [ (e.clientX-r.left)/r.width*120, (e.clientY-r.top)/r.height*120 ]; };
+  const VB=[-38,-42,196,196];
+  const toSvg=(e)=>{ const r=svg.getBoundingClientRect(); return [ VB[0]+(e.clientX-r.left)/r.width*VB[2], VB[1]+(e.clientY-r.top)/r.height*VB[3] ]; };
   let raf=0, pend=null;
-  const apply=()=>{ raf=0; if(pend==null) return; const i=pend[0], rr=pend[1]; pend=null; draft.hairShape.r[i]=rr; renderHairEditor(); updateHairPreview(); };
+  const apply=()=>{ raf=0; if(pend==null) return; const i=pend[0], rr=pend[1]; pend=null; draft.hairShape.r[i]=rr; renderHairEditor(); };
   const onMove=(e)=>{
     if(hairDrag==null) return; e.preventDefault();
     const xy=toSvg(e); const i=hairDrag; const ang=-Math.PI/2+i*(2*Math.PI/12);
     const w=draft.hairShape.w||1, h=draft.hairShape.h||1;
     const ux=(xy[0]-60)/w, uy=(xy[1]-62)/h;
-    let rr=ux*Math.cos(ang)+uy*Math.sin(ang); rr=Math.max(14,Math.min(58,rr));
+    let rr=ux*Math.cos(ang)+uy*Math.sin(ang); rr=Math.max(14,Math.min(64,rr));
     pend=[i,rr]; if(!raf) raf=requestAnimationFrame(apply);
   };
   const onUp=()=>{ if(hairDrag!=null){ hairDrag=null; if(raf){cancelAnimationFrame(raf);raf=0;} apply(); rebuildCreature(); window.removeEventListener('pointermove',onMove); window.removeEventListener('pointerup',onUp); window.removeEventListener('pointercancel',onUp); } };
@@ -1015,9 +1053,16 @@ function wire(){
     renderHairEditor(); rebuildCreature();
   }));
   const hw=document.getElementById('hair-w');
-  if(hw){ hw.addEventListener('input',()=>{ draft.hairShape.w=parseFloat(hw.value); renderHairEditor(); updateHairPreview(); }); hw.addEventListener('change',()=>rebuildCreature()); }
+  if(hw){ hw.addEventListener('input',()=>{ draft.hairShape.w=parseFloat(hw.value); renderHairEditor(); }); hw.addEventListener('change',()=>rebuildCreature()); }
   const hh=document.getElementById('hair-h');
-  if(hh){ hh.addEventListener('input',()=>{ draft.hairShape.h=parseFloat(hh.value); renderHairEditor(); updateHairPreview(); }); hh.addEventListener('change',()=>rebuildCreature()); }
+  if(hh){ hh.addEventListener('input',()=>{ draft.hairShape.h=parseFloat(hh.value); renderHairEditor(); }); hh.addEventListener('change',()=>rebuildCreature()); }
+  document.querySelectorAll('#tipswatches .sw').forEach(s=>s.addEventListener('click',()=>{ const v=s.getAttribute('data-hairtip'); draft.hairTip=(v==='same'?null:v); document.querySelectorAll('#tipswatches .sw').forEach(x=>x.classList.remove('sel')); s.classList.add('sel'); rebuildCreature(); }));
+  const tc=document.getElementById('tipcolor'); if(tc) tc.addEventListener('input',()=>{ draft.hairTip=tc.value; document.querySelectorAll('#tipswatches .sw').forEach(x=>x.classList.remove('sel')); rebuildCreature(); });
+  document.querySelectorAll('#tipswatches .sw').forEach(s=>s.addEventListener('click',()=>{
+    const v=s.getAttribute('data-hairtip'); draft.hairTip=(v==='none'?null:v);
+    document.querySelectorAll('#tipswatches .sw').forEach(x=>x.classList.remove('sel'));
+    s.classList.add('sel'); rebuildCreature();
+  }));
   reWireBday();
   document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{
     draft.shape={r:SHAPE_PRESETS[b.getAttribute('data-preset')].slice(),w:1,h:1};
