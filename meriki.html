@@ -461,6 +461,21 @@ footer .wrap{position:relative;z-index:3}
   </div>
 </section>
 
+<!-- ============ PLAY (Salon Dash) ============ -->
+<section id="play" style="background:linear-gradient(165deg,#1d1316,var(--noir));color:var(--bone);overflow:hidden">
+  <div class="aurora" data-aurora></div>
+  <div class="wrap" style="position:relative;z-index:2">
+    <div class="section-head reveal" style="margin-inline:auto;text-align:center">
+      <p class="eyebrow">A little fun</p>
+      <h2 style="color:var(--bone)">Run my chair in <em style="color:var(--coral-bright);font-style:italic">Salon Dash</em></h2>
+    </div>
+    <p class="reveal" style="color:rgba(244,239,232,.74);max-width:46ch;margin:6px auto 32px;text-align:center">Seat clients, nail the color, beat the clock. A tiny salon game — see how long you can keep everyone happy.</p>
+    <div class="reveal" style="text-align:center">
+      <button class="btn" id="playBtn"><span>Play Salon Dash</span></button>
+    </div>
+  </div>
+</section>
+
 <!-- ============ BOOK ============ -->
 <section class="book" id="book">
   <div class="wrap reveal">
@@ -591,6 +606,33 @@ document.querySelectorAll(".reveal,.stagger").forEach(el=>io.observe(el));
       document.getElementById("quiz").scrollIntoView({behavior:reduce?"auto":"smooth"});
     });
   });
+})();
+</script>
+<!-- ============ Salon Dash overlay ============ -->
+<style>
+  #game-overlay{position:fixed;inset:0;z-index:1000;background:#16100f;display:none}
+  #game-overlay.open{display:block}
+  #game-frame{width:100%;height:100%;border:0;display:block}
+  #game-close{position:fixed;top:14px;right:14px;z-index:1001;width:44px;height:44px;border-radius:50%;
+    background:rgba(244,239,232,.94);color:#1a1417;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 24px -8px rgba(0,0,0,.6);cursor:pointer;border:none;font-family:var(--body)}
+  html.game-open,body.game-open{overflow:hidden}
+</style>
+<div id="game-overlay" aria-hidden="true">
+  <button id="game-close" aria-label="Close game">&times;</button>
+  <iframe id="game-frame" title="Salon Dash" src="about:blank"></iframe>
+</div>
+<script>
+(function(){
+  var ov=document.getElementById('game-overlay'),
+      fr=document.getElementById('game-frame'),
+      openBtn=document.getElementById('playBtn'),
+      closeBtn=document.getElementById('game-close');
+  function show(){ fr.src='salon-dash.html'; ov.classList.add('open'); ov.setAttribute('aria-hidden','false'); document.documentElement.classList.add('game-open'); document.body.classList.add('game-open'); }
+  function hide(){ ov.classList.remove('open'); ov.setAttribute('aria-hidden','true'); document.documentElement.classList.remove('game-open'); document.body.classList.remove('game-open'); fr.src='about:blank'; }
+  if(openBtn) openBtn.addEventListener('click',show);
+  if(closeBtn) closeBtn.addEventListener('click',hide);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&ov.classList.contains('open')) hide(); });
 })();
 </script>
 </body>
