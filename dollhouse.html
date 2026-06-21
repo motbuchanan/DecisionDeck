@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#FFF8F2">
-<title>Dollhouse</title>
+<title>Storyhouse</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -168,6 +168,10 @@ nav{flex:0 0 auto;display:flex;background:var(--card);box-shadow:0 -3px 16px var
 .rname{flex:1;border:2px solid var(--line);background:var(--card);border-radius:14px;padding:10px 12px;font-family:'Fredoka';font-weight:500;font-size:15px;color:var(--ink);-webkit-user-select:text;user-select:text;}
 .rname:focus{outline:none;border-color:var(--teal);}
 .rdel{border:none;background:#FFE7E2;color:var(--coral-d);border-radius:14px;padding:0 16px;font-family:'Fredoka';font-weight:500;font-size:14px;cursor:pointer;}
+@keyframes breathe{0%,100%{transform:translateY(0) scaleY(1);}50%{transform:translateY(-2px) scaleY(1.013);}}
+.breathe{transform-box:fill-box;transform-origin:50% 100%;animation:breathe 4s ease-in-out infinite;}
+@keyframes sway{0%,100%{transform:rotate(-0.8deg);}50%{transform:rotate(0.8deg);}}
+@media (prefers-reduced-motion: reduce){.breathe{animation:none;}}
 </style>
 </head>
 <body>
@@ -179,7 +183,7 @@ nav{flex:0 0 auto;display:flex;background:var(--card);box-shadow:0 -3px 16px var
     <div class="brand">
       <svg class="logo" viewBox="0 0 40 40" fill="none"><path d="M20 5 L34 16 V34 H6 V16 Z" fill="#FFC94D"/><path d="M20 5 L34 16 H6 Z" fill="#FF7A66"/><rect x="16" y="23" width="8" height="11" rx="1" fill="#fff"/><circle cx="20" cy="18.5" r="2.4" fill="#4FC2B8"/></svg>
       <div style="min-width:0;">
-        <h1>Dollhouse</h1>
+        <h1>Storyhouse</h1>
         <div class="story-name" id="hdrName">make a little life</div>
       </div>
     </div>
@@ -383,8 +387,8 @@ const DEFS=`<defs>
 const TORSO=`M58 184 C58 172 68 166 80 166 L160 166 C172 166 182 172 182 184 L176 256 Q188 300 166 306 L74 306 Q52 300 64 256 Z`;
 const ARM_L=`M46 178 q0 -13 12 -13 q12 0 12 13 l0 110 q0 14 -12 14 q-12 0 -12 -14 Z`;
 const ARM_R=`M170 178 q0 -13 12 -13 q12 0 12 13 l0 110 q0 14 -12 14 q-12 0 -12 -14 Z`;
-const LEG_L=`M82 300 h32 v138 q0 12 -16 12 q-16 0 -16 -12 Z`;
-const LEG_R=`M126 300 h32 v138 q0 12 -16 12 q-16 0 -16 -12 Z`;
+const LEG_L=`M80 300 h32 v140 q0 13 -16 13 q-16 0 -16 -13 Z`;
+const LEG_R=`M128 300 h32 v140 q0 13 -16 13 q-16 0 -16 -13 Z`;
 
 function buildDoll(c){
   __P=[];
@@ -400,9 +404,7 @@ function buildDoll(c){
   s+=paint([LEG_L,LEG_R],skin);
   s+=paint([LEG_L,LEG_R],"url(#gLimb)");
   // inner-leg shadow
-  s+=`<path d="M114 300 h2 v140 h-2 Z" fill="${skinSh}" opacity="0.5"/><path d="M124 300 h2 v140 h-2 Z" fill="${skinSh}" opacity="0.5"/>`;
-  // shoes
-  s+=shoe2(c.shoes.style,resolve(c.shoes.base),resolve(c.shoes.ink));
+  s+=`<path d="M110 304 h2 v138 h-2 Z" fill="${skinSh}" opacity="0.45"/><path d="M128 304 h2 v138 h-2 Z" fill="${skinSh}" opacity="0.45"/>`;
   // ---- arms (skin) ---- (drawn before torso so shoulders fuse)
   s+=paint([ARM_L,ARM_R],skin);
   s+=paint([ARM_L,ARM_R],"url(#gLimb)");
@@ -418,6 +420,8 @@ function buildDoll(c){
     const gt=top2(c.top.style); const tf=fillFor(c.top.pattern,resolve(c.top.base),resolve(c.top.ink));
     s+=paint(gt.parts,tf)+paint(gt.parts,"url(#gV)")+gt.details(resolve(c.top.ink));
   }
+  // ---- shoes (drawn over pant cuffs so they read clearly) ----
+  s+=shoe2(c.shoes.style,resolve(c.shoes.base),resolve(c.shoes.ink));
   // ---- neck + head ----
   s+=`<path d="M104 150 h32 v22 q0 10 -16 10 q-16 0 -16 -10 Z" fill="${skin}"/>`;
   s+=`<path d="M104 168 q16 10 32 0 v6 q-16 9 -32 0 Z" fill="${skinSh}" opacity="0.55"/>`; // neck shadow
@@ -511,8 +515,8 @@ function top2(style){
 /* ---- bottoms ---- */
 function bottom2(style){
   switch(style){
-    case "pants": return {parts:[`M80 276 L160 276 L156 440 Q156 450 142 450 L130 450 Q122 450 121 440 L120 320 L119 440 Q118 450 110 450 L98 450 Q84 450 84 440 Z`],details:()=>""};
-    case "shorts": return {parts:[`M80 276 L160 276 L158 356 Q158 364 148 364 L128 364 L120 318 L112 364 L92 364 Q82 364 82 356 Z`],details:()=>""};
+    case "pants": return {parts:[`M86 280 H154 Q162 280 162 291 V316 H78 V291 Q78 280 86 280 Z`,`M78 310 h36 v128 q0 13 -18 13 q-18 0 -18 -13 Z`,`M126 310 h36 v128 q0 13 -18 13 q-18 0 -18 -13 Z`],details:()=>""};
+    case "shorts": return {parts:[`M86 280 H154 Q162 280 162 291 V316 H78 V291 Q78 280 86 280 Z`,`M78 310 h36 v46 q0 11 -18 11 q-18 0 -18 -11 Z`,`M126 310 h36 v46 q0 11 -18 11 q-18 0 -18 -11 Z`],details:()=>""};
     case "skirt": return {parts:[`M78 276 L162 276 L182 350 Q120 366 58 350 Z`],details:()=>""};
     case "longskirt": return {parts:[`M78 276 L162 276 L188 446 Q120 462 52 446 Z`],details:()=>""};
     default: return {parts:[],details:()=>""};
@@ -529,22 +533,22 @@ function dress2(style){
 }
 /* ---- shoes (real feet, forward-facing) ---- */
 function shoe2(style,base,ink){
-  const baseSh=shade(base,-0.18), baseHi=shade(base,0.16);
-  // left foot center ~99, right ~141, ground ~452
-  function pair(d){ return `<g transform="translate(99,452)">${d}</g><g transform="translate(141,452)">${d}</g>`; }
+  const baseSh=shade(base,-0.20);
+  function pair(d){ return `<g transform="translate(96,452)">${d}</g><g transform="translate(144,452)">${d}</g>`; }
   if(style==="sneaker"){
-    const d=`<path d="M-17 -16 q-1 -8 7 -8 h12 q8 0 9 8 l2 8 q1 8 -7 9 l-22 0 q-6 0 -6 -6 Z" fill="${base}"/>
-      <ellipse cx="-1" cy="0" rx="20" ry="7" fill="#ffffff"/>
-      <path d="M-2 -22 q3 8 1 14" stroke="${ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-      <path d="M-17 -16 q-1 -8 7 -8 h12 q8 0 9 8" fill="url(#gV)"/>`;
+    const d=`<ellipse cx="-1" cy="3" rx="20" ry="6.5" fill="#ffffff"/>
+      <path d="M-18 -19 q-2 -10 9 -10 h11 q11 0 13 10 l2 10 q1 8 -8 9 l-27 0 q-7 0 -7 -8 Z" fill="${base}"/>
+      <path d="M-18 -19 q-2 -10 9 -10 h11 q11 0 13 10 l2 4 l-35 0 Z" fill="url(#gV)"/>
+      <path d="M-3 -27 q5 9 3 18" stroke="${ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <path d="M-14 -4 l28 0" stroke="#ffffff" stroke-width="3" opacity="0.6" stroke-linecap="round"/>`;
     return pair(d);
   }
   if(style==="flat"){
-    const d=`<path d="M-16 -10 q0 -7 8 -7 h10 q8 0 8 7 l1 5 q1 6 -7 7 l-14 0 q-6 0 -6 -6 Z" fill="${base}"/><path d="M-16 -10 q0 -7 8 -7 h10 q8 0 8 7" fill="url(#gV)"/>`;
+    const d=`<ellipse cx="-1" cy="2" rx="17" ry="5" fill="${baseSh}"/><path d="M-16 -11 q0 -9 9 -9 h10 q9 0 9 9 l1 6 q1 6 -7 7 l-15 0 q-7 0 -7 -7 Z" fill="${base}"/><path d="M-16 -11 q0 -9 9 -9 h10 q9 0 9 9 l1 3 l-30 0 Z" fill="url(#gV)"/>`;
     return pair(d);
   }
   if(style==="boot"){
-    const d=`<path d="M-12 -34 h16 q4 0 4 6 l1 22 q8 1 9 7 l1 5 q1 6 -7 6 l-22 0 q-6 0 -6 -6 l0 -40 q0 -6 5 -6 Z" fill="${base}"/><path d="M-13 -10 h28" stroke="${baseSh}" stroke-width="3" opacity="0.5"/><path d="M-12 -34 h16 q4 0 4 6 l0 8 h-24 l0 -8 q0 -6 4 -6 Z" fill="url(#gV)"/>`;
+    const d=`<path d="M-13 -38 h17 q5 0 5 7 l1 22 q9 1 11 8 l1 6 q1 7 -8 7 l-28 0 q-7 0 -7 -7 l0 -43 q0 -7 5 -7 Z" fill="${base}"/><path d="M-14 -8 h33" stroke="${baseSh}" stroke-width="3" opacity="0.55"/><path d="M-13 -38 h17 q5 0 5 7 l0 9 h-27 l0 -9 q0 -7 5 -7 Z" fill="url(#gV)"/>`;
     return pair(d);
   }
   return "";
@@ -623,12 +627,12 @@ function renderStudio(){
   const svg=$("#dollSvg");
   if(active.kind==="person"){
     svg.setAttribute("viewBox","0 0 240 480");
-    svg.innerHTML=buildDoll(ent).inner;
+    svg.innerHTML='<g class="breathe">'+buildDoll(ent).inner+'</g>';
     $("#whoTag").textContent = ent.build==="child"?"Child":"Adult";
     $("#inMemberName").placeholder="Name";
   } else {
     svg.setAttribute("viewBox","0 0 200 190");
-    svg.innerHTML=buildPet(ent).inner;
+    svg.innerHTML='<g class="breathe">'+buildPet(ent).inner+'</g>';
     $("#whoTag").textContent = nm(ent.kind);
     $("#inMemberName").placeholder=nm(ent.kind)+" name";
   }
@@ -766,7 +770,7 @@ function spark(){
 }
 
 /* ============================ PERSISTENCE ============================ */
-const LS="dollhouse.households.v1";
+const LS="storyhouse.households.v1";
 function loadHouses(){ try{HOUSES=JSON.parse(localStorage.getItem(LS))||[];}catch(e){HOUSES=[];} }
 function saveHouses(){ try{localStorage.setItem(LS,JSON.stringify(HOUSES));}catch(e){} }
 function snapshot(){ return JSON.parse(JSON.stringify(state)); }
@@ -854,7 +858,7 @@ async function renderCard(){
   ctx.fillStyle="#3A3340"; ctx.textAlign="center"; ctx.font="700 60px Fredoka, sans-serif";
   ctx.fillText(state.name||"A little household",W/2,128);
   ctx.font="600 28px Nunito, sans-serif"; ctx.fillStyle="#6E5B86";
-  wrapText(ctx,state.premise||"made in Dollhouse",W/2,180,W-150,36);
+  wrapText(ctx,state.premise||"made in Storyhouse",W/2,180,W-150,36);
   // people row (bottom-aligned, fit to column width)
   const people=state.members.slice(0,4);
   const padX=50, gap=20, maxPH=470, baseline=790;
@@ -881,19 +885,19 @@ async function renderCard(){
     }
   }
   ctx.textAlign="center"; ctx.fillStyle="#8A8190"; ctx.font="700 26px Fredoka, sans-serif";
-  ctx.fillText("· made in Dollhouse ·",W/2,H-36);
+  ctx.fillText("· made in Storyhouse ·",W/2,H-36);
 }
 function downloadCard(){
   $("#cardCanvas").toBlob(b=>{
     const url=URL.createObjectURL(b),a=document.createElement("a");
-    a.href=url; a.download=(state.name||"dollhouse").replace(/\s+/g,"-").toLowerCase()+".png";
+    a.href=url; a.download=(state.name||"storyhouse").replace(/\s+/g,"-").toLowerCase()+".png";
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),2000);
   },"image/png");
 }
 async function shareCard(){
   $("#cardCanvas").toBlob(async b=>{
-    const file=new File([b],"dollhouse.png",{type:"image/png"});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){ try{await navigator.share({files:[file],title:state.name||"Dollhouse"});}catch(e){} }
+    const file=new File([b],"storyhouse.png",{type:"image/png"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){ try{await navigator.share({files:[file],title:state.name||"Storyhouse"});}catch(e){} }
     else downloadCard();
   },"image/png");
 }
@@ -1114,9 +1118,9 @@ function occupantsRender(room){
   const out=[];
   (room.occupants||[]).forEach(o=>{
     if(o.kind==="person"){ const m=state.members.find(x=>x.id===o.id); if(!m)return; const sc=0.31;
-      out.push({id:o.id,col:o.col,svg:(x)=>`<g transform="translate(${(x+25)-120*sc},${290-452*sc}) scale(${sc})">${buildDoll(m).inner}</g>`}); }
+      out.push({id:o.id,col:o.col,svg:(x)=>`<g transform="translate(${(x+25)-120*sc},${290-452*sc}) scale(${sc})"><g class="breathe">${buildDoll(m).inner}</g></g>`}); }
     else { const p=state.pets.find(x=>x.id===o.id); if(!p)return; const sc=0.42;
-      out.push({id:o.id,col:o.col,svg:(x)=>`<g transform="translate(${(x+25)-100*sc},${292-168*sc}) scale(${sc})">${buildPet(p).inner}</g>`}); }
+      out.push({id:o.id,col:o.col,svg:(x)=>`<g transform="translate(${(x+25)-100*sc},${292-168*sc}) scale(${sc})"><g class="breathe">${buildPet(p).inner}</g></g>`}); }
   });
   return out;
 }
