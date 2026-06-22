@@ -82,6 +82,19 @@ header.scrolled{background:rgba(22,16,15,.92);backdrop-filter:blur(12px);padding
 .brandmark{font-family:var(--display);font-size:1.35rem;font-weight:500;letter-spacing:.02em;color:var(--bone)}
 .brandmark small{display:block;font-family:var(--body);font-size:.55rem;letter-spacing:.34em;text-transform:uppercase;color:var(--coral);margin-top:-2px;font-weight:600}
 header .btn{padding:10px 22px;font-size:.82rem}
+  .hdr-actions{display:flex;align-items:center;gap:10px}
+  .game-launch{display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:999px;background:rgba(244,239,232,.10);border:1px solid rgba(244,239,232,.22);color:var(--bone);font-family:var(--body);font-weight:600;font-size:.82rem;letter-spacing:.01em;cursor:pointer;transition:background .25s var(--ease),border-color .25s var(--ease),color .25s var(--ease),transform .25s var(--ease)}
+  .game-launch:hover{background:rgba(244,239,232,.16);border-color:var(--coral);color:var(--coral-bright);transform:translateY(-1px)}
+  .gl-ico{width:30px;height:30px;border-radius:9px;display:block;flex:none;box-shadow:0 4px 12px -5px rgba(0,0,0,.55)}
+  @media(max-width:560px){.game-launch{display:none}}
+  .game-callout{display:flex;align-items:center;gap:14px;width:100%;max-width:440px;margin-top:24px;text-align:left;padding:14px 16px;border-radius:18px;background:rgba(244,239,232,.06);border:1px solid rgba(244,239,232,.18);color:var(--bone);cursor:pointer;transition:background .25s var(--ease),border-color .25s var(--ease),transform .25s var(--ease),box-shadow .25s var(--ease)}
+  .game-callout:hover{background:rgba(221,125,99,.12);border-color:var(--coral);transform:translateY(-2px);box-shadow:0 18px 40px -22px rgba(224,120,95,.9)}
+  .gc-ico{width:52px;height:52px;border-radius:14px;flex:none;box-shadow:0 10px 24px -10px rgba(0,0,0,.7)}
+  .gc-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .gc-kicker{font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--coral)}
+  .gc-title{font-family:var(--display);font-size:1.32rem;font-weight:500;line-height:1.05}
+  .gc-sub{font-size:.82rem;color:rgba(244,239,232,.72);line-height:1.3}
+  .gc-go{margin-left:auto;font-size:1.7rem;color:var(--coral);flex:none;line-height:1}
 
 /* HERO */
 .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px 24px 84px;background:linear-gradient(160deg,var(--noir),#241417);color:var(--bone);overflow:hidden}
@@ -241,10 +254,31 @@ footer .wrap{position:relative;z-index:3}
 </head>
 <body>
 
+<!-- Salon Dash logo (defined once, reused) -->
+<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true">
+  <defs><linearGradient id="sdg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1aa491"/><stop offset="1" stop-color="#0f6d63"/></linearGradient></defs>
+  <symbol id="sd-logo" viewBox="0 0 48 48">
+    <rect x="2" y="2" width="44" height="44" rx="13" fill="url(#sdg)"/>
+    <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M23 27 L35 12"/><path d="M25 27 L13 12"/>
+      <circle cx="16.5" cy="32" r="3.6"/><circle cx="31.5" cy="32" r="3.6"/>
+      <path d="M24 27 L19.4 29.6"/><path d="M24 27 L28.6 29.6"/>
+    </g>
+    <circle cx="24" cy="26.5" r="1.9" fill="#fff"/>
+    <path d="M36.5 10 l1.5 3.1 3.1 1.5 -3.1 1.5 -1.5 3.1 -1.5 -3.1 -3.1 -1.5 3.1 -1.5 z" fill="#e6b450"/>
+  </symbol>
+</svg>
+
 <!-- ============ HEADER ============ -->
 <header id="hdr">
   <a class="brandmark" href="#top">meriki<small>the main</small></a>
-  <a class="btn" data-book><span>Book the chair</span></a>
+  <div class="hdr-actions">
+    <button class="game-launch" data-play aria-label="Play Salon Dash">
+      <svg class="gl-ico" viewBox="0 0 48 48" aria-hidden="true"><use href="#sd-logo"/></svg>
+      <span class="gl-label">Salon Dash</span>
+    </button>
+    <a class="btn" data-book><span>Book the chair</span></a>
+  </div>
 </header>
 
 <!-- ============ HERO ============ -->
@@ -276,6 +310,15 @@ footer .wrap{position:relative;z-index:3}
       <a class="btn" data-book><span>Book the chair</span></a>
       <a class="btn btn--ghost" href="#quiz">Find your look ↓</a>
     </div>
+    <button class="game-callout reveal" data-play aria-label="Play Salon Dash, a little salon game">
+      <svg class="gc-ico" viewBox="0 0 48 48" aria-hidden="true"><use href="#sd-logo"/></svg>
+      <span class="gc-copy">
+        <span class="gc-kicker">Play the game</span>
+        <span class="gc-title">Salon Dash</span>
+        <span class="gc-sub">Seat clients, nail the color, beat the clock — see how long you last.</span>
+      </span>
+      <span class="gc-go" aria-hidden="true">&rsaquo;</span>
+    </button>
     <div class="creds">
       <span class="cred">One Shot Global Hair Awards</span>
       <span class="cred">Greater Cleveland · by appointment</span>
@@ -465,13 +508,14 @@ footer .wrap{position:relative;z-index:3}
 <section id="play" style="background:linear-gradient(165deg,#1d1316,var(--noir));color:var(--bone);overflow:hidden">
   <div class="aurora" data-aurora></div>
   <div class="wrap" style="position:relative;z-index:2">
+    <svg class="reveal" viewBox="0 0 48 48" aria-hidden="true" style="width:62px;height:62px;border-radius:16px;display:block;margin:0 auto 16px;box-shadow:0 14px 32px -12px rgba(0,0,0,.7)"><use href="#sd-logo"/></svg>
     <div class="section-head reveal" style="margin-inline:auto;text-align:center">
       <p class="eyebrow">A little fun</p>
       <h2 style="color:var(--bone)">Run my chair in <em style="color:var(--coral-bright);font-style:italic">Salon Dash</em></h2>
     </div>
     <p class="reveal" style="color:rgba(244,239,232,.74);max-width:46ch;margin:6px auto 32px;text-align:center">Seat clients, nail the color, beat the clock. A tiny salon game — see how long you can keep everyone happy.</p>
     <div class="reveal" style="text-align:center">
-      <button class="btn" id="playBtn"><span>Play Salon Dash</span></button>
+      <button class="btn" id="playBtn" data-play><span>Play Salon Dash</span></button>
     </div>
   </div>
 </section>
@@ -626,11 +670,10 @@ document.querySelectorAll(".reveal,.stagger").forEach(el=>io.observe(el));
 (function(){
   var ov=document.getElementById('game-overlay'),
       fr=document.getElementById('game-frame'),
-      openBtn=document.getElementById('playBtn'),
       closeBtn=document.getElementById('game-close');
   function show(){ fr.src='salon-dash.html'; ov.classList.add('open'); ov.setAttribute('aria-hidden','false'); document.documentElement.classList.add('game-open'); document.body.classList.add('game-open'); }
   function hide(){ ov.classList.remove('open'); ov.setAttribute('aria-hidden','true'); document.documentElement.classList.remove('game-open'); document.body.classList.remove('game-open'); fr.src='about:blank'; }
-  if(openBtn) openBtn.addEventListener('click',show);
+  document.querySelectorAll('[data-play]').forEach(function(b){ b.addEventListener('click',show); });
   if(closeBtn) closeBtn.addEventListener('click',hide);
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&ov.classList.contains('open')) hide(); });
 })();
