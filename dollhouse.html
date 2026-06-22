@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#FFF8F2">
-<title>Storyhouse</title>
+<title>Dollhouse</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -183,7 +183,7 @@ nav{flex:0 0 auto;display:flex;background:var(--card);box-shadow:0 -3px 16px var
     <div class="brand">
       <svg class="logo" viewBox="0 0 40 40" fill="none"><path d="M20 5 L34 16 V34 H6 V16 Z" fill="#FFC94D"/><path d="M20 5 L34 16 H6 Z" fill="#FF7A66"/><rect x="16" y="23" width="8" height="11" rx="1" fill="#fff"/><circle cx="20" cy="18.5" r="2.4" fill="#4FC2B8"/></svg>
       <div style="min-width:0;">
-        <h1>Storyhouse</h1>
+        <h1>Dollhouse</h1>
         <div class="story-name" id="hdrName">make a little life</div>
       </div>
     </div>
@@ -311,9 +311,9 @@ const HATS=["none","beanie","cap","sunhat"];
 const PATTERNS=["solid","stripe","dot","gingham","floral"];
 const PET_KINDS=["bird","cat","dog","bunny"];
 
-const ROLES=["a candle maker","a professional dog walker","a pastry chef","a backyard birdwatcher","a ghost-tour guide","a romance novelist","a beekeeper","a stadium organist","a competitive baker","a tide-pool biologist","a tiny-bakery owner","a thrift-store stylist","a houseplant whisperer","a retired magician","a late-night radio host","a wildlife illustrator","a cheese monger","a storm chaser","a lighthouse keeper","a botanical tattoo artist","a sourdough obsessive","a ballpark organ player"];
-const PLACES=["in a tropical city","in a treehouse village","above a corner bakery","on a creaky houseboat","in a snowed-in cabin","in a desert oasis town","on a foggy little island","in a loft full of birdcages","in a sunny cottage by a ballpark","in a greenhouse apartment","in a town where it's always autumn","in a lighthouse stuffed with books","in a converted old diner"];
-const TWISTS=["who keeps getting abducted by aliens","who is secretly a witch","who's training a crow to fetch the mail","who just adopted seven cats","who can talk to houseplants","who's haunted by a very polite ghost","who's hiding from a reality-TV crew","who bakes a new pie for every heartbreak","who's convinced the neighbor is a vampire","who collects storms in jars","who's quietly the best in the league","who only tells the truth on Tuesdays","who inherited a cursed cookbook","who's raising a baby owl","who runs an underground supper club"];
+const ROLES=["a candle maker","a professional dog walker","a pastry chef","a backyard birdwatcher","a ghost-tour guide","a romance novelist","a beekeeper","a stadium organist","a competitive baker","a tide-pool biologist","a tiny-bakery owner","a thrift-store stylist","a houseplant whisperer","a retired magician","a late-night radio host","a wildlife illustrator","a cheese monger","a storm chaser","a lighthouse keeper","a botanical tattoo artist","a sourdough obsessive","a ballpark organ player","a freelance taxidermist","a roller-rink DJ","a mushroom forager","a wedding-cake decorator","a koi-pond designer","a vintage-typewriter repairer","a planetarium narrator","a competitive birder","a llama farmer","a perfume maker","a puppet builder","a tarot reader","a hand-painted sign maker","a jam-and-preserves seller","a snow-cone vendor","a sea-glass jeweler","a cat-cafe owner","a hot-air-balloon pilot","an aquarium diver","a moody barista","a childrens-book author","a flea-market flipper","a parade-float builder","a Christmas-tree farmer","a karaoke-bar regular","a midnight baker","a museum night guard","a beach-town surf instructor","a antique-clock winder","a county-fair pie judge","a tugboat captain","a rooftop beekeeper","a glassblower","a cartographer of made-up places","a bird-call impressionist","a vintage-arcade fixer","a flower-truck florist","a backyard astronomer"];
+const PLACES=["in a tropical city","in a treehouse village","above a corner bakery","on a creaky houseboat","in a snowed-in cabin","in a desert oasis town","on a foggy little island","in a loft full of birdcages","in a sunny cottage by a ballpark","in a greenhouse apartment","in a town where it is always autumn","in a lighthouse stuffed with books","in a converted old diner","in a converted train car","in a town built on stilts","in a candy-colored row house","in a windmill by the sea","in an apartment over a record shop","on the edge of a sleepy vineyard","in a cabin full of wind chimes","in a city that floats","in a converted firehouse","in a cottage in a pumpkin patch","in a flat above a flower shop","in a desert Airstream","in a house grown from a giant tree","in a village under the northern lights","in a beach shack that smells like waffles","in a tiny home on wheels","in a manor with too many cats","in a clocktower downtown","in a bungalow by the boardwalk","in a fixer-upper on a dead-end street","in a cottage at the edge of a fog bank","in a high-rise above the night market","on a farm at the end of a dirt road"];
+const TWISTS=["who keeps getting abducted by aliens","who is secretly a witch","who is training a crow to fetch the mail","who just adopted seven cats","who can talk to houseplants","who is haunted by a very polite ghost","who is hiding from a reality-TV crew","who bakes a new pie for every heartbreak","who is convinced the neighbor is a vampire","who collects storms in jars","who is quietly the best in the league","who only tells the truth on Tuesdays","who inherited a cursed cookbook","who is raising a baby owl","who runs an underground supper club","who is secretly running from a baking rival","who adopted a goose with strong opinions","who swears the radio talks back","who is building a robot best friend","who keeps finding doors that were not there yesterday","who is the unofficial mayor of the block","who trades secrets for cookies","who is training for a pie-eating title","who insists the moon is following them","who is allergic to their own good luck","who keeps a journal the cat edits","who throws a feast every full moon","who is convinced spring is plotting something","who cannot stop rescuing crows","who is one bad day from opening a detective agency","who babysits a very small dragon","who is writing a tell-all about the neighbors","who is on a quest to taste every pie in town","who fosters retired racing pigeons","who keeps winning contests they never entered","who is teaching the parrot to gossip","who is searching for a lost lucky penny","who hosts a midnight book club for insomniacs"];
 
 const MAX_PEOPLE=4, MAX_PETS=4;
 
@@ -764,13 +764,16 @@ function removePet(id){
 
 /* ============================ SPARK ============================ */
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+let _lastSpark="";
 function spark(){
-  const p=`${cap(pick(ROLES))} ${pick(PLACES)}, ${pick(TWISTS)}.`;
+  let p="";
+  for(let i=0;i<8;i++){ p=`${cap(pick(ROLES))} ${pick(PLACES)}, ${pick(TWISTS)}.`; if(p!==_lastSpark) break; }
+  _lastSpark=p;
   $("#premiseText").textContent=p; $("#premiseCard").classList.add("show"); $("#premiseCard").dataset.premise=p;
 }
 
 /* ============================ PERSISTENCE ============================ */
-const LS="storyhouse.households.v1";
+const LS="dollhouse.households.v1";
 function loadHouses(){ try{HOUSES=JSON.parse(localStorage.getItem(LS))||[];}catch(e){HOUSES=[];} }
 function saveHouses(){ try{localStorage.setItem(LS,JSON.stringify(HOUSES));}catch(e){} }
 function snapshot(){ return JSON.parse(JSON.stringify(state)); }
@@ -858,7 +861,7 @@ async function renderCard(){
   ctx.fillStyle="#3A3340"; ctx.textAlign="center"; ctx.font="700 60px Fredoka, sans-serif";
   ctx.fillText(state.name||"A little household",W/2,128);
   ctx.font="600 28px Nunito, sans-serif"; ctx.fillStyle="#6E5B86";
-  wrapText(ctx,state.premise||"made in Storyhouse",W/2,180,W-150,36);
+  wrapText(ctx,state.premise||"made in Dollhouse",W/2,180,W-150,36);
   // people row (bottom-aligned, fit to column width)
   const people=state.members.slice(0,4);
   const padX=50, gap=20, maxPH=470, baseline=790;
@@ -885,19 +888,19 @@ async function renderCard(){
     }
   }
   ctx.textAlign="center"; ctx.fillStyle="#8A8190"; ctx.font="700 26px Fredoka, sans-serif";
-  ctx.fillText("· made in Storyhouse ·",W/2,H-36);
+  ctx.fillText("· made in Dollhouse ·",W/2,H-36);
 }
 function downloadCard(){
   $("#cardCanvas").toBlob(b=>{
     const url=URL.createObjectURL(b),a=document.createElement("a");
-    a.href=url; a.download=(state.name||"storyhouse").replace(/\s+/g,"-").toLowerCase()+".png";
+    a.href=url; a.download=(state.name||"dollhouse").replace(/\s+/g,"-").toLowerCase()+".png";
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),2000);
   },"image/png");
 }
 async function shareCard(){
   $("#cardCanvas").toBlob(async b=>{
-    const file=new File([b],"storyhouse.png",{type:"image/png"});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){ try{await navigator.share({files:[file],title:state.name||"Storyhouse"});}catch(e){} }
+    const file=new File([b],"dollhouse.png",{type:"image/png"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){ try{await navigator.share({files:[file],title:state.name||"Dollhouse"});}catch(e){} }
     else downloadCard();
   },"image/png");
 }

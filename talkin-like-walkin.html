@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talkin' Like Walkin'</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --stage:#0F0E13;
+    --panel:#17151C;
+    --panel-2:#1E1B24;
+    --paper:#E9E2D0;
+    --dim:#9A9281;
+    --faint:#5C5749;
+    --blue:#74A9C9;     /* the eyes */
+    --amber:#D9A14B;    /* the gold watch — the pause dot */
+    --red:#C24B3C;      /* menace / miss */
+    --green:#74B48A;    /* hit */
+    --line:rgba(233,226,208,0.12);
+    --line-2:rgba(233,226,208,0.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--stage);
+    color:var(--paper);
+    font-family:"Courier Prime",ui-monospace,monospace;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  /* spotlight wash on the stage */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(120% 80% at 50% -10%, rgba(217,161,75,0.10), transparent 55%),
+               radial-gradient(90% 60% at 80% 110%, rgba(116,169,201,0.07), transparent 60%);
+  }
+  .wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:0 20px 80px}
+
+  /* ---- marquee header ---- */
+  header.hero{padding:46px 0 26px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:"Oswald";text-transform:uppercase;letter-spacing:.42em;
+    font-weight:500;font-size:12px;color:var(--blue);margin:0 0 14px}
+  h1.marquee{
+    font-family:"Oswald";font-weight:700;text-transform:uppercase;
+    line-height:.92;letter-spacing:.01em;margin:0;
+    font-size:clamp(40px,9vw,92px);color:var(--paper);
+  }
+  h1.marquee .dot{color:var(--amber)}
+  .tag{margin:18px 0 0;max-width:60ch;color:var(--dim);font-size:15px}
+  .tag b{color:var(--paper);font-weight:700}
+
+  /* ---- nav tabs ---- */
+  nav.tabs{display:flex;flex-wrap:wrap;gap:2px;margin:22px 0 30px;
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;
+    background:linear-gradient(var(--stage) 70%, transparent);padding-top:8px}
+  nav.tabs button{
+    font-family:"Oswald";text-transform:uppercase;letter-spacing:.12em;font-weight:500;
+    font-size:13px;color:var(--dim);background:none;border:0;cursor:pointer;
+    padding:11px 14px;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+  nav.tabs button .n{color:var(--faint);margin-right:7px;font-family:"Courier Prime";font-weight:700}
+  nav.tabs button:hover{color:var(--paper)}
+  nav.tabs button.active{color:var(--amber);border-bottom-color:var(--amber)}
+  nav.tabs button.active .n{color:var(--amber)}
+  nav.tabs button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+  .panel{display:none;animation:fade .25s ease}
+  .panel.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  h2.sec{font-family:"Oswald";text-transform:uppercase;letter-spacing:.06em;
+    font-weight:600;font-size:clamp(24px,4vw,34px);margin:6px 0 4px}
+  .lede{color:var(--dim);max-width:64ch;margin:0 0 26px;font-size:15px}
+
+  /* ---- method cards ---- */
+  .rule{display:grid;grid-template-columns:54px 1fr;gap:18px;
+    padding:20px 0;border-top:1px solid var(--line-2)}
+  .rule:first-of-type{border-top:0}
+  .rule .mk{font-family:"Oswald";font-weight:700;font-size:30px;color:var(--amber);line-height:1}
+  .rule h3{font-family:"Oswald";text-transform:uppercase;letter-spacing:.08em;
+    font-weight:600;font-size:16px;margin:2px 0 7px;color:var(--paper)}
+  .rule p{margin:0;color:var(--dim);font-size:14.5px}
+  .rule .ex{margin-top:10px;color:var(--blue);font-size:14px}
+  .pausemark{color:var(--amber);font-weight:700;padding:0 .12em}
+  .lift{color:var(--paper);background:rgba(194,75,60,.22);
+    box-shadow:inset 0 -2px 0 var(--red);padding:0 .1em;font-weight:700;text-transform:uppercase}
+
+  .callout{border:1px solid var(--line);border-left:3px solid var(--blue);
+    background:var(--panel);padding:16px 18px;margin:26px 0 0;border-radius:2px}
+  .callout p{margin:0;color:var(--dim);font-size:14px}
+  .callout b{color:var(--paper)}
+
+  /* ---- shared controls ---- */
+  .btn{font-family:"Oswald";text-transform:uppercase;letter-spacing:.1em;font-weight:600;
+    font-size:13px;color:var(--stage);background:var(--amber);border:0;cursor:pointer;
+    padding:12px 20px;border-radius:2px;transition:transform .1s,filter .15s}
+  .btn:hover{filter:brightness(1.08)}
+  .btn:active{transform:translateY(1px)}
+  .btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+  .btn.ghost{background:none;color:var(--paper);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--amber);color:var(--amber)}
+  .btn.live{background:var(--red);color:var(--paper)}
+  .btn[disabled]{opacity:.4;cursor:not-allowed;filter:none}
+  .btnrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:22px}
+  .stagecard{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+    padding:26px 24px;margin:20px 0}
+
+  /* the practice line */
+  .scriptline{font-family:"Courier Prime";font-size:clamp(20px,3.4vw,28px);
+    line-height:1.85;letter-spacing:.01em;margin:6px 0 4px}
+  .scriptline .w{transition:color .15s}
+  .scriptline .pd{color:var(--amber);font-weight:700;padding:0 .18em;
+    text-shadow:0 0 10px rgba(217,161,75,.5)}
+  .scriptline .pd.long{letter-spacing:.1em}
+  .scriptline .em{color:var(--paper);background:rgba(194,75,60,.20);
+    box-shadow:inset 0 -2px 0 var(--red);padding:0 .12em;text-transform:uppercase;font-weight:700}
+  .delnote{font-family:"Oswald";text-transform:uppercase;letter-spacing:.1em;
+    font-size:12px;color:var(--faint);margin-top:14px}
+
+  /* meters */
+  .meters{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  @media(max-width:560px){.meters{grid-template-columns:1fr}}
+  .meter{background:var(--panel-2);border:1px solid var(--line-2);border-radius:2px;padding:12px 14px}
+  .meter .lab{font-family:"Oswald";text-transform:uppercase;letter-spacing:.12em;
+    font-size:11px;color:var(--dim);display:flex;justify-content:space-between}
+  .meter .lab .val{color:var(--paper);font-family:"Courier Prime"}
+  .bar{height:8px;background:rgba(0,0,0,.4);border-radius:6px;overflow:hidden;margin-top:9px}
+  .bar > i{display:block;height:100%;width:0%;border-radius:6px;
+    background:linear-gradient(90deg,var(--blue),var(--amber));transition:width .06s linear}
+
+  canvas{display:block;width:100%;border-radius:2px;background:var(--panel-2);
+    border:1px solid var(--line-2)}
+
+  /* results */
+  .verdict{font-family:"Oswald";text-transform:uppercase;letter-spacing:.06em;
+    font-weight:700;font-size:clamp(22px,4vw,30px);margin:4px 0 2px}
+  .verdict.good{color:var(--green)} .verdict.mid{color:var(--amber)} .verdict.low{color:var(--red)}
+  .scoregrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+  .stat{background:var(--panel-2);border:1px solid var(--line-2);border-radius:2px;padding:13px 15px}
+  .stat .k{font-family:"Oswald";text-transform:uppercase;letter-spacing:.1em;font-size:11px;color:var(--dim)}
+  .stat .v{font-size:22px;color:var(--paper);margin-top:3px}
+  .stat .v small{font-size:12px;color:var(--faint)}
+  .coach{color:var(--dim);font-size:14.5px;margin:14px 0 0;border-top:1px solid var(--line-2);padding-top:14px}
+  .coach b{color:var(--paper)}
+
+  /* walken-izer */
+  textarea{width:100%;min-height:120px;background:var(--panel-2);color:var(--paper);
+    border:1px solid var(--line);border-radius:3px;padding:14px;font-family:"Courier Prime";
+    font-size:16px;line-height:1.6;resize:vertical}
+  textarea:focus{outline:2px solid var(--blue);outline-offset:1px}
+  .out{margin-top:18px}
+
+  .hint{color:var(--faint);font-size:13px;margin-top:10px}
+  .mic-warn{color:var(--red);font-size:13px;margin-top:8px;display:none}
+  .pill{display:inline-block;font-family:"Oswald";text-transform:uppercase;letter-spacing:.1em;
+    font-size:11px;padding:3px 9px;border-radius:20px;border:1px solid var(--line);color:var(--dim)}
+  .pill.on{color:var(--green);border-color:var(--green)}
+  select{font-family:"Courier Prime";background:var(--panel-2);color:var(--paper);
+    border:1px solid var(--line);border-radius:2px;padding:9px 11px;font-size:14px}
+  select:focus{outline:2px solid var(--blue)}
+  footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);
+    color:var(--faint);font-size:12.5px}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">A Cadence Trainer</p>
+    <h1 class="marquee">Talkin'<span class="dot">·</span>Like<span class="dot">·</span>Walkin'</h1>
+    <p class="tag">You don't copy the voice. You copy the <b>punctuation he invented</b> — the pauses where you'd never pause, the stress on the wrong word, the flat line that suddenly jumps. Your mic checks the shape. <b>The dots are where you stop.</b></p>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="method" class="active"><span class="n">01</span>The Method</button>
+    <button data-tab="warmup"><span class="n">02</span>Calibrate</button>
+    <button data-tab="pause"><span class="n">03</span>The Pause</button>
+    <button data-tab="lift"><span class="n">04</span>The Lift</button>
+    <button data-tab="line"><span class="n">05</span>The Line</button>
+    <button data-tab="izer"><span class="n">06</span>Walken-izer</button>
+    <button data-tab="take"><span class="n">07</span>Free Take</button>
+  </nav>
+
+  <!-- 01 METHOD -->
+  <section class="panel show" id="method">
+    <h2 class="sec">The Method</h2>
+    <p class="lede">Six things make the impression. Learn them one at a time. None of them is the voice.</p>
+
+    <div class="rule">
+      <div class="mk">·</div>
+      <div>
+        <h3>One — The pause goes where you'd keep going</h3>
+        <p>Not at the comma. Mid-clause. Right before a small, unimportant word. He learned it in Astoria, hearing immigrant neighbors stop to find the English word — a staccato rhythm he kept on purpose.</p>
+        <p class="ex">I had a goldfish <span class="pausemark">·</span> once <span class="pausemark">·</span> it taught me everything I know <span class="pausemark">·</span> about patience</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="mk">!</div>
+      <div>
+        <h3>Two — Stress the word nobody stresses</h3>
+        <p>Lean hard on an article, a preposition, a throwaway. The emphasis lands somewhere the meaning didn't ask for.</p>
+        <p class="ex">There are <span class="lift">two</span> kinds of people <span class="pausemark">·</span> and I am <span class="lift">neither</span> of them</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="mk">—</div>
+      <div>
+        <h3>Three — Flat, then a jump</h3>
+        <p>Near-monotone for a stretch — almost robotic — then a sudden pitch spike on one word, then flat again. Limited variation makes the spikes hit.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="mk">···</div>
+      <div>
+        <h3>Four — Staccato bursts, often in threes</h3>
+        <p>Short bunches of words, broken cleanly, frequently grouped three at a time. Theatrical phrasing from his musical-stage years.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="mk">▲▼</div>
+      <div>
+        <h3>Five — Wide dynamic range</h3>
+        <p>Booming to near-whisper inside one line. Commit to the swing; don't deliver everything at one volume.</p>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="mk">?</div>
+      <div>
+        <h3>Six — Delete the punctuation, write your own</h3>
+        <p>His master trick: strip every mark from the script and re-author it. A statement becomes a question. A question becomes a statement. The flow stops being the writer's and starts being his. That's what the <b>Walken-izer</b> does to any sentence you give it.</p>
+      </div>
+    </div>
+
+    <div class="callout"><p><b>How to use this:</b> Calibrate your mic once, then drill 03–05 a few minutes each. The mic measures <b>rhythm and pitch shape</b> — not whether you nailed a specific word — so trust your ear alongside the numbers. The famous gold-watch monologue is the canonical study piece, but you'll practice on original lines built for each drill.</p></div>
+  </section>
+
+  <!-- 02 WARMUP -->
+  <section class="panel" id="warmup">
+    <h2 class="sec">Calibrate</h2>
+    <p class="lede">Turn the mic on and talk normally for a few seconds. You're confirming the analyzer can hear your pitch and your volume swings before you drill.</p>
+    <div class="stagecard">
+      <div class="btnrow">
+        <button class="btn" id="warm-toggle">Turn mic on</button>
+        <span class="pill" id="warm-pill">mic off</span>
+      </div>
+      <div class="meters">
+        <div class="meter">
+          <div class="lab"><span>Volume</span><span class="val" id="warm-vol">—</span></div>
+          <div class="bar"><i id="warm-volbar"></i></div>
+        </div>
+        <div class="meter">
+          <div class="lab"><span>Pitch</span><span class="val" id="warm-pitch">—</span></div>
+          <div class="bar"><i id="warm-pitchbar"></i></div>
+        </div>
+      </div>
+      <canvas id="warm-canvas" height="120" aria-label="live pitch trace"></canvas>
+      <p class="hint">Watch the trace flatten when you drone and spike when you emphasize. That up-and-down is the raw material of the whole impression.</p>
+      <p class="mic-warn" id="warm-warn">Couldn't reach the microphone. Allow mic access in your browser, then try again.</p>
+    </div>
+  </section>
+
+  <!-- 03 PAUSE -->
+  <section class="panel" id="pause">
+    <h2 class="sec">The Pause</h2>
+    <p class="lede">Speak the line out loud and <b>actually stop at every dot</b> — the long one (<span class="pausemark">··</span>) is a held beat. The mic doesn't read your words; it reads your silences. It's checking that you broke the line into staccato bursts instead of reading it smooth.</p>
+    <div class="stagecard">
+      <div class="btnrow">
+        <select id="pause-pick" aria-label="choose a line"></select>
+        <button class="btn ghost" id="pause-shuffle">New line</button>
+      </div>
+      <div class="scriptline" id="pause-text"></div>
+      <p class="delnote" id="pause-target"></p>
+      <div class="btnrow">
+        <button class="btn" id="pause-rec">Record the line</button>
+        <span class="pill" id="pause-pill">ready</span>
+      </div>
+      <canvas id="pause-canvas" height="110" aria-label="your silences and bursts"></canvas>
+      <div id="pause-result"></div>
+      <p class="mic-warn" id="pause-warn">Couldn't reach the microphone. Allow mic access, then try again.</p>
+    </div>
+  </section>
+
+  <!-- 04 LIFT -->
+  <section class="panel" id="lift">
+    <h2 class="sec">The Lift</h2>
+    <p class="lede">One word is marked. Say the line and <b>punch that word</b> — louder, or sharper — then drop back. The mic measures your dynamic range: did you actually commit to a swing, or stay flat?</p>
+    <div class="stagecard">
+      <div class="btnrow">
+        <button class="btn ghost" id="lift-shuffle">New line</button>
+      </div>
+      <div class="scriptline" id="lift-text"></div>
+      <p class="delnote" id="lift-target"></p>
+      <div class="btnrow">
+        <button class="btn" id="lift-rec">Record the line</button>
+        <span class="pill" id="lift-pill">ready</span>
+      </div>
+      <canvas id="lift-canvas" height="110" aria-label="your volume over time"></canvas>
+      <div id="lift-result"></div>
+      <p class="mic-warn" id="lift-warn">Couldn't reach the microphone. Allow mic access, then try again.</p>
+    </div>
+  </section>
+
+  <!-- 05 LINE -->
+  <section class="panel" id="line">
+    <h2 class="sec">The Line</h2>
+    <p class="lede">Press <b>Play shape</b> to hear an abstract target contour — flat, with sudden jumps. That's not his voice; it's the <b>pitch shape</b> of a Walken read, synthesized. Then record yourself matching the shape, and your trace overlays the target.</p>
+    <div class="stagecard">
+      <div class="btnrow">
+        <select id="line-pick" aria-label="choose a line"></select>
+        <button class="btn ghost" id="line-play">Play shape</button>
+        <button class="btn" id="line-rec">Record your match</button>
+        <span class="pill" id="line-pill">ready</span>
+      </div>
+      <div class="scriptline" id="line-text"></div>
+      <canvas id="line-canvas" height="170" aria-label="target contour and your pitch"></canvas>
+      <div id="line-result"></div>
+      <p class="hint">Amber = the target shape. Blue = you. You're matching the <b>up-and-down and the timing</b>, not the exact notes.</p>
+      <p class="mic-warn" id="line-warn">Couldn't reach the microphone. Allow mic access, then try again.</p>
+    </div>
+  </section>
+
+  <!-- 06 IZER -->
+  <section class="panel" id="izer">
+    <h2 class="sec">Walken-izer</h2>
+    <p class="lede">Paste any sentence. It strips the punctuation, re-inserts pauses where you'd least expect them, picks an unlikely word to stress, and flips the ending between statement and question — his actual method, applied to your words.</p>
+    <div class="card">
+      <textarea id="izer-in" placeholder="Type or paste a line. A grocery list works. A toast works. Anything works.">I really appreciate everyone coming out today and I hope you enjoy the show.</textarea>
+      <div class="btnrow">
+        <button class="btn" id="izer-go">Walken-ize it</button>
+        <button class="btn ghost" id="izer-again">Re-roll</button>
+        <label style="margin-left:auto;color:var(--dim);font-size:13px;display:flex;gap:8px;align-items:center">
+          intensity
+          <select id="izer-int">
+            <option value="0">light</option>
+            <option value="1" selected>medium</option>
+            <option value="2">full Walken</option>
+          </select>
+        </label>
+      </div>
+      <div class="out" id="izer-out"></div>
+    </div>
+  </section>
+
+  <!-- 07 TAKE -->
+  <section class="panel" id="take">
+    <h2 class="sec">Free Take</h2>
+    <p class="lede">Read anything you want — a Walken-ized line, a paragraph, the cereal box — and get a read on your overall Walken-ness: how staccato your rhythm was, how flat-with-spikes your pitch was, and how wide your dynamic range got.</p>
+    <div class="stagecard">
+      <div class="btnrow">
+        <button class="btn" id="take-rec">Start take</button>
+        <span class="pill" id="take-pill">ready</span>
+      </div>
+      <canvas id="take-canvas" height="140" aria-label="your full take"></canvas>
+      <div id="take-result"></div>
+      <p class="mic-warn" id="take-warn">Couldn't reach the microphone. Allow mic access, then try again.</p>
+    </div>
+  </section>
+
+  <footer>
+    Talkin' Like Walkin' — a prosody trainer, not a voice cloner. All analysis runs locally in your browser; nothing is recorded or sent anywhere. Practice lines are original. The impression is a performance skill; the technique notes are drawn from public interviews and impressionists' breakdowns.
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============ practice lines (original, tuned for cadence) ============ */
+const LINES = [
+  "You know what I like about this place the chairs they let you sit down",
+  "I had a goldfish once it taught me everything I know about patience",
+  "There are two kinds of people in this world and I am neither of them",
+  "My grandfather gave me this coat he said wear it when something important is about to not happen",
+  "I dont trust a man who eats soup with a fork but I respect the commitment",
+  "Sometimes I stand in the kitchen at night just to hear what the refrigerator is thinking",
+  "They asked me if I was nervous and I told them a clock is never nervous it just keeps going",
+  "The thing about a long hallway is you have plenty of time to change your mind"
+];
+
+/* ============ pause-target generator (deterministic per line) ============ */
+// returns array of tokens: {w:"word"} or {p:1} short pause or {p:2} long pause
+function buildPauseScript(text, seedShift){
+  const words = text.trim().split(/\s+/);
+  let seed = (seedShift||0);
+  for(const c of text) seed = (seed*31 + c.charCodeAt(0)) & 0xffff;
+  const rnd = ()=>{ seed = (seed*1103515245 + 12345) & 0x7fffffff; return seed/0x7fffffff; };
+  const small = new Set(["the","a","an","of","in","to","and","but","it","is","i","my","you","they","that","with","just","about","when","what","who","never","never","im"]);
+  const out=[];
+  let sinceP = 0;
+  for(let i=0;i<words.length;i++){
+    out.push({w:words[i]});
+    sinceP++;
+    const next = (words[i+1]||"").toLowerCase().replace(/[^a-z]/g,"");
+    const atEnd = i===words.length-1;
+    if(atEnd) continue;
+    let want=false;
+    // bias: pause right BEFORE a small/unimportant next word
+    if(small.has(next) && sinceP>=2 && rnd()<0.7) want=true;
+    // or just because it's been a few words (staccato)
+    if(!want && sinceP>=3 && rnd()<0.55) want=true;
+    if(want){
+      const long = sinceP>=3 && rnd()<0.3;
+      out.push({p: long?2:1});
+      sinceP=0;
+    }
+  }
+  return out;
+}
+function targetPauseCount(script){ return script.filter(t=>t.p).length; }
+
+/* ============ emphasis generator ============ */
+function buildLift(text, seedShift){
+  const words = text.trim().split(/\s+/);
+  let seed=(seedShift||7);
+  for(const c of text) seed=(seed*17 + c.charCodeAt(0)) & 0xffff;
+  const rnd=()=>{ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; };
+  const small = new Set(["the","a","an","of","in","to","and","but","it","is","i","my","you","that","with","just","about","when","never","two","neither"]);
+  // prefer an "unexpected" word: a small/function word, length>1
+  const cands=[];
+  words.forEach((w,i)=>{ const c=w.toLowerCase().replace(/[^a-z]/g,""); if(small.has(c) && c.length>1) cands.push(i); });
+  let idx;
+  if(cands.length) idx = cands[Math.floor(rnd()*cands.length)];
+  else idx = 1 + Math.floor(rnd()*Math.max(1,words.length-1));
+  return {words, idx};
+}
+
+/* ============ contour data for "The Line" ============ */
+// build a flat-with-spikes contour from a line: low base pitch, spike on emphasis word
+function buildContour(text){
+  const words=text.trim().split(/\s+/);
+  const lift=buildLift(text, 3);
+  const base=140; // Hz, low male monotone
+  const segs=[];
+  words.forEach((w,i)=>{
+    const isEm = i===lift.idx;
+    const syll = Math.max(1, Math.round(w.replace(/[^a-zA-Z]/g,"").length/3));
+    const dur = Math.min(0.5, 0.16 + syll*0.07);
+    let f = base + (i%2? 6:-4);          // tiny waver around monotone
+    let g = 0.55;
+    if(isEm){ f = base+72; g=0.95; }      // the jump
+    segs.push({w, f, dur, g, em:isEm});
+    // occasional staccato pause
+    if(i<words.length-1 && (i%2===1)) segs.push({pause: (i===lift.idx)?0.55:0.32});
+  });
+  return {segs, words, emIdx:lift.idx};
+}
+
+/* ============ audio engine ============ */
+let AC=null, stream=null, analyser=null, srcNode=null, buf=null, sampleRate=44100;
+let activeTab="method";
+
+function ctx(){ if(!AC) AC = new (window.AudioContext||window.webkitAudioContext)(); return AC; }
+
+async function micOn(){
+  if(stream) return true;
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+  }catch(e){ return false; }
+  const c=ctx(); sampleRate=c.sampleRate;
+  srcNode = c.createMediaStreamSource(stream);
+  analyser = c.createAnalyser();
+  analyser.fftSize = 2048;
+  buf = new Float32Array(analyser.fftSize);
+  srcNode.connect(analyser);
+  return true;
+}
+function micOff(){
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+  if(srcNode){ try{srcNode.disconnect();}catch(e){} srcNode=null; }
+  analyser=null;
+}
+
+function readFrame(){
+  if(!analyser) return {rms:0,pitch:-1};
+  analyser.getFloatTimeDomainData(buf);
+  let rms=0; for(let i=0;i<buf.length;i++){ rms+=buf[i]*buf[i]; }
+  rms=Math.sqrt(rms/buf.length);
+  let pitch=-1;
+  if(rms>0.008) pitch=autoCorr(buf, sampleRate);
+  return {rms,pitch};
+}
+
+// autocorrelation pitch detection (downsampled window for speed)
+function autoCorr(b, sr){
+  // copy + trim quiet edges
+  let SIZE=1024; // window
+  // use last SIZE samples
+  const start=b.length-SIZE;
+  const x=new Float32Array(SIZE);
+  for(let i=0;i<SIZE;i++) x[i]=b[start+i];
+  let rms=0; for(let i=0;i<SIZE;i++) rms+=x[i]*x[i];
+  rms=Math.sqrt(rms/SIZE); if(rms<0.008) return -1;
+  const minLag=Math.floor(sr/400), maxLag=Math.floor(sr/70); // 70-400Hz speech
+  let best=-1,bestv=0;
+  for(let lag=minLag;lag<=maxLag;lag++){
+    let s=0; for(let i=0;i<SIZE-lag;i++) s+=x[i]*x[i+lag];
+    if(s>bestv){bestv=s;best=lag;}
+  }
+  if(best<0) return -1;
+  // parabolic refine
+  if(best>minLag && best<maxLag){
+    let s0=0,s1=0,s2=0;
+    for(let i=0;i<SIZE-(best-1);i++) s0+=x[i]*x[i+best-1];
+    for(let i=0;i<SIZE-(best+1);i++) s2+=x[i]*x[i+best+1];
+    s1=bestv;
+    const a=(s0+s2-2*s1)/2, bq=(s2-s0)/2;
+    if(a) best = best - bq/(2*a);
+  }
+  const f=sr/best;
+  return (f>=70&&f<=400)?f:-1;
+}
+
+/* ============ recorder: captures {t,rms,pitch} timeline ============ */
+function recordTimeline(durationMs, onFrame, onDone){
+  const t0=performance.now();
+  const data=[];
+  function step(){
+    const t=performance.now()-t0;
+    const fr=readFrame();
+    data.push({t:t/1000, rms:fr.rms, pitch:fr.pitch});
+    if(onFrame) onFrame(t/1000, fr, data);
+    if(t<durationMs){ requestAnimationFrame(step); }
+    else { onDone(data); }
+  }
+  requestAnimationFrame(step);
+}
+
+/* ============ timeline analysis ============ */
+function analyzeBursts(data){
+  // dynamic threshold from max rms
+  let maxr=0; data.forEach(d=>{ if(d.rms>maxr)maxr=d.rms; });
+  const thr=Math.max(0.01, maxr*0.22);
+  let voiced=[]; data.forEach(d=> voiced.push(d.rms>thr));
+  // smooth tiny gaps
+  // count bursts and silences with min durations
+  const bursts=[]; const pauses=[];
+  let i=0; const n=data.length;
+  function dur(a,b){ return data[b].t-data[a].t; }
+  while(i<n){
+    if(voiced[i]){
+      let j=i; while(j<n&&voiced[j]) j++;
+      if(dur(i,Math.min(j,n-1))>0.07) bursts.push([i,j-1]);
+      i=j;
+    } else {
+      let j=i; while(j<n&&!voiced[j]) j++;
+      const d=dur(i,Math.min(j,n-1));
+      if(d>0.16) pauses.push({d, mid:i>0&&j<n}); // internal pauses only
+      i=j;
+    }
+  }
+  // drop leading/trailing silence from pauses (only count mid pauses)
+  const midPauses=pauses.filter(p=>p.mid);
+  const longest = midPauses.reduce((m,p)=>Math.max(m,p.d),0);
+  const totalVoiced = bursts.reduce((s,b)=>s+(data[b[1]].t-data[b[0]].t),0);
+  return {bursts, midPauses, longest, thr, totalVoiced, maxr};
+}
+function dynamicRangeDb(data){
+  const v=data.map(d=>d.rms).filter(r=>r>0.004).sort((a,b)=>a-b);
+  if(v.length<4) return 0;
+  const lo=v[Math.floor(v.length*0.15)], hi=v[Math.floor(v.length*0.95)];
+  if(lo<=0) return 0;
+  return 20*Math.log10(hi/Math.max(lo,1e-4));
+}
+function pitchStats(data){
+  const ps=data.map(d=>d.pitch).filter(p=>p>0);
+  if(ps.length<4) return {median:0, spikes:0, flatFrac:0, series:[]};
+  const sorted=[...ps].sort((a,b)=>a-b);
+  const med=sorted[Math.floor(sorted.length/2)];
+  // spikes: pitch > median*1.18 sustained briefly
+  let spikes=0, inSpike=false;
+  for(const p of ps){
+    if(p>med*1.18){ if(!inSpike){spikes++;inSpike=true;} }
+    else inSpike=false;
+  }
+  // flatness: fraction within +-8% of median
+  const flat=ps.filter(p=>Math.abs(p-med)<med*0.10).length/ps.length;
+  return {median:med, spikes, flatFrac:flat, series:ps};
+}
+
+/* ============ canvas helpers ============ */
+function clearCanvas(cv){
+  const dpr=window.devicePixelRatio||1;
+  const w=cv.clientWidth, h=cv.height;
+  cv.width=w*dpr; cv.height=h*dpr;
+  const g=cv.getContext("2d"); g.scale(dpr,dpr);
+  g.clearRect(0,0,w,h);
+  return {g,w,h};
+}
+function drawTimeline(cv, data, opt){
+  opt=opt||{};
+  const {g,w,h}=clearCanvas(cv);
+  if(!data||!data.length) return;
+  const T=Math.max(data[data.length-1].t, 0.5);
+  const an=analyzeBursts(data);
+  // pause bands
+  g.fillStyle="rgba(217,161,75,0.10)";
+  an.midPauses.forEach(p=>{ /* shaded later via voiced map */ });
+  // shade silences
+  let maxr=an.maxr||0.05;
+  // volume area
+  g.beginPath();
+  g.moveTo(0,h);
+  data.forEach(d=>{
+    const x=(d.t/T)*w;
+    const y=h-(Math.min(1,d.rms/(maxr*1.1))*(h-14))-6;
+    g.lineTo(x,y);
+  });
+  g.lineTo(w,h); g.closePath();
+  g.fillStyle="rgba(116,169,201,0.22)"; g.fill();
+  // volume line
+  g.beginPath();
+  data.forEach((d,i)=>{
+    const x=(d.t/T)*w;
+    const y=h-(Math.min(1,d.rms/(maxr*1.1))*(h-14))-6;
+    i?g.lineTo(x,y):g.moveTo(x,y);
+  });
+  g.strokeStyle="var(--blue)"; g.lineWidth=1.5;
+  g.strokeStyle="#74A9C9"; g.stroke();
+  // mark pauses
+  if(opt.showPauses){
+    const thr=an.thr;
+    let inSil=false, sx=0;
+    data.forEach((d,i)=>{
+      const v=d.rms>thr;
+      const x=(d.t/T)*w;
+      if(!v && !inSil){inSil=true;sx=x;}
+      if((v||i===data.length-1)&&inSil){
+        inSil=false;
+        if(sx>4 && x<w-4){ // internal
+          g.fillStyle="rgba(217,161,75,0.16)";
+          g.fillRect(sx,0,Math.max(2,x-sx),h);
+        }
+      }
+    });
+  }
+}
+function drawContour(cv, contourPts, userPts){
+  const {g,w,h}=clearCanvas(cv);
+  const allf=[...contourPts.map(p=>p.f)];
+  if(userPts) userPts.forEach(p=>{ if(p.f>0) allf.push(p.f); });
+  let fmin=Math.min(...allf)-15, fmax=Math.max(...allf)+15;
+  fmin=Math.max(60,fmin); fmax=Math.min(420,fmax);
+  const T=Math.max(contourPts[contourPts.length-1].t, userPts&&userPts.length?userPts[userPts.length-1].t:0, 0.5);
+  function X(t){return (t/T)*w;}
+  function Y(f){return h-((f-fmin)/(fmax-fmin))*(h-16)-8;}
+  // grid baseline
+  g.strokeStyle="rgba(233,226,208,0.06)"; g.lineWidth=1;
+  for(let k=1;k<4;k++){ const y=h*k/4; g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke(); }
+  // target contour (amber) — draw as held segments
+  g.strokeStyle="#D9A14B"; g.lineWidth=3; g.lineJoin="round";
+  g.beginPath();
+  let started=false;
+  contourPts.forEach(p=>{
+    if(p.gap){ started=false; return; }
+    const x=X(p.t), y=Y(p.f);
+    if(!started){g.moveTo(x,y);started=true;} else g.lineTo(x,y);
+  });
+  g.stroke();
+  // user (blue) dots
+  if(userPts){
+    g.fillStyle="#74A9C9";
+    userPts.forEach(p=>{ if(p.f>0){ g.beginPath();g.arc(X(p.t),Y(p.f),2.2,0,7);g.fill(); } });
+  }
+}
+
+/* render contour to playable + drawable point list */
+function contourToTimeline(contour){
+  const pts=[]; let t=0;
+  contour.segs.forEach(s=>{
+    if(s.pause){ pts.push({gap:true,t}); t+=s.pause; pts.push({gap:true,t}); return; }
+    pts.push({t, f:s.f}); t+=s.dur; pts.push({t, f:s.f});
+  });
+  return {pts, total:t};
+}
+
+/* play the contour as a synthesized shape (not a voice) */
+function playContour(contour){
+  const c=ctx(); if(c.state==="suspended") c.resume();
+  const now=c.currentTime+0.05;
+  const master=c.createGain(); master.gain.value=0.0; master.connect(c.destination);
+  const o1=c.createOscillator(); o1.type="sawtooth";
+  const o2=c.createOscillator(); o2.type="sine";
+  const lp=c.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=900; lp.Q.value=0.6;
+  o1.connect(lp); o2.connect(lp); lp.connect(master);
+  const g=master.gain;
+  let t=now;
+  contour.segs.forEach(s=>{
+    if(s.pause){ g.setValueAtTime(g.value!==undefined?0.0:0.0,t); g.linearRampToValueAtTime(0.0001,t+0.02); t+=s.pause; return; }
+    o1.frequency.setValueAtTime(s.f, t);
+    o2.frequency.setValueAtTime(s.f/2, t);
+    g.cancelScheduledValues(t);
+    g.linearRampToValueAtTime(0.0001,t+0.005);
+    g.linearRampToValueAtTime(s.g*0.16, t+0.04);
+    g.setValueAtTime(s.g*0.16, t+s.dur-0.05);
+    g.linearRampToValueAtTime(0.0001, t+s.dur);
+    t+=s.dur;
+  });
+  o1.start(now); o2.start(now);
+  o1.stop(t+0.1); o2.stop(t+0.1);
+  return (t-now)*1000;
+}
+
+/* ============ UI wiring ============ */
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+
+// tabs
+$$("#tabs button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    $$("#tabs button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    $$(".panel").forEach(p=>p.classList.remove("show"));
+    const id=b.dataset.tab; $("#"+id).classList.add("show");
+    activeTab=id;
+    if(id!=="warmup") stopWarm();
+  });
+});
+
+/* ---- 02 Calibrate ---- */
+let warmRaf=null, warmData=[];
+async function stopWarm(){
+  if(warmRaf){cancelAnimationFrame(warmRaf);warmRaf=null;}
+  $("#warm-toggle").textContent="Turn mic on";
+  $("#warm-pill").textContent="mic off"; $("#warm-pill").classList.remove("on");
+}
+$("#warm-toggle").addEventListener("click",async()=>{
+  if(warmRaf){ stopWarm(); return; }
+  $("#warm-warn").style.display="none";
+  const ok=await micOn(); if(!ok){ $("#warm-warn").style.display="block"; return; }
+  if(AC.state==="suspended") AC.resume();
+  $("#warm-toggle").textContent="Turn mic off";
+  $("#warm-pill").textContent="listening"; $("#warm-pill").classList.add("on");
+  warmData=[];
+  const cv=$("#warm-canvas");
+  function loop(){
+    const fr=readFrame();
+    const vp=Math.min(100,(fr.rms/0.18)*100);
+    $("#warm-volbar").style.width=vp+"%";
+    $("#warm-vol").textContent=fr.rms>0.006?Math.round(vp)+"%":"—";
+    if(fr.pitch>0){
+      $("#warm-pitch").textContent=Math.round(fr.pitch)+" Hz";
+      $("#warm-pitchbar").style.width=Math.min(100,((fr.pitch-70)/330)*100)+"%";
+    } else { $("#warm-pitch").textContent="—"; }
+    warmData.push({t:warmData.length/60, rms:fr.rms, pitch:fr.pitch});
+    if(warmData.length>240) warmData.shift();
+    // draw rolling pitch trace
+    const {g,w,h}=clearCanvas(cv);
+    g.strokeStyle="rgba(233,226,208,0.06)";
+    for(let k=1;k<3;k++){const y=h*k/3;g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke();}
+    g.beginPath(); let started=false;
+    warmData.forEach((d,i)=>{
+      if(d.pitch<=0){started=false;return;}
+      const x=(i/240)*w;
+      const y=h-((d.pitch-70)/330)*(h-12)-6;
+      if(!started){g.moveTo(x,y);started=true;}else g.lineTo(x,y);
+    });
+    g.strokeStyle="#74A9C9"; g.lineWidth=2; g.stroke();
+    warmRaf=requestAnimationFrame(loop);
+  }
+  loop();
+});
+
+/* ---- shared line pickers ---- */
+function fillSelect(sel){
+  sel.innerHTML="";
+  LINES.forEach((l,i)=>{
+    const o=document.createElement("option");
+    o.value=i; o.textContent=(l.length>52?l.slice(0,52)+"…":l);
+    sel.appendChild(o);
+  });
+}
+
+/* ---- 03 Pause ---- */
+let pauseIdx=0, pauseSeed=0, pauseScript=[];
+function renderPause(){
+  const text=LINES[pauseIdx];
+  pauseScript=buildPauseScript(text, pauseSeed);
+  const el=$("#pause-text"); el.innerHTML="";
+  pauseScript.forEach(t=>{
+    if(t.w){ const s=document.createElement("span"); s.className="w"; s.textContent=t.w+" "; el.appendChild(s); }
+    else { const s=document.createElement("span"); s.className="pd"+(t.p===2?" long":""); s.textContent=t.p===2?"·· ":"· "; el.appendChild(s); }
+  });
+  const tc=targetPauseCount(pauseScript);
+  $("#pause-target").textContent="TARGET — "+tc+" stops, including "+(pauseScript.some(t=>t.p===2)?"one held beat":"a clean staccato break");
+}
+fillSelect($("#pause-pick"));
+$("#pause-pick").addEventListener("change",e=>{ pauseIdx=+e.target.value; renderPause(); $("#pause-result").innerHTML=""; });
+$("#pause-shuffle").addEventListener("click",()=>{ pauseSeed++; renderPause(); $("#pause-result").innerHTML=""; });
+renderPause();
+
+$("#pause-rec").addEventListener("click",async()=>{
+  $("#pause-warn").style.display="none";
+  const ok=await micOn(); if(!ok){ $("#pause-warn").style.display="block"; return; }
+  if(AC.state==="suspended") AC.resume();
+  const btn=$("#pause-rec"); btn.disabled=true;
+  $("#pause-pill").textContent="recording…"; $("#pause-pill").classList.add("on");
+  const cv=$("#pause-canvas");
+  recordTimeline(4500,(t,fr,data)=>{ drawTimeline(cv,data,{showPauses:true}); },(data)=>{
+    btn.disabled=false; $("#pause-pill").textContent="ready"; $("#pause-pill").classList.remove("on");
+    drawTimeline(cv,data,{showPauses:true});
+    scorePause(data);
+  });
+});
+function scorePause(data){
+  const an=analyzeBursts(data);
+  const made=an.midPauses.length;
+  const target=targetPauseCount(pauseScript);
+  const longest=an.longest;
+  const diff=Math.abs(made-target);
+  let score = Math.max(0, 100 - diff*22) ;
+  // reward a held beat
+  const heldOK = longest>=0.45;
+  if(pauseScript.some(t=>t.p===2)){ score = heldOK? Math.min(100,score+6) : score-14; }
+  score=Math.max(0,Math.min(100,Math.round(score)));
+  let cls=score>=75?"good":score>=50?"mid":"low";
+  let verdict=score>=75?"That's the rhythm":score>=50?"Getting staccato":"Too smooth";
+  let coach;
+  if(made<target) coach="You ran words together. Walken would have stopped <b>"+(target-made)+" more time"+(target-made>1?"s":"")+"</b> — break before the small words even when it feels wrong.";
+  else if(made>target) coach="A touch choppy — you stopped <b>"+(made-target)+" more</b> than the target. Pauses land harder when there are fewer of them.";
+  else coach="Stop count is dead on.";
+  if(pauseScript.some(t=>t.p===2) && !heldOK) coach+=" And the held beat (··) needs to <b>linger</b> — let the silence get uncomfortable.";
+  $("#pause-result").innerHTML=
+    '<div class="verdict '+cls+'">'+verdict+'</div>'+
+    '<div class="scoregrid">'+
+      stat("Walken rhythm", score+"<small>/100</small>")+
+      stat("Your stops", made+"<small> · target "+target+"</small>")+
+      stat("Longest pause", longest.toFixed(2)+"<small> s</small>")+
+    '</div>'+
+    '<p class="coach">'+coach+'</p>';
+}
+
+/* ---- 04 Lift ---- */
+let liftSeed=2, liftData={words:[],idx:0};
+function renderLift(){
+  const text=LINES[(liftSeed)%LINES.length];
+  liftData=buildLift(text, liftSeed*5);
+  const el=$("#lift-text"); el.innerHTML="";
+  liftData.words.forEach((w,i)=>{
+    const s=document.createElement("span");
+    if(i===liftData.idx){ s.className="em"; s.textContent=w; } else { s.className="w"; s.textContent=w; }
+    el.appendChild(s); el.appendChild(document.createTextNode(" "));
+  });
+  $("#lift-target").textContent='TARGET — punch "'+liftData.words[liftData.idx].replace(/[^a-zA-Z]/g,"")+'", then drop back under it';
+}
+$("#lift-shuffle").addEventListener("click",()=>{ liftSeed++; renderLift(); $("#lift-result").innerHTML=""; });
+renderLift();
+$("#lift-rec").addEventListener("click",async()=>{
+  $("#lift-warn").style.display="none";
+  const ok=await micOn(); if(!ok){ $("#lift-warn").style.display="block"; return; }
+  if(AC.state==="suspended") AC.resume();
+  const btn=$("#lift-rec"); btn.disabled=true;
+  $("#lift-pill").textContent="recording…"; $("#lift-pill").classList.add("on");
+  const cv=$("#lift-canvas");
+  recordTimeline(4000,(t,fr,data)=>{ drawTimeline(cv,data,{}); },(data)=>{
+    btn.disabled=false; $("#lift-pill").textContent="ready"; $("#lift-pill").classList.remove("on");
+    drawTimeline(cv,data,{});
+    scoreLift(data);
+  });
+});
+function scoreLift(data){
+  const dr=dynamicRangeDb(data);
+  // count distinct loud peaks
+  const an=analyzeBursts(data);
+  let maxr=an.maxr;
+  let peaks=0,inP=false;
+  data.forEach(d=>{ if(d.rms>maxr*0.7){if(!inP){peaks++;inP=true;}}else inP=false; });
+  let score=Math.max(0,Math.min(100,Math.round((dr/16)*100)));
+  let cls=score>=75?"good":score>=50?"mid":"low";
+  let verdict=score>=75?"Big swing":score>=50?"Some lift":"Stayed flat";
+  let coach= dr<7 ? "You delivered the whole line at one volume. The impression lives in the <b>contrast</b> — that one word needs to jump out, then everything around it drops to almost nothing."
+           : dr<12 ? "There's a lift, but go bigger on the gap. Whisper the setup, then <b>hit the marked word</b> harder than feels natural."
+           : "Wide range — that's the swing. Now make sure the peak landed on the marked word, not just somewhere.";
+  $("#lift-result").innerHTML=
+    '<div class="verdict '+cls+'">'+verdict+'</div>'+
+    '<div class="scoregrid">'+
+      stat("Dynamic range", dr.toFixed(1)+"<small> dB</small>")+
+      stat("Commit score", score+"<small>/100</small>")+
+      stat("Loud peaks", peaks+"")+
+    '</div>'+
+    '<p class="coach">'+coach+'</p>';
+}
+
+/* ---- 05 Line ---- */
+let lineIdx=1, lineContour=null, lineTL=null, lineRecData=null;
+function renderLine(){
+  const text=LINES[lineIdx];
+  lineContour=buildContour(text);
+  lineTL=contourToTimeline(lineContour);
+  const el=$("#line-text"); el.innerHTML="";
+  lineContour.words.forEach((w,i)=>{
+    const s=document.createElement("span");
+    s.className=(i===lineContour.emIdx)?"em":"w"; s.textContent=w; el.appendChild(s);
+    el.appendChild(document.createTextNode(" "));
+  });
+  drawContour($("#line-canvas"), lineTL.pts, lineRecData);
+}
+fillSelect($("#line-pick")); $("#line-pick").value=1;
+$("#line-pick").addEventListener("change",e=>{ lineIdx=+e.target.value; lineRecData=null; $("#line-result").innerHTML=""; renderLine(); });
+renderLine();
+$("#line-play").addEventListener("click",()=>{ ctx(); playContour(lineContour); });
+$("#line-rec").addEventListener("click",async()=>{
+  $("#line-warn").style.display="none";
+  const ok=await micOn(); if(!ok){ $("#line-warn").style.display="block"; return; }
+  if(AC.state==="suspended") AC.resume();
+  const btn=$("#line-rec"); btn.disabled=true;
+  $("#line-pill").textContent="recording…"; $("#line-pill").classList.add("on");
+  const ms=Math.max(3000, lineTL.total*1000+800);
+  const rec=[];
+  recordTimeline(ms,(t,fr)=>{
+    if(fr.pitch>0) rec.push({t, f:fr.pitch});
+    drawContour($("#line-canvas"), lineTL.pts, rec);
+  },(data)=>{
+    btn.disabled=false; $("#line-pill").textContent="ready"; $("#line-pill").classList.remove("on");
+    lineRecData=rec;
+    drawContour($("#line-canvas"), lineTL.pts, rec);
+    scoreLine(rec);
+  });
+});
+function scoreLine(rec){
+  if(rec.length<6){ $("#line-result").innerHTML='<p class="coach">Didn\'t catch enough pitch — get closer to the mic and try again.</p>'; return; }
+  const ps=rec.map(r=>r.f);
+  const sorted=[...ps].sort((a,b)=>a-b);
+  const med=sorted[Math.floor(sorted.length/2)];
+  const flat=ps.filter(p=>Math.abs(p-med)<med*0.10).length/ps.length;
+  let spikes=0,inS=false; ps.forEach(p=>{ if(p>med*1.18){if(!inS){spikes++;inS=true;}}else inS=false; });
+  // shape score: reward flat base + at least one spike
+  let score = Math.round(flat*60 + Math.min(40, spikes*22));
+  score=Math.max(0,Math.min(100,score));
+  let cls=score>=72?"good":score>=48?"mid":"low";
+  let verdict=score>=72?"Flat with a jump":score>=48?"Close to the shape":"Too sing-songy";
+  let coach = flat<0.45 ? "Your pitch wandered the whole time. Walken sits on <b>one near-monotone note</b> and only leaves it for the jump — flatten the rest."
+            : spikes===0 ? "Nicely flat, but no jump — you need <b>one sharp spike</b> on the marked word to break the monotone."
+            : "Flat base, real spike — that's the contour. Match the <b>timing</b> of the amber line next.";
+  $("#line-result").innerHTML=
+    '<div class="verdict '+cls+'">'+verdict+'</div>'+
+    '<div class="scoregrid">'+
+      stat("Shape match", score+"<small>/100</small>")+
+      stat("Flatness", Math.round(flat*100)+"<small>%</small>")+
+      stat("Pitch jumps", spikes+"")+
+      stat("Your base", Math.round(med)+"<small> Hz</small>")+
+    '</div>'+
+    '<p class="coach">'+coach+'</p>';
+}
+
+/* ---- 06 Walken-izer ---- */
+function walkenize(text, intensity){
+  let raw=text.replace(/\s+/g," ").trim();
+  if(!raw) return null;
+  const endQ = /\?\s*$/.test(raw);
+  // strip punctuation, keep words
+  let cleaned=raw.replace(/[.,;:!?""'']/g,"").replace(/\s+/g," ").trim();
+  const words=cleaned.split(" ");
+  // deterministic-ish randomness based on content + a salt we can re-roll
+  let seed=walkenize._salt|0;
+  for(const c of cleaned) seed=(seed*31+c.charCodeAt(0))&0xffff;
+  const rnd=()=>{ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; };
+  const small=new Set(["the","a","an","of","in","to","and","but","it","is","i","my","you","they","that","with","just","about","when","so","on","at","for","your","our","out","up","here","now"]);
+  // pause density by intensity
+  const dens=[0.35,0.55,0.78][intensity];
+  const tokens=[];
+  let sinceP=0;
+  for(let i=0;i<words.length;i++){
+    tokens.push({w:words[i]}); sinceP++;
+    const next=(words[i+1]||"").toLowerCase().replace(/[^a-z]/g,"");
+    if(i===words.length-1) break;
+    let want=false;
+    if(small.has(next)&&sinceP>=2&&rnd()<dens) want=true;
+    else if(sinceP>=3&&rnd()<dens*0.7) want=true;
+    if(want){ const long=sinceP>=3&&rnd()< (0.2+intensity*0.12); tokens.push({p:long?2:1}); sinceP=0; }
+  }
+  // emphasis: 1 word (light/med) or 2 (full)
+  const emCount=intensity===2?2:1;
+  const cands=[];
+  words.forEach((w,i)=>{ const c=w.toLowerCase().replace(/[^a-z]/g,""); if(small.has(c)&&c.length>1) cands.push(i); });
+  const emSet=new Set();
+  for(let k=0;k<emCount && (cands.length||words.length);k++){
+    let idx;
+    if(cands.length){ idx=cands.splice(Math.floor(rnd()*cands.length),1)[0]; }
+    else idx=Math.floor(rnd()*words.length);
+    emSet.add(idx);
+  }
+  // build display
+  let html=""; let wi=0;
+  tokens.forEach(t=>{
+    if(t.w){
+      const isEm=emSet.has(wi);
+      html+= isEm? '<span class="em">'+escapeHtml(t.w)+'</span> ' : '<span class="w">'+escapeHtml(t.w)+'</span> ';
+      wi++;
+    } else {
+      html+= t.p===2? '<span class="pd long">·· </span>' : '<span class="pd">· </span>';
+    }
+  });
+  // flip ending statement<->question
+  let flip;
+  if(intensity>0){
+    flip = endQ ? "Was a question — now say it flat, like a fact." : "Was a statement — now lift the end like a question, even though it isn't one.";
+  } else flip="";
+  const stops=tokens.filter(t=>t.p).length;
+  return {html, stops, ems:[...emSet].map(i=>words[i]), flip};
+}
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function runIzer(reroll){
+  if(reroll) walkenize._salt=(walkenize._salt|0)+7; else walkenize._salt=1;
+  const intensity=+$("#izer-int").value;
+  const res=walkenize($("#izer-in").value, intensity);
+  if(!res){ $("#izer-out").innerHTML='<p class="coach">Give me a sentence first.</p>'; return; }
+  $("#izer-out").innerHTML=
+    '<div class="scriptline">'+res.html+'</div>'+
+    '<p class="delnote">'+res.stops+' stops · stress: '+(res.ems.map(e=>e.replace(/[^a-zA-Z]/g,"")).join(", ")||"—")+'</p>'+
+    (res.flip?'<p class="coach"><b>Ending trick:</b> '+res.flip+'</p>':'');
+}
+$("#izer-go").addEventListener("click",()=>runIzer(false));
+$("#izer-again").addEventListener("click",()=>runIzer(true));
+$("#izer-int").addEventListener("change",()=>runIzer(false));
+runIzer(false);
+
+/* ---- 07 Free Take ---- */
+let takeOn=false;
+$("#take-rec").addEventListener("click",async()=>{
+  if(takeOn) return;
+  $("#take-warn").style.display="none";
+  const ok=await micOn(); if(!ok){ $("#take-warn").style.display="block"; return; }
+  if(AC.state==="suspended") AC.resume();
+  takeOn=true;
+  const btn=$("#take-rec"); btn.disabled=true; btn.classList.add("live");
+  $("#take-pill").textContent="recording 8s…"; $("#take-pill").classList.add("on");
+  const cv=$("#take-canvas");
+  recordTimeline(8000,(t,fr,data)=>{ drawTimeline(cv,data,{showPauses:true}); },(data)=>{
+    takeOn=false; btn.disabled=false; btn.classList.remove("live");
+    $("#take-pill").textContent="ready"; $("#take-pill").classList.remove("on");
+    drawTimeline(cv,data,{showPauses:true});
+    scoreTake(data);
+  });
+});
+function scoreTake(data){
+  const an=analyzeBursts(data);
+  const dr=dynamicRangeDb(data);
+  const pit=pitchStats(data);
+  const pauses=an.midPauses.length;
+  const bursts=an.bursts.length;
+  // staccato index: bursts per second of voiced speech
+  const stacc = an.totalVoiced>0 ? bursts/Math.max(0.5,an.totalVoiced) : 0;
+  // sub-scores
+  const sRhythm = Math.min(100, Math.round((pauses*16) + (stacc*55)));
+  const sPitch = Math.round(pit.flatFrac*55 + Math.min(45, pit.spikes*18));
+  const sDyn = Math.min(100, Math.round((dr/15)*100));
+  const total=Math.round((sRhythm*0.4 + sPitch*0.3 + sDyn*0.3));
+  const cls=total>=72?"good":total>=48?"mid":"low";
+  const verdict=total>=72?"Unmistakably Walken-ish":total>=48?"Walken's in the room":"Mostly still you";
+  // weakest link coaching
+  const parts=[["rhythm",sRhythm,"break it into shorter staccato bursts with real stops between them"],
+               ["pitch",sPitch,"flatten to a near-monotone and let only a few words spike"],
+               ["dynamics",sDyn,"open up the volume — whisper, then boom, inside the same line"]];
+  parts.sort((a,b)=>a[1]-b[1]);
+  const coach="Weakest right now: <b>"+parts[0][0]+"</b>. Next take, "+parts[0][2]+".";
+  $("#take-result").innerHTML=
+    '<div class="verdict '+cls+'">'+verdict+'</div>'+
+    '<div class="scoregrid">'+
+      stat("Overall", total+"<small>/100</small>")+
+      stat("Rhythm", sRhythm+"<small>/100</small>")+
+      stat("Pitch shape", sPitch+"<small>/100</small>")+
+      stat("Dynamics", sDyn+"<small>/100</small>")+
+      stat("Stops", pauses+"")+
+      stat("Range", dr.toFixed(1)+"<small> dB</small>")+
+    '</div>'+
+    '<p class="coach">'+coach+'</p>';
+}
+
+function stat(k,v){ return '<div class="stat"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>'; }
+
+})();
+</script>
+</body>
+</html>
