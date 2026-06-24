@@ -109,17 +109,64 @@ footer{text-align:center;padding:40px 0 56px}
 .lb__x{position:absolute;top:18px;right:22px;width:46px;height:46px;border:2.5px solid var(--ink);border-radius:50%;background:var(--lime);font-size:1.4rem;cursor:pointer;font-weight:800}
 :focus-visible{outline:3px solid var(--grape);outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+
+#book,#work,#about{scroll-margin-top:84px}
+.booking{padding:56px 0}
+.bk-head{max-width:60ch;margin-bottom:26px}
+.bk-head .eyebrow::before{content:"\2605 "}
+.bk-head h2{font-family:var(--disp);font-weight:800;font-size:clamp(1.9rem,5vw,2.8rem);margin:.2em 0 .3em}
+.bk-head p{color:#6a5566;font-weight:500;font-size:1.05rem}
+.bk-menu{margin-bottom:40px}
+.bk-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.bk-tier{background:#fff;border:2.5px solid var(--ink);border-radius:16px;box-shadow:5px 6px 0 var(--ink);padding:20px}
+.bk-tier:nth-child(3){background:var(--lime)}
+.bk-tier-h h3{font-family:var(--disp);font-weight:700;font-size:1.02rem}
+.bk-tier-h p{color:#5a4658;font-size:.9rem;font-weight:500;margin:7px 0 14px;min-height:3.8em}
+.bk-prices{display:flex;flex-direction:column;gap:7px;border-top:2px solid var(--ink);padding-top:12px}
+.bk-prices span{display:flex;justify-content:space-between;font-weight:800;font-size:.95rem}
+.bk-prices b{color:#6a5566;font-weight:600}
+.bk-extra{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:24px}
+.bk-col h4{font-family:var(--disp);font-weight:700;font-size:1rem;margin-bottom:8px}
+.bk-list{list-style:none}
+.bk-list li{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:2px dotted #e7cdb2;font-weight:600;font-size:.94rem}
+.bk-list li span:last-child{color:var(--magenta);white-space:nowrap;font-weight:800}
+.bk-fine{margin-top:18px;font-size:.86rem;color:#6a5566;font-weight:500}
+.bk-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start}
+.bk-form{background:#fff;border:2.5px solid var(--ink);border-radius:20px;box-shadow:7px 8px 0 var(--ink);padding:24px}
+.bk-formtitle{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin-bottom:16px}
+.bk-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bk-form label{display:block;font-weight:700;font-size:.8rem;margin-bottom:13px}
+.bk-form input,.bk-form select,.bk-form textarea{width:100%;margin-top:5px;font-family:var(--body);font-weight:500;font-size:.95rem;padding:11px 12px;border:2.5px solid var(--ink);border-radius:10px;background:var(--cream);color:var(--ink)}
+.bk-form input:focus,.bk-form select:focus,.bk-form textarea:focus{outline:3px solid var(--grape)}
+.bk-submit{width:100%;margin-top:6px;background:var(--magenta);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:14px;font-family:var(--disp);font-weight:700;font-size:.96rem;cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:.14s}
+.bk-submit:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.bk-side{display:flex;flex-direction:column;gap:16px}
+.bk-instant{background:var(--grape);color:#fff;border:2.5px solid var(--ink);border-radius:18px;box-shadow:6px 7px 0 var(--ink);padding:22px}
+.bk-flex{background:#fff;border:2.5px solid var(--ink);border-radius:18px;box-shadow:6px 7px 0 var(--ink);padding:22px}
+.bk-instant h4,.bk-flex h4{font-family:var(--disp);font-weight:700;font-size:1.05rem;margin-bottom:8px}
+.bk-instant p{color:#f0e6f7;font-weight:500;font-size:.92rem;margin-bottom:14px}
+.bk-flex p{color:#5a4658;font-weight:500;font-size:.92rem}
+.bk-instant-go{display:inline-block;background:var(--lime);color:var(--ink);font-weight:800;text-decoration:none;border:2.5px solid var(--ink);border-radius:999px;padding:10px 18px;box-shadow:3px 3px 0 var(--ink)}
+.bk-result{display:none;margin-top:16px}.bk-result.show{display:block}
+.bk-err{color:#c0392b;font-weight:700;font-size:.9rem}
+.bk-ok{font-weight:700;margin-bottom:10px}
+.bk-sum{background:var(--cream);border:2.5px solid var(--ink);border-radius:12px;padding:14px;font-family:var(--body);font-weight:500;font-size:.88rem;white-space:pre-wrap;line-height:1.55}
+.bk-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.bk-go{display:inline-block;font-weight:800;font-size:.88rem;text-decoration:none;padding:10px 16px;border-radius:999px;border:2.5px solid var(--ink);color:var(--ink);background:#fff;cursor:pointer;font-family:var(--body);box-shadow:3px 3px 0 var(--ink)}
+.bk-go.bk-gg{background:var(--lime)}
+.bk-go:hover{transform:translate(-1px,-1px)}
+@media(max-width:820px){.bk-tiers{grid-template-columns:1fr}.bk-grid{grid-template-columns:1fr}.bk-extra{grid-template-columns:1fr}.bk-row{grid-template-columns:1fr}}
 </style></head><body>
 <nav><div class="wrap nav">
   <a href="#top" class="brand">Nails by <b>Lily</b></a>
-  <div class="nav-r"><a href="#work">Work</a><a href="#about">About</a><a href="https://nailsbylily.glossgenius.com" class="pill pill--solid">Book now</a></div>
+  <div class="nav-r"><a href="#work">Work</a><a href="#about">About</a><a href="#book" class="pill pill--solid">Book now</a></div>
 </div></nav>
 <header class="hero" id="top"><div class="wrap hero-grid">
   <div>
     <span class="eyebrow">★ Akron, Ohio · Custom nail artist</span>
     <h1>Nails by<br><span class="b">Lily</span></h1>
     <p class="lead">Clean French tips to full-blown character art — hand-painted, made to order.</p>
-    <div class="ctas"><a href="https://nailsbylily.glossgenius.com" class="pill pill--solid">Book an appointment</a><a href="#work" class="pill pill--ghost">See the work</a></div>
+    <div class="ctas"><a href="#book" class="pill pill--solid">Book an appointment</a><a href="#work" class="pill pill--ghost">See the work</a></div>
     <span class="loc">Mobile or by appointment</span>
   </div>
   <div class="stack">
@@ -159,15 +206,46 @@ footer{text-align:center;padding:40px 0 56px}
     <li>Press-on sets made to order</li>
   </ul>
 </div></div></section>
-<section class="book"><div class="wrap"><div class="bcard">
-  <h2>Let's do your nails.</h2>
-  <p>I keep it flexible — I can travel to you, or set up an appointment. Book online or send a message.</p>
-  <div class="ctas"><a href="https://nailsbylily.glossgenius.com" class="pill pill--lime">Book on GlossGenius</a><a href="#" class="pill pill--ghost" data-ph>Message Lily</a></div>
-  <small>AKRON &amp; SURROUNDING AREAS</small>
-</div></div></section>
+<section id="book" class="booking"><div class="wrap">
+  <div class="bk-head"><span class="eyebrow">Booking &amp; pricing</span><h2>Book your set</h2>
+  <p>Pick what you want, tell Lily when, and she confirms. Custom and character sets are quoted from an inspo pic.</p></div>
+  <div class="bk-menu">
+    <div class="bk-tiers"><div class="bk-tier"><div class="bk-tier-h"><h3>Tier 1 · Simple</h3><p>One color or French tip, your shape. Clean and classic.</p></div><div class="bk-prices"><span><b>Short/Med</b> $65</span><span><b>Long</b> $80</span><span><b>XL</b> $95</span><span><b>XXL</b> $110</span></div></div><div class="bk-tier"><div class="bk-tier-h"><h3>Tier 2 · Designed</h3><p>2–3 colors, chrome, French, a few art accents, small gems.</p></div><div class="bk-prices"><span><b>Short/Med</b> $90</span><span><b>Long</b> $105</span><span><b>XL</b> $120</span><span><b>XXL</b> $135</span></div></div><div class="bk-tier"><div class="bk-tier-h"><h3>Tier 3 · Custom &amp; Character</h3><p>Detailed hand-painted art, 3D, bling, full character sets. Lily's signature.</p></div><div class="bk-prices"><span><b>Short/Med</b> $115+</span><span><b>Long</b> $130+</span><span><b>XL</b> $150+</span><span><b>XXL</b> $170+</span></div></div></div>
+    <div class="bk-extra">
+      <div class="bk-col"><h4>Add-ons</h4><ul class="bk-list"><li><span>Chrome / cat-eye / airbrush</span><span>+$10–15</span></li><li><span>French tips</span><span>+$10</span></li><li><span>Nail art (per nail)</span><span>$5–15</span></li><li><span>3D art / charms</span><span>+$5–10 ea</span></li><li><span>Full bling / crystal nail</span><span>+$10–20 ea</span></li><li><span>Encapsulated glitter or flowers</span><span>+$10–15</span></li><li><span>Custom shape (stiletto / long coffin)</span><span>+$5–10</span></li></ul></div>
+      <div class="bk-col"><h4>More services</h4><ul class="bk-list"><li><span>Classic pedicure</span><span>$40–50</span></li><li><span>Gel pedicure</span><span>$50–60</span></li><li><span>Mani-pedi (gel)</span><span>$75–90</span></li><li><span>Fill-in (art extra)</span><span>from $50</span></li><li><span>Soak-off / removal</span><span>$15–25</span></li><li><span>Single nail repair</span><span>$10–15</span></li><li><span>Custom press-on set</span><span>from $45</span></li><li><span>Full character set (quoted)</span><span>$150–200+</span></li></ul></div>
+    </div>
+    <p class="bk-fine">Mobile service: travel fee $15–35 within the Akron area · studio appointments no fee. Prices are estimates — final quote depends on length, detail and design.</p>
+  </div>
+  <div class="bk-grid">
+    <form id="bkForm" class="bk-form" novalidate>
+      <h3 class="bk-formtitle">Request an appointment</h3>
+      <div class="bk-row">
+        <label>Your name<input id="bkName" type="text" placeholder="First &amp; last"></label>
+        <label>Phone or email<input id="bkContact" type="text" placeholder="So Lily can confirm"></label>
+      </div>
+      <div class="bk-row">
+        <label>Service<select id="bkService"><option value="">Choose…</option><option>Full set — Simple (Tier 1)</option><option>Full set — Designed (Tier 2)</option><option>Full set — Custom / Character (Tier 3)</option><option>Fill-in</option><option>Pedicure</option><option>Mani-pedi</option><option>Custom press-on set</option><option>Not sure / custom quote</option></select></label>
+        <label>Length<select id="bkLength"><option value="">—</option><option>Short/Medium</option><option>Long</option><option>XL</option><option>XXL</option></select></label>
+      </div>
+      <div class="bk-row">
+        <label>Preferred date<input id="bkDate" type="date"></label>
+        <label>Time<select id="bkTime"><option value="">Flexible</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select></label>
+      </div>
+      <label>Where<select id="bkLoc"><option value="">Either works</option><option>Lily comes to me (mobile)</option><option>I'll come to Lily</option></select></label>
+      <label>Design notes / inspo link<textarea id="bkNotes" rows="2" placeholder="Describe it, or paste a Pinterest / IG link"></textarea></label>
+      <button type="submit" class="bk-submit">Send request</button>
+      <div id="bkResult" class="bk-result"></div>
+    </form>
+    <aside class="bk-side">
+      <div class="bk-instant"><h4>Want a live slot now?</h4><p>Book instantly on GlossGenius — pick an open time and you're set.</p><a class="bk-instant-go" href="https://nailsbylily.glossgenius.com">Book on GlossGenius &rarr;</a></div>
+      <div class="bk-flex"><h4>Flexible by design</h4><p>Mobile or by appointment, whatever works. Akron &amp; surrounding areas.</p></div>
+    </aside>
+  </div>
+</div></section>
 <footer><div class="wrap">
   <span class="fb">Nails by <b>Lily</b></span>
-  <div class="socials"><a href="#" data-ph aria-label="Facebook">f</a><a href="#" data-ph aria-label="Instagram">ig</a><a href="https://nailsbylily.glossgenius.com" aria-label="Book">★</a></div>
+  <div class="socials"><a href="#" data-ph aria-label="Facebook">f</a><a href="#" data-ph aria-label="Instagram">ig</a><a href="#book" aria-label="Book">★</a></div>
   <div class="credit">Design blueprint · Pop direction · for review</div>
 </div></footer>
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer"><button class="lb__x" id="lbx" aria-label="Close">&times;</button><img id="lbimg" src="" alt=""></div>
@@ -179,4 +257,29 @@ document.getElementById('lbx').addEventListener('click',cl);
 lb.addEventListener('click',e=>{if(e.target===lb)cl()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')cl()});
 document.querySelectorAll('[data-ph]').forEach(a=>a.addEventListener('click',e=>{if(a.getAttribute('href')==='#')e.preventDefault()}));
+
+(function(){
+var F=document.getElementById('bkForm'); if(!F) return;
+var LILY_PHONE="";  /* add Lily's number, e.g. 13305551234 */
+var LILY_EMAIL="";  /* add Lily's email */
+var GG="https://nailsbylily.glossgenius.com";
+var R=document.getElementById('bkResult');
+function v(id){var e=document.getElementById(id);return e?e.value.trim():"";}
+var d=document.getElementById('bkDate'); if(d){var t=new Date();t.setMinutes(t.getMinutes()-t.getTimezoneOffset());d.min=t.toISOString().slice(0,10);}
+F.addEventListener('submit',function(e){
+ e.preventDefault();
+ var name=v('bkName'),c=v('bkContact'),s=v('bkService'),len=v('bkLength'),dt=v('bkDate'),tm=v('bkTime'),lo=v('bkLoc'),no=v('bkNotes');
+ var miss=[]; if(!name)miss.push('name'); if(!c)miss.push('phone or email'); if(!s)miss.push('service'); if(!dt)miss.push('date');
+ if(miss.length){R.className='bk-result show';R.innerHTML='<p class="bk-err">Please add your '+miss.join(', ')+'.</p>';return;}
+ var L=['New booking request — Nails by Lily','Name: '+name,'Contact: '+c,'Service: '+s+(len?' ('+len+')':''),'Preferred: '+dt+(tm?' · '+tm:''),'Where: '+(lo||'either'),no?'Notes: '+no:''].filter(Boolean);
+ var msg=L.join('\n'),en=encodeURIComponent(msg),b='';
+ if(LILY_PHONE)b+='<a class="bk-go" href="sms:'+LILY_PHONE+'?&body='+en+'">Text Lily</a>';
+ if(LILY_EMAIL)b+='<a class="bk-go" href="mailto:'+LILY_EMAIL+'?subject=Booking%20request&body='+en+'">Email Lily</a>';
+ b+='<button type="button" class="bk-go bk-copy">Copy request</button>';
+ b+='<a class="bk-go bk-gg" href="'+GG+'">Book a live slot instead</a>';
+ R.className='bk-result show';
+ R.innerHTML='<p class="bk-ok">Here\'s your request — send it to Lily and she\'ll confirm your time.</p><pre class="bk-sum">'+msg.replace(/</g,'&lt;')+'</pre><div class="bk-actions">'+b+'</div>';
+ var cp=R.querySelector('.bk-copy'); if(cp)cp.addEventListener('click',function(){try{navigator.clipboard.writeText(msg);cp.textContent='Copied \u2713';}catch(x){}});
+ R.scrollIntoView({behavior:'smooth',block:'nearest'});
+});})();
 </script></body></html>
