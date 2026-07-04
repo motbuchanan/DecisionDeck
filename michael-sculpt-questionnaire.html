@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#191614">
+<title>Session Zero · Sculpt App Questionnaire</title>
+<style>
+:root{
+  --bg:#191614; --panel:#221e1b; --panel2:#2c2723; --line:#3a332d;
+  --ink:#f0ece7; --mut:#a89e93; --dim:#797064;
+  --act:#d97e4a; --act-soft:rgba(217,126,74,.14);
+  --must:#e05c3a; --want:#d99e4a; --nice:#8a93d9; --skip:#797064;
+  --mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);padding-bottom:60px}
+main{max-width:720px;margin:0 auto;padding:0 14px}
+h1{font:800 24px/1.2 var(--sans);letter-spacing:-.01em;margin:0}
+h2{font:800 19px/1.25 var(--sans);margin:0 0 4px}
+h3{font:700 16px/1.3 var(--sans);margin:0 0 2px}
+p{margin:6px 0}
+.mut{color:var(--mut)} .dim{color:var(--dim)}
+.mono{font-family:var(--mono)}
+
+header{position:sticky;top:0;z-index:50;background:rgba(25,22,20,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 14px 8px}
+.hrow{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.htitle{flex:1;min-width:0}
+.htitle .t{font:800 15px/1.1 var(--sans)}
+.htitle .s{font:600 10px/1 var(--mono);color:var(--mut);letter-spacing:.14em;margin-top:3px}
+.badge{font:700 10px/1 var(--mono);color:var(--act);background:var(--act-soft);border:1px solid rgba(217,126,74,.35);border-radius:20px;padding:6px 10px;cursor:pointer;user-select:none;white-space:nowrap}
+.meshbar{max-width:720px;margin:8px auto 0;height:8px;border-radius:4px;background:var(--panel2);overflow:hidden;position:relative}
+.meshbar b{display:block;height:100%;width:0;background:linear-gradient(90deg,#8a6a4f,#d97e4a);border-radius:4px;transition:width .3s}
+.pct{font:700 10px/1 var(--mono);color:var(--mut);letter-spacing:.1em;text-align:right;max-width:720px;margin:5px auto 0}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.sechead{margin:30px 0 4px;display:flex;align-items:baseline;gap:10px}
+.secnum{font:800 12px/1 var(--mono);color:var(--act);letter-spacing:.14em}
+.intro{border-color:rgba(217,126,74,.4)}
+.q{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.q:first-of-type{margin-top:6px;padding-top:0;border-top:0}
+.qt{font:700 15px/1.35 var(--sans);margin-bottom:8px}
+.qn{font:700 10px/1 var(--mono);color:var(--dim);letter-spacing:.1em;margin-right:6px}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font:600 13px/1.2 var(--sans);color:var(--mut);background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:8px 13px;cursor:pointer;user-select:none;transition:all .12s}
+.chip:active{transform:scale(.96)}
+.chip.on{color:#191614;background:var(--act);border-color:var(--act);font-weight:700}
+.chip.multi.on{color:var(--ink);background:var(--act-soft);border-color:var(--act)}
+.otherwrap{margin-top:8px}
+input[type=text],textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:15px/1.5 var(--sans);padding:10px 12px;outline:none}
+input[type=text]:focus,textarea:focus{border-color:var(--act)}
+textarea{min-height:84px;resize:vertical}
+
+.concept{padding:0;overflow:hidden}
+.cbody{padding:14px 16px 16px}
+.cfig{background:#131110;border-bottom:1px solid var(--line);padding:12px 14px;display:flex;justify-content:center}
+.cfig svg{max-width:100%;height:auto}
+.creact{margin-top:12px}
+.rlab{font:700 10px/1 var(--mono);color:var(--dim);letter-spacing:.12em;margin-bottom:7px}
+
+.catcard{padding:0;overflow:hidden}
+.cathead{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.catdot{width:10px;height:10px;border-radius:3px;flex:none}
+.cathead .cn{font:800 15px/1.2 var(--sans)}
+.cathead .cd{font:13px/1.3 var(--sans);color:var(--mut)}
+.feat{padding:12px 16px;border-bottom:1px solid var(--line)}
+.feat:last-child{border-bottom:0}
+.fname{font:700 14.5px/1.3 var(--sans)}
+.fdesc{font:13px/1.45 var(--sans);color:var(--mut);margin:2px 0 8px}
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:420px}
+.rb{font:700 11px/1 var(--mono);letter-spacing:.06em;text-align:center;padding:9px 2px;border-radius:8px;border:1px solid var(--line);color:var(--dim);background:var(--panel2);cursor:pointer;user-select:none;transition:all .12s}
+.rb:active{transform:scale(.95)}
+.rb.on.r-must{background:var(--must);border-color:var(--must);color:#191614}
+.rb.on.r-want{background:var(--want);border-color:var(--want);color:#191614}
+.rb.on.r-nice{background:var(--nice);border-color:var(--nice);color:#191614}
+.rb.on.r-skip{background:#463e36;border-color:#574e44;color:var(--ink)}
+
+.bigbtn{display:block;width:100%;font:800 16px/1 var(--sans);color:#191614;background:var(--act);border:0;border-radius:12px;padding:16px;cursor:pointer;margin-top:12px}
+.bigbtn:active{transform:scale(.98)}
+.ghost{display:block;width:100%;font:700 14px/1 var(--sans);color:var(--mut);background:transparent;border:1px solid var(--line);border-radius:12px;padding:13px;cursor:pointer;margin-top:10px}
+#out{display:none;margin-top:12px}
+#outtxt{min-height:220px;font:12.5px/1.5 var(--mono);white-space:pre-wrap}
+.warn{font:600 13px/1.4 var(--sans);color:var(--want);margin-top:10px;display:none}
+
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:#0f0d0c;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 18px;font:600 13px/1.3 var(--sans);opacity:0;transition:all .25s;z-index:99;pointer-events:none;max-width:86vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+footer{text-align:center;font:600 10px/1 var(--mono);color:var(--dim);letter-spacing:.12em;margin:34px 0 10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div class="htitle">
+      <div class="t">Session Zero</div>
+      <div class="s">SCULPT APP QUESTIONNAIRE · FOR MICHAEL</div>
+    </div>
+    <div class="badge" id="badge">v1 · Jul 4</div>
+  </div>
+  <div class="meshbar"><b id="meshfill"></b></div>
+  <div class="pct" id="pct">0% BLOCKED IN</div>
+</header>
+
+<main>
+
+<div class="card intro">
+  <h2>Hey Michael</h2>
+  <p>I'm building a pocket sculpting tool that runs in a browser on a phone or tablet. The pitch: sculpt where ZBrush can't go, block something in on the couch, export an OBJ, finish it in ZBrush. You're the target user, so I want to build it around your hands, not around what I guess a sculptor wants.</p>
+  <p>This form takes 10 to 15 minutes. Answers save automatically on this device, so you can come back later. At the end, one button turns it all into a block of text you copy and send back to me.</p>
+  <p class="mut">Rate things honestly. "Must have" means the tool is dead to you without it. "Skip" means you'd never touch it on a phone even if you use it daily in ZBrush. The skips matter as much as the musts, they keep the tool fast.</p>
+</div>
+
+<div class="sechead"><span class="secnum">01</span><h2>About you</h2></div>
+<div class="card" id="sec-about"></div>
+
+<div class="sechead"><span class="secnum">02</span><h2>How you work</h2></div>
+<p class="mut" style="margin:2px 0 0">Pick whatever is closest to reality. This decides the default layout and what loads first.</p>
+<div class="card" id="sec-work"></div>
+
+<div class="sechead"><span class="secnum">03</span><h2>The big concepts</h2></div>
+<p class="mut" style="margin:2px 0 0">You know all of these from ZBrush land, but they cost very different amounts on a phone. For each one, tell me how central it is to how you personally sculpt. That tells me where the performance budget goes.</p>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="110" viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#4a4138" stroke-width="1" fill="none">
+        <path d="M20 80 L60 30 L120 40 L100 90 Z"/>
+        <path d="M60 30 L100 90"/>
+      </g>
+      <g stroke="#d97e4a" stroke-width="1" fill="none">
+        <path d="M180 80 L200 55 L220 30 L250 33 L280 40 L272 62 L262 90 L220 86 Z"/>
+        <path d="M200 55 L250 33 M200 55 L220 86 M200 55 L262 90 M220 30 L250 33 M250 33 L262 90 M250 33 L272 62 M220 86 L262 90 M200 55 L280 40 M220 30 L280 40"/>
+      </g>
+      <path d="M138 58 L166 58" stroke="#797064" stroke-width="2"/>
+      <path d="M160 52 L166 58 L160 64" stroke="#797064" stroke-width="2" fill="none"/>
+      <text x="14" y="104" font-family="monospace" font-size="9" fill="#797064">SPARSE MESH</text>
+      <text x="196" y="104" font-family="monospace" font-size="9" fill="#d97e4a">DENSIFIES UNDER THE BRUSH</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Dynamic topology</h3>
+    <p class="mut">The mesh adds triangles only where you sculpt, so detail appears where you need it and the rest stays light. Sculptris and Nomad style. The alternative is pre-densifying everything, which phones hate.</p>
+    <div class="creact" data-concept="c1"><div class="rlab">HOW CENTRAL IS THIS TO YOU?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="110" viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 70 C30 40 60 22 90 30 C110 14 140 24 138 46 C160 52 158 82 132 88 C110 100 60 98 44 86 C32 82 30 76 30 70 Z" fill="none" stroke="#a89e93" stroke-width="1.5"/>
+      <circle cx="70" cy="34" r="10" fill="none" stroke="#a89e93" stroke-width="1.5"/>
+      <text x="30" y="106" font-family="monospace" font-size="9" fill="#797064">LUMPY, STRETCHED, BLOBBED</text>
+      <path d="M158 58 L182 58" stroke="#797064" stroke-width="2"/>
+      <path d="M176 52 L182 58 L176 64" stroke="#797064" stroke-width="2" fill="none"/>
+      <path d="M200 70 C200 40 230 22 260 30 C280 14 306 26 304 48 C318 56 314 82 292 88 C270 100 226 98 212 86 C202 82 200 76 200 70 Z" fill="none" stroke="#d97e4a" stroke-width="1.5"/>
+      <g stroke="#d97e4a" stroke-width="0.6" opacity="0.65">
+        <path d="M200 56 L306 56 M202 44 L300 44 M204 68 L310 68 M212 80 L300 80 M206 32 L292 32"/>
+        <path d="M216 24 L214 94 M232 22 L230 96 M248 22 L248 98 M264 24 L264 96 M280 22 L280 92 M294 30 L294 88"/>
+      </g>
+      <text x="206" y="106" font-family="monospace" font-size="9" fill="#d97e4a">REWRAPPED, EVEN, CLEAN</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Global remesh (the Dynamesh move)</h3>
+    <p class="mut">One tap rewraps the whole model with fresh even topology so you can keep pulling clay without stretched polygons. The reset-and-keep-going button.</p>
+    <div class="creact" data-concept="c2"><div class="rlab">HOW CENTRAL IS THIS TO YOU?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="100" viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="26" width="52" height="52" rx="4" fill="none" stroke="#a89e93" stroke-width="1.5"/>
+      <text x="26" y="94" font-family="monospace" font-size="9" fill="#797064">LEVEL 1</text>
+      <rect x="110" y="26" width="52" height="52" rx="10" fill="none" stroke="#c98f5f" stroke-width="1.5"/>
+      <path d="M110 52 L162 52 M136 26 L136 78" stroke="#c98f5f" stroke-width="0.8" opacity="0.7"/>
+      <text x="114" y="94" font-family="monospace" font-size="9" fill="#c98f5f">LEVEL 3</text>
+      <circle cx="252" cy="52" r="27" fill="none" stroke="#d97e4a" stroke-width="1.5"/>
+      <g stroke="#d97e4a" stroke-width="0.6" opacity="0.7">
+        <path d="M225 52 L279 52 M252 25 L252 79 M232 34 L272 70 M232 70 L272 34"/>
+        <ellipse cx="252" cy="52" rx="27" ry="12" fill="none"/>
+        <ellipse cx="252" cy="52" rx="12" ry="27" fill="none"/>
+      </g>
+      <text x="228" y="94" font-family="monospace" font-size="9" fill="#d97e4a">LEVEL 6</text>
+      <path d="M80 52 L102 52 M96 46 L102 52 L96 58" stroke="#797064" stroke-width="2" fill="none"/>
+      <path d="M170 52 L216 52 M210 46 L216 52 L210 58" stroke="#797064" stroke-width="2" fill="none"/>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Subdivision levels</h3>
+    <p class="mut">A ladder of resolutions on the same clean mesh. Drop to level 1 to move big forms, ride up to level 6 for pores, and detail survives the trip. The disciplined alternative to Dynamesh-everything.</p>
+    <div class="creact" data-concept="c3"><div class="rlab">HOW CENTRAL IS THIS TO YOU?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="100" viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M60 88 C30 88 18 62 30 42 C40 22 74 14 100 24 C130 12 166 22 172 46 C182 70 158 90 128 90 Z" fill="#2c2723" stroke="#a89e93" stroke-width="1.5"/>
+      <path d="M60 88 C30 88 18 62 30 42 C40 22 74 14 100 24 L100 90 Z" fill="#4a4138" opacity="0.9"/>
+      <text x="40" y="60" font-family="monospace" font-size="9" fill="#f0ece7">MASKED</text>
+      <path d="M214 40 C226 26 250 26 258 40" stroke="#d97e4a" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <text x="200" y="70" font-family="monospace" font-size="9" fill="#d97e4a">BRUSH ONLY BITES</text>
+      <text x="200" y="84" font-family="monospace" font-size="9" fill="#d97e4a">THE UNMASKED SIDE</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Masking</h3>
+    <p class="mut">Paint a protective layer so brushes only affect what's exposed. Invert it, blur it, sharpen it. In ZBrush this is half the workflow. On a phone the question is how much of that half you actually need.</p>
+    <div class="creact" data-concept="c4"><div class="rlab">HOW CENTRAL IS THIS TO YOU?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="100" viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="90" cy="46" r="30" fill="none" stroke="#d97e4a" stroke-width="1.5"/>
+      <ellipse cx="118" cy="72" rx="16" ry="10" fill="none" stroke="#a89e93" stroke-width="1.5"/>
+      <circle cx="76" cy="38" r="6" fill="none" stroke="#a89e93" stroke-width="1.5"/>
+      <circle cx="102" cy="38" r="6" fill="none" stroke="#a89e93" stroke-width="1.5"/>
+      <g font-family="monospace" font-size="9">
+        <text x="196" y="26" fill="#d97e4a">&#9654; HEAD</text>
+        <text x="196" y="46" fill="#a89e93">&#9655; EYE L</text>
+        <text x="196" y="66" fill="#a89e93">&#9655; EYE R</text>
+        <text x="196" y="86" fill="#a89e93">&#9655; JAW</text>
+      </g>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Multi-object scenes</h3>
+    <p class="mut">Separate meshes living in one scene, like subtools. Eyes stay spheres, teeth stay separate, you sculpt one thing at a time and export together or apart.</p>
+    <div class="creact" data-concept="c5"><div class="rlab">HOW CENTRAL IS THIS TO YOU?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="100" viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="70" cy="50" r="32" fill="#5c5147" stroke="#3a332d"/>
+      <ellipse cx="58" cy="38" rx="12" ry="9" fill="#8a7d70" opacity="0.85"/>
+      <text x="46" y="96" font-family="monospace" font-size="9" fill="#797064">CLAY</text>
+      <circle cx="160" cy="50" r="32" fill="#6b7280" stroke="#3a332d"/>
+      <ellipse cx="148" cy="36" rx="10" ry="7" fill="#e5e7eb" opacity="0.9"/>
+      <path d="M136 66 A32 32 0 0 0 184 66" stroke="#2c3340" stroke-width="4" fill="none" opacity="0.6"/>
+      <text x="134" y="96" font-family="monospace" font-size="9" fill="#797064">METAL</text>
+      <circle cx="250" cy="50" r="32" fill="#c98f5f" stroke="#3a332d"/>
+      <ellipse cx="238" cy="36" rx="11" ry="8" fill="#f0d9c4" opacity="0.9"/>
+      <text x="222" y="96" font-family="monospace" font-size="9" fill="#797064">SKIN WAX</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Matcaps</h3>
+    <p class="mut">Baked material-and-lighting spheres that make the model read as clay, metal or wax instantly, no light setup. Cheap on the GPU, huge for judging forms.</p>
+    <div class="creact" data-concept="c6"><div class="rlab">HOW CENTRAL IS THIS TO YOU?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="100" viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M40 82 C18 74 20 42 42 32 C58 16 92 18 104 36 C122 44 120 72 100 80 C84 92 56 92 40 82 Z" fill="none" stroke="#a89e93" stroke-width="1"/>
+      <g stroke="#a89e93" stroke-width="0.45" opacity="0.8">
+        <path d="M28 58 L118 58 M30 46 L114 46 M32 70 L112 70 M40 34 L104 34 M42 82 L100 82"/>
+        <path d="M48 22 L44 88 M62 18 L60 92 M76 18 L76 92 M90 20 L90 90 M102 26 L100 84"/>
+      </g>
+      <text x="30" y="98" font-family="monospace" font-size="9" fill="#797064">2M TRIS</text>
+      <path d="M138 54 L162 54 M156 48 L162 54 L156 60" stroke="#797064" stroke-width="2" fill="none"/>
+      <path d="M212 82 C190 74 192 42 214 32 C230 16 264 18 276 36 C294 44 292 72 272 80 C256 92 228 92 212 82 Z" fill="none" stroke="#d97e4a" stroke-width="1.2"/>
+      <g stroke="#d97e4a" stroke-width="0.7" opacity="0.8">
+        <path d="M204 60 L288 52 M210 40 L282 72 M226 24 L260 90 M256 22 L232 90"/>
+      </g>
+      <text x="206" y="98" font-family="monospace" font-size="9" fill="#d97e4a">80K TRIS, SAME SILHOUETTE</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Decimation for export</h3>
+    <p class="mut">Crunch the triangle count way down while keeping the shape, so the file that leaves the phone is light enough to email and clean enough to remesh in ZBrush.</p>
+    <div class="creact" data-concept="c7"><div class="rlab">HOW CENTRAL IS THIS TO YOU?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="110" viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="160" cy="60" rx="34" ry="26" fill="#2c2723" stroke="#a89e93"/>
+      <path d="M160 60 L160 12" stroke="#59c98d" stroke-width="2.5"/>
+      <path d="M154 20 L160 12 L166 20" stroke="#59c98d" stroke-width="2.5" fill="none"/>
+      <path d="M160 60 L232 60" stroke="#e05c3a" stroke-width="2.5"/>
+      <path d="M224 54 L232 60 L224 66" stroke="#e05c3a" stroke-width="2.5" fill="none"/>
+      <path d="M160 60 L116 96" stroke="#8a93d9" stroke-width="2.5"/>
+      <path d="M118 86 L116 96 L126 94" stroke="#8a93d9" stroke-width="2.5" fill="none"/>
+      <path d="M236 34 A56 56 0 0 1 250 76" stroke="#d99e4a" stroke-width="2" fill="none"/>
+      <path d="M246 68 L250 76 L241 77" stroke="#d99e4a" stroke-width="2" fill="none"/>
+      <text x="12" y="104" font-family="monospace" font-size="9" fill="#797064">MOVE / ROTATE / SCALE HANDLES ON ANY OBJECT</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Transform gizmo</h3>
+    <p class="mut">Arrow and ring handles for precise move, rotate and scale, ZBrush gizmo or Rhino style, instead of nudging things around with a grab brush.</p>
+    <div class="creact" data-concept="c8"><div class="rlab">HOW CENTRAL IS THIS TO YOU?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="sechead"><span class="secnum">04</span><h2>Feature triage</h2></div>
+<p class="mut" style="margin:2px 0 0">Rate everything for a POCKET tool, not for ZBrush. <b style="color:#e05c3a">MUST</b> = dead without it. <b style="color:#d99e4a">WANT</b> = would use it constantly. <b style="color:#8a93d9">NICE</b> = cool but wouldn't miss it. <b style="color:#a89e93">SKIP</b> = not on a phone. Gut reactions, don't overthink.</p>
+<div id="triage"></div>
+
+<div class="sechead"><span class="secnum">05</span><h2>Final word</h2></div>
+<div class="card">
+  <div class="q"><div class="qt">What would you miss most from ZBrush on day one?</div><textarea data-t="t1" placeholder="Whatever comes to mind..."></textarea></div>
+  <div class="q"><div class="qt">Instant dealbreaker. The thing that makes you close a sculpt app and never reopen it.</div><textarea data-t="t2" placeholder=""></textarea></div>
+  <div class="q"><div class="qt">If this tool nails exactly ONE thing, what should it be?</div><textarea data-t="t3" placeholder=""></textarea></div>
+  <div class="q"><div class="qt">Anything else about how you sculpt, or what you'd actually use a pocket tool for?</div><textarea data-t="t4" placeholder=""></textarea></div>
+</div>
+
+<div class="sechead"><span class="secnum">06</span><h2>Send it back</h2></div>
+<div class="card">
+  <p class="mut">This builds a text version of all your answers. Copy it and text or email it to Mot. Change anything above and rebuild, it always uses the latest.</p>
+  <div class="warn" id="warn"></div>
+  <button class="bigbtn" id="gen">Build my answers</button>
+  <div id="out">
+    <textarea id="outtxt" readonly></textarea>
+    <button class="bigbtn" id="copy">Copy to clipboard</button>
+  </div>
+  <button class="ghost" id="reset">Start over (wipes all answers)</button>
+</div>
+
+<footer>SESSION ZERO · SCULPT APP · ANSWERS SAVE ON THIS DEVICE ONLY</footer>
+</main>
+<div id="toast" role="status"></div>
+<script>
+(function(){
+"use strict";
+var VERSION = "v1 · Jul 4";
+var KEY = "sculptq_v1";
+
+/* ---------- data ---------- */
+var ABOUT = [
+ {i:"a1",q:"Which of these do you use or have used? Tap all that apply.",multi:true,other:true,
+  o:["ZBrush","Rhino","Meshmixer","Blender","Maya or 3ds Max","Nomad Sculpt","forger","Fusion 360","SelfCAD / SculptGL / browser tools"]},
+ {i:"a2",q:"Which ONE is home base for sculpting?",text:true},
+ {i:"a3",q:"What do you mostly make? All that apply.",multi:true,other:true,
+  o:["Characters and creatures","Anatomy studies","Hard surface / mechanical","Parts headed to 3D print","Production or work pieces","Small objects, jewelry scale","Concept doodles and speed sculpts"]},
+ {i:"a4",q:"Where would a pocket sculpt tool actually live for you?",
+  o:["My phone","A tablet","Both","Honestly, also the desktop browser"]},
+ {i:"a5",q:"What would you sculpt with?",
+  o:["Finger only","Stylus with pressure","Stylus, no pressure","Depends where I am"]},
+ {i:"a6",q:"What happens to a finished sculpt? All that apply.",multi:true,
+  o:["Into ZBrush to finish","3D print it","Render or turntable it","Into Rhino or CAD downstream","Nothing, it was for the reps"]},
+ {i:"a7",q:"Roughly how many years have you been sculpting digitally?",
+  o:["Under 5","5 to 10","10 to 20","20 plus"]}
+];
+
+var WORK = [
+ {i:"w1",q:"A new sculpt starts from...",
+  o:["A sphere, always","Primitives kitbashed together","An armature (ZSpheres style)","A base mesh library","An imported scan or model","Depends on the piece"]},
+ {i:"w2",q:"Your topology habit:",
+  o:["Dynamesh constantly, think later","Subdivision levels, keep it clean","Sculpt first, fix topology at the end","Depends on the piece"]},
+ {i:"w3",q:"Symmetry is...",
+  o:["On 90% of the time","On early, off for the asymmetry pass","Rarely on"]},
+ {i:"w4",q:"Masking is...",
+  o:["Constant, it's half my workflow","Sometimes","Rare for me"]},
+ {i:"w5",q:"Honest answer: what would you use a POCKET sculpt tool for?",
+  o:["Couch concepts and maquettes","Blocking real work to finish in ZBrush","Full sculpts if it's good enough","Doodles and killing time","Not sure until I try it"]},
+ {i:"w6",q:"Touch navigation preference:",
+  o:["One finger orbits, brush needs a mode (Nomad default)","Two fingers navigate, one finger always sculpts","On-screen nav buttons","No strong feeling, I'll adapt"]},
+ {i:"w7",q:"Reference images while sculpting:",
+  o:["Always up, split view or overlay","Sometimes, glance and go","It's all in my head"]},
+ {i:"w8",q:"Smooth brush access has to be...",
+  o:["Hold a button, like Shift in ZBrush","A toggle mode is fine","Second finger while sculpting","Don't care, just make it fast"]},
+ {i:"w9",q:"How precious is undo to you?",
+  o:["I lean on it constantly, deep history please","Normal amounts","I commit to my strokes"]},
+ {i:"w10",q:"A pocket sculpt session would realistically be...",
+  o:["Five stolen minutes","Twenty to thirty minutes","An hour plus if it holds up"]}
+];
+
+var CREACT = ["Core to me","Useful","Rarely touch it","Could live without"];
+var CONCEPTS = ["c1","c2","c3","c4","c5","c6","c7","c8"];
+var CNAMES = {c1:"Dynamic topology",c2:"Global remesh (Dynamesh)",c3:"Subdivision levels",c4:"Masking",c5:"Multi-object scenes",c6:"Matcaps",c7:"Decimation for export",c8:"Transform gizmo"};
+
+var CATS = [
+ {id:"brush",n:"Brushes",d:"The hands.",col:"#e05c3a"},
+ {id:"mask",n:"Mask and select",d:"Protect, isolate, target.",col:"#d99e4a"},
+ {id:"topo",n:"Topology",d:"What the clay is made of.",col:"#8a93d9"},
+ {id:"scene",n:"Scene and objects",d:"Subtools, primitives, assembly.",col:"#59c98d"},
+ {id:"prec",n:"Symmetry and precision",d:"The Rhino part of your brain.",col:"#5bb8d4"},
+ {id:"view",n:"View and display",d:"Reading the forms.",col:"#c9a86b"},
+ {id:"hist",n:"History and layers",d:"Safety nets.",col:"#d96aa6"},
+ {id:"files",n:"Files and export",d:"Getting work out alive.",col:"#a89e93"},
+ {id:"input",n:"Input and UI",d:"How it feels under the fingers.",col:"#7fc98d"}
+];
+
+var FEATURES = [
+ {i:"f01",c:"brush",n:"Clay buildup",b:"Layering clay in flat-ish strokes. The workhorse."},
+ {i:"f02",c:"brush",n:"Standard add / subtract",b:"Classic rounded push and carve."},
+ {i:"f03",c:"brush",n:"Move / grab",b:"Pull big forms around. Silhouette work."},
+ {i:"f04",c:"brush",n:"Inflate",b:"Puff a region outward along its normals."},
+ {i:"f05",c:"brush",n:"Pinch",b:"Tighten edges and sharpen forms."},
+ {i:"f06",c:"brush",n:"Crease / dam standard",b:"Cut clean sharp lines and folds."},
+ {i:"f07",c:"brush",n:"Flatten / polish planes",b:"hPolish energy. Planar facets and hard-surface cleanup."},
+ {i:"f08",c:"brush",n:"Trim / hard cut",b:"Slice material off decisively."},
+ {i:"f09",c:"brush",n:"Snake hook",b:"Pull horns, spikes and tentacles out of the mass."},
+ {i:"f10",c:"brush",n:"Stamps and alphas",b:"Texture through the brush tip. Scales, pores, fabric."},
+ {i:"f11",c:"brush",n:"Stroke smoothing (lazy mouse)",b:"Steadies your line for long clean strokes, big deal for finger input."},
+ {i:"f12",c:"brush",n:"Backface masking",b:"Thin parts like ears don't get sculpted from both sides at once."},
+ {i:"f13",c:"mask",n:"Paint a mask",b:"Brush on protection, sculpt around it."},
+ {i:"f14",c:"mask",n:"Invert / clear / blur mask",b:"The standard mask verbs."},
+ {i:"f15",c:"mask",n:"Mask by cavity",b:"Auto-mask the crevices so surface strokes skip the cracks."},
+ {i:"f16",c:"mask",n:"Face groups",b:"Polygroup-ish colored regions for one-tap selection later."},
+ {i:"f17",c:"mask",n:"Hide / isolate geometry",b:"Get inside a mouth or behind an arm by hiding what's in the way."},
+ {i:"f18",c:"topo",n:"Local refine under the brush",b:"Dyntopo. Triangles appear only where you're working."},
+ {i:"f19",c:"topo",n:"One-tap global remesh",b:"The Dynamesh reset. Rewrap everything even and keep going."},
+ {i:"f20",c:"topo",n:"Subdivision levels",b:"Step up and down resolution on a clean mesh."},
+ {i:"f21",c:"topo",n:"Decimate",b:"Crunch the poly count while keeping the shape."},
+ {i:"f22",c:"topo",n:"Wireframe view",b:"See the actual topology when you want to."},
+ {i:"f23",c:"scene",n:"Multiple objects (subtools)",b:"Separate meshes in one scene, sculpt one at a time."},
+ {i:"f24",c:"scene",n:"Primitive library",b:"Sphere, box, cylinder, torus, tube as starting stock."},
+ {i:"f25",c:"scene",n:"Lathe / profile shapes",b:"Draw a profile, spin it into a vase, limb or socket."},
+ {i:"f26",c:"scene",n:"Merge objects",b:"Weld subtools into one mesh."},
+ {i:"f27",c:"scene",n:"Boolean cut / intersect",b:"Subtract one shape from another. Hard-surface bread and butter."},
+ {i:"f28",c:"scene",n:"Duplicate and mirror",b:"Copy an object, flip it across an axis. Ears, eyes, limbs."},
+ {i:"f29",c:"scene",n:"Insert mesh stamps",b:"Drop ready-made eyes, teeth, bolts into the scene."},
+ {i:"f30",c:"prec",n:"Axis symmetry",b:"X, Y, Z mirror while sculpting."},
+ {i:"f31",c:"prec",n:"Radial symmetry",b:"Repeat strokes around an axis. Pottery, gears, creatures."},
+ {i:"f32",c:"prec",n:"Real-world units",b:"Actual millimeters, for anything headed to print or CAD."},
+ {i:"f33",c:"prec",n:"Floor grid and snapping",b:"A ground plane and things that line up to it."},
+ {i:"f34",c:"prec",n:"Ortho / perspective toggle",b:"True orthographic views for judging proportions."},
+ {i:"f35",c:"view",n:"Matcap library",b:"A good set of clay, metal and skin materials."},
+ {i:"f36",c:"view",n:"Adjustable lighting",b:"Move the light to rake across forms and check surfaces."},
+ {i:"f37",c:"view",n:"Reference image overlay",b:"Pin a reference photo on screen or on a plane in the scene."},
+ {i:"f38",c:"view",n:"Turntable spin",b:"Auto-rotate to judge the piece and record a preview."},
+ {i:"f39",c:"view",n:"High-res screenshot",b:"A clean beauty shot without UI."},
+ {i:"f40",c:"hist",n:"Deep undo",b:"Fifty plus steps back, reliable."},
+ {i:"f41",c:"hist",n:"Sculpt layers",b:"Detail on layers you can dial in and out or delete."},
+ {i:"f42",c:"hist",n:"Snapshots / versions",b:"Save named checkpoints of a project and roll back."},
+ {i:"f43",c:"files",n:"OBJ export",b:"The handoff to ZBrush. Non-negotiable for me, but rate it anyway."},
+ {i:"f44",c:"files",n:"STL export",b:"Straight to the printer or slicer."},
+ {i:"f45",c:"files",n:"Poly count control on export",b:"Choose how heavy the exported file is."},
+ {i:"f46",c:"files",n:"Import OBJ / STL",b:"Bring a mesh in and keep sculpting it."},
+ {i:"f47",c:"files",n:"Autosave",b:"A phone call never eats a sculpt."},
+ {i:"f48",c:"files",n:"Fully offline",b:"Works with zero signal, nothing leaves the device."},
+ {i:"f49",c:"input",n:"Stylus pressure",b:"Pressure drives intensity or size when a pen is present."},
+ {i:"f50",c:"input",n:"Customizable quick buttons",b:"Put YOUR five most-used actions one thumb away."},
+ {i:"f51",c:"input",n:"Left / right hand layout flip",b:"Mirror the UI for handedness."},
+ {i:"f52",c:"input",n:"On-screen size and intensity sliders",b:"Always-visible brush dials, no menu diving."}
+];
+
+var RATES = [
+ {k:"must",l:"MUST"},{k:"want",l:"WANT"},{k:"nice",l:"NICE"},{k:"skip",l:"SKIP"}
+];
+
+/* ---------- state ---------- */
+var S = {a:{},c:{},f:{},t:{}};
+var memFallback = null;
+function loadState(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(raw){ S = JSON.parse(raw) || S; }
+  }catch(e){ if(memFallback){ S = memFallback; } }
+  S.a = S.a || {}; S.c = S.c || {}; S.f = S.f || {}; S.t = S.t || {};
+}
+function saveState(){
+  memFallback = S;
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  renderProgress();
+}
+
+/* ---------- helpers ---------- */
+function el(tag, cls, txt){
+  var n = document.createElement(tag);
+  if(cls) n.className = cls;
+  if(txt !== undefined) n.textContent = txt;
+  return n;
+}
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._h);
+  toast._h = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+}
+
+/* ---------- render question blocks ---------- */
+function renderQuestions(list, mount, store, prefix){
+  list.forEach(function(item, idx){
+    var q = el("div","q");
+    var qt = el("div","qt");
+    var qn = el("span","qn", prefix + (idx+1));
+    qt.appendChild(qn);
+    qt.appendChild(document.createTextNode(item.q));
+    q.appendChild(qt);
+
+    if(item.text){
+      var inp = el("input");
+      inp.type = "text";
+      inp.placeholder = "Type it here";
+      inp.value = store[item.i] || "";
+      inp.addEventListener("input", function(){
+        store[item.i] = inp.value;
+        debounceSave();
+      });
+      q.appendChild(inp);
+    } else {
+      var chips = el("div","chips");
+      item.o.forEach(function(opt){
+        var c = el("div","chip" + (item.multi ? " multi" : ""), opt);
+        var isOn = item.multi
+          ? (Array.isArray(store[item.i]) && store[item.i].indexOf(opt) > -1)
+          : store[item.i] === opt;
+        if(isOn) c.classList.add("on");
+        c.addEventListener("click", function(){
+          if(item.multi){
+            var arr = Array.isArray(store[item.i]) ? store[item.i] : [];
+            var at = arr.indexOf(opt);
+            if(at > -1){ arr.splice(at,1); c.classList.remove("on"); }
+            else { arr.push(opt); c.classList.add("on"); }
+            store[item.i] = arr;
+          } else {
+            store[item.i] = opt;
+            var sibs = chips.querySelectorAll(".chip");
+            for(var s=0;s<sibs.length;s++) sibs[s].classList.remove("on");
+            c.classList.add("on");
+          }
+          saveState();
+        });
+        chips.appendChild(c);
+      });
+      q.appendChild(chips);
+      if(item.other){
+        var ow = el("div","otherwrap");
+        var oi = el("input");
+        oi.type = "text";
+        oi.placeholder = "Anything not listed? Type it";
+        oi.value = store[item.i + "_x"] || "";
+        oi.addEventListener("input", function(){
+          store[item.i + "_x"] = oi.value;
+          debounceSave();
+        });
+        ow.appendChild(oi);
+        q.appendChild(ow);
+      }
+    }
+    mount.appendChild(q);
+  });
+}
+
+/* ---------- concepts ---------- */
+function renderConcepts(){
+  var nodes = document.querySelectorAll(".creact");
+  for(var i=0;i<nodes.length;i++){
+    (function(node){
+      var cid = node.getAttribute("data-concept");
+      var chips = node.querySelector(".chips");
+      CREACT.forEach(function(opt){
+        var c = el("div","chip",opt);
+        if(S.c[cid] === opt) c.classList.add("on");
+        c.addEventListener("click", function(){
+          S.c[cid] = opt;
+          var sibs = chips.querySelectorAll(".chip");
+          for(var s=0;s<sibs.length;s++) sibs[s].classList.remove("on");
+          c.classList.add("on");
+          saveState();
+        });
+        chips.appendChild(c);
+      });
+    })(nodes[i]);
+  }
+}
+
+/* ---------- triage ---------- */
+function renderTriage(){
+  var mount = document.getElementById("triage");
+  CATS.forEach(function(cat){
+    var card = el("div","card catcard");
+    var head = el("div","cathead");
+    var dot = el("span","catdot");
+    dot.style.background = cat.col;
+    head.appendChild(dot);
+    var ht = el("div");
+    ht.appendChild(el("div","cn",cat.n));
+    ht.appendChild(el("div","cd",cat.d));
+    head.appendChild(ht);
+    card.appendChild(head);
+    FEATURES.filter(function(f){ return f.c === cat.id; }).forEach(function(f){
+      var row = el("div","feat");
+      row.appendChild(el("div","fname",f.n));
+      row.appendChild(el("div","fdesc",f.b));
+      var rate = el("div","rate");
+      RATES.forEach(function(r){
+        var b = el("div","rb r-" + r.k, r.l);
+        if(S.f[f.i] === r.k) b.classList.add("on");
+        b.addEventListener("click", function(){
+          S.f[f.i] = r.k;
+          var sibs = rate.querySelectorAll(".rb");
+          for(var s=0;s<sibs.length;s++) sibs[s].classList.remove("on");
+          b.classList.add("on");
+          saveState();
+        });
+        rate.appendChild(b);
+      });
+      row.appendChild(rate);
+      card.appendChild(row);
+    });
+    mount.appendChild(card);
+  });
+}
+
+/* ---------- textareas ---------- */
+function bindTextareas(){
+  var tas = document.querySelectorAll("textarea[data-t]");
+  for(var i=0;i<tas.length;i++){
+    (function(ta){
+      var id = ta.getAttribute("data-t");
+      ta.value = S.t[id] || "";
+      ta.addEventListener("input", function(){
+        S.t[id] = ta.value;
+        debounceSave();
+      });
+    })(tas[i]);
+  }
+}
+
+var debounceSave = (function(){
+  var h = null;
+  return function(){
+    clearTimeout(h);
+    h = setTimeout(saveState, 400);
+  };
+})();
+
+/* ---------- progress ---------- */
+function answeredCounts(){
+  var done = 0, total = 0;
+  ABOUT.concat(WORK).forEach(function(item){
+    total++;
+    var v = S.a[item.i];
+    if(item.text){ if(v && String(v).trim()) done++; }
+    else if(item.multi){ if(Array.isArray(v) && v.length) done++; }
+    else if(v) done++;
+  });
+  CONCEPTS.forEach(function(cid){ total++; if(S.c[cid]) done++; });
+  FEATURES.forEach(function(f){ total++; if(S.f[f.i]) done++; });
+  return {done:done, total:total};
+}
+function renderProgress(){
+  var c = answeredCounts();
+  var pct = c.total ? Math.round(100 * c.done / c.total) : 0;
+  document.getElementById("pct").textContent = pct + "% BLOCKED IN · " + c.done + " OF " + c.total;
+  document.getElementById("meshfill").style.width = pct + "%";
+}
+
+/* ---------- summary ---------- */
+function buildSummary(){
+  var L = [];
+  L.push("SCULPT APP QUESTIONNAIRE · MICHAEL");
+  L.push("Generated " + new Date().toLocaleDateString() + " · " + VERSION);
+  L.push("");
+  L.push("=== ABOUT ===");
+  ABOUT.forEach(function(item){
+    var v = S.a[item.i];
+    var extra = S.a[item.i + "_x"];
+    var ans = "";
+    if(item.text){ ans = (v && String(v).trim()) ? String(v).trim() : "(blank)"; }
+    else if(item.multi){ ans = (Array.isArray(v) && v.length) ? v.join(", ") : "(none picked)"; }
+    else { ans = v || "(skipped)"; }
+    if(extra && String(extra).trim()) ans += " | Other: " + String(extra).trim();
+    L.push("- " + item.q + " -> " + ans);
+  });
+  L.push("");
+  L.push("=== WORKFLOW ===");
+  WORK.forEach(function(item){
+    var v = S.a[item.i];
+    var ans = item.multi
+      ? ((Array.isArray(v) && v.length) ? v.join(", ") : "(none picked)")
+      : (v || "(skipped)");
+    L.push("- " + item.q + " -> " + ans);
+  });
+  L.push("");
+  L.push("=== CONCEPTS ===");
+  CREACT.forEach(function(opt){
+    var names = CONCEPTS.filter(function(cid){ return S.c[cid] === opt; })
+      .map(function(cid){ return CNAMES[cid]; });
+    if(names.length) L.push(opt.toUpperCase() + ": " + names.join(", "));
+  });
+  var unC = CONCEPTS.filter(function(cid){ return !S.c[cid]; });
+  if(unC.length) L.push("(no answer: " + unC.map(function(cid){ return CNAMES[cid]; }).join(", ") + ")");
+  L.push("");
+  L.push("=== FEATURES ===");
+  RATES.forEach(function(r){
+    var names = FEATURES.filter(function(f){ return S.f[f.i] === r.k; })
+      .map(function(f){
+        var cat = CATS.filter(function(c){ return c.id === f.c; })[0];
+        return f.n + " [" + cat.n + "]";
+      });
+    L.push(r.l + " HAVE (" + names.length + "):");
+    if(names.length){ names.forEach(function(n){ L.push("  - " + n); }); }
+    else L.push("  (none)");
+  });
+  var unF = FEATURES.filter(function(f){ return !S.f[f.i]; });
+  if(unF.length) L.push("UNRATED (" + unF.length + "): " + unF.map(function(f){ return f.n; }).join(", "));
+  L.push("");
+  L.push("=== FINAL WORD ===");
+  var TQ = {t1:"Would miss most from ZBrush", t2:"Instant dealbreaker", t3:"The ONE thing to nail", t4:"Anything else"};
+  ["t1","t2","t3","t4"].forEach(function(id){
+    var v = S.t[id];
+    if(v && String(v).trim()) L.push(TQ[id] + ": " + String(v).trim());
+  });
+  return L.join("\n");
+}
+
+/* ---------- export wiring ---------- */
+function copyText(txt){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){
+      toast("Copied. Send it to Mot.");
+    }, function(){ fallbackCopy(); });
+  } else { fallbackCopy(); }
+  function fallbackCopy(){
+    var ta = document.getElementById("outtxt");
+    ta.focus(); ta.select();
+    try{ document.execCommand("copy"); toast("Copied. Send it to Mot."); }
+    catch(e){ toast("Copy failed. Long-press the text and copy manually."); }
+  }
+}
+
+function init(){
+  loadState();
+  renderQuestions(ABOUT, document.getElementById("sec-about"), S.a, "A");
+  renderQuestions(WORK, document.getElementById("sec-work"), S.a, "W");
+  renderConcepts();
+  renderTriage();
+  bindTextareas();
+  renderProgress();
+
+  document.getElementById("badge").addEventListener("click", function(){
+    toast("Session Zero · Sculpt App · " + VERSION);
+  });
+  document.getElementById("gen").addEventListener("click", function(){
+    var c = answeredCounts();
+    var warn = document.getElementById("warn");
+    if(c.done < c.total){
+      warn.style.display = "block";
+      warn.textContent = "Heads up: " + (c.total - c.done) + " items unanswered. That's fine, they'll be listed as skipped.";
+    } else {
+      warn.style.display = "none";
+    }
+    var txt = buildSummary();
+    document.getElementById("out").style.display = "block";
+    document.getElementById("outtxt").value = txt;
+    document.getElementById("outtxt").style.height = "320px";
+    toast("Built. Scroll down and copy.");
+  });
+  document.getElementById("copy").addEventListener("click", function(){
+    copyText(document.getElementById("outtxt").value);
+  });
+  document.getElementById("reset").addEventListener("click", function(){
+    if(confirm("Wipe every answer and start over?")){
+      S = {a:{},c:{},f:{},t:{}};
+      memFallback = null;
+      try{ localStorage.removeItem(KEY); }catch(e){}
+      location.reload();
+    }
+  });
+}
+if(document.readyState === "loading"){
+  document.addEventListener("DOMContentLoaded", init);
+} else { init(); }
+})();
+</script>
+</body>
+</html>
