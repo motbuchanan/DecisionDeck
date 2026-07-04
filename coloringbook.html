@@ -135,7 +135,7 @@
     <div class="title">Coloring<span class="dot">.</span>Book</div>
     <div class="grow"></div>
     <button class="iconbtn" id="helpBtn" aria-label="How to">?</button>
-    <button class="badge" id="badge">v0.1</button>
+    <button class="badge" id="badge">v0.2</button>
   </div>
 
   <!-- HOME -->
@@ -252,7 +252,7 @@
    Standalone Game Shelf file. Register in index.html + sw.js
    from the hub chat only (do not edit those here).
    ============================================================ */
-var VERSION = "v0.1 \u00B7 Jul 4";
+var VERSION = "v0.2 \u00B7 Jul 4";
 var WORK_MAX = 1200;      // longest side of working canvas (perf + undo memory)
 var UNDO_DEPTH = 5;
 
@@ -525,12 +525,18 @@ function doUndo(){
 $("undoBtn").addEventListener("click",doUndo);
 
 /* ---- load a page (line canvas + fresh white paint) ---- */
+// size the stage to fit the wrap — ONLY valid when colorScreen is visible
+function sizeStage(){
+  if(!paint.width||!paint.height) return;
+  var wrap=stage.parentElement;
+  var mw=wrap.clientWidth-16, mh=wrap.clientHeight-16;
+  if(mw<=0||mh<=0) return;               // wrap not laid out yet — bail, a later pass will size
+  var sc=Math.min(mw/paint.width, mh/paint.height);
+  stage.style.width=(paint.width*sc)+"px";
+  stage.style.height=(paint.height*sc)+"px";
+}
 function loadPage(lineCanvasEl,w,h,existingPaintDataURL){
   paint.width=w; paint.height=h; lineC.width=w; lineC.height=h;
-  // fit stage inside wrap while preserving aspect
-  var wrap=stage.parentElement, maxW=wrap.clientWidth-16, maxH=wrap.clientHeight-16;
-  var sc=Math.min(maxW/w, maxH/h);
-  stage.style.width=(w*sc)+"px"; stage.style.height=(h*sc)+"px";
   // line layer
   var lctx=lineC.getContext("2d");
   lctx.clearRect(0,0,w,h);
@@ -540,16 +546,16 @@ function loadPage(lineCanvasEl,w,h,existingPaintDataURL){
   undoStack.length=0;
   if(existingPaintDataURL){
     var pimg=new Image();
-    pimg.onload=function(){ pctx.drawImage(pimg,0,0,w,h); };
+    pimg.onload=function(){ pctx.drawImage(pimg,0,0,w,h); sizeStage(); };
     pimg.src=existingPaintDataURL;
   }
-  goto("colorScreen");
+  goto("colorScreen");               // show FIRST so the wrap has real dimensions
+  sizeStage();                       // reading clientWidth now forces a correct reflow
+  requestAnimationFrame(sizeStage);  // safety pass once layout settles
 }
 window.addEventListener("resize",function(){
   if($("colorScreen").classList.contains("hidden")) return;
-  var w=paint.width,h=paint.height,wrap=stage.parentElement;
-  var sc=Math.min((wrap.clientWidth-16)/w,(wrap.clientHeight-16)/h);
-  stage.style.width=(w*sc)+"px"; stage.style.height=(h*sc)+"px";
+  sizeStage();
 });
 
 /* ---- drawing (pointer events) ---- */
