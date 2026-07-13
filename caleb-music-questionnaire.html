@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#14161b">
+<title>Session Zero · Music App Questionnaire</title>
+<style>
+:root{
+  --bg:#14161b; --panel:#1d2026; --panel2:#252932; --line:#2f3440;
+  --ink:#eceef2; --mut:#9aa1ad; --dim:#697180;
+  --act:#f2a33c; --act-soft:rgba(242,163,60,.14);
+  --must:#ff6b4a; --want:#f2a33c; --nice:#7b8ff2; --skip:#697180;
+  --w1:#ff6b4a; --w2:#f2a33c; --w3:#59c98d; --w4:#7b8ff2;
+  --mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);padding-bottom:60px}
+main{max-width:720px;margin:0 auto;padding:0 14px}
+h1{font:800 24px/1.2 var(--sans);letter-spacing:-.01em;margin:0}
+h2{font:800 19px/1.25 var(--sans);margin:0 0 4px}
+h3{font:700 16px/1.3 var(--sans);margin:0 0 2px}
+p{margin:6px 0}
+.mut{color:var(--mut)} .dim{color:var(--dim)}
+.mono{font-family:var(--mono)}
+header{position:sticky;top:0;z-index:50;background:rgba(20,22,27,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 14px 8px}
+.hrow{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.htitle{flex:1;min-width:0}
+.htitle .t{font:800 15px/1.1 var(--sans)}
+.htitle .s{font:600 10px/1 var(--mono);color:var(--mut);letter-spacing:.14em;margin-top:3px}
+.badge{font:700 10px/1 var(--mono);color:var(--act);background:var(--act-soft);border:1px solid rgba(242,163,60,.35);border-radius:20px;padding:6px 10px;cursor:pointer;user-select:none;white-space:nowrap}
+.wave{max-width:720px;margin:8px auto 0;display:grid;grid-template-columns:repeat(40,1fr);gap:2px;align-items:center;height:22px}
+.wave i{display:block;width:100%;border-radius:1px;background:var(--panel2);transition:background .25s,height .25s;height:4px}
+.wave i.on{height:16px}
+.wave i.on:nth-child(4n+1){background:var(--w1)}
+.wave i.on:nth-child(4n+2){background:var(--w2)}
+.wave i.on:nth-child(4n+3){background:var(--w3)}
+.wave i.on:nth-child(4n+4){background:var(--w4)}
+.pct{font:700 10px/1 var(--mono);color:var(--mut);letter-spacing:.1em;text-align:right;max-width:720px;margin:5px auto 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.sechead{margin:30px 0 4px;display:flex;align-items:baseline;gap:10px}
+.secnum{font:800 12px/1 var(--mono);color:var(--act);letter-spacing:.14em}
+.intro{border-color:rgba(242,163,60,.4)}
+.q{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.q:first-of-type{margin-top:6px;padding-top:0;border-top:0}
+.qt{font:700 15px/1.35 var(--sans);margin-bottom:8px}
+.qhint{font:400 13px/1.4 var(--sans);color:var(--mut);margin:-4px 0 8px}
+.qn{font:700 10px/1 var(--mono);color:var(--dim);letter-spacing:.1em;margin-right:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font:600 13px/1.2 var(--sans);color:var(--mut);background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:8px 13px;cursor:pointer;user-select:none;transition:all .12s}
+.chip:active{transform:scale(.96)}
+.chip.on{color:#14161b;background:var(--act);border-color:var(--act);font-weight:700}
+.chip.multi.on{color:var(--ink);background:var(--act-soft);border-color:var(--act)}
+.otherwrap{margin-top:8px}
+input[type=text],textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:15px/1.5 var(--sans);padding:10px 12px;outline:none}
+input[type=text]:focus,textarea:focus{border-color:var(--act)}
+textarea{min-height:84px;resize:vertical}
+.concept{padding:0;overflow:hidden}
+.cbody{padding:14px 16px 16px}
+.cfig{background:#101216;border-bottom:1px solid var(--line);padding:12px 14px;display:flex;justify-content:center}
+.cfig svg{max-width:100%;height:auto}
+.creact{margin-top:12px}
+.rlab{font:700 10px/1 var(--mono);color:var(--dim);letter-spacing:.12em;margin-bottom:7px}
+.catcard{padding:0;overflow:hidden}
+.cathead{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.catdot{width:10px;height:10px;border-radius:3px;flex:none}
+.cathead .cn{font:800 15px/1.2 var(--sans)}
+.cathead .cd{font:13px/1.3 var(--sans);color:var(--mut)}
+.feat{padding:12px 16px;border-bottom:1px solid var(--line)}
+.feat:last-child{border-bottom:0}
+.fname{font:700 14.5px/1.3 var(--sans)}
+.fdesc{font:13px/1.45 var(--sans);color:var(--mut);margin:2px 0 8px}
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:420px}
+.rb{font:700 11px/1 var(--mono);letter-spacing:.06em;text-align:center;padding:9px 2px;border-radius:8px;border:1px solid var(--line);color:var(--dim);background:var(--panel2);cursor:pointer;user-select:none;transition:all .12s}
+.rb:active{transform:scale(.95)}
+.rb.on.r-must{background:var(--must);border-color:var(--must);color:#14161b}
+.rb.on.r-want{background:var(--want);border-color:var(--want);color:#14161b}
+.rb.on.r-nice{background:var(--nice);border-color:var(--nice);color:#14161b}
+.rb.on.r-skip{background:#3a4150;border-color:#4a5262;color:var(--ink)}
+.bigbtn{display:block;width:100%;font:800 16px/1 var(--sans);color:#14161b;background:var(--act);border:0;border-radius:12px;padding:16px;cursor:pointer;margin-top:12px}
+.bigbtn:active{transform:scale(.98)}
+.ghost{display:block;width:100%;font:700 14px/1 var(--sans);color:var(--mut);background:transparent;border:1px solid var(--line);border-radius:12px;padding:13px;cursor:pointer;margin-top:10px}
+#out{display:none;margin-top:12px}
+#outtxt{min-height:220px;font:12.5px/1.5 var(--mono);white-space:pre-wrap}
+.warn{font:600 13px/1.4 var(--sans);color:var(--want);margin-top:10px;display:none}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:#0d0f13;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 18px;font:600 13px/1.3 var(--sans);opacity:0;transition:all .25s;z-index:99;pointer-events:none;max-width:86vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+footer{text-align:center;font:600 10px/1 var(--mono);color:var(--dim);letter-spacing:.12em;margin:34px 0 10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div class="htitle">
+      <div class="t">Session Zero</div>
+      <div class="s">MUSIC APP QUESTIONNAIRE · FOR CALEB</div>
+    </div>
+    <div class="badge" id="badge">v3 · Jul 13</div>
+  </div>
+  <div class="wave" id="wave"></div>
+  <div class="pct" id="pct">0% TRACKED</div>
+</header>
+
+<main>
+
+<div class="card intro">
+  <h2>Hey Caleb</h2>
+  <p>I'm building a music making app from scratch, phone first, and I want it built around how you actually make music, not around how some company thinks you should. The goal isn't a toy beat maker. It's start to finish: get the idea down, build it out, record over it, mix it, and get a finished track out the other end.</p>
+  <p>You're the whole reason for it, so this is me figuring out your process, because I don't know it. There are no wrong answers. Music theory is not required anywhere in here, if a question uses a word you don't use, that itself is useful info for me.</p>
+  <p>Takes maybe 15 minutes. Answers save on this device as you go, so you can bail and come back. When you're done, one button turns it all into a block of text you copy and send back to me.</p>
+  <p class="mut">Be brutal. "Must have" means the app is useless to you without it. "Skip" means you'd never touch it. Skips are just as useful to me as musts, they keep the thing from getting bloated.</p>
+</div>
+
+<div class="sechead"><span class="secnum">01</span><h2>About you</h2></div>
+<div class="card" id="sec-about"></div>
+
+<div class="sechead"><span class="secnum">02</span><h2>Your gear and setup</h2></div>
+<p class="mut" style="margin:2px 0 0">You record in more than one place. I need to know how sound gets into and out of your world.</p>
+<div class="card" id="sec-gear"></div>
+
+<div class="sechead"><span class="secnum">03</span><h2>How you actually work</h2></div>
+<p class="mut" style="margin:2px 0 0">The important part. How a song goes from nothing to done, in your hands.</p>
+<div class="card" id="sec-work"></div>
+
+<div class="sechead"><span class="secnum">04</span><h2>The big pieces</h2></div>
+<p class="mut" style="margin:2px 0 0">A full music app is built from a handful of core ideas. For each one, tell me how much it's part of how you work. If one is new to you, that's genuinely useful, it tells me whether to build it, teach it, or skip it.</p>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="94" viewBox="0 0 320 94" xmlns="http://www.w3.org/2000/svg">
+      <text x="8" y="16" font-family="monospace" font-size="9" fill="#697180">ONE LOOP</text>
+      <rect x="8" y="24" width="120" height="26" rx="5" fill="#f2a33c"/><text x="40" y="41" font-family="monospace" font-size="10" fill="#14161b" font-weight="bold">4 BARS</text>
+      <text x="8" y="72" font-family="monospace" font-size="9" fill="#697180">OR A WHOLE SONG</text>
+      <rect x="90" y="60" width="34" height="20" rx="4" fill="#7b8ff2"/><text x="98" y="74" font-family="monospace" font-size="8" fill="#14161b" font-weight="bold">IN</text>
+      <rect x="126" y="60" width="46" height="20" rx="4" fill="#ff6b4a"/><text x="140" y="74" font-family="monospace" font-size="8" fill="#14161b" font-weight="bold">VRS</text>
+      <rect x="174" y="60" width="46" height="20" rx="4" fill="#59c98d"/><text x="190" y="74" font-family="monospace" font-size="8" fill="#14161b" font-weight="bold">HOOK</text>
+      <rect x="222" y="60" width="46" height="20" rx="4" fill="#ff6b4a"/><text x="236" y="74" font-family="monospace" font-size="8" fill="#14161b" font-weight="bold">VRS</text>
+      <rect x="270" y="60" width="42" height="20" rx="4" fill="#7b8ff2"/><text x="280" y="74" font-family="monospace" font-size="8" fill="#14161b" font-weight="bold">OUT</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Loop vs full arrangement</h3>
+    <p class="mut">Some people live in an 8-bar loop forever. Some build the whole song with an intro, verses, a hook and an ending. A full app has to do both, but knowing where you spend your time decides what the app opens into.</p>
+    <div class="creact" data-concept="c1"><div class="rlab">HOW MUCH IS THIS YOUR WORLD?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="96" viewBox="0 0 320 96" xmlns="http://www.w3.org/2000/svg">
+      <text x="8" y="14" font-family="monospace" font-size="9" fill="#697180">PROGRAMMED PARTS</text>
+      <g fill="#7b8ff2"><rect x="8" y="20" width="10" height="12" rx="2"/><rect x="26" y="20" width="10" height="12" rx="2"/><rect x="44" y="20" width="10" height="12" rx="2"/><rect x="62" y="20" width="10" height="12" rx="2"/><rect x="80" y="20" width="10" height="12" rx="2"/><rect x="98" y="20" width="10" height="12" rx="2"/></g>
+      <text x="130" y="30" font-family="monospace" font-size="9" fill="#7b8ff2">drums, bass, keys you build</text>
+      <text x="8" y="58" font-family="monospace" font-size="9" fill="#697180">RECORDED AUDIO</text>
+      <path d="M8 74 L14 70 L20 78 L26 66 L32 80 L38 64 L44 82 L50 68 L56 78 L62 70 L68 76 L74 66 L80 80 L86 68 L92 78 L98 72 L104 76" stroke="#59c98d" stroke-width="2" fill="none"/>
+      <text x="130" y="74" font-family="monospace" font-size="9" fill="#59c98d">your voice, guitar, the Zoom</text>
+      <line x1="8" y1="44" x2="312" y2="44" stroke="#2f3440" stroke-width="1"/>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Programmed parts + recorded audio together</h3>
+    <p class="mut">The big one for a real app. Built parts (drums, bass, keys you tap or play in) and recorded audio (your voice, a guitar, a file off the Zoom) living on the same timeline, in time with each other. This is the line between a beat pad and a studio.</p>
+    <div class="creact" data-concept="c2"><div class="rlab">HOW MUCH IS THIS YOUR WORLD?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="92" viewBox="0 0 320 92" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="12" width="300" height="52" rx="6" fill="#101216" stroke="#2f3440"/>
+      <path d="M18 38 L22 30 L26 46 L30 22 L34 52 L38 20 L42 40 L46 32 L50 44 L54 26 L58 48 L62 30 L66 42 L70 34 L74 46 L78 24 L82 50 L86 30 L90 40 L94 36" stroke="#59c98d" stroke-width="1.8" fill="none"/>
+      <rect x="120" y="20" width="60" height="10" rx="3" fill="#7b8ff2"/>
+      <rect x="120" y="34" width="90" height="10" rx="3" fill="#7b8ff2"/>
+      <rect x="120" y="48" width="44" height="10" rx="3" fill="#f2a33c"/>
+      <text x="18" y="80" font-family="monospace" font-size="9" fill="#697180">EVERYTHING LINED UP ON ONE GROWING TIMELINE</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>The timeline</h3>
+    <p class="mut">A left-to-right view of the whole song where every track sits in its lane and you see how it all lines up. Scroll through time, grab a chunk, move it. The workspace a finished song gets built on.</p>
+    <div class="creact" data-concept="c3"><div class="rlab">HOW MUCH IS THIS YOUR WORLD?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="94" viewBox="0 0 320 94" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="42" cy="40" r="22" fill="none" stroke="#ff6b4a" stroke-width="3"/>
+      <circle cx="42" cy="40" r="8" fill="#ff6b4a"/>
+      <text x="20" y="80" font-family="monospace" font-size="9" fill="#697180">HIT RECORD</text>
+      <path d="M110 40 L134 40 M128 34 L134 40 L128 46" stroke="#697180" stroke-width="2" fill="none"/>
+      <path d="M150 40 L156 28 L162 52 L168 18 L174 58 L180 22 L186 46 L192 32 L198 50 L204 26 L210 54 L216 30 L222 48 L228 36 L234 44 L240 34 L246 50 L252 28 L258 46 L264 38 L270 42" stroke="#59c98d" stroke-width="1.8" fill="none"/>
+      <text x="150" y="80" font-family="monospace" font-size="9" fill="#697180">SING OR PLAY OVER THE BEAT</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Recording into the app</h3>
+    <p class="mut">Hit record and lay your voice or an instrument down over what's already playing, right there in the app. Do a take, do another, keep the one you like. The whole reason to have a mic in your hand.</p>
+    <div class="creact" data-concept="c4"><div class="rlab">HOW MUCH IS THIS YOUR WORLD?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="94" viewBox="0 0 320 94" xmlns="http://www.w3.org/2000/svg">
+      <text x="8" y="16" font-family="monospace" font-size="9" fill="#697180">FOUND SOUND</text>
+      <path d="M8 40 L12 30 L16 50 L20 24 L24 54 L28 22 L32 42 L36 34 L40 46 L44 28 L48 50 L52 32 L56 44 L60 36 L64 48 L68 26 L72 52 L76 30 L80 42 L84 34 L88 46 L92 38" stroke="#59c98d" stroke-width="1.8" fill="none"/>
+      <line x1="30" y1="18" x2="30" y2="58" stroke="#f2a33c" stroke-width="2"/>
+      <line x1="58" y1="18" x2="58" y2="58" stroke="#f2a33c" stroke-width="2"/>
+      <path d="M104 38 L128 38 M122 32 L128 38 L122 44" stroke="#697180" stroke-width="2" fill="none"/>
+      <g>
+        <rect x="150" y="18" width="46" height="22" rx="5" fill="#ff6b4a"/><text x="168" y="33" font-family="monospace" font-size="9" fill="#14161b" font-weight="bold">1</text>
+        <rect x="204" y="18" width="46" height="22" rx="5" fill="#f2a33c"/><text x="222" y="33" font-family="monospace" font-size="9" fill="#14161b" font-weight="bold">2</text>
+        <rect x="150" y="46" width="46" height="22" rx="5" fill="#59c98d"/><text x="168" y="61" font-family="monospace" font-size="9" fill="#14161b" font-weight="bold">3</text>
+        <rect x="204" y="46" width="46" height="22" rx="5" fill="#7b8ff2"/><text x="222" y="61" font-family="monospace" font-size="9" fill="#14161b" font-weight="bold">4</text>
+      </g>
+      <text x="150" y="82" font-family="monospace" font-size="9" fill="#697180">SLICE IT ONTO PADS, PLAY IT NEW</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Sampling and chopping</h3>
+    <p class="mut">Grab any sound (a record, a voice memo, something you recorded) and cut it into pieces spread across pads, then play the pieces in a new order to make something new. The heart of a lot of hip-hop and lo-fi.</p>
+    <div class="creact" data-concept="c5"><div class="rlab">HOW MUCH IS THIS YOUR WORLD?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="96" viewBox="0 0 320 96" xmlns="http://www.w3.org/2000/svg">
+      <g>
+        <rect x="14" y="14" width="34" height="70" rx="6" fill="#1d2026" stroke="#2f3440"/>
+        <rect x="27" y="24" width="8" height="46" rx="4" fill="#252932"/><rect x="27" y="38" width="8" height="32" rx="4" fill="#59c98d"/>
+        <circle cx="31" cy="38" r="5" fill="#eceef2"/><text x="18" y="80" font-family="monospace" font-size="8" fill="#697180">DRUMS</text>
+        <rect x="56" y="14" width="34" height="70" rx="6" fill="#1d2026" stroke="#2f3440"/>
+        <rect x="69" y="24" width="8" height="46" rx="4" fill="#252932"/><rect x="69" y="30" width="8" height="40" rx="4" fill="#59c98d"/>
+        <circle cx="73" cy="30" r="5" fill="#eceef2"/><text x="60" y="80" font-family="monospace" font-size="8" fill="#697180">BASS</text>
+        <rect x="98" y="14" width="34" height="70" rx="6" fill="#1d2026" stroke="#2f3440"/>
+        <rect x="111" y="24" width="8" height="46" rx="4" fill="#252932"/><rect x="111" y="48" width="8" height="22" rx="4" fill="#f2a33c"/>
+        <circle cx="115" cy="48" r="5" fill="#eceef2"/><text x="100" y="80" font-family="monospace" font-size="8" fill="#697180">VOX</text>
+      </g>
+      <g>
+        <rect x="168" y="24" width="52" height="22" rx="6" fill="#252932" stroke="#7b8ff2"/><text x="180" y="39" font-family="monospace" font-size="9" fill="#7b8ff2">EQ</text>
+        <rect x="168" y="52" width="52" height="22" rx="6" fill="#252932" stroke="#f2a33c"/><text x="176" y="67" font-family="monospace" font-size="9" fill="#f2a33c">COMP</text>
+        <rect x="232" y="38" width="66" height="22" rx="6" fill="#252932" stroke="#59c98d"/><text x="242" y="53" font-family="monospace" font-size="9" fill="#59c98d">REVERB</text>
+      </g>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Mixing and effects</h3>
+    <p class="mut">Every track gets its own volume, its own place in the stereo field, and a chain of effects: EQ to carve space, compression for punch, reverb and delay for depth. The difference between a rough idea and something that sounds finished.</p>
+    <div class="creact" data-concept="c6"><div class="rlab">HOW MUCH IS THIS YOUR WORLD?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="88" viewBox="0 0 320 88" xmlns="http://www.w3.org/2000/svg">
+      <text x="8" y="16" font-family="monospace" font-size="9" fill="#697180">STRAIGHT</text>
+      <g fill="#7b8ff2"><rect x="80" y="8" width="9" height="12" rx="2"/><rect x="108" y="8" width="9" height="12" rx="2"/><rect x="136" y="8" width="9" height="12" rx="2"/><rect x="164" y="8" width="9" height="12" rx="2"/><rect x="192" y="8" width="9" height="12" rx="2"/><rect x="220" y="8" width="9" height="12" rx="2"/><rect x="248" y="8" width="9" height="12" rx="2"/><rect x="276" y="8" width="9" height="12" rx="2"/></g>
+      <text x="8" y="50" font-family="monospace" font-size="9" fill="#697180">SWUNG</text>
+      <g fill="#f2a33c"><rect x="80" y="42" width="9" height="12" rx="2"/><rect x="116" y="42" width="9" height="12" rx="2"/><rect x="136" y="42" width="9" height="12" rx="2"/><rect x="172" y="42" width="9" height="12" rx="2"/><rect x="192" y="42" width="9" height="12" rx="2"/><rect x="228" y="42" width="9" height="12" rx="2"/><rect x="248" y="42" width="9" height="12" rx="2"/><rect x="284" y="42" width="9" height="12" rx="2"/></g>
+      <text x="8" y="78" font-family="monospace" font-size="9" fill="#697180">EVERY OTHER HIT NUDGED LATE = BOUNCE AND FEEL</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Feel: swing, timing, humanness</h3>
+    <p class="mut">Whether the app locks everything to a rigid grid or lets things breathe. Swing bounces the groove. Playing loose and keeping it loose keeps the human feel. For someone who works by feel, this matters more than most features.</p>
+    <div class="creact" data-concept="c7"><div class="rlab">HOW MUCH IS THIS YOUR WORLD?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="card concept">
+  <div class="cfig">
+    <svg width="320" height="88" viewBox="0 0 320 88" xmlns="http://www.w3.org/2000/svg">
+      <rect x="14" y="24" width="70" height="40" rx="8" fill="#1d2026" stroke="#2f3440"/>
+      <text x="30" y="49" font-family="monospace" font-size="10" fill="#eceef2">PHONE</text>
+      <path d="M92 44 L150 44 M144 38 L150 44 L144 50" stroke="#f2a33c" stroke-width="2.5" fill="none"/>
+      <text x="96" y="34" font-family="monospace" font-size="8" fill="#f2a33c">STEMS / FILE</text>
+      <rect x="158" y="18" width="90" height="52" rx="8" fill="#1d2026" stroke="#2f3440"/>
+      <text x="172" y="48" font-family="monospace" font-size="10" fill="#eceef2">COMPUTER</text>
+      <path d="M256 44 L296 44 M290 38 L296 44 L290 50" stroke="#59c98d" stroke-width="2.5" fill="none"/>
+      <text x="256" y="80" font-family="monospace" font-size="8" fill="#59c98d">FINISH IT</text>
+    </svg>
+  </div>
+  <div class="cbody">
+    <h3>Phone to computer handoff</h3>
+    <p class="mut">You edit on the phone and the computer. So the question is how finished the app has to get things on its own, versus how cleanly it hands a project (or separate track files) off to whatever you use on the desktop to finish. This decides how deep the app goes.</p>
+    <div class="creact" data-concept="c8"><div class="rlab">HOW MUCH IS THIS YOUR WORLD?</div><div class="chips"></div></div>
+  </div>
+</div>
+
+<div class="sechead"><span class="secnum">05</span><h2>Feature triage</h2></div>
+<p class="mut" style="margin:2px 0 0">The big one. Rate every feature: <b style="color:#ff6b4a">MUST</b> = useless without it. <b style="color:#f2a33c">WANT</b> = would use it a lot. <b style="color:#7b8ff2">NICE</b> = cool but wouldn't miss it. <b style="color:#9aa1ad">SKIP</b> = would never touch it. Gut reactions are fine.</p>
+<div id="triage"></div>
+
+<div class="sechead"><span class="secnum">06</span><h2>How we do this</h2></div>
+<p class="mut" style="margin:2px 0 0">Not about the app. About how you and I work together on it, so I build the right thing instead of guessing twice.</p>
+<div class="card" id="sec-test"></div>
+
+<div class="sechead"><span class="secnum">07</span><h2>Final word</h2></div>
+<div class="card">
+  <div class="q"><div class="qt">Walk me through making one song, start to finish, in whatever app you'd use today. What do you touch first, second, third?</div><div class="qhint">Even rough. This is the single most useful thing you can tell me.</div><textarea data-t="t1" placeholder="I usually start with..."></textarea></div>
+  <div class="q"><div class="qt">The one thing an app has to nail or you delete it.</div><textarea data-t="t2" placeholder=""></textarea></div>
+  <div class="q"><div class="qt">The most annoying thing about apps you've used. Paywalls, workflow, sounds, whatever.</div><textarea data-t="t3" placeholder=""></textarea></div>
+  <div class="q"><div class="qt">Dream feature. Money and physics are no object.</div><textarea data-t="t4" placeholder=""></textarea></div>
+  <div class="q"><div class="qt">Anything else I should know about how you make music?</div><textarea data-t="t5" placeholder=""></textarea></div>
+</div>
+
+<div class="sechead"><span class="secnum">08</span><h2>Send it back</h2></div>
+<div class="card">
+  <p class="mut">This builds a text version of all your answers. Copy it and text or email it to Mot. You can change answers above and rebuild anytime, it always uses the latest.</p>
+  <div class="warn" id="warn"></div>
+  <button class="bigbtn" id="gen">Build my answers</button>
+  <div id="out">
+    <textarea id="outtxt" readonly></textarea>
+    <button class="bigbtn" id="copy">Copy to clipboard</button>
+  </div>
+  <button class="ghost" id="reset">Start over (wipes all answers)</button>
+</div>
+
+<footer>SESSION ZERO · MUSIC APP · ANSWERS SAVE ON THIS DEVICE ONLY</footer>
+</main>
+<div id="toast" role="status"></div>
+<script>
+(function(){
+"use strict";
+var VERSION = "v3 · Jul 13";
+var KEY = "musicq_v3";
+
+var ABOUT = [
+ {i:"a1",q:"Which of these have you ever made music in? Tap all that apply.",multi:true,other:true,
+  o:["FL Studio (desktop)","Ableton Live","Logic or GarageBand (Mac)","GarageBand (iPhone/iPad)","BandLab","FL Studio Mobile","Koala Sampler","Audacity","Reaper","A phone voice recorder app","Hardware (MPC, looper, 4-track)","None of these yet"]},
+ {i:"a2",q:"Which ONE do you reach for most right now?",text:true},
+ {i:"a3",q:"How long have you been making music?",
+  o:["Just starting","A couple years","Five plus years","Longer than I want to admit"]},
+ {i:"a4",q:"What kind of stuff would you make? All that apply.",multi:true,other:true,
+  o:["Hip-hop / trap","Boom bap","Lo-fi","R&B / soul","Singer-songwriter","Rock / band stuff","House / EDM","Ambient / beats to chill to","Whatever comes out"]},
+ {i:"a5",q:"Do you play or perform anything? All that apply.",multi:true,other:true,
+  o:["I sing","I rap","Guitar or bass","Keys / piano","Drums","I mostly build it on a screen"]},
+ {i:"a6",q:"Be honest about theory:",
+  o:["I go fully by ear and feel","I know a little, mostly by ear","I know my way around chords and keys"]}
+];
+
+var GEAR = [
+ {i:"g1",q:"What would you actually make music on?",
+  o:["Android phone","iPhone","iPad","Android tablet","Whatever's closest"]},
+ {i:"g1b",q:"What exact phone or tablet is it?",hint:"Model and rough age. This is the single most useful technical thing you can tell me, it sets how much the app can do at once.",text:true},
+ {i:"g1c",q:"Ever noticed lag between tapping a pad and hearing the sound, in any app?",hint:"Be honest. If your phone does this, I have to build the audio engine differently.",
+  o:["Yes, it's bad and it ruins playing live","A little, but I work around it","Never noticed any","Not sure what to listen for"]},
+ {i:"g2",q:"How do you record vocals or instruments right now? All that apply.",multi:true,other:true,
+  o:["Phone built-in mic","Zoom / handheld recorder","USB or interface mic","Into the computer","I don't record audio, I build it"]},
+ {i:"g3",q:"When you record on the Zoom, what happens to that file?",hint:"This tells me how audio needs to get INTO the app.",
+  o:["I'd want to drop it straight into the app","I load it on the computer first","Both, depends","I don't use the Zoom for this"]},
+ {i:"g4",q:"Where does the finishing usually happen?",
+  o:["All on the phone","Phone for ideas, computer to finish","All on the computer","Wherever I am when it hits"]},
+ {i:"g5",q:"What do you finish or edit on the computer with?",text:true},
+ {i:"g6",q:"How do you listen while working?",
+  o:["Earbuds","Wired headphones","Studio headphones","Phone speaker","Monitors / speakers"]},
+ {i:"g7",q:"Any gear you'd want to plug into the phone?",multi:true,
+  o:["MIDI keyboard","Pad controller","Mic or interface","Guitar via interface","Nope, just the screen"]},
+ {i:"g8",q:"How is your phone storage usually doing?",hint:"Samples and recordings eat space fast. Tells me how careful the app has to be.",
+  o:["Always nearly full","Some room","Plenty of room","No idea"]},
+ {i:"g9",q:"Does it need to work with no signal?",
+  o:["Yes, I'm often offline","Nice to have","Doesn't matter, I'm always on wifi"]},
+ {i:"g10",q:"How do you get a finished file off your phone?",multi:true,other:true,
+  o:["Text or email it to myself","Google Drive / Dropbox / cloud","Plug into the computer with a cable","Bluetooth / AirDrop","Never had to figure it out"]},
+ {i:"g11",q:"Phone in your hand: portrait or landscape?",
+  o:["Portrait, one hand","Portrait, two hands","Landscape, more room","Whatever the app wants"]}
+];
+
+var WORK = [
+ {i:"w1",q:"A new song usually starts with...",
+  o:["Drums / a beat","A melody or chords","A sample I found","A bassline","A vocal idea or lyric","A loop I record live","Depends on the day"]},
+ {i:"w2",q:"You've got a melody or bassline in your head. Best way to get it into the app?",hint:"You go by ear, so there's no wrong answer here. Pick what feels natural.",
+  o:["Play it on on-screen keys and keep what I play","Hum or sing it and let the app figure out the notes","Tap the rhythm, then move pitches by ear until it's right","Find the notes one at a time by tapping and listening","Only wrong notes hidden so anything I tap sounds right"]},
+ {i:"w3",q:"Laying drums, you'd rather...",
+  o:["Tap pads in real time","Place hits on a grid","Both, depends","Start from a premade groove and tweak"]},
+ {i:"w3b",q:"Chords are...",
+  o:["Something I'd want one-tap help with","I find them by ear on keys","I record a real instrument for those","Not really my thing"]},
+ {i:"w4",q:"Timing philosophy:",
+  o:["Snap it to the grid, keep it tight","Play loose, let me tidy it after","Record loose and keep it loose, that's the feel"]},
+ {i:"w5",q:"Do you finish songs?",
+  o:["Mostly loops and ideas","Loops that sometimes grow up","I take things all the way to done"]},
+ {i:"w6",q:"Sampling other audio is...",
+  o:["Core to what I do","Something I do sometimes","Rare","Never touched it"]},
+ {i:"w7",q:"Vocals in your music:",
+  o:["Central, I record a lot of them","Sometimes","Rarely","No vocals"]},
+ {i:"w8",q:"A typical session is...",
+  o:["Ten minutes on the couch","Half hour to an hour","Hours when I lock in"]},
+ {i:"w9",q:"When something's done you...",multi:true,
+  o:["Send it to friends","Perform or rap over it","Move it to the computer to finish","Post it somewhere","It just lives on the phone"]},
+ {i:"w10",q:"Presets vs building your own sounds:",
+  o:["Presets all day, keep me moving","Presets then tweak to taste","I like building sounds from scratch"]},
+ {i:"w11",q:"Do you have your own stash of sounds or samples you'd want to bring in?",
+  o:["Yes, a big folder I'd want loaded in","A few things","No, I'd use whatever comes with it"]},
+ {i:"w12",q:"How many songs do you have going at once?",
+  o:["One at a time, finish it or kill it","A few in progress","A graveyard of unfinished ideas"]},
+ {i:"w13",q:"Do you ever make music with other people?",
+  o:["Yes, I'd want to send projects back and forth","Sometimes, we just swap files","No, this is a solo thing"]},
+ {i:"w14",q:"How do you know when a mix sounds right?",
+  o:["I A/B it against songs I like","I just trust my ears","I check it on different speakers and earbuds","Honestly I struggle with this part"]},
+ {i:"w15",q:"How long is a typical track you'd make?",
+  o:["Under a minute, a loop or a snippet","One to two minutes","Full song, three minutes plus"]}
+];
+
+var TEST = [
+ {i:"x1",q:"Would you actually try rough versions and tell me what's broken?",hint:"Totally fine to say no. I'd rather know now.",
+  o:["Yes, send me anything","Yes, but only when it's usable","Maybe, depends how busy I am","I'd rather just see it when it's done"]},
+ {i:"x2",q:"How do you want to give feedback?",multi:true,
+  o:["Just text you","Talk in person","A button in the app to send a note","Voice memo","Whatever's easiest"]},
+ {i:"x3",q:"If the app could only do ONE of these really well at first, which?",
+  o:["Making a beat fast","Recording my voice over something","Chopping a sample","Finishing and exporting a real track"]},
+ {i:"x4",q:"What would make you actually keep using it instead of what you use now?",text:true}
+];
+
+var CREACT = ["Live in it","Use it sometimes","Rarely","New to me"];
+var CONCEPTS = ["c1","c2","c3","c4","c5","c6","c7","c8"];
+var CNAMES = {c1:"Loop vs full arrangement",c2:"Programmed + recorded audio together",c3:"The timeline",c4:"Recording into the app",c5:"Sampling and chopping",c6:"Mixing and effects",c7:"Feel: swing and timing",c8:"Phone to computer handoff"};
+
+var CATS = [
+ {id:"start",n:"Getting started",d:"Setting up a song, the blank page.",col:"#c9d45b"},
+ {id:"drums",n:"Drums and rhythm",d:"The engine room.",col:"#ff6b4a"},
+ {id:"melody",n:"Melody, chords and bass",d:"For an ear player.",col:"#7b8ff2"},
+ {id:"samp",n:"Sampling",d:"Turning any sound into an instrument.",col:"#59c98d"},
+ {id:"rec",n:"Recording audio",d:"Voice, guitar, the Zoom.",col:"#5bb8d4"},
+ {id:"arr",n:"Song building",d:"From loop to finished track.",col:"#f2a33c"},
+ {id:"mix",n:"Mixing and FX",d:"Making it sound finished.",col:"#d96aa6"},
+ {id:"perf",n:"Playing it live",d:"Performing the app.",col:"#b07be0"},
+ {id:"out",n:"Saving and getting it out",d:"The finish line and the handoff.",col:"#9aa1ad"}
+];
+
+var FEATURES = [
+ {i:"f01",c:"start",n:"Set a tempo and feel for the song",b:"One place to set how fast and how loose the whole thing is."},
+ {i:"f02",c:"start",n:"Set a key (or never think about it)",b:"Pick a key so everything fits, or the app just keeps you in tune quietly."},
+ {i:"f03",c:"start",n:"Metronome and count-in",b:"A click to play or record along to, with a lead-in."},
+ {i:"f04",c:"start",n:"Start from a template or empty",b:"Blank canvas, or a starter with drums and a bassline already going."},
+ {i:"f05",c:"drums",n:"Tap pads live",b:"Big pads you play by hand like an MPC."},
+ {i:"f06",c:"drums",n:"Step grid",b:"Tap cells to place drum hits, the classic drum machine grid."},
+ {i:"f07",c:"drums",n:"Soft and loud hits (velocity)",b:"Hits at different strengths so drums breathe."},
+ {i:"f08",c:"drums",n:"Hi-hat rolls",b:"One step fires 2x, 3x, 4x. The trap hat sound."},
+ {i:"f09",c:"drums",n:"Swing knob",b:"One control that adds bounce to the whole groove."},
+ {i:"f10",c:"drums",n:"Big kit library",b:"Ready drum kits across genres."},
+ {i:"f11",c:"drums",n:"Build your own kit",b:"Drop any sound onto any pad, save it."},
+ {i:"f12",c:"melody",n:"Playable on-screen keys",b:"A keyboard you play by ear, keep what you play."},
+ {i:"f13",c:"melody",n:"Wrong notes hidden (scale help)",b:"Anything you tap sounds right, no theory needed."},
+ {i:"f14",c:"melody",n:"Hum or sing a melody in",b:"Sing it, the app turns it into notes you can use."},
+ {i:"f15",c:"melody",n:"One-tap chords",b:"Full chords under one finger, progressions with no theory."},
+ {i:"f16",c:"melody",n:"Fix a note after the fact",b:"Move or retune a note by ear once it's down."},
+ {i:"f17",c:"melody",n:"Synth and keys sounds",b:"Playable pianos, pads, plucks, leads."},
+ {i:"f18",c:"melody",n:"808 bass with slide",b:"Booming sub bass that slides between notes."},
+ {i:"f19",c:"samp",n:"Record a sample from the mic",b:"Grab any sound off the mic and use it."},
+ {i:"f20",c:"samp",n:"Import an audio file to chop",b:"Pull in a song or clip to slice up."},
+ {i:"f21",c:"samp",n:"Auto-chop onto pads",b:"App finds the hits and spreads them across pads for you."},
+ {i:"f22",c:"samp",n:"Fit a sample to the tempo",b:"A sample at one speed snaps to your song's speed without sounding chipmunky."},
+ {i:"f23",c:"samp",n:"Move a sample into your key",b:"Pitch it to fit while it stays on time."},
+ {i:"f24",c:"rec",n:"Record vocals over the beat",b:"Sing or rap a take right in the app."},
+ {i:"f25",c:"rec",n:"Record an instrument in",b:"Guitar, keys, anything through a mic or input."},
+ {i:"f26",c:"rec",n:"Import a Zoom / handheld file",b:"Drop a recording you made elsewhere onto the timeline in time."},
+ {i:"f27",c:"rec",n:"Multiple takes, keep the best",b:"Do a verse three times, pick the keeper (comping)."},
+ {i:"f28",c:"rec",n:"Punch in to fix one line",b:"Re-record just the spot you flubbed, leave the rest."},
+ {i:"f29",c:"rec",n:"Hear yourself with reverb while recording",b:"Monitoring with FX so it feels good going in."},
+ {i:"f30",c:"rec",n:"Pitch correction on vocals",b:"Tuning, from gentle to full robot."},
+ {i:"f31",c:"rec",n:"Line up a recording to the beat",b:"Nudge or auto-snap a take so it sits in the pocket."},
+ {i:"f32",c:"arr",n:"Full timeline arrangement",b:"Lay parts left to right and build a whole song."},
+ {i:"f33",c:"arr",n:"Named sections",b:"Intro, verse, hook blocks you can move around."},
+ {i:"f34",c:"arr",n:"Lots of tracks",b:"Plenty of lanes so big ideas fit."},
+ {i:"f35",c:"arr",n:"Duplicate and vary a part",b:"Copy a section, change two things, instant variation."},
+ {i:"f36",c:"arr",n:"Loop a section while you work",b:"Cycle 8 bars over and over as you build on it."},
+ {i:"f37",c:"arr",n:"Space to keep lyrics or notes",b:"A place to type words or ideas alongside the song."},
+ {i:"f38",c:"mix",n:"Per-track volume and pan",b:"Every sound has its own level and stereo spot."},
+ {i:"f39",c:"mix",n:"EQ per track",b:"Carve space so parts stop fighting."},
+ {i:"f40",c:"mix",n:"Compression",b:"Punch and glue."},
+ {i:"f41",c:"mix",n:"Reverb and delay",b:"Space and echo."},
+ {i:"f42",c:"mix",n:"Filter sweeps",b:"The build-up and drop move."},
+ {i:"f43",c:"mix",n:"Sidechain / pump",b:"Everything ducks when the kick hits."},
+ {i:"f44",c:"mix",n:"One-tap master polish",b:"Loudness and limiting so exports don't come out quiet."},
+ {i:"f45",c:"mix",n:"Automation (moves that play themselves)",b:"Draw a fade or a filter sweep once, the app performs it."},
+ {i:"f46",c:"perf",n:"Live loop launching",b:"Tap parts in and out live, jam an arrangement."},
+ {i:"f47",c:"perf",n:"Performance FX",b:"Stutters, filter throws, tape stops you play with a finger."},
+ {i:"f48",c:"perf",n:"Record a live jam as a take",b:"Capture a performance you can keep and edit."},
+ {i:"f49",c:"out",n:"Export a finished MP3 / WAV",b:"A real file out, no watermark, no paywall."},
+ {i:"f50",c:"out",n:"Export separate track files (stems)",b:"Each track as its own file to finish on the computer."},
+ {i:"f51",c:"out",n:"Hand the whole project to a desktop app",b:"Move the session into whatever you finish with."},
+ {i:"f52",c:"out",n:"Auto-save, never lose work",b:"A phone call never eats a song."},
+ {i:"f53",c:"out",n:"Sync phone and tablet",b:"Start on one, open on the other."},
+ {i:"f54",c:"out",n:"Share by link",b:"Send someone a track they hear in a browser."},
+ {i:"f55",c:"out",n:"Works fully offline",b:"No signal needed, nothing has to upload."},
+ {i:"f56",c:"out",n:"Send a project to someone to add to",b:"Pass a song to a friend, they add a part, send it back."},
+ {i:"f57",c:"start",n:"Load in your own sound folder",b:"Bring your whole sample stash in at once, not one file at a time."},
+ {i:"f58",c:"start",n:"Browse and reopen old projects",b:"A shelf of everything you've made, easy to get back into."},
+ {i:"f59",c:"mix",n:"A/B against a reference track",b:"Flip between your mix and a song you like, to hear the gap."},
+ {i:"f60",c:"arr",n:"Deep undo",b:"Lots of steps back, reliably. Never fear trying something."}
+];
+
+var RATES = [{k:"must",l:"MUST"},{k:"want",l:"WANT"},{k:"nice",l:"NICE"},{k:"skip",l:"SKIP"}];
+
+var S = {a:{},c:{},f:{},t:{}};
+var memFallback = null;
+function loadState(){
+  try{ var raw = localStorage.getItem(KEY); if(raw){ S = JSON.parse(raw) || S; } }
+  catch(e){ if(memFallback){ S = memFallback; } }
+  S.a = S.a || {}; S.c = S.c || {}; S.f = S.f || {}; S.t = S.t || {};
+}
+function saveState(){ memFallback = S; try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} renderProgress(); }
+
+function el(tag, cls, txt){ var n = document.createElement(tag); if(cls) n.className = cls; if(txt !== undefined) n.textContent = txt; return n; }
+function toast(msg){ var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._h); toast._h = setTimeout(function(){ t.classList.remove("show"); }, 1800); }
+
+function renderQuestions(list, mount, store, prefix){
+  list.forEach(function(item, idx){
+    var q = el("div","q");
+    var qt = el("div","qt");
+    qt.appendChild(el("span","qn", prefix + (idx+1)));
+    qt.appendChild(document.createTextNode(item.q));
+    q.appendChild(qt);
+    if(item.hint){ q.appendChild(el("div","qhint",item.hint)); }
+    if(item.text){
+      var inp = el("input"); inp.type = "text"; inp.placeholder = "Type it here"; inp.value = store[item.i] || "";
+      inp.addEventListener("input", function(){ store[item.i] = inp.value; debounceSave(); });
+      q.appendChild(inp);
+    } else {
+      var chips = el("div","chips");
+      item.o.forEach(function(opt){
+        var c = el("div","chip" + (item.multi ? " multi" : ""), opt);
+        var isOn = item.multi ? (Array.isArray(store[item.i]) && store[item.i].indexOf(opt) > -1) : store[item.i] === opt;
+        if(isOn) c.classList.add("on");
+        c.addEventListener("click", function(){
+          if(item.multi){
+            var arr = Array.isArray(store[item.i]) ? store[item.i] : [];
+            var at = arr.indexOf(opt);
+            if(at > -1){ arr.splice(at,1); c.classList.remove("on"); } else { arr.push(opt); c.classList.add("on"); }
+            store[item.i] = arr;
+          } else {
+            store[item.i] = opt;
+            var sibs = chips.querySelectorAll(".chip");
+            for(var s=0;s<sibs.length;s++) sibs[s].classList.remove("on");
+            c.classList.add("on");
+          }
+          saveState();
+        });
+        chips.appendChild(c);
+      });
+      q.appendChild(chips);
+      if(item.other){
+        var ow = el("div","otherwrap"); var oi = el("input"); oi.type = "text";
+        oi.placeholder = "Anything not listed? Type it"; oi.value = store[item.i + "_x"] || "";
+        oi.addEventListener("input", function(){ store[item.i + "_x"] = oi.value; debounceSave(); });
+        ow.appendChild(oi); q.appendChild(ow);
+      }
+    }
+    mount.appendChild(q);
+  });
+}
+
+function renderConcepts(){
+  var nodes = document.querySelectorAll(".creact");
+  for(var i=0;i<nodes.length;i++){
+    (function(node){
+      var cid = node.getAttribute("data-concept");
+      var chips = node.querySelector(".chips");
+      CREACT.forEach(function(opt){
+        var c = el("div","chip",opt);
+        if(S.c[cid] === opt) c.classList.add("on");
+        c.addEventListener("click", function(){
+          S.c[cid] = opt;
+          var sibs = chips.querySelectorAll(".chip");
+          for(var s=0;s<sibs.length;s++) sibs[s].classList.remove("on");
+          c.classList.add("on"); saveState();
+        });
+        chips.appendChild(c);
+      });
+    })(nodes[i]);
+  }
+}
+
+function renderTriage(){
+  var mount = document.getElementById("triage");
+  CATS.forEach(function(cat){
+    var card = el("div","card catcard");
+    var head = el("div","cathead");
+    var dot = el("span","catdot"); dot.style.background = cat.col; head.appendChild(dot);
+    var ht = el("div"); ht.appendChild(el("div","cn",cat.n)); ht.appendChild(el("div","cd",cat.d)); head.appendChild(ht);
+    card.appendChild(head);
+    FEATURES.filter(function(f){ return f.c === cat.id; }).forEach(function(f){
+      var row = el("div","feat");
+      row.appendChild(el("div","fname",f.n));
+      row.appendChild(el("div","fdesc",f.b));
+      var rate = el("div","rate");
+      RATES.forEach(function(r){
+        var b = el("div","rb r-" + r.k, r.l);
+        if(S.f[f.i] === r.k) b.classList.add("on");
+        b.addEventListener("click", function(){
+          S.f[f.i] = r.k;
+          var sibs = rate.querySelectorAll(".rb");
+          for(var s=0;s<sibs.length;s++) sibs[s].classList.remove("on");
+          b.classList.add("on"); saveState();
+        });
+        rate.appendChild(b);
+      });
+      row.appendChild(rate); card.appendChild(row);
+    });
+    mount.appendChild(card);
+  });
+}
+
+function bindTextareas(){
+  var tas = document.querySelectorAll("textarea[data-t]");
+  for(var i=0;i<tas.length;i++){
+    (function(ta){
+      var id = ta.getAttribute("data-t"); ta.value = S.t[id] || "";
+      ta.addEventListener("input", function(){ S.t[id] = ta.value; debounceSave(); });
+    })(tas[i]);
+  }
+}
+
+var debounceSave = (function(){ var h = null; return function(){ clearTimeout(h); h = setTimeout(saveState, 400); }; })();
+
+function answeredCounts(){
+  var done = 0, total = 0;
+  ABOUT.concat(GEAR).concat(WORK).concat(TEST).forEach(function(item){
+    total++;
+    var v = S.a[item.i];
+    if(item.text){ if(v && String(v).trim()) done++; }
+    else if(item.multi){ if(Array.isArray(v) && v.length) done++; }
+    else if(v) done++;
+  });
+  CONCEPTS.forEach(function(cid){ total++; if(S.c[cid]) done++; });
+  FEATURES.forEach(function(f){ total++; if(S.f[f.i]) done++; });
+  return {done:done, total:total};
+}
+function renderProgress(){
+  var c = answeredCounts();
+  var pct = c.total ? Math.round(100 * c.done / c.total) : 0;
+  document.getElementById("pct").textContent = pct + "% TRACKED · " + c.done + " OF " + c.total;
+  var bars = document.getElementById("wave").children;
+  var lit = Math.round(pct / 100 * bars.length);
+  for(var i=0;i<bars.length;i++){ bars[i].classList.toggle("on", i < lit); }
+}
+function buildWave(){ var g = document.getElementById("wave"); for(var i=0;i<40;i++) g.appendChild(el("i")); }
+
+function buildSummary(){
+  var L = [];
+  L.push("MUSIC APP QUESTIONNAIRE · CALEB");
+  L.push("Full production app, start to finish");
+  L.push("Generated " + new Date().toLocaleDateString() + " · " + VERSION);
+  L.push("");
+  function dumpChips(title, list){
+    L.push("=== " + title + " ===");
+    list.forEach(function(item){
+      var v = S.a[item.i]; var extra = S.a[item.i + "_x"]; var ans = "";
+      if(item.text){ ans = (v && String(v).trim()) ? String(v).trim() : "(blank)"; }
+      else if(item.multi){ ans = (Array.isArray(v) && v.length) ? v.join(", ") : "(none picked)"; }
+      else { ans = v || "(skipped)"; }
+      if(extra && String(extra).trim()) ans += " | Other: " + String(extra).trim();
+      L.push("- " + item.q + " -> " + ans);
+    });
+    L.push("");
+  }
+  dumpChips("ABOUT", ABOUT);
+  dumpChips("GEAR & SETUP", GEAR);
+  dumpChips("WORKFLOW", WORK);
+  dumpChips("HOW WE WORK TOGETHER", TEST);
+  L.push("=== BIG PIECES ===");
+  CREACT.forEach(function(opt){
+    var names = CONCEPTS.filter(function(cid){ return S.c[cid] === opt; }).map(function(cid){ return CNAMES[cid]; });
+    if(names.length) L.push(opt.toUpperCase() + ": " + names.join(", "));
+  });
+  var unC = CONCEPTS.filter(function(cid){ return !S.c[cid]; });
+  if(unC.length) L.push("(no answer: " + unC.map(function(cid){ return CNAMES[cid]; }).join(", ") + ")");
+  L.push("");
+  L.push("=== FEATURES ===");
+  RATES.forEach(function(r){
+    var names = FEATURES.filter(function(f){ return S.f[f.i] === r.k; }).map(function(f){
+      var cat = CATS.filter(function(c){ return c.id === f.c; })[0];
+      return f.n + " [" + cat.n + "]";
+    });
+    L.push(r.l + " HAVE (" + names.length + "):");
+    if(names.length){ names.forEach(function(n){ L.push("  - " + n); }); } else L.push("  (none)");
+  });
+  var unF = FEATURES.filter(function(f){ return !S.f[f.i]; });
+  if(unF.length) L.push("UNRATED (" + unF.length + "): " + unF.map(function(f){ return f.n; }).join(", "));
+  L.push("");
+  L.push("=== FINAL WORD ===");
+  var TQ = {t1:"One song start to finish", t2:"Has to nail or delete", t3:"Most annoying thing in other apps", t4:"Dream feature", t5:"Anything else"};
+  ["t1","t2","t3","t4","t5"].forEach(function(id){
+    var v = S.t[id]; if(v && String(v).trim()) L.push(TQ[id] + ": " + String(v).trim());
+  });
+  return L.join("\n");
+}
+
+function copyText(txt){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ toast("Copied. Text it to Mot."); }, function(){ fallbackCopy(); });
+  } else { fallbackCopy(); }
+  function fallbackCopy(){
+    var ta = document.getElementById("outtxt"); ta.focus(); ta.select();
+    try{ document.execCommand("copy"); toast("Copied. Text it to Mot."); }
+    catch(e){ toast("Copy failed. Long-press the text and copy manually."); }
+  }
+}
+
+function init(){
+  loadState();
+  buildWave();
+  renderQuestions(ABOUT, document.getElementById("sec-about"), S.a, "A");
+  renderQuestions(GEAR, document.getElementById("sec-gear"), S.a, "G");
+  renderQuestions(WORK, document.getElementById("sec-work"), S.a, "W");
+  renderQuestions(TEST, document.getElementById("sec-test"), S.a, "X");
+  renderConcepts();
+  renderTriage();
+  bindTextareas();
+  renderProgress();
+
+  document.getElementById("badge").addEventListener("click", function(){ toast("Session Zero · Music App · " + VERSION); });
+  document.getElementById("gen").addEventListener("click", function(){
+    var c = answeredCounts(); var warn = document.getElementById("warn");
+    if(c.done < c.total){ warn.style.display = "block"; warn.textContent = "Heads up: " + (c.total - c.done) + " items unanswered. That's fine, they'll show as skipped."; }
+    else { warn.style.display = "none"; }
+    var txt = buildSummary();
+    document.getElementById("out").style.display = "block";
+    document.getElementById("outtxt").value = txt;
+    document.getElementById("outtxt").style.height = "340px";
+    toast("Built. Scroll down and copy.");
+  });
+  document.getElementById("copy").addEventListener("click", function(){ copyText(document.getElementById("outtxt").value); });
+  document.getElementById("reset").addEventListener("click", function(){
+    if(confirm("Wipe every answer and start over?")){
+      S = {a:{},c:{},f:{},t:{}}; memFallback = null;
+      try{ localStorage.removeItem(KEY); }catch(e){}
+      location.reload();
+    }
+  });
+}
+if(document.readyState === "loading"){ document.addEventListener("DOMContentLoaded", init); } else { init(); }
+})();
+</script>
+</body>
+</html>

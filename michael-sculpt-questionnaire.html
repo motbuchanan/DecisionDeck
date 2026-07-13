@@ -42,6 +42,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(25,22,20,.94);backdrop-f
 .q{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line)}
 .q:first-of-type{margin-top:6px;padding-top:0;border-top:0}
 .qt{font:700 15px/1.35 var(--sans);margin-bottom:8px}
+.qhint{font:400 13px/1.4 var(--sans);color:var(--mut);margin:-4px 0 8px}
 .qn{font:700 10px/1 var(--mono);color:var(--dim);letter-spacing:.1em;margin-right:6px}
 
 .chips{display:flex;flex-wrap:wrap;gap:7px}
@@ -97,7 +98,7 @@ footer{text-align:center;font:600 10px/1 var(--mono);color:var(--dim);letter-spa
       <div class="t">Session Zero</div>
       <div class="s">SCULPT APP QUESTIONNAIRE · FOR MICHAEL</div>
     </div>
-    <div class="badge" id="badge">v1 · Jul 4</div>
+    <div class="badge" id="badge">v2 · Jul 13</div>
   </div>
   <div class="meshbar"><b id="meshfill"></b></div>
   <div class="pct" id="pct">0% BLOCKED IN</div>
@@ -307,7 +308,11 @@ footer{text-align:center;font:600 10px/1 var(--mono);color:var(--dim);letter-spa
 <p class="mut" style="margin:2px 0 0">Rate everything for a POCKET tool, not for ZBrush. <b style="color:#e05c3a">MUST</b> = dead without it. <b style="color:#d99e4a">WANT</b> = would use it constantly. <b style="color:#8a93d9">NICE</b> = cool but wouldn't miss it. <b style="color:#a89e93">SKIP</b> = not on a phone. Gut reactions, don't overthink.</p>
 <div id="triage"></div>
 
-<div class="sechead"><span class="secnum">05</span><h2>Final word</h2></div>
+<div class="sechead"><span class="secnum">05</span><h2>How we do this</h2></div>
+<p class="mut" style="margin:2px 0 0">Not about the tool. About how you and I work on it, so I build the right thing instead of guessing twice.</p>
+<div class="card" id="sec-test"></div>
+
+<div class="sechead"><span class="secnum">06</span><h2>Final word</h2></div>
 <div class="card">
   <div class="q"><div class="qt">What would you miss most from ZBrush on day one?</div><textarea data-t="t1" placeholder="Whatever comes to mind..."></textarea></div>
   <div class="q"><div class="qt">Instant dealbreaker. The thing that makes you close a sculpt app and never reopen it.</div><textarea data-t="t2" placeholder=""></textarea></div>
@@ -315,7 +320,7 @@ footer{text-align:center;font:600 10px/1 var(--mono);color:var(--dim);letter-spa
   <div class="q"><div class="qt">Anything else about how you sculpt, or what you'd actually use a pocket tool for?</div><textarea data-t="t4" placeholder=""></textarea></div>
 </div>
 
-<div class="sechead"><span class="secnum">06</span><h2>Send it back</h2></div>
+<div class="sechead"><span class="secnum">07</span><h2>Send it back</h2></div>
 <div class="card">
   <p class="mut">This builds a text version of all your answers. Copy it and text or email it to Mot. Change anything above and rebuild, it always uses the latest.</p>
   <div class="warn" id="warn"></div>
@@ -333,8 +338,8 @@ footer{text-align:center;font:600 10px/1 var(--mono);color:var(--dim);letter-spa
 <script>
 (function(){
 "use strict";
-var VERSION = "v1 · Jul 4";
-var KEY = "sculptq_v1";
+var VERSION = "v2 · Jul 13";
+var KEY = "sculptq_v2";
 
 /* ---------- data ---------- */
 var ABOUT = [
@@ -350,7 +355,14 @@ var ABOUT = [
  {i:"a6",q:"What happens to a finished sculpt? All that apply.",multi:true,
   o:["Into ZBrush to finish","3D print it","Render or turntable it","Into Rhino or CAD downstream","Nothing, it was for the reps"]},
  {i:"a7",q:"Roughly how many years have you been sculpting digitally?",
-  o:["Under 5","5 to 10","10 to 20","20 plus"]}
+  o:["Under 5","5 to 10","10 to 20","20 plus"]},
+ {i:"a8",q:"What exact phone or tablet would you run this on?",hint:"Model and rough age. This is the single most useful technical thing you can tell me, it sets the polygon budget for the whole tool.",text:true},
+ {i:"a9",q:"How do you get a file off that device onto your computer?",multi:true,other:true,
+  o:["Email it to myself","Cloud (Drive, Dropbox, iCloud)","AirDrop","Cable","Never had to figure it out"]},
+ {i:"a10",q:"Does it need to work with no signal?",
+  o:["Yes, I'm often offline","Nice to have","Doesn't matter"]},
+ {i:"a11",q:"Holding the device: portrait or landscape?",
+  o:["Portrait","Landscape","Whatever the app wants"]}
 ];
 
 var WORK = [
@@ -373,7 +385,26 @@ var WORK = [
  {i:"w9",q:"How precious is undo to you?",
   o:["I lean on it constantly, deep history please","Normal amounts","I commit to my strokes"]},
  {i:"w10",q:"A pocket sculpt session would realistically be...",
-  o:["Five stolen minutes","Twenty to thirty minutes","An hour plus if it holds up"]}
+  o:["Five stolen minutes","Twenty to thirty minutes","An hour plus if it holds up"]},
+ {i:"w11",q:"What would you sculpt on a phone that you would NOT bother sculpting on the desktop?",hint:"If the answer is nothing, say so. That's a real answer and I need to hear it.",text:true},
+ {i:"w12",q:"How heavy does a mesh need to get before the tool is useful to you?",hint:"Rough guess is fine. A phone can't hold ZBrush numbers, I need to know where your floor is.",
+  o:["Low, it's just blocking (under 100k)","Medium, some detail (a few hundred k)","High or it's a toy (a million plus)","No idea, I just sculpt until it feels right"]},
+ {i:"w13",q:"Do you paint color on models?",
+  o:["Yes, polypaint is part of my process","Sometimes","No, form only"]},
+ {i:"w14",q:"Do you build custom brushes in ZBrush?",
+  o:["Yes, I have a set I rely on","A few tweaks here and there","No, I use the defaults"]}
+];
+
+var TEST = [
+ {i:"x1",q:"Would you actually try rough versions and tell me what's broken?",hint:"Totally fine to say no. I'd rather know now.",
+  o:["Yes, send me anything","Yes, but only when it's usable","Maybe, depends how busy I am","I'd rather see it when it's done"]},
+ {i:"x2",q:"How do you want to give feedback?",multi:true,
+  o:["Just text you","Talk in person at work","A button in the app to send a note","Screenshots with notes on them","Whatever's easiest"]},
+ {i:"x3",q:"If it only did ONE of these really well at first, which?",
+  o:["Fast rough blocking anywhere","Detailed sculpting that holds up","Clean export into ZBrush","Fixing or tweaking an existing model"]},
+ {i:"x4",q:"Honest gut check: is a browser sculpting tool on a phone something you'd ever actually reach for?",hint:"A no here saves us both a lot of time. Say it if you feel it.",
+  o:["Yes, I'd use it","Maybe, if it's genuinely good","Probably not, but I'll tell you if it's good","Doubt it"]},
+ {i:"x5",q:"What would make you reach for this instead of just waiting until you're at your desk?",text:true}
 ];
 
 var CREACT = ["Core to me","Useful","Rarely touch it","Could live without"];
@@ -444,7 +475,13 @@ var FEATURES = [
  {i:"f49",c:"input",n:"Stylus pressure",b:"Pressure drives intensity or size when a pen is present."},
  {i:"f50",c:"input",n:"Customizable quick buttons",b:"Put YOUR five most-used actions one thumb away."},
  {i:"f51",c:"input",n:"Left / right hand layout flip",b:"Mirror the UI for handedness."},
- {i:"f52",c:"input",n:"On-screen size and intensity sliders",b:"Always-visible brush dials, no menu diving."}
+ {i:"f52",c:"input",n:"On-screen size and intensity sliders",b:"Always-visible brush dials, no menu diving."},
+ {i:"f53",c:"brush",n:"Build and save your own brush",b:"Tune a brush's behavior and keep it."},
+ {i:"f54",c:"scene",n:"Armature blocking (ZSphere style)",b:"Rough a figure out of linked blobs, then skin it into a mesh."},
+ {i:"f55",c:"view",n:"Paint color on the model (polypaint)",b:"Vertex color straight onto the surface, no UVs."},
+ {i:"f56",c:"view",n:"Export the color with the model",b:"Color survives the trip to ZBrush or the printer."},
+ {i:"f57",c:"files",n:"Works fully offline",b:"No signal, nothing uploads, sculpt on a plane."},
+ {i:"f58",c:"files",n:"Send straight to the computer",b:"One tap to email or cloud, no file-manager hunting."}
 ];
 
 var RATES = [
@@ -491,6 +528,7 @@ function renderQuestions(list, mount, store, prefix){
     qt.appendChild(qn);
     qt.appendChild(document.createTextNode(item.q));
     q.appendChild(qt);
+    if(item.hint){ q.appendChild(el("div","qhint",item.hint)); }
 
     if(item.text){
       var inp = el("input");
@@ -633,7 +671,7 @@ var debounceSave = (function(){
 /* ---------- progress ---------- */
 function answeredCounts(){
   var done = 0, total = 0;
-  ABOUT.concat(WORK).forEach(function(item){
+  ABOUT.concat(WORK).concat(TEST).forEach(function(item){
     total++;
     var v = S.a[item.i];
     if(item.text){ if(v && String(v).trim()) done++; }
@@ -657,27 +695,21 @@ function buildSummary(){
   L.push("SCULPT APP QUESTIONNAIRE · MICHAEL");
   L.push("Generated " + new Date().toLocaleDateString() + " · " + VERSION);
   L.push("");
-  L.push("=== ABOUT ===");
-  ABOUT.forEach(function(item){
-    var v = S.a[item.i];
-    var extra = S.a[item.i + "_x"];
-    var ans = "";
-    if(item.text){ ans = (v && String(v).trim()) ? String(v).trim() : "(blank)"; }
-    else if(item.multi){ ans = (Array.isArray(v) && v.length) ? v.join(", ") : "(none picked)"; }
-    else { ans = v || "(skipped)"; }
-    if(extra && String(extra).trim()) ans += " | Other: " + String(extra).trim();
-    L.push("- " + item.q + " -> " + ans);
-  });
-  L.push("");
-  L.push("=== WORKFLOW ===");
-  WORK.forEach(function(item){
-    var v = S.a[item.i];
-    var ans = item.multi
-      ? ((Array.isArray(v) && v.length) ? v.join(", ") : "(none picked)")
-      : (v || "(skipped)");
-    L.push("- " + item.q + " -> " + ans);
-  });
-  L.push("");
+  function dumpChips(title, list){
+    L.push("=== " + title + " ===");
+    list.forEach(function(item){
+      var v = S.a[item.i]; var extra = S.a[item.i + "_x"]; var ans = "";
+      if(item.text){ ans = (v && String(v).trim()) ? String(v).trim() : "(blank)"; }
+      else if(item.multi){ ans = (Array.isArray(v) && v.length) ? v.join(", ") : "(none picked)"; }
+      else { ans = v || "(skipped)"; }
+      if(extra && String(extra).trim()) ans += " | Other: " + String(extra).trim();
+      L.push("- " + item.q + " -> " + ans);
+    });
+    L.push("");
+  }
+  dumpChips("ABOUT", ABOUT);
+  dumpChips("WORKFLOW", WORK);
+  dumpChips("HOW WE WORK TOGETHER", TEST);
   L.push("=== CONCEPTS ===");
   CREACT.forEach(function(opt){
     var names = CONCEPTS.filter(function(cid){ return S.c[cid] === opt; })
@@ -729,6 +761,7 @@ function init(){
   loadState();
   renderQuestions(ABOUT, document.getElementById("sec-about"), S.a, "A");
   renderQuestions(WORK, document.getElementById("sec-work"), S.a, "W");
+  renderQuestions(TEST, document.getElementById("sec-test"), S.a, "X");
   renderConcepts();
   renderTriage();
   bindTextareas();
