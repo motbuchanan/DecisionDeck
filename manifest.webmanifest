@@ -1,15 +1,16 @@
 {
-  "name": "AstroMerge Realms",
-  "short_name": "AstroMerge",
-  "description": "Merge cute planet critters, build habitats, and clear the story planets!",
-  "start_url": "./astromerge.html",
+  "name": "Bot Lab",
+  "short_name": "Bot Lab",
+  "description": "A little world where AI creatures learn, survive, and form tribes.",
+  "start_url": "./botlab.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "any",
-  "background_color": "#141a33",
-  "theme_color": "#141a33",
+  "orientation": "portrait",
+  "background_color": "#0e0f13",
+  "theme_color": "#0e0f13",
   "icons": [
-    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

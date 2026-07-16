@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Bot Lab</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0e0f13">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bot Lab">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <style>
 :root{
   --bg:#101216; --panel:#1a1d23; --panel2:#22262e; --line:rgba(255,255,255,.08);
@@ -80,7 +87,15 @@ input[type=range]{flex:1;accent-color:var(--accent);}
 .setlabel{font-size:14px;font-weight:700;display:flex;flex-direction:column;gap:2px;}
 .setlabel small{font-size:11px;font-weight:400;color:var(--dim);}
 .soon{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;border:1px solid var(--line);border-radius:8px;padding:3px 8px;}
-#moreSheet{position:fixed;inset:0;background:rgba(8,9,12,.6);z-index:44;display:flex;align-items:flex-end;justify-content:center;}
+#feedSheet{position:fixed;inset:0;background:rgba(8,9,12,.6);z-index:45;display:flex;align-items:flex-end;justify-content:center;}
+#feedSheet.hide{display:none;}
+#feedList{max-height:52vh;overflow-y:auto;}
+.feeditem{display:flex;gap:9px;align-items:flex-start;padding:7px 2px;border-bottom:1px solid var(--line);font-size:14px;}
+.feeditem .fic{font-size:17px;flex:0 0 auto;line-height:1.3;}
+.feeditem .ftx{line-height:1.35;}
+.feeditem .fday{color:var(--dim);font-size:11px;}
+.feedempty{color:var(--dim);font-size:13px;padding:14px 4px;text-align:center;}
+#feedDot{position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--bad);display:none;}
 #moreSheet.hide{display:none;}
 .sheetbox{background:var(--panel);border:1px solid var(--line);border-radius:18px 18px 0 0;padding:16px;width:100%;max-width:560px;}
 .sheethead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
@@ -134,7 +149,7 @@ input[type=range]{flex:1;accent-color:var(--accent);}
   <h1>🧠 Bot Lab</h1>
   <div style="display:flex;gap:8px;align-items:center;">
     <div id="gear" style="font-size:15px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px 9px;cursor:pointer;">⚙️</div>
-    <div id="ver">v17.0 · Jul 15</div>
+    <div id="ver">v18.0 · Jul 16</div>
   </div>
 </header>
 <div id="wrap">
@@ -174,6 +189,7 @@ input[type=range]{flex:1;accent-color:var(--accent);}
       <button data-m="sense">👃 Senses</button>
     </div>
     <div class="btn" id="brainBtn" style="flex:0 0 auto;padding:9px 12px;">👁 Brain</div>
+    <div class="btn" id="feedBtn" style="flex:0 0 auto;padding:9px 12px;position:relative;">📜 Story<span id="feedDot"></span></div>
     <div class="btn" id="moreBtn" style="flex:0 0 auto;padding:9px 12px;">⋯ More</div>
   </div>
 
@@ -182,6 +198,13 @@ input[type=range]{flex:1;accent-color:var(--accent);}
     <div class="stat"><b id="stPop">1</b><span>Pop</span></div>
     <div class="stat"><b id="stGen">1</b><span>Gen</span></div>
     <div class="stat"><b id="stMood">😐</b><span>Mood</span></div>
+  </div>
+</div>
+
+<div id="feedSheet" class="hide">
+  <div class="sheetbox">
+    <div class="sheethead"><b>📜 Colony Story</b><span id="feedClose" class="mini">Done</span></div>
+    <div id="feedList"></div>
   </div>
 </div>
 
@@ -227,6 +250,7 @@ input[type=range]{flex:1;accent-color:var(--accent);}
   </div>
 </div>
 
+<div id="updateBar" class="hide"><span>✨ New version ready</span><button id="updateGo">Reload</button></div>
 <div id="card" class="hide">
   <div class="cardbox">
     <div class="cardtop">
@@ -1092,18 +1116,19 @@ if (typeof document !== "undefined") (function(){
   function doStep(){
     var c=cell();
     for(var b=0;b<st.agents.length;b++){
-      var a=st.agents[b], ev=stepAgent(st.world,a,st.mode,epsilon);
+      var a=st.agents[b], preName=a.name, ev=stepAgent(st.world,a,st.mode,epsilon);
       if(ev===1){ ai(a).eat=1; emotes.push({ch:"🌸",x:a.x*c+c/2,y:a.y*c+c*0.2,t:0}); }
       else if(ev===2){ a._scare=18; emotes.push({ch:"💥",x:a.x*c+c/2,y:a.y*c+c*0.2,t:0}); }
       else if(ev===4){ ai(a).spawn=0; emotes.push({ch:"💫",x:a.x*c+c/2,y:a.y*c+c*0.2,t:0}); }
-      else if(ev===5) emotes.push({ch:"💀",x:a.x*c+c/2,y:a.y*c+c*0.2,t:0});
+      else if(ev===5){ emotes.push({ch:"💀",x:a.x*c+c/2,y:a.y*c+c*0.2,t:0}); logEvent(a._byPred?"🦊":"💀", a._byPred? (preName+" was caught by a predator.") : (preName+" ran out of energy.")); }
+      else if(ev===6){ logEvent("🕊️", preName+" grew old and passed away peacefully."); }
     }
     // predators: scripted hunters chase the nearest forager
     if(st.world.predatorsOn){
       while(st.world.predators.length<st.world.predCount){ var pp=spawnCell(st.world,{}); st.world.predators.push(makePredator(pp.x,pp.y)); }
       while(st.world.predators.length>st.world.predCount) st.world.predators.pop();
       for(var pi=0;pi<st.world.predators.length;pi++){ var caught=stepPredator(st.world, st.world.predators[pi], st.agents, Math.random);
-        if(caught){ caught._scare=24; emotes.push({ch:"😱",x:caught.x*c+c/2,y:caught.y*c+c*0.2,t:0}); } }
+        if(caught){ caught._scare=24; caught._byPred=true; emotes.push({ch:"😱",x:caught.x*c+c/2,y:caught.y*c+c*0.2,t:0}); } }
     } else if(st.world.predators.length){ st.world.predators.length=0; }
     // prey: mobile food that flees; a group brings it down and shares the meal
     if(st.world.huntingOn){
@@ -1112,12 +1137,15 @@ if (typeof document !== "undefined") (function(){
       for(var qi=0;qi<st.world.prey.length;qi++){ var q=st.world.prey[qi];
         var res=huntResolve(st.world, q, st.agents);
         if(res.caught){ emotes.push({ch:"🍖",x:q.x*c+c/2,y:q.y*c+c*0.2,t:0});
+          if(res.hunters.length>=2) logEvent("🍖", res.hunters.length+" hunters teamed up and caught prey together.");
+          else if(res.hunters.length===1) logEvent("🍖", res.hunters[0].name+" caught prey.");
           for(var hi=0;hi<res.hunters.length;hi++){ res.hunters[hi]._joy=18; }
           var np=freeCell(); q.x=np.x; q.y=np.y; q.ax=np.x; q.ay=np.y; q.hp=q.maxhp; // respawn a new one elsewhere
         } else { preyFleeStep(st.world, q, st.agents, Math.random); }
       }
     } else if(st.world.prey.length){ st.world.prey.length=0; }
     if(st.world.tribesOn) cohesionPass(st.world, st.agents, Math.random);
+    checkTribeMilestone();
     worldTick(st.world);
     // remove the dead (permadeath)
     if(st.agents.some(function(a){return a.dead;})){
@@ -1139,7 +1167,8 @@ if (typeof document !== "undefined") (function(){
           if(Math.abs(A.x-B.x)+Math.abs(A.y-B.y)>1) continue; // must be next to each other
           var pos=freeAdjacent(A)||freeAdjacent(B)||freeCell();
           if(pos){ var child=birthChild2(A,B,pos.x,pos.y); A.energy-=REPRO_COST; B.energy-=REPRO_COST; A.age=0; B.age=0;
-            st.agents.push(child); emotes.push({ch:"🌱",x:pos.x*c+c/2,y:pos.y*c+c*0.2,t:0});
+            st.agents.push(child); logEvent("🐣", child.name+" was born to "+A.name+" and "+B.name+".");
+            emotes.push({ch:"🌱",x:pos.x*c+c/2,y:pos.y*c+c*0.2,t:0});
             emotes.push({ch:"💞",x:((A.x+B.x)/2)*c+c/2,y:((A.y+B.y)/2)*c+c*0.1,t:0}); made=true; }
         } }
         // lone/unpaired adults do NOT breed — colony can dwindle (realistic)
@@ -1147,6 +1176,7 @@ if (typeof document !== "undefined") (function(){
         // solo cloning (legacy asexual mode)
         var solo=eligible[0], pos2=freeAdjacent(solo)||freeCell();
         if(pos2){ var ch=birthChild(solo,pos2.x,pos2.y); solo.energy-=REPRO_COST; solo.age=0; st.agents.push(ch);
+          logEvent("🐣", ch.name+" was born to "+solo.name+".");
           emotes.push({ch:"🌱",x:pos2.x*c+c/2,y:pos2.y*c+c*0.2,t:0}); }
       }
     }
@@ -1359,6 +1389,8 @@ if (typeof document !== "undefined") (function(){
       body:"<p>Turn on <b>Prey to hunt</b> in the gear. Little critters hop around and run away.</p><p>One creature can't catch one alone, it just chases. But when <b>two or three gang up</b>, they corner it and bring it down, then <b>share the meal</b>.</p><div class='tip'>This is how the group learns to work together.</div>" },
     { icon:"🛖", title:"They form tribes",
       body:"<p>Turn on <b>Tribes</b> in the gear. Each family gets its own <b>color and badge</b>, so you can tell who belongs together.</p><p>When they're fed, families <b>drift together</b> and make home turf you can see as a colored glow. Predators go after loners first, so the group is safer.</p>" },
+    { icon:"📜", title:"Follow the story",
+      body:"<p>Tap <b>📜 Story</b> to read what's happening in plain words: who was born, who caught prey, who grew old, which tribe is taking over.</p><div class='tip'>A red dot means something new happened while you were away.</div>" },
     { icon:"🏆", title:"Strategy tips",
       body:"<ul><li>🌸 Spread flowers <b>far apart</b> so they must travel, that's when they learn a route.</li><li>💀 Want them to <b>evolve</b>? Turn on <b>Aging</b> or <b>Survival-of-the-fittest</b>, or nothing changes.</li><li>🎨 Creatures turn colors as families specialize. All grey means the world is too easy, make it harder.</li><li>🧬 Drop in a <b>specialist</b> and see if its family takes over.</li><li>✨ <b>New Group</b> starts totally fresh whenever you want.</li></ul>" }
   ];
@@ -1496,6 +1528,10 @@ if (typeof document !== "undefined") (function(){
   document.getElementById("gear").onclick=function(){ syncSettings(); settings.classList.remove("hide"); };
   var moreSheet=document.getElementById("moreSheet");
   document.getElementById("moreBtn").onclick=function(){ moreSheet.classList.remove("hide"); };
+  var feedSheet=document.getElementById("feedSheet");
+  document.getElementById("feedBtn").onclick=function(){ feedOpen=true; feedNew=false; updateFeedDot(); renderFeed(); feedSheet.classList.remove("hide"); };
+  document.getElementById("feedClose").onclick=function(){ feedOpen=false; feedSheet.classList.add("hide"); };
+  feedSheet.addEventListener("click",function(e){ if(e.target===feedSheet){ feedOpen=false; feedSheet.classList.add("hide"); } });
   document.getElementById("moreClose").onclick=function(){ moreSheet.classList.add("hide"); };
   moreSheet.addEventListener("click",function(e){ if(e.target===moreSheet) moreSheet.classList.add("hide"); });
   document.getElementById("gearBtn2").onclick=function(){ moreSheet.classList.add("hide"); syncSettings(); settings.classList.remove("hide"); };
@@ -1593,6 +1629,56 @@ if (typeof document !== "undefined") (function(){
   if(!had || !seenTut) openWizard(true);
   else if(migrated) setTimeout(function(){ toast("New survival rules! Brains reset, your world kept. Hit Play."); },400);
   draw(); requestAnimationFrame(loop);
+
+  var feed=[], feedOpen=false, feedNew=false;
+  // ---- event feed: plain-words story of colony life ----
+  function feedDay(){ var w=st.world; return w.dayNight? (Math.floor(w.time/w.cycleLen)+1) : null; }
+  function logEvent(ic, txt){ feed.push({ic:ic, txt:txt, day:feedDay()});
+    if(feed.length>60) feed.shift(); if(feedOpen) renderFeed(); feedNew=true; updateFeedDot(); }
+  function renderFeed(){ var p=document.getElementById("feedList"); if(!p) return;
+    if(!feed.length){ p.innerHTML="<div class='feedempty'>Press Play and watch. Births, deaths, hunts and tribes will show up here.</div>"; return; }
+    var h="";
+    for(var i=feed.length-1;i>=0;i--){ var e=feed[i];
+      h+="<div class='feeditem'><span class='fic'>"+e.ic+"</span><span class='ftx'>"+e.txt+(e.day?" <span class='fday'>· Day "+e.day+"</span>":"")+"</span></div>"; }
+    p.innerHTML=h;
+  }
+  function updateFeedDot(){ var d=document.getElementById("feedDot"); if(d) d.style.display=(feedNew&&!feedOpen)?"block":"none"; }
+  var _lastDom=-1;
+  function checkTribeMilestone(){
+    if(!st.world.tribesOn || st.agents.length<4) { _lastDom=-1; return; }
+    var count={}, total=0;
+    for(var i=0;i<st.agents.length;i++){ var a=st.agents[i]; if(a.dead) continue; var cl=a.clan||0; count[cl]=(count[cl]||0)+1; total++; }
+    var topCl=-1, topN=0; for(var k in count){ if(count[k]>topN){topN=count[k]; topCl=+k;} }
+    if(topCl>=0 && topN/total>=0.6 && topCl!==_lastDom){ _lastDom=topCl;
+      var names=["Red","Green","Blue","Gold","Purple","Teal","Orange","Pink"];
+      logEvent("🚩", "The "+(names[topCl%names.length])+" tribe now rules the colony ("+topN+" of "+total+").");
+    } else if(topN/total<0.6){ _lastDom=-1; }
+  }
+
+  // ---- PWA: register service worker + prompt to reload when a new push lands ----
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",function(){
+      navigator.serviceWorker.register("./sw.js").then(function(reg){
+        function watch(w){ if(!w) return; w.addEventListener("statechange",function(){
+          if(w.state==="installed" && navigator.serviceWorker.controller){ showUpdate(); } }); }
+        if(reg.waiting && navigator.serviceWorker.controller) showUpdate();
+        reg.addEventListener("updatefound",function(){ watch(reg.installing); });
+        // check for a new version whenever the app regains focus
+        document.addEventListener("visibilitychange",function(){ if(!document.hidden) reg.update(); });
+      }).catch(function(){});
+      var reloaded=false;
+      navigator.serviceWorker.addEventListener("controllerchange",function(){ if(reloaded) return; reloaded=true; location.reload(); });
+    });
+  }
+  function showUpdate(){
+    var b=document.getElementById("updateBar"); if(!b) return; b.classList.remove("hide");
+    b.querySelector("#updateGo").onclick=function(){
+      navigator.serviceWorker.getRegistration().then(function(reg){
+        if(reg && reg.waiting){ reg.waiting.postMessage("skipWaiting"); }
+        else location.reload();
+      });
+    };
+  }
 })();
 
 // Node export
