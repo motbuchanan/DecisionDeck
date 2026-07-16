@@ -11,39 +11,43 @@
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
-body{display:flex;flex-direction:column;min-height:100dvh;}
-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 6px;}
-h1{font-size:18px;margin:0;letter-spacing:.5px;}
+body{display:flex;flex-direction:column;height:100dvh;overflow:hidden;}
+header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px 4px;flex:0 0 auto;}
+h1{font-size:17px;margin:0;letter-spacing:.5px;}
 #ver{font-size:11px;color:var(--dim);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px 8px;cursor:pointer;}
-#wrap{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 10px 16px;gap:8px;max-width:560px;margin:0 auto;width:100%;}
-.cvbox{position:relative;width:100%;}
-#cv{width:100%;aspect-ratio:1/1;background:#15171c;border-radius:14px;border:1px solid var(--line);touch-action:manipulation;display:block;}
-#vs{position:absolute;top:8px;left:50%;transform:translateX(-50%);display:none;gap:14px;background:rgba(16,18,22,.75);border:1px solid var(--line);border-radius:20px;padding:4px 14px;font-weight:800;font-size:15px;}
+#wrap{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;padding:0 10px 8px;gap:6px;max-width:560px;margin:0 auto;width:100%;}
+.cvbox{position:relative;width:100%;flex:1;min-height:0;display:flex;overflow:hidden;border-radius:14px;touch-action:none;}
+#cv{width:100%;height:100%;background:#15171c;border-radius:14px;border:1px solid var(--line);display:block;touch-action:none;}
+#zoomHint{position:absolute;bottom:8px;right:10px;font-size:11px;color:var(--dim);background:rgba(16,18,22,.75);border:1px solid var(--line);border-radius:9px;padding:3px 8px;pointer-events:none;opacity:0;transition:opacity .3s;}
+#zoomReset{position:absolute;bottom:8px;left:10px;font-size:12px;font-weight:700;color:var(--accent);background:rgba(16,18,22,.85);border:1px solid var(--accent);border-radius:9px;padding:4px 10px;cursor:pointer;display:none;}
+#vs{position:absolute;top:6px;left:50%;transform:translateX(-50%);display:none;gap:12px;background:rgba(16,18,22,.55);border:1px solid var(--line);border-radius:14px;padding:2px 12px;font-weight:800;font-size:13px;z-index:2;pointer-events:auto;}
 #vs.on{display:flex;}
-.row{display:flex;gap:8px;width:100%;align-items:center;}
-.btn{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:11px 6px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;user-select:none;}
+#clock{pointer-events:none;}
+.row{display:flex;gap:8px;width:100%;align-items:center;flex:0 0 auto;}
+.btn{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:9px 6px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;user-select:none;}
 .btn:active{background:var(--panel2);}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#181818;}
 .btn.on{outline:2px solid var(--accent);color:var(--accent);}
 .seg{display:flex;flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-.seg button{flex:1;background:none;border:none;color:var(--dim);padding:11px 0;font-size:14px;font-weight:700;cursor:pointer;}
+.seg button{flex:1;background:none;border:none;color:var(--dim);padding:9px 0;font-size:14px;font-weight:700;cursor:pointer;}
 .seg button.on{background:var(--panel2);color:var(--accent);}
-.pal{display:flex;gap:8px;width:100%;}
-.pal .btn{display:flex;align-items:center;justify-content:center;gap:5px;font-size:13px;padding:11px 3px;}
+.pal{display:flex;gap:6px;width:100%;flex:0 0 auto;}
+.pal .btn{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:4px;font-size:13px;padding:11px 2px;white-space:nowrap;overflow:hidden;}
+.pal .btn .lbl{overflow:hidden;text-overflow:ellipsis;}
 .dot{width:13px;height:13px;border-radius:50%;display:inline-block;}
 .sq{width:13px;height:13px;border-radius:3px;display:inline-block;}
-label.slid{display:flex;align-items:center;gap:10px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--dim);}
+label.slid{display:flex;align-items:center;gap:10px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:13px;color:var(--dim);flex:0 0 auto;}
 input[type=range]{flex:1;accent-color:var(--accent);}
 .mini{background:var(--panel2);border:1px solid var(--line);color:var(--dim);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;}
 .mini.on{color:var(--accent);outline:1.5px solid var(--accent);}
-#sparkWrap{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;}
+#sparkWrap{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;flex:0 0 auto;}
 #sparkWrap span{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;}
 #spark{width:100%;height:44px;display:block;}
-#ebar{position:relative;width:100%;height:22px;background:var(--panel);border:1px solid var(--line);border-radius:11px;overflow:hidden;}
+#ebar{position:relative;width:100%;height:20px;background:var(--panel);border:1px solid var(--line);border-radius:11px;overflow:hidden;flex:0 0 auto;}
 #efill{position:absolute;left:0;top:0;bottom:0;width:60%;background:var(--good);transition:width .12s linear,background .3s;border-radius:11px;}
 #ebar b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#0c0e12;text-shadow:0 1px 1px rgba(255,255,255,.25);}
-#stats{display:flex;gap:8px;width:100%;}
-.stat{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center;}
+#stats{display:flex;gap:8px;width:100%;flex:0 0 auto;}
+.stat{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 4px;text-align:center;}
 .stat b{display:block;font-size:16px;}
 .stat span{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;text-align:center;max-width:90%;}
@@ -76,7 +80,11 @@ input[type=range]{flex:1;accent-color:var(--accent);}
 .setlabel{font-size:14px;font-weight:700;display:flex;flex-direction:column;gap:2px;}
 .setlabel small{font-size:11px;font-weight:400;color:var(--dim);}
 .soon{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;border:1px solid var(--line);border-radius:8px;padding:3px 8px;}
-#dnLenRow{margin-bottom:8px;}
+#moreSheet{position:fixed;inset:0;background:rgba(8,9,12,.6);z-index:44;display:flex;align-items:flex-end;justify-content:center;}
+#moreSheet.hide{display:none;}
+.sheetbox{background:var(--panel);border:1px solid var(--line);border-radius:18px 18px 0 0;padding:16px;width:100%;max-width:560px;}
+.sheethead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sheethead b{font-size:16px;}
 #obsPanel{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 13px;}
 #obsPanel.hide{display:none;}
 #obsPanel .obshead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;}
@@ -126,7 +134,7 @@ input[type=range]{flex:1;accent-color:var(--accent);}
   <h1>🧠 Bot Lab</h1>
   <div style="display:flex;gap:8px;align-items:center;">
     <div id="gear" style="font-size:15px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px 9px;cursor:pointer;">⚙️</div>
-    <div id="ver">v15.0 · Jul 15</div>
+    <div id="ver">v17.0 · Jul 15</div>
   </div>
 </header>
 <div id="wrap">
@@ -134,9 +142,19 @@ input[type=range]{flex:1;accent-color:var(--accent);}
     <canvas id="cv"></canvas>
     <div id="clock">☀️ Day 1</div>
     <div id="vs">👥 <b id="vsPop">1</b> · Gen <b id="vsGen">1</b></div>
+    <div id="zoomReset">⤢ Fit</div>
+    <div id="zoomHint">pinch to zoom · drag to pan</div>
   </div>
 
   <div id="obsPanel" class="hide"></div>
+
+  <div class="pal">
+    <div class="btn on" id="palHappy"><span class="dot" style="background:var(--good)"></span><span class="lbl">Happy</span></div>
+    <div class="btn" id="palOuch"><span class="dot" style="background:var(--bad)"></span><span class="lbl">Ouch</span></div>
+    <div class="btn" id="palWall"><span class="sq" style="background:var(--wall)"></span><span class="lbl">Wall</span></div>
+    <div class="btn" id="palErase"><span class="lbl">🧽 Erase</span></div>
+    <div class="btn" id="moveBtn"><span class="lbl">✋ Move</span></div>
+  </div>
 
   <div id="ebar"><i id="efill"></i><b id="etxt">60%</b></div>
 
@@ -150,36 +168,14 @@ input[type=range]{flex:1;accent-color:var(--accent);}
     </div>
   </div>
 
-  <div class="pal">
-    <div class="btn on" id="palHappy"><span class="dot" style="background:var(--good)"></span>Happy</div>
-    <div class="btn" id="palOuch"><span class="dot" style="background:var(--bad)"></span>Ouch</div>
-    <div class="btn" id="palWall"><span class="sq" style="background:var(--wall)"></span>Wall</div>
-    <div class="btn" id="palErase">🧽 Erase</div>
-  </div>
-
   <div class="row">
     <div class="seg" id="brainSeg">
       <button data-m="place" class="on">🧠 Memory</button>
       <button data-m="sense">👃 Senses</button>
     </div>
-    <div class="btn" id="brainBtn" style="flex:0 0 auto;padding:11px 12px;">👁 Brain</div>
+    <div class="btn" id="brainBtn" style="flex:0 0 auto;padding:9px 12px;">👁 Brain</div>
+    <div class="btn" id="moreBtn" style="flex:0 0 auto;padding:9px 12px;">⋯ More</div>
   </div>
-
-  <label class="slid">Curiosity
-    <input type="range" id="eps" min="0" max="100" value="90">
-    <b id="epsVal" style="color:var(--txt);min-width:38px;text-align:right;">90%</b>
-    <button id="epsAuto" class="mini on">Auto</button>
-  </label>
-
-  <div class="row">
-    <div class="btn" id="moveBtn">✋ Move bot</div>
-    <div class="btn" id="rivalBtn"><span class="sq" style="background:var(--blue)"></span> Rival</div>
-    <div class="btn" id="resetBtn">🔄 Forget</div>
-    <div class="btn" id="clearBtn">🗑 Clear</div>
-    <div class="btn" id="newGroupBtn">✨ New Group</div>
-  </div>
-
-  <div id="sparkWrap"><span>Learning · avg energy per 200 steps</span><canvas id="spark"></canvas></div>
 
   <div id="stats">
     <div class="stat"><b id="stMeals" style="color:var(--good)">0</b><span>Meals</span></div>
@@ -187,9 +183,29 @@ input[type=range]{flex:1;accent-color:var(--accent);}
     <div class="stat"><b id="stGen">1</b><span>Gen</span></div>
     <div class="stat"><b id="stMood">😐</b><span>Mood</span></div>
   </div>
+</div>
 
-  <div class="row">
-    <div class="btn" id="helpBtn">❓ How he learns</div>
+<div id="moreSheet" class="hide">
+  <div class="sheetbox">
+    <div class="sheethead"><b>More controls</b><span id="moreClose" class="mini">Done</span></div>
+    <label class="slid">Curiosity
+      <input type="range" id="eps" min="0" max="100" value="90">
+      <b id="epsVal" style="color:var(--txt);min-width:38px;text-align:right;">90%</b>
+      <button id="epsAuto" class="mini on">Auto</button>
+    </label>
+    <div class="row" style="margin-top:8px">
+      <div class="btn" id="rivalBtn"><span class="sq" style="background:var(--blue)"></span> Rival</div>
+      <div class="btn" id="resetBtn">🔄 Forget</div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="btn" id="clearBtn">🗑 Clear</div>
+      <div class="btn" id="newGroupBtn">✨ New Group</div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="btn" id="helpBtn">❓ Tutorial</div>
+      <div class="btn" id="gearBtn2">⚙️ Settings</div>
+    </div>
+    <div id="sparkWrap" style="margin-top:8px"><span>Learning · avg energy per 200 steps</span><canvas id="spark"></canvas></div>
   </div>
 </div>
 
@@ -676,15 +692,27 @@ if (typeof document !== "undefined") (function(){
 
   // ---- canvas ----
   var cv=document.getElementById("cv"), ctx=cv.getContext("2d");
+  var view={z:1, ox:0, oy:0}; // zoom + pan offset (in canvas px)
   function fit(){ var r=cv.getBoundingClientRect(); var d=Math.min(window.devicePixelRatio||1,2);
-    cv.width=Math.round(r.width*d); cv.height=Math.round(r.width*d); }
+    cv.width=Math.round(r.width*d); cv.height=Math.round(r.height*d); clampView(); }
   window.addEventListener("resize",function(){fit();draw();});
-  function cell(){ return cv.width/GRID; }
-
+  function cell(){ return (cv.width/GRID)*view.z; }
+  function clampView(){
+    var span=cv.width*view.z;
+    // keep the board covering the viewport (no empty gaps) when zoomed in; center when zoomed out
+    if(view.z<=1){ view.z=1; view.ox=0; view.oy=0; return; }
+    var minx=cv.width-span, miny=cv.height-span;
+    if(view.ox>0) view.ox=0; if(view.ox<minx) view.ox=minx;
+    if(view.oy>0) view.oy=0; if(view.oy<miny) view.oy=miny;
+    document.getElementById("zoomReset").style.display = view.z>1.02?"block":"none";
+  }
   function draw(){
     var c=cell(), w=st.world;
+    ctx.setTransform(1,0,0,1,0,0);
     ctx.clearRect(0,0,cv.width,cv.height);
-    ctx.fillStyle="#15171c"; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.fillStyle="#0e0f13"; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.setTransform(1,0,0,1,view.ox,view.oy); // apply pan; zoom is baked into cell()
+    ctx.fillStyle="#15171c"; ctx.fillRect(0,0,cv.width*view.z,cv.height*view.z);
 
     // brain heat
     if(brainView){
@@ -1173,27 +1201,67 @@ if (typeof document !== "undefined") (function(){
   function toast(msg){ var t=document.getElementById("toast"); t.textContent=msg; t.style.opacity=1;
     clearTimeout(t._h); t._h=setTimeout(function(){t.style.opacity=0;},2000); }
 
-  cv.addEventListener("pointerdown",function(e){
-    var r=cv.getBoundingClientRect();
-    var x=Math.floor((e.clientX-r.left)/r.width*GRID), y=Math.floor((e.clientY-r.top)/r.height*GRID);
+  // ---- canvas input: tap to paint/focus, pinch to zoom, drag to pan ----
+  function cellFromEvent(e){ var r=cv.getBoundingClientRect();
+    var px=(e.clientX-r.left)*(cv.width/r.width), py=(e.clientY-r.top)*(cv.height/r.height);
+    var c=cell();
+    var x=Math.floor((px-view.ox)/c), y=Math.floor((py-view.oy)/c);
+    return {x:x,y:y};
+  }
+  var pointers={}, pinchStart=null, panStart=null, movedFar=false, downPt=null;
+  function showHint(){ var h=document.getElementById("zoomHint"); h.style.opacity=1; clearTimeout(h._t); h._t=setTimeout(function(){h.style.opacity=0;},1400); }
+  cv.addEventListener("pointerdown",function(e){ cv.setPointerCapture(e.pointerId);
+    pointers[e.pointerId]={x:e.clientX,y:e.clientY};
+    var ids=Object.keys(pointers);
+    if(ids.length===1){ downPt={x:e.clientX,y:e.clientY}; movedFar=false;
+      panStart={ox:view.ox,oy:view.oy,x:e.clientX,y:e.clientY}; }
+    else if(ids.length===2){ var a=pointers[ids[0]],b=pointers[ids[1]];
+      pinchStart={d:Math.hypot(a.x-b.x,a.y-b.y),z:view.z,cx:(a.x+b.x)/2,cy:(a.y+b.y)/2,ox:view.ox,oy:view.oy}; panStart=null; }
+  });
+  cv.addEventListener("pointermove",function(e){ if(!pointers[e.pointerId]) return;
+    pointers[e.pointerId]={x:e.clientX,y:e.clientY};
+    var ids=Object.keys(pointers);
+    if(ids.length===2 && pinchStart){ var a=pointers[ids[0]],b=pointers[ids[1]];
+      var d=Math.hypot(a.x-b.x,a.y-b.y), r=cv.getBoundingClientRect(), scale=cv.width/r.width;
+      var nz=Math.max(1,Math.min(4, pinchStart.z*(d/pinchStart.d)));
+      // zoom around the pinch midpoint
+      var mx=(pinchStart.cx-r.left)*scale, my=(pinchStart.cy-r.top)*scale;
+      var wx=(mx-pinchStart.ox)/(cv.width*pinchStart.z/GRID)/GRID; // fraction 0..1 of board under midpoint
+      var wy=(my-pinchStart.oy)/(cv.height*pinchStart.z/GRID)/GRID;
+      view.z=nz;
+      view.ox=mx-wx*cv.width*view.z; view.oy=my-wy*cv.height*view.z;
+      clampView(); draw(); movedFar=true; return;
+    }
+    if(ids.length===1 && panStart && view.z>1){ var r2=cv.getBoundingClientRect(), sc=cv.width/r2.width;
+      view.ox=panStart.ox+(e.clientX-panStart.x)*sc; view.oy=panStart.oy+(e.clientY-panStart.y)*sc;
+      clampView(); draw();
+    }
+    if(downPt && Math.hypot(e.clientX-downPt.x,e.clientY-downPt.y)>10) movedFar=true;
+  });
+  function endPointer(e){ delete pointers[e.pointerId];
+    var ids=Object.keys(pointers); if(ids.length<2) pinchStart=null; if(ids.length===0) panStart=null; }
+  cv.addEventListener("pointerup",function(e){
+    var wasTap = !movedFar && Object.keys(pointers).length===1;
+    endPointer(e);
+    if(wasTap) handleTap(e);
+  });
+  cv.addEventListener("pointercancel",endPointer);
+  document.getElementById("zoomReset").onclick=function(){ view.z=1; view.ox=0; view.oy=0; clampView(); draw(); };
+
+  function handleTap(e){
+    var p=cellFromEvent(e), x=p.x, y=p.y;
     if(!inBounds(x,y)) return;
     var s=idx(x,y);
-    if(tool===9){ // move bot
-      if(st.world.cells[s]===WALL) return;
-      var a=agent(); a.x=x; a.y=y; a.ax=x; a.ay=y; a.Ep.fill(0); a.Es.fill(0); save(); draw(); return;
-    }
-    // tap a creature to focus on it (live follow)
+    if(tool===9){ if(st.world.cells[s]===WALL) return;
+      var a=agent(); a.x=x; a.y=y; a.ax=x; a.ay=y; a.Ep.fill(0); a.Es.fill(0); save(); draw(); return; }
     for(var b=0;b<st.agents.length;b++){ var ba=st.agents[b];
-      if(ba.x===x&&ba.y===y){ focusAgent=ba; overview=false; updateObs(); return; }
-    }
+      if(!ba.dead && ba.x===x&&ba.y===y){ focusAgent=ba; overview=false; updateObs(); return; } }
     if(tool===0){ st.world.cells[s]=EMPTY; st.world.nectar[s]=0; }
-    else {
-      var was=st.world.cells[s];
-      st.world.cells[s] = (was===tool)?EMPTY:tool;
-      st.world.nectar[s] = (st.world.cells[s]===HAPPY)?NECTAR_MAX:0;
-    }
+    else { var was=st.world.cells[s]; st.world.cells[s]=(was===tool)?EMPTY:tool;
+      st.world.nectar[s]=(st.world.cells[s]===HAPPY)?NECTAR_MAX:0; }
     draw(); save();
-  });
+  }
+  cv.addEventListener("pointerdown",function(){ if(view.z>1) showHint(); });
 
   function setTool(t){
     tool=t;
@@ -1426,6 +1494,11 @@ if (typeof document !== "undefined") (function(){
   // settings drawer
   var settings=document.getElementById("settings");
   document.getElementById("gear").onclick=function(){ syncSettings(); settings.classList.remove("hide"); };
+  var moreSheet=document.getElementById("moreSheet");
+  document.getElementById("moreBtn").onclick=function(){ moreSheet.classList.remove("hide"); };
+  document.getElementById("moreClose").onclick=function(){ moreSheet.classList.add("hide"); };
+  moreSheet.addEventListener("click",function(e){ if(e.target===moreSheet) moreSheet.classList.add("hide"); });
+  document.getElementById("gearBtn2").onclick=function(){ moreSheet.classList.add("hide"); syncSettings(); settings.classList.remove("hide"); };
   document.getElementById("setClose").onclick=function(){ settings.classList.add("hide"); save(); };
   settings.addEventListener("click",function(e){ if(e.target===settings){ settings.classList.add("hide"); save(); } });
   var dnToggle=document.getElementById("dnToggle"), dnLen=document.getElementById("dnLen"), dnLenRow=document.getElementById("dnLenRow");
