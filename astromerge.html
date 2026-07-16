@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#141a33">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>AstroMerge Realms</title>
 <style>
   :root{
@@ -69,8 +75,9 @@
   .habNote{color:var(--dim); font-size:13px; text-align:center; padding:4px 20px;}
 
   /* BATTLE */
-  #planetRow{display:flex; gap:8px; padding:10px 12px 4px;}
-  .planetBtn{flex:1; border:none; border-radius:14px; padding:10px 6px; font-weight:800;
+  #planetRow{display:flex; gap:8px; padding:10px 12px 4px; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  #planetRow::-webkit-scrollbar{display:none;}
+  .planetBtn{flex:0 0 auto; min-width:92px; border:none; border-radius:14px; padding:10px 10px; font-weight:800;
     background:var(--panel); color:var(--ink); font-size:13px;}
   .planetBtn.sel{outline:3px solid var(--gold);}
   .planetBtn.locked{opacity:.4;}
@@ -103,6 +110,13 @@
   .card h2{margin:0 0 8px; font-size:22px;}
   .card p{color:var(--dim); font-size:14px; line-height:1.5; margin:0 0 14px;}
   .card .bigBtn{width:100%;}
+  #questsList{display:flex; flex-direction:column; gap:10px; margin-bottom:14px;}
+  .questRow{display:flex; align-items:center; gap:10px; background:var(--panel2);
+    border-radius:12px; padding:10px 12px; text-align:left;}
+  .questRow .ql{flex:1; min-width:0; font-size:14px;}
+  .questRow .bar{height:8px; background:#141a33; border-radius:4px; overflow:hidden; margin-top:6px;}
+  .questRow .bar i{display:block; height:100%; background:var(--mint); border-radius:4px;}
+  .questRow .qs{font-weight:800; color:var(--gold); font-size:14px; flex:0 0 auto;}
   #pickerList{max-height:46vh; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:12px;}
   .pickRow{display:flex; align-items:center; gap:10px; background:var(--panel2);
     border-radius:12px; padding:8px; border:none; color:var(--ink); font-weight:700; font-size:14px; text-align:left;}
@@ -255,19 +269,27 @@
   </div>
 </div>
 
+<div class="overlay" id="questsOv">
+  <div class="card">
+    <h2>📜 Daily Quests</h2>
+    <div id="questsList"></div>
+    <button class="bigBtn" id="questsOk">Done</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 <div id="hint"></div>
 
 <script>
 "use strict";
 /* ============================================================
-   AstroMerge Realms — v0.3 · visual overhaul
-   Planet-being critters (fox/bunny families), biome backdrops,
-   candy UI, drawn nav icons, cozy juice with arcade spikes.
+   AstroMerge Realms — v0.4 · PWA + retention build
+   Installable PWA (network-first updates from GitHub Pages),
+   habitat upgrades (Sparks sink), planets 4-6, daily quest set of 3.
    ============================================================ */
 /* ---------------- CONFIG (all balancing) ---------------- */
 const CONFIG = {
-  version: "v0.3 · Jul 15",
+  version: "v0.4 · Jul 16",
   storageKey: "astromerge_v1",
   cells: 48,                       // fixed board size; layout reflows 6x8 <-> 8x6
   tiers: 7,
@@ -286,11 +308,20 @@ const CONFIG = {
   waveBudget: (p, w) => Math.round(40 * Math.pow(1.18, p) * (1 + 0.15 * w)),
   wavesForPlanet: p => 3,
   mergeSparks: t => t * 2,
-  quest: { target: 20, reward: 300 },
+  quests: [
+    { id: "merge",   label: "Merge 20 critters",            target: 20, reward: 300, ev: "merge"   },
+    { id: "win",     label: "Win 2 battles",                target: 2,  reward: 250, ev: "win"     },
+    { id: "collect", label: "Collect from habitats 3 times", target: 3,  reward: 200, ev: "collect" },
+  ],
+  habCost: lvl => Math.round(200 * Math.pow(1.6, lvl - 1)),
+  habMult: lvl => 1 + 0.3 * (lvl - 1),
   planets: [
     { name: "Lumen",  biome: "meadow" },
     { name: "Cinder", biome: "magma"  },
     { name: "Glacia", biome: "frost"  },
+    { name: "Sylva",  biome: "meadow" },
+    { name: "Pyros",  biome: "magma"  },
+    { name: "Boreal", biome: "frost"  },
   ],
   elements: {
     fire: { color: "#ff7a5c", dark: "#c94b33", name: "Fire", icon: "🔥" },
@@ -337,13 +368,13 @@ const Save = (() => {
       player: { level: 1, xp: 0, energy: 30, sparks: 0, lastEnergyT: now() },
       grid: new Array(CONFIG.cells).fill(null),
       habitats: [
-        { biome: "magma",  occ: null, stash: 0, lastT: now() },
-        { biome: "frost",  occ: null, stash: 0, lastT: now() },
-        { biome: "meadow", occ: null, stash: 0, lastT: now() },
+        { biome: "magma",  lvl: 1, occ: null, stash: 0, lastT: now() },
+        { biome: "frost",  lvl: 1, occ: null, stash: 0, lastT: now() },
+        { biome: "meadow", lvl: 1, occ: null, stash: 0, lastT: now() },
       ],
       squad: [null, null, null],
       planets: CONFIG.planets.map(() => ({ cleared: false })),
-      quest: { day: "", progress: 0, claimed: false },
+      quests: null, // built by Quests.check() on first tick
       tut: 0,
       wizSeen: false,
       collection: [],
@@ -358,8 +389,13 @@ const Save = (() => {
       if (!raw) return defaults();
       const d = JSON.parse(raw);
       if (!d || d.v !== 1) return defaults();
-      // forward-migration hook lives here for v2+
-      return Object.assign(defaults(), d);
+      const st = Object.assign(defaults(), d);
+      // v0.4 migrations
+      (st.habitats || []).forEach(h => { if (!h.lvl) h.lvl = 1; });
+      while (st.planets.length < CONFIG.planets.length) st.planets.push({ cleared: false });
+      if (!st.quests || !st.quests.items) st.quests = null; // rebuilt by Quests.check()
+      delete st.quest;
+      return st;
     } catch (e) { return mem ? JSON.parse(JSON.stringify(mem)) : defaults(); }
   }
   let t = null;
@@ -1502,7 +1538,7 @@ const Habitats = (() => {
   function ratePerHr(h) {
     if (!h.occ) return 0;
     const m = BIOME[h.biome].match === h.occ.el ? CONFIG.biomeMatch : 1;
-    return CONFIG.idlePerHr(h.occ.tier) * m;
+    return CONFIG.idlePerHr(h.occ.tier) * m * CONFIG.habMult(h.lvl || 1);
   }
   function accrue() {
     const t = now();
@@ -1538,7 +1574,7 @@ const Habitats = (() => {
       info.className = "info";
       const rate = ratePerHr(h);
       const bonus = h.occ && B.match === h.occ.el ? " ★ biome bonus" : "";
-      info.innerHTML = "<b>" + B.name + "</b>" +
+      info.innerHTML = "<b>" + B.name + " <span style='color:var(--gold); font-size:12px;'>Lv " + (h.lvl || 1) + "</span></b>" +
         "<div class='rate'>" + (h.occ ? critterName(h.occ) + "<br>+" + rate.toFixed(1) + " Sparks/hr" + bonus
                                       : "Empty · " + (B.match ? "loves " + B.match : "any critter")) + "</div>" +
         "<div class='stash'>✦ <span class='stashN'>" + Math.floor(h.stash) + "</span> stored</div>";
@@ -1552,6 +1588,7 @@ const Habitats = (() => {
         h.stash -= amt;
         Player.addSparks(amt);
         Sfx.coin();
+        Quests.onCollect();
         toast("+" + amt + " Sparks ✦");
         Player.hud(); Save.save(S); render();
       });
@@ -1567,7 +1604,20 @@ const Habitats = (() => {
           Save.save(S); render();
         });
       });
-      btns.appendChild(collect); btns.appendChild(assign);
+      const up = document.createElement("button");
+      const cost = CONFIG.habCost(h.lvl || 1);
+      up.className = "assign";
+      up.style.color = "var(--gold)";
+      up.textContent = "Upgrade ✦" + cost;
+      up.addEventListener("click", () => {
+        if (S.player.sparks < cost) { Sfx.deny(); toast("Need ✦" + cost + " Sparks to upgrade."); return; }
+        S.player.sparks -= cost;
+        h.lvl = (h.lvl || 1) + 1;
+        Sfx.cheer();
+        toast(B.name + " is now Lv " + h.lvl + "! Earning " + Math.round((CONFIG.habMult(h.lvl) - 1) * 100) + "% bonus Sparks.");
+        Player.hud(); Save.save(S); render();
+      });
+      btns.appendChild(collect); btns.appendChild(assign); btns.appendChild(up);
       if (h.occ) {
         const recall = document.createElement("button");
         recall.className = "assign"; recall.textContent = "Recall";
@@ -1661,7 +1711,7 @@ const Battle = (() => {
   function genWave(planetIdx, w) {
     const rng = mulberry32(planetIdx * 1000 + w * 7 + 3);
     let budget = CONFIG.waveBudget(planetIdx, w);
-    const maxT = clamp(1 + planetIdx + (w > 1 ? 1 : 0), 1, 5);
+    const maxT = clamp(1 + planetIdx + (w > 1 ? 1 : 0), 1, 6);
     const out = [];
     while (budget > 0 && out.length < 5) {
       const t = 1 + Math.floor(rng() * maxT);
@@ -1721,7 +1771,7 @@ const Battle = (() => {
   function finish(win) {
     const loot = active.loot;
     Player.addSparks(loot);
-    S.stats.battles++; if (win) S.stats.wins++;
+    S.stats.battles++; if (win) { S.stats.wins++; Quests.onWin(); }
     if (win) {
       S.planets[active.planet].cleared = true;
       Sfx.cheer();
@@ -1843,35 +1893,80 @@ const Battle = (() => {
 /* ---------------- Quests (daily) ---------------- */
 const Quests = (() => {
   function today() { return new Date().toDateString(); }
+  function fresh() {
+    return { day: today(), items: CONFIG.quests.map(q => ({ id: q.id, progress: 0, claimed: false })) };
+  }
   function check() {
-    if (S.quest.day !== today()) {
-      S.quest = { day: today(), progress: 0, claimed: false };
-      Save.save(S);
-    }
+    if (!S.quests || S.quests.day !== today()) { S.quests = fresh(); Save.save(S); }
     render();
   }
-  function onMerge() {
-    if (S.quest.claimed) return;
-    S.quest.progress = Math.min(CONFIG.quest.target, S.quest.progress + 1);
-    render();
+  function bump(ev) {
+    if (!S.quests) check();
+    let changed = false;
+    CONFIG.quests.forEach((q, i) => {
+      const it = S.quests.items[i];
+      if (q.ev !== ev || it.claimed || it.progress >= q.target) return;
+      it.progress++;
+      changed = true;
+      if (it.progress === q.target) toast("Quest ready to claim! 🎉");
+    });
+    if (changed) { render(); Save.save(S); }
+  }
+  function claimable() {
+    return CONFIG.quests.filter((q, i) => {
+      const it = S.quests.items[i];
+      return !it.claimed && it.progress >= q.target;
+    }).length;
+  }
+  function claimAll() {
+    let total = 0;
+    CONFIG.quests.forEach((q, i) => {
+      const it = S.quests.items[i];
+      if (it.claimed || it.progress < q.target) return;
+      it.claimed = true;
+      total += q.reward;
+    });
+    if (!total) return;
+    Player.addSparks(total);
+    Sfx.coin();
+    toast("Quests claimed! +" + total + " Sparks ✦");
+    Player.hud(); render(); renderList(); Save.save(S);
   }
   function render() {
-    const q = S.quest;
-    $("#questTxt").textContent = "Daily: merge " + CONFIG.quest.target;
-    $("#questFill").style.width = Math.round(100 * q.progress / CONFIG.quest.target) + "%";
-    const done = q.progress >= CONFIG.quest.target && !q.claimed;
-    $("#questClaim").style.display = done ? "block" : "none";
-    if (q.claimed) $("#questTxt").textContent = "Daily quest done! ✔";
+    if (!S.quests) return;
+    const doneCount = S.quests.items.filter((it, i) => it.progress >= CONFIG.quests[i].target).length;
+    const pSum = S.quests.items.reduce((a, it, i) => a + Math.min(it.progress, CONFIG.quests[i].target), 0);
+    const tSum = CONFIG.quests.reduce((a, q) => a + q.target, 0);
+    $("#questTxt").textContent = "Daily quests · " + doneCount + "/" + CONFIG.quests.length;
+    $("#questFill").style.width = Math.round(100 * pSum / tSum) + "%";
+    const cl = claimable();
+    $("#questClaim").textContent = cl ? "Claim!" : "View";
+    $("#questClaim").style.display = "block";
+    $("#questClaim").style.background = cl ? "var(--mint)" : "var(--panel2)";
+    $("#questClaim").style.color = cl ? "#0d2a1b" : "var(--ink)";
   }
-  $("#questClaim").addEventListener("click", () => {
-    if (S.quest.claimed || S.quest.progress < CONFIG.quest.target) return;
-    S.quest.claimed = true;
-    Player.addSparks(CONFIG.quest.reward);
-    Sfx.coin();
-    toast("Daily quest complete! +" + CONFIG.quest.reward + " Sparks ✦");
-    Player.hud(); render(); Save.save(S);
+  function renderList() {
+    const box = $("#questsList");
+    box.innerHTML = "";
+    CONFIG.quests.forEach((q, i) => {
+      const it = S.quests.items[i];
+      const row = document.createElement("div");
+      row.className = "questRow";
+      const done = it.progress >= q.target;
+      row.innerHTML = "<div class='ql'><b>" + q.label + "</b>" +
+        "<div class='bar'><i style='width:" + Math.round(100 * Math.min(it.progress, q.target) / q.target) + "%'></i></div></div>" +
+        "<span class='qs'>" + (it.claimed ? "✔" : done ? "✦" + q.reward : it.progress + "/" + q.target) + "</span>";
+      box.appendChild(row);
+    });
+  }
+  $("#questClaim").addEventListener("click", e => {
+    e.stopPropagation();
+    if (claimable()) claimAll();
+    else { renderList(); $("#questsOv").classList.add("show"); }
   });
-  return { check, onMerge };
+  $("#questBar").addEventListener("click", () => { renderList(); $("#questsOv").classList.add("show"); });
+  $("#questsOk").addEventListener("click", () => $("#questsOv").classList.remove("show"));
+  return { check, onMerge: () => bump("merge"), onWin: () => bump("win"), onCollect: () => bump("collect") };
 })();
 
 /* ---------------- Tutorial (first-run hints) ---------------- */
@@ -1972,6 +2067,10 @@ const App = (() => {
   window.addEventListener("beforeunload", () => Save.write(S));
   document.addEventListener("visibilitychange", () => { if (document.hidden) Save.write(S); });
 
+  // PWA: network-first service worker (registers only on https, so file:// testing stays clean)
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  }
   // init
   Collection.scan();
   Grid.layout(); Battle.layout();
