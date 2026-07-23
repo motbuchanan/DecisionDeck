@@ -38,6 +38,7 @@
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:17px; }
 body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-height:100vh; overflow-x:hidden; }
 
 /* ─── SCREENS ─── */
@@ -136,7 +137,7 @@ body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-
 .deck-card.deck-adv   .deck-pill { background:rgba(200,150,10,0.15); color:var(--gold); }
 
 .home-ref-row {
-  display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:2rem;
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; margin-bottom:2rem;
 }
 .ref-btn {
   background:var(--card); border:1px solid var(--border); border-radius:4px;
@@ -150,6 +151,159 @@ body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-
 .ref-btn-desc { font-size:0.68rem; color:var(--muted); }
 
 .home-privacy { font-size:0.68rem; color:var(--muted); line-height:1.5; }
+
+.version-badge {
+  display:inline-block; margin-top:0.75rem;
+  font-family:var(--font-h); font-size:0.62rem; letter-spacing:0.15em;
+  color:var(--muted); text-transform:uppercase;
+  border:1px solid var(--border); border-radius:3px;
+  padding:0.22rem 0.6rem; cursor:pointer;
+}
+.version-badge:hover { color:var(--gold); border-color:var(--gold); }
+
+.deck-stat {
+  margin-top:0.6rem; font-family:var(--font-h); font-size:0.62rem;
+  letter-spacing:0.12em; text-transform:uppercase; color:var(--muted);
+  border-top:1px solid var(--border); padding-top:0.5rem;
+}
+
+#toast {
+  position:fixed; bottom:4.2rem; left:50%; transform:translateX(-50%);
+  background:var(--card); border:1px solid var(--gold); color:var(--cream);
+  font-family:var(--font-h); font-size:0.8rem; letter-spacing:0.08em;
+  padding:0.5rem 1.1rem; border-radius:4px; z-index:300;
+  opacity:0; pointer-events:none; transition:opacity 0.25s;
+}
+#toast.show { opacity:1; }
+
+/* ─── Walkthrough overlay ─── */
+#tour-overlay {
+  position:fixed; inset:0; background:rgba(8,9,11,0.94);
+  z-index:200; display:none; align-items:center; justify-content:center;
+  padding:1.5rem;
+}
+#tour-overlay.active { display:flex; }
+.tour-card {
+  max-width:420px; width:100%; background:var(--surface);
+  border:1px solid var(--border); border-radius:8px; padding:1.6rem;
+  animation:fadeUp 0.35s ease both;
+}
+.tour-step-label {
+  font-family:var(--font-h); font-size:0.62rem; letter-spacing:0.25em;
+  color:var(--gold); text-transform:uppercase; margin-bottom:0.6rem;
+}
+.tour-title {
+  font-family:var(--font-h); font-size:1.5rem; font-weight:900;
+  text-transform:uppercase; color:var(--white); margin-bottom:0.7rem; line-height:1.05;
+}
+.tour-body { font-size:0.88rem; line-height:1.7; color:var(--cream); opacity:0.88; margin-bottom:1.3rem; }
+.tour-dots { display:flex; gap:0.4rem; justify-content:center; margin-bottom:1.1rem; }
+.tour-dot { width:7px; height:7px; border-radius:50%; background:var(--border); }
+.tour-dot.on { background:var(--gold); }
+.tour-btns { display:flex; gap:0.6rem; }
+.tour-skip {
+  flex:1; background:transparent; border:1px solid var(--border); color:var(--muted);
+  font-family:var(--font-h); font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase;
+  padding:0.75rem; border-radius:3px; cursor:pointer;
+}
+.tour-next {
+  flex:2; background:var(--gold); border:none; color:#0d0e10;
+  font-family:var(--font-h); font-size:0.9rem; font-weight:700; letter-spacing:0.12em;
+  text-transform:uppercase; padding:0.75rem; border-radius:3px; cursor:pointer;
+}
+.tour-next:hover { background:var(--gold-lt); }
+
+/* ─── Wizard ─── */
+.wiz-q { font-family:var(--font-h); font-size:1.25rem; font-weight:700; color:var(--white); margin-bottom:1rem; line-height:1.2; }
+.wiz-opts { display:flex; flex-direction:column; gap:0.55rem; margin-bottom:1rem; }
+.wiz-opt {
+  background:var(--card); border:1px solid var(--border); border-radius:4px;
+  padding:0.95rem 1.1rem; color:var(--cream); font-size:0.9rem; line-height:1.45;
+  text-align:left; cursor:pointer; transition:all 0.16s;
+}
+.wiz-opt:hover { border-color:var(--gold); background:rgba(200,150,10,0.06); }
+.wiz-rec {
+  background:rgba(200,150,10,0.08); border:1px solid rgba(200,150,10,0.3);
+  border-radius:6px; padding:1.1rem 1.2rem; margin-bottom:1rem;
+  font-size:0.88rem; line-height:1.7; color:var(--cream);
+}
+.wiz-rec strong { color:var(--gold-lt); }
+
+/* ─── Practice modes ─── */
+.practice-bar {
+  background:var(--card); border:1px solid var(--border); border-radius:5px;
+  padding:0.85rem 1.1rem; margin-bottom:0.9rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:space-between; gap:0.75rem;
+  transition:all 0.18s; text-align:left; flex-wrap:wrap;
+}
+.practice-bar:hover { border-color:var(--gold); }
+.practice-bar-name {
+  font-family:var(--font-h); font-size:0.85rem; font-weight:700;
+  letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-lt);
+}
+.practice-bar-desc { font-size:0.68rem; color:var(--muted); }
+
+.prac-row { display:flex; flex-direction:column; gap:0.5rem; }
+.prac-btn {
+  border-radius:4px; padding:0.8rem 1rem; cursor:pointer;
+  font-family:var(--font-h); font-size:0.85rem; font-weight:700;
+  letter-spacing:0.1em; text-transform:uppercase;
+  background:var(--card); transition:all 0.16s; text-align:left;
+}
+.pb-blue { border:1px solid var(--blue); color:var(--blue-lt); }
+.pb-blue:hover { background:rgba(61,127,193,0.1); }
+.pb-gold { border:1px solid var(--gold); color:var(--gold-lt); }
+.pb-gold:hover { background:rgba(200,150,10,0.1); }
+.pb-teal { border:1px solid var(--teal); color:var(--teal-lt); }
+.pb-teal:hover { background:rgba(26,138,122,0.1); }
+.prac-btn:disabled { border-color:var(--border); color:var(--muted); cursor:default; background:transparent; }
+
+.prog-chart-wrap { margin-bottom:1rem; }
+.prog-chart-label {
+  font-family:var(--font-h); font-size:0.72rem; letter-spacing:0.12em;
+  text-transform:uppercase; margin-bottom:0.35rem;
+}
+
+/* ─── Study mode ─── */
+.study-nav { display:flex; gap:0.6rem; margin-top:1rem; }
+.study-nav button {
+  flex:1; background:var(--card); border:1px solid var(--border); color:var(--cream);
+  font-family:var(--font-h); font-size:0.85rem; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase; padding:0.75rem; border-radius:3px; cursor:pointer;
+}
+.study-nav button:hover { border-color:var(--gold); color:var(--gold-lt); }
+.study-nav button:disabled { opacity:0.35; cursor:default; }
+.study-reveal-lesson { margin-top:0.9rem; }
+
+/* ─── Flashcards ─── */
+.flash-card {
+  background:var(--surface); border:1px solid var(--gold); border-radius:8px;
+  min-height:220px; display:flex; align-items:center; justify-content:center;
+  padding:1.8rem 1.4rem; cursor:pointer; text-align:center; margin-bottom:1rem;
+  transition:border-color 0.2s;
+}
+.flash-card:hover { border-color:var(--gold-lt); }
+.flash-term {
+  font-family:var(--font-h); font-size:1.9rem; font-weight:900;
+  text-transform:uppercase; color:var(--gold-lt); line-height:1.05;
+}
+.flash-def { font-size:0.92rem; line-height:1.75; color:var(--cream); opacity:0.9; }
+.flash-hint {
+  font-family:var(--font-h); font-size:0.62rem; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:1rem;
+}
+
+/* ─── Help screen ─── */
+#help-screen { background:var(--bg); padding:1.5rem; overflow-y:auto; padding-bottom:5rem; }
+.help-action-row { display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; margin-bottom:1.6rem; }
+.help-action {
+  background:var(--card); border:1px solid var(--gold); border-radius:5px;
+  padding:0.9rem; text-align:center; cursor:pointer;
+  font-family:var(--font-h); font-size:0.82rem; font-weight:700;
+  letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-lt);
+  transition:all 0.16s;
+}
+.help-action:hover { background:rgba(200,150,10,0.1); }
 
 /* ═══════════════════════════════════════════
    SCENARIO SCREEN
@@ -411,6 +565,341 @@ body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-
   .home-ref-row   { grid-template-columns:1fr; }
   .axis-row-name  { width:90px; font-size:0.73rem; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   v6 VISUAL PASS — readability, light, motion, juice
+═══════════════════════════════════════════════════════════ */
+
+:root {
+  --cream:  #e9eef6;
+  --muted:  #9aa3b4;
+  --white:  #f4f7fc;
+  --border: #2e3340;
+}
+
+/* ── READABILITY: kill the dark-on-dark ── */
+.scenario-context { opacity:1; color:#e4eaf4; font-size:0.99rem;
+  background:linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+  box-shadow:0 2px 12px rgba(0,0,0,0.35);
+}
+.callout-box { opacity:1; color:#c4cddd; font-size:0.88rem; font-style:normal;
+  background:linear-gradient(135deg, rgba(255,255,255,0.03), transparent);
+  border-color:#333947;
+}
+.callout-box strong { font-size:0.86rem; }
+.feedback-text { opacity:1; color:#e4eaf4; font-size:0.97rem; }
+.rule-text { opacity:1; color:#e6ecf6; font-size:0.87rem; }
+.term-def, .guide-block-text, .r-text { opacity:1; color:#dbe2ee; font-size:0.88rem; }
+.tour-body, .wiz-rec, .flash-def { opacity:1; color:#dfe6f0; }
+.deck-tagline { color:#a8b1c2; }
+.q-label { color:#8b94a6; }
+.progress-label, .header-deck-label { font-weight:600; }
+
+.choice-btn {
+  font-size:1.02rem; color:#eef2f9; border-color:#3a4152;
+  padding:1.05rem 1.25rem;
+  background:linear-gradient(135deg, #1e222a, #191d24);
+  box-shadow:0 2px 8px rgba(0,0,0,0.3);
+  transition:transform 0.1s ease, border-color 0.18s, background 0.18s, box-shadow 0.18s;
+}
+.choice-btn:not(:disabled):active { transform:scale(0.975); }
+
+.scenario-situation {
+  color:#fbfcfe;
+  text-shadow:0 2px 18px rgba(0,0,0,0.5);
+}
+
+/* ── CARD DEPTH: light from above ── */
+.deck-card, .guide-block, .term-card, .r-card,
+.feedback-panel, .tour-card, .flash-card, .axis-results {
+  background:linear-gradient(160deg, #1c2029 0%, #15181f 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 4px 20px rgba(0,0,0,0.4);
+}
+.guide-block, .term-card { border-color:#2b3040; }
+
+.deck-card { transition:transform 0.22s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.22s, border-color 0.22s; }
+.deck-card:active { transform:scale(0.98); }
+.deck-card.deck-intro { box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 24px rgba(0,0,0,0.45), 0 0 32px -14px rgba(61,127,193,0.35); }
+.deck-card.deck-adv   { box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 24px rgba(0,0,0,0.45), 0 0 32px -14px rgba(200,150,10,0.3); }
+.deck-card.deck3-card { box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 24px rgba(0,0,0,0.45), 0 0 32px -14px rgba(26,138,122,0.35); }
+
+/* home entrance stagger */
+.home-deck-grid .deck-card { animation:cardIn 0.5s cubic-bezier(0.22,0.9,0.36,1) both; }
+.home-deck-grid .deck-card:nth-child(1) { animation-delay:0.05s; }
+.home-deck-grid .deck-card:nth-child(2) { animation-delay:0.13s; }
+.home-deck-grid .deck-card:nth-child(3) { animation-delay:0.21s; }
+.practice-bar { animation:cardIn 0.5s cubic-bezier(0.22,0.9,0.36,1) 0.3s both; }
+.home-ref-row .ref-btn { animation:cardIn 0.5s cubic-bezier(0.22,0.9,0.36,1) both; }
+.home-ref-row .ref-btn:nth-child(1) { animation-delay:0.36s; }
+.home-ref-row .ref-btn:nth-child(2) { animation-delay:0.42s; }
+.home-ref-row .ref-btn:nth-child(3) { animation-delay:0.48s; }
+
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(18px) scale(0.97); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* ── SCENARIO ENTRANCE: staggered cascade guides the eye ── */
+.scenario-body > * { animation:fadeUp 0.42s cubic-bezier(0.22,0.9,0.36,1) both; }
+.scenario-body > *:nth-child(1) { animation-delay:0.02s; }
+.scenario-body > *:nth-child(2) { animation-delay:0.08s; }
+.scenario-body > *:nth-child(3) { animation-delay:0.15s; }
+.scenario-body > *:nth-child(4) { animation-delay:0.22s; }
+.scenario-body > *:nth-child(5) { animation-delay:0.28s; }
+.scenario-body > *:nth-child(6) { animation-delay:0.34s; }
+.choices .choice-btn { animation:fadeUp 0.38s cubic-bezier(0.22,0.9,0.36,1) both; }
+.choices .choice-btn:nth-child(1) { animation-delay:0.36s; }
+.choices .choice-btn:nth-child(2) { animation-delay:0.42s; }
+.choices .choice-btn:nth-child(3) { animation-delay:0.48s; }
+.choices .choice-btn:nth-child(4) { animation-delay:0.54s; }
+
+/* ── PROGRESS BAR: alive ── */
+.progress-track { height:4px; }
+.progress-fill { position:relative; overflow:hidden; }
+.progress-fill::after {
+  content:''; position:absolute; top:0; bottom:0; width:36px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation:shimmer 2.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%   { left:-40px; }
+  60%  { left:calc(100% + 8px); }
+  100% { left:calc(100% + 8px); }
+}
+
+/* ── ANSWER JUICE ── */
+.choices .choice-btn.sel-good { animation:pulseGood 0.55s cubic-bezier(0.34,1.5,0.64,1); }
+@keyframes pulseGood {
+  0%   { transform:scale(1); box-shadow:0 0 0 0 rgba(90,152,112,0.7); }
+  30%  { transform:scale(1.035); box-shadow:0 0 0 14px rgba(90,152,112,0); }
+  55%  { transform:scale(0.99); }
+  100% { transform:scale(1); box-shadow:0 0 0 0 rgba(90,152,112,0); }
+}
+.choices .choice-btn.sel-bad { animation:shakeNo 0.42s cubic-bezier(0.36,0.07,0.19,0.97); }
+@keyframes shakeNo {
+  10%, 90% { transform:translateX(-3px); }
+  20%, 80% { transform:translateX(5px); }
+  30%, 50%, 70% { transform:translateX(-8px); }
+  40%, 60% { transform:translateX(8px); }
+}
+.rev-good { transition:opacity 0.4s ease 0.25s, border-color 0.4s ease 0.25s; }
+
+/* ── FEEDBACK PANEL: verdict-colored glow ── */
+.feedback-panel.visible { animation:panelIn 0.45s cubic-bezier(0.22,0.9,0.36,1) both; }
+@keyframes panelIn {
+  from { opacity:0; transform:translateY(22px) scale(0.98); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+.feedback-panel:has(.verdict-good) {
+  border-color:rgba(90,152,112,0.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 24px rgba(0,0,0,0.4), 0 0 34px -12px rgba(90,152,112,0.4);
+}
+.feedback-panel:has(.verdict-bad) {
+  border-color:rgba(168,48,48,0.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 24px rgba(0,0,0,0.4), 0 0 34px -12px rgba(168,48,48,0.4);
+}
+.verdict { font-size:1.05rem; }
+
+/* score chips pop in sequence */
+.score-row .s-chip { animation:chipPop 0.4s cubic-bezier(0.34,1.6,0.64,1) both; }
+.score-row .s-chip:nth-child(1) { animation-delay:0.25s; }
+.score-row .s-chip:nth-child(2) { animation-delay:0.35s; }
+.score-row .s-chip:nth-child(3) { animation-delay:0.45s; }
+@keyframes chipPop {
+  from { opacity:0; transform:scale(0.6); }
+  60%  { transform:scale(1.08); }
+  to   { opacity:1; transform:scale(1); }
+}
+
+/* ── BUTTONS: respond on press ── */
+.btn-next, .btn-restart, .btn-home, .btn-start, .prac-btn,
+.help-action, .tour-next, .tour-skip, .wiz-opt, .ref-btn,
+.header-back, .btn-back, .nav-btn, .study-nav button, .practice-bar {
+  transition:transform 0.09s ease, background 0.18s, border-color 0.18s, color 0.18s, box-shadow 0.18s;
+}
+.btn-next:active, .btn-restart:active, .btn-home:active, .prac-btn:not(:disabled):active,
+.help-action:active, .tour-next:active, .wiz-opt:active, .ref-btn:active,
+.study-nav button:not(:disabled):active, .practice-bar:active { transform:scale(0.97); }
+.btn-next:hover { box-shadow:0 6px 20px -6px rgba(200,150,10,0.5); }
+
+/* results screen polish */
+.axis-row { background:linear-gradient(160deg, #1c2029, #15181f); }
+.bar-fill { box-shadow:0 0 12px -2px currentColor; }
+.results-title { animation:fadeUp 0.5s cubic-bezier(0.22,0.9,0.36,1) both; }
+.r-card { animation:fadeUp 0.5s cubic-bezier(0.22,0.9,0.36,1) both; }
+.results-inner .r-card:nth-of-type(1) { animation-delay:0.15s; }
+.results-inner .r-card:nth-of-type(2) { animation-delay:0.25s; }
+
+/* flash card flip feel */
+.flash-card { transition:transform 0.12s ease, border-color 0.2s; }
+.flash-card:active { transform:scale(0.97); }
+
+/* toast slide */
+#toast { transform:translateX(-50%) translateY(8px); transition:opacity 0.25s, transform 0.25s; }
+#toast.show { transform:translateX(-50%) translateY(0); }
+
+/* nav active glow */
+.nav-btn.active { text-shadow:0 0 14px rgba(200,150,10,0.5); }
+
+
+
+/* ═══════════════════════════════════════════════════════════
+   v7 LIGHT MODE — body.light overrides
+═══════════════════════════════════════════════════════════ */
+body.light {
+  --bg:       #eef1f6;
+  --surface:  #ffffff;
+  --card:     #f6f8fb;
+  --border:   #d3d9e3;
+  --cream:    #2b3140;
+  --muted:    #5c6474;
+  --white:    #12161f;
+  --gold:     #9c7a08;
+  --gold-lt:  #85670a;
+  --blue:     #2563a8;
+  --blue-lt:  #1e5696;
+  --amber:    #b06a10;
+  --amber-lt: #9a5c0e;
+  --green:    #2c6e4a;
+  --green-lt: #256b45;
+  --steel:    #45506a;
+  --teal:     #0e7a6c;
+  --teal-lt:  #0a6a5e;
+  --danger:   #b03030;
+}
+
+body.light { background:var(--bg); color:var(--white); }
+
+/* surfaces: white cards, soft shadows, light from above */
+body.light .deck-card, body.light .guide-block, body.light .term-card,
+body.light .r-card, body.light .feedback-panel, body.light .tour-card,
+body.light .flash-card, body.light .axis-results, body.light .axis-row {
+  background:linear-gradient(160deg, #ffffff 0%, #f4f6fa 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 3px 14px rgba(30,40,60,0.1), 0 1px 3px rgba(30,40,60,0.08);
+}
+body.light .choice-btn {
+  background:linear-gradient(135deg, #ffffff, #f4f6fa);
+  color:#1d2330; border-color:#c7cedb;
+  box-shadow:0 2px 8px rgba(30,40,60,0.08);
+}
+body.light .choice-btn:hover { background:#fdfdfe; }
+body.light .scenario-context {
+  color:#242a38;
+  background:linear-gradient(135deg, rgba(30,60,110,0.05), rgba(30,60,110,0.015));
+  box-shadow:0 2px 10px rgba(30,40,60,0.07);
+}
+body.light .callout-box {
+  color:#3c4658;
+  background:linear-gradient(135deg, rgba(30,40,60,0.035), transparent);
+  border-color:#ccd3df;
+}
+body.light .feedback-text { color:#242a38; }
+body.light .rule-text { color:#242a38; }
+body.light .term-def, body.light .guide-block-text, body.light .r-text { color:#333b4c; }
+body.light .tour-body, body.light .wiz-rec, body.light .flash-def { color:#242a38; }
+body.light .deck-tagline { color:#5c6474; }
+body.light .scenario-situation { color:#10141d; text-shadow:none; }
+body.light .rule-box, body.light .wiz-opt, body.light .prac-btn,
+body.light .study-nav button, body.light .practice-bar, body.light .ref-btn,
+body.light .help-action, body.light .version-badge, body.light .concept-box {
+  background:#ffffff;
+}
+body.light .scenario-header, body.light .bottom-nav {
+  background:#ffffff; border-color:#d9dfe8;
+  box-shadow:0 1px 8px rgba(30,40,60,0.06);
+}
+body.light #home-screen {
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(156,122,8,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 15%, rgba(37,99,168,0.06) 0%, transparent 50%),
+    var(--bg);
+}
+body.light #home-screen::before {
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 70px,rgba(20,30,50,0.02) 70px,rgba(20,30,50,0.02) 71px),
+    repeating-linear-gradient(90deg,transparent,transparent 70px,rgba(20,30,50,0.02) 70px,rgba(20,30,50,0.02) 71px);
+}
+body.light #tour-overlay { background:rgba(235,238,244,0.95); }
+body.light .btn-next-adv { color:#ffffff; }
+body.light .btn-start { color:#ffffff; }
+body.light .tour-next { color:#ffffff; }
+body.light .progress-track { background:#dde2ea; }
+body.light #toast { background:#ffffff; color:#242a38; box-shadow:0 4px 16px rgba(30,40,60,0.15); }
+body.light .prog-chart-wrap line { stroke:#cfd5e0; }
+body.light .feedback-panel:has(.verdict-good) {
+  border-color:rgba(44,110,74,0.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.9), 0 3px 16px rgba(30,40,60,0.1), 0 0 30px -12px rgba(44,110,74,0.45);
+}
+body.light .feedback-panel:has(.verdict-bad) {
+  border-color:rgba(176,48,48,0.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.9), 0 3px 16px rgba(30,40,60,0.1), 0 0 30px -12px rgba(176,48,48,0.45);
+}
+body.light .nav-btn.active { text-shadow:none; }
+
+/* theme toggle button */
+.theme-toggle {
+  display:inline-flex; align-items:center; gap:0.45rem;
+  margin-top:0.75rem; margin-left:0.5rem;
+  font-family:var(--font-h); font-size:0.62rem; letter-spacing:0.15em;
+  color:var(--muted); text-transform:uppercase;
+  border:1px solid var(--border); border-radius:3px;
+  padding:0.22rem 0.6rem; cursor:pointer; background:transparent;
+  transition:color 0.18s, border-color 0.18s, transform 0.09s;
+}
+.theme-toggle:hover { color:var(--gold); border-color:var(--gold); }
+.theme-toggle:active { transform:scale(0.95); }
+.theme-toggle svg { width:13px; height:13px; }
+
+/* ── v8: verdict marks on choice buttons ── */
+.choice-btn { position:relative; padding-right:3.1rem; }
+.verdict-mark {
+  position:absolute; right:0.85rem; top:50%;
+  width:26px; height:26px; margin-top:-13px;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.95rem; font-weight:700; line-height:1;
+  animation:markPop 0.45s cubic-bezier(0.34,1.7,0.64,1) both;
+}
+.vm-good   { background:#5a9870; color:#0d1410; box-shadow:0 0 16px -2px rgba(90,152,112,0.9); }
+.vm-bad    { background:#c04545; color:#1a0d0d; box-shadow:0 0 16px -2px rgba(192,69,69,0.9); }
+.vm-reveal { background:transparent; border:2px solid #5a9870; color:#5a9870; animation-delay:0.3s; }
+@keyframes markPop {
+  0%   { opacity:0; transform:scale(0.2) rotate(-25deg); }
+  65%  { opacity:1; transform:scale(1.25) rotate(4deg); }
+  100% { opacity:1; transform:scale(1) rotate(0); }
+}
+
+/* ── v8: floating theme toggle ── */
+#theme-fab {
+  position:fixed; top:0.75rem; right:0.75rem; z-index:250;
+  width:44px; height:44px; border-radius:50%;
+  background:var(--surface); border:1px solid var(--border);
+  color:var(--gold); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 16px rgba(0,0,0,0.45);
+  transition:transform 0.14s cubic-bezier(0.34,1.5,0.64,1), border-color 0.2s, color 0.2s;
+}
+#theme-fab svg { width:20px; height:20px; }
+#theme-fab:hover { border-color:var(--gold); }
+#theme-fab:active { transform:scale(0.88) rotate(-18deg); }
+body.light #theme-fab {
+  background:#ffffff; border-color:#ccd3df; color:#9c7a08;
+  box-shadow:0 3px 14px rgba(30,40,60,0.16);
+}
+
+/* feedback panel eases in rather than snapping */
+.feedback-panel.visible { animation:panelIn 0.5s cubic-bezier(0.22,0.9,0.36,1) both; }
+
+/* ── RESTRAINT ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation:none !important;
+    transition:none !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -436,6 +925,7 @@ body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-
           <span class="deck-pill">Judgment</span>
           <span class="deck-pill">Integrity</span>
         </div>
+        <div class="deck-stat" id="stat-intro">Not started</div>
       </div>
       <div class="deck-card deck-adv" onclick="startDeck('adv')">
         <div class="deck-num">Deck 02</div>
@@ -446,9 +936,8 @@ body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-
           <span class="deck-pill">Legal Instinct</span>
           <span class="deck-pill">Field Judgment</span>
         </div>
+        <div class="deck-stat" id="stat-adv">Not started</div>
       </div>
-    </div>
-
           <div class="deck-card deck3-card" onclick="startDeck('deck3')">
         <div class="deck-num">Deck 03</div>
         <div class="deck-name">Advanced Field</div>
@@ -458,7 +947,15 @@ body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-
           <span class="deck-pill">Regulatory</span>
           <span class="deck-pill">Professional</span>
         </div>
+        <div class="deck-stat" id="stat-deck3">Not started</div>
       </div>
+    </div>
+
+    <div class="practice-bar" onclick="navTo('practice')">
+      <span class="practice-bar-name">Practice Modes</span>
+      <span class="practice-bar-desc">Review missed · Study · Flashcards · Progress</span>
+    </div>
+
     <div class="home-ref-row">
       <div class="ref-btn" onclick="navTo('guide')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -475,12 +972,25 @@ body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-
         </svg>
         <div class="ref-btn-text">
           <div class="ref-btn-name">Field Glossary</div>
-          <div class="ref-btn-desc">16 key terms defined for beginners</div>
+          <div class="ref-btn-desc">20 key terms including Ohio-specific instruments</div>
+        </div>
+      </div>
+      <div class="ref-btn" onclick="navTo('help')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <div class="ref-btn-text">
+          <div class="ref-btn-name">Help &amp; Tour</div>
+          <div class="ref-btn-desc">How this works, wizard, replay the tour</div>
         </div>
       </div>
     </div>
 
     <div class="home-privacy">Scores stay on this device only. Nothing is transmitted or shared.</div>
+    <div class="version-badge" onclick="toastVersion()">v8.0 · May 26</div><button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <span id="theme-label">Light Mode</span>
+    </button>
   </div>
 </div>
 
@@ -492,7 +1002,7 @@ body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-
     <div class="progress-track">
       <div class="progress-fill" id="progress-fill" style="width:10%"></div>
     </div>
-    <div class="progress-label" id="progress-label">1 / 8</div>
+    <div class="progress-label" id="progress-label">1 / 10</div>
   </div>
   <div class="scenario-body" id="scenario-body"></div>
 </div>
@@ -571,27 +1081,139 @@ body { background:var(--bg); color:var(--white); font-family:var(--font-b); min-
     <div class="term-card"><div class="term-name">Deed</div><div class="term-def">The legal document that transfers ownership from one party to another. For ROW work, you need the recorded deed to confirm who currently owns the land and in what form (individual, LLC, trust, etc.).</div></div>
     <div class="term-card"><div class="term-name">Grantor / Grantee</div><div class="term-def">On a deed, the Grantor is the seller (the one giving away the property) and the Grantee is the buyer (the one receiving it). Deed indexes are organized by both — critical for running title at the courthouse.</div></div>
     <div class="term-card"><div class="term-name">Legal Description</div><div class="term-def">The formal language in a deed that precisely describes the land's boundaries — using metes and bounds (bearings and distances), or the Public Land Survey System (townships, ranges, sections). You'll need to confirm your easement falls within the described parcel.</div></div>
-    <div class="term-card"><div class="term-name">Tax Records / Parcel ID</div><div class="term-def">County tax records tell you who the county thinks owns a parcel and how they're taxed. They're a starting point but not definitive — the deed of record controls legal ownership, not the tax roll.</div></div>
+    <div class="term-card"><div class="term-name">Tax Records / Parcel ID</div><div class="term-def">In Ohio, property records are split across three county offices: the Recorder (deeds, mortgages, liens — the legal record), the Auditor (ownership, assessed value, parcel maps, sales history), and the Treasurer (tax billing and delinquencies). The Auditor's office is often your fastest first lookup — Ohio counties provide excellent free online access. But the Recorder's deed is what controls legal ownership. The tax roll is a starting point, not the answer.</div></div>
 
     <div class="gloss-section-title">Encumbrances &amp; Interests</div>
     <div class="term-card"><div class="term-name">Easement</div><div class="term-def">The legal right to use someone else's land for a specific purpose — like running a pipeline across it — without owning the land itself. This is the core deliverable of your job. Easements are recorded in the county records and run with the land.</div></div>
     <div class="term-card"><div class="term-name">Right-of-Way (ROW)</div><div class="term-def">The strip of land (or the legal right to use that strip) for infrastructure like pipelines, power lines, or roads. The ROW easement defines the width, permitted uses, and duration. Permanent ROW stays with the pipeline forever; temporary construction ROW expires.</div></div>
     <div class="term-card"><div class="term-name">Lien</div><div class="term-def">A legal claim against a property, usually for unpaid debt — a mortgage, unpaid taxes, a contractor's mechanics lien, or a court judgment. A property with a lien can still be easement-signed, but the lienholders may also have to consent. Always flag liens to your title attorney.</div></div>
-    <div class="term-card"><div class="term-name">Mortgage / Deed of Trust</div><div class="term-def">When a lender finances a property purchase, they record a mortgage (or deed of trust in some states) as security. On pipeline projects, lenders with recorded mortgages often must subordinate or consent to the easement — your company's title team handles this.</div></div>
+    <div class="term-card"><div class="term-name">Mortgage</div><div class="term-def">Ohio uses mortgages exclusively — not deeds of trust (which are common in Texas and other states). When a lender finances a property purchase, they record a mortgage with the County Recorder as security. Ohio requires judicial foreclosure through a sheriff's sale, which takes 7–12 months. On pipeline projects, lenders with recorded mortgages often must subordinate or consent to your easement. Flag every recorded mortgage to your title team — they handle the subordination process.</div></div>
     <div class="term-card"><div class="term-name">Mineral Rights</div><div class="term-def">The rights to oil, gas, coal, and other resources beneath the surface. These can be owned separately from the surface. On a pipeline project, surface ownership controls your ROW, but mineral rights owners may have separate interests — especially if the pipeline crosses their mineral lease.</div></div>
     <div class="term-card"><div class="term-name">Encumbrance</div><div class="term-def">Any claim, lien, easement, or restriction that affects a property's title or use. Running title means finding all encumbrances and understanding which ones affect your project.</div></div>
 
     <div class="gloss-section-title">Process &amp; Field Terms</div>
     <div class="term-card"><div class="term-name">Title Search / Title Run</div><div class="term-def">The process of examining public records to determine the current owner of a parcel, the chain of title, and any recorded encumbrances. On large pipeline projects, this is done for every parcel the route crosses — often hundreds.</div></div>
     <div class="term-card"><div class="term-name">Curative</div><div class="term-def">The process of fixing title defects. If title research finds a break in the chain, an old unresolved heir, or an improperly released lien, curative work is required before the easement can be finalized. This often requires attorneys and can take weeks or months.</div></div>
-    <div class="term-card"><div class="term-name">Eminent Domain / Condemnation</div><div class="term-def">The legal right of certain companies — those with FERC certification (interstate pipelines) or state common carrier status — to take private land for public use with just compensation. Not all pipeline companies have this authority. It is always a last resort, always involves attorneys and courts, and is never a negotiating tool.</div></div>
-    <div class="term-card"><div class="term-name">Just Compensation</div><div class="term-def">The fair market value payment owed to a landowner when an easement is taken — either by negotiation or condemnation. Your job in negotiation is to reach a fair agreement; appraisers establish the baseline value.</div></div>
+    <div class="term-card"><div class="term-name">Eminent Domain / Condemnation</div><div class="term-def">The legal right of certain companies to take private land for public use with just compensation. In Ohio, this is called "appropriation" and is governed by ORC Chapter 163. Interstate pipelines may use federal authority under the Natural Gas Act; intrastate pipelines in Ohio must qualify under ORC 1723.01 or related statutes — and whether a specific pipeline qualifies is sometimes contested. Not all pipeline companies have this authority. It is always a last resort, always involves attorneys and county courts, and is never a negotiating tool. In Ohio, landowners have a constitutional right to challenge necessity and to a jury trial on compensation.</div></div>
+    <div class="term-card"><div class="term-name">Just Compensation</div><div class="term-def">The fair market value payment owed to a landowner when an easement is taken. In Ohio, the state constitution (Article I, Section 19) gives landowners the right to have just compensation assessed by a jury — stronger than the federal standard. This is why Ohio landowners often have real leverage in condemnation proceedings and why negotiated agreements are almost always preferable. Your company's appraiser establishes the baseline offer, but the landowner can request a jury trial on the amount.</div></div>
     <div class="term-card"><div class="term-name">Damage Payments</div><div class="term-def">Compensation paid beyond the easement value — for crop damage, timber removal, fence replacement, or disruption to operations. These are negotiated separately and must be documented carefully.</div></div>
     <div class="term-card"><div class="term-name">Subordination Agreement</div><div class="term-def">A lender's consent to allow a pipeline easement to have priority over their mortgage — so the easement survives if the property is foreclosed on. Your company's legal team typically handles obtaining these.</div></div>
+
+    <div class="gloss-section-title">Ohio-Specific Instruments</div>
+    <div class="term-card"><div class="term-name">Survivorship Deed</div><div class="term-def">Ohio has a statutory survivorship deed form (ORC 5302.17) — "to A and B for their joint lives, remainder to the survivor." This is extremely common for Ohio farm properties held by married couples. When one owner dies, the survivor takes the whole interest automatically without probate. In ROW work: if one spouse has died and the property was held in survivorship, the surviving spouse is typically the sole owner and the only signature required — but you should verify with your title attorney and may need a death certificate filed at the county.</div></div>
+    <div class="term-card"><div class="term-name">Dower Rights</div><div class="term-def">Ohio is one of the few remaining states that recognizes dower rights (ORC 2103.02). A married person's spouse holds a potential 1/3 life interest in real property acquired during the marriage. This means that even if a deed shows only one spouse as owner, the other spouse may need to sign an easement to release their dower interest. This comes up constantly in Ohio ROW work — always check marital status and flag it to your title attorney if the signing owner is or was married.</div></div>
+    <div class="term-card"><div class="term-name">Transfer-on-Death (TOD) Affidavit</div><div class="term-def">Ohio allows property owners to record a TOD affidavit (ORC 5302.22) designating a beneficiary who automatically receives the property on death — without probate. The owner retains full control during their lifetime and can revoke or change it. In ROW work: if you find a recorded TOD affidavit, note it — the owner can still sign your easement, but the beneficiary designation may affect future title if the owner dies during or after the project. Flag it to your title attorney.</div></div>
+    <div class="term-card"><div class="term-name">Ohio Auditor / Three-Office System</div><div class="term-def">Ohio property records are split across three county offices. The Recorder holds deeds, mortgages, and liens — this is the legal record of title. The Auditor holds ownership data, assessed values, parcel maps, and sales history — often the fastest starting point online. The Treasurer holds tax billing and delinquency records. For ROW work: start with the Auditor for parcel identification and ownership leads, then verify and run title through the Recorder. All Ohio counties provide free online access to both Auditor and Recorder records.</div></div>
 
     <div style="height:1rem"></div>
   </div>
 </div>
+
+<!-- ═══ HELP SCREEN ═══ -->
+<div id="help-screen" class="screen">
+  <div class="ref-inner">
+    <div class="ref-header">
+      <button class="btn-back" onclick="navTo('home')">← Back</button>
+      <div class="ref-title">Help</div>
+    </div>
+
+    <div class="help-action-row">
+      <div class="help-action" onclick="startTour()">Replay the Tour</div>
+      <div class="help-action" onclick="startWizard()">Getting Started Wizard</div>
+      <div class="help-action" onclick="toggleTheme()">Light / Dark</div>
+      <div class="help-action" onclick="navTo('practice')">Practice Modes</div>
+      <div class="help-action" onclick="navTo('glossary')">Glossary</div>
+    </div>
+
+    <div class="guide-section">
+      <div class="guide-section-title">How This Works</div>
+      <div class="guide-block"><div class="guide-block-title">What this app is</div><div class="guide-block-text">A scenario-based training system for someone preparing to become a Right-of-Way Agent in the oil and gas pipeline industry, built with Ohio-specific law and practice. It teaches through decisions, not lectures — every scenario puts you in a real situation and asks what you would do.</div></div>
+      <div class="guide-block"><div class="guide-block-title">The three decks</div><div class="guide-block-text">Deck 01 (Into the Field) covers the role itself — duties, conduct, and judgment. Deck 02 (Title &amp; Legal) covers titles, deeds, liens, easements, and Ohio property law. Deck 03 (Advanced Field) covers permits, regulatory dependencies, damage settlement, and complex situations. Do them in order the first time.</div></div>
+      <div class="guide-block"><div class="guide-block-title">How scoring works</div><div class="guide-block-text">Each deck tracks three skill axes starting at 50. Good choices raise them; poor choices lower them. Each run draws 10 random scenarios from that deck's pool, so runs differ. Your best score and run count are saved on this device and shown on each deck card.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Wrong answers are the point</div><div class="guide-block-text">The feedback on a wrong answer teaches more than the feedback on a right one. Read both. When you miss a scenario, the correct choice is highlighted so you can see the reasoning gap.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Reference tabs</div><div class="guide-block-text">The Role Guide is a plain-English breakdown of what the job actually is — read it before your first run of Deck 01. The Field Glossary defines 20 terms, including four Ohio-specific instruments (dower rights, survivorship deeds, TOD affidavits, and the three-office records system) that come up constantly in Ohio ROW work.</div></div>
+    </div>
+
+    <div class="guide-section">
+      <div class="guide-section-title">Common Questions</div>
+      <div class="guide-block"><div class="guide-block-title">Do my scores go anywhere?</div><div class="guide-block-text">No. Everything stays on this device in local browser storage. Nothing is transmitted, tracked, or shared. Clearing your browser data resets your progress.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Why do the same scenarios repeat?</div><div class="guide-block-text">Each deck draws 10 of its scenarios per run (Deck 01 has 23, Deck 02 has 23, Deck 03 has 13). Repeats become more common after several runs. When a repeat appears, use it — try to articulate the rule before tapping.</div></div>
+      <div class="guide-block"><div class="guide-block-title">Is this legal advice?</div><div class="guide-block-text">No. This is a training aid built for interview preparation and foundational learning. Real ROW work follows your employer's procedures, your project attorneys, and current law. When this app and your future employer's training disagree, the employer wins.</div></div>
+      <div class="guide-block"><div class="guide-block-title">What should I know for an interview?</div><div class="guide-block-text">The patterns matter more than the details: verify before you act, escalate legal questions to attorneys, document everything, never let schedule pressure override property rights, and treat every landowner honestly. If you can explain WHY each of those rules exists, you are ahead of most entry-level candidates.</div></div>
+    </div>
+    <div style="height:0.5rem"></div>
+  </div>
+</div>
+
+<!-- ═══ PRACTICE SCREEN ═══ -->
+<div id="practice-screen" class="screen">
+  <div class="ref-inner">
+    <div class="ref-header">
+      <button class="btn-back" onclick="navTo('home')">← Back</button>
+      <div class="ref-title">Practice Modes</div>
+    </div>
+
+    <div class="guide-section">
+      <div class="guide-section-title">Review Missed Cards</div>
+      <div class="guide-block"><div class="guide-block-text" style="margin-bottom:0.6rem">Every scenario you answer wrong goes on a list. Review runs draw only from that list — answer one correctly anywhere and it comes off. Clear the list and you have covered your gaps.</div>
+        <div class="prac-row" id="prac-review-rows"></div>
+      </div>
+    </div>
+
+    <div class="guide-section">
+      <div class="guide-section-title">Study Mode</div>
+      <div class="guide-block"><div class="guide-block-text" style="margin-bottom:0.6rem">Browse every card in a deck in order, no scoring. Tap an answer to see the correct choice and the rule. Ideal for pre-interview cramming.</div>
+        <div class="prac-row">
+          <button class="prac-btn pb-blue" onclick="startStudy('intro')">Deck 01 · 23 cards</button>
+          <button class="prac-btn pb-gold" onclick="startStudy('adv')">Deck 02 · 23 cards</button>
+          <button class="prac-btn pb-teal" onclick="startStudy('deck3')">Deck 03 · 13 cards</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-section">
+      <div class="guide-section-title">Glossary Flashcards</div>
+      <div class="guide-block"><div class="guide-block-text" style="margin-bottom:0.6rem">All 20 glossary terms as flip cards, shuffled. Tap to flip between term and definition.</div>
+        <div class="prac-row">
+          <button class="prac-btn pb-gold" onclick="startFlash()">Start Flashcards</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-section">
+      <div class="guide-section-title">Progress</div>
+      <div class="guide-block" id="prac-progress">
+        <div class="guide-block-text">Run each deck at least twice to see your score trend here.</div>
+      </div>
+    </div>
+    <div style="height:0.5rem"></div>
+  </div>
+</div>
+
+<!-- ═══ TOUR OVERLAY ═══ -->
+<div id="tour-overlay">
+  <div class="tour-card">
+    <div class="tour-step-label" id="tour-step-label">Step 1 of 5</div>
+    <div class="tour-title" id="tour-title"></div>
+    <div class="tour-body" id="tour-body"></div>
+    <div class="tour-dots" id="tour-dots"></div>
+    <div class="tour-btns">
+      <button class="tour-skip" onclick="endTour()">Skip</button>
+      <button class="tour-next" id="tour-next" onclick="tourNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<button id="theme-fab" onclick="toggleTheme()" aria-label="Toggle light and dark mode">
+  <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+  <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+    <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+</button>
+
+<div id="toast"></div>
 
 <!-- ═══ BOTTOM NAV ═══ -->
 <div class="bottom-nav">
@@ -1022,7 +1644,7 @@ const ADV_SCENARIOS = [
     id:"t1", type:"title", typeLabel:"Title Research", typeClass:"type-title",
     situation:"You pull county records on a parcel. The tax records show \"John Harmon\" as owner — but the last recorded deed is from 1987, transferring to \"John & Mary Harmon, husband and wife.\" Mary's name isn't on anything after that.",
     context:"You're preparing to contact the landowner and get an easement signed. The pipeline crosses the northwest corner of this parcel.",
-    concept:"<strong>Chain of Title:</strong> Every transfer of ownership must be recorded. If Mary Harmon is still alive, or passed away without a will being probated, her interest may still exist — meaning John alone may not be able to sign your easement.",
+    concept:"<strong>Chain of Title &amp; Ohio Dower Rights:</strong> Every transfer must be recorded. Ohio is one of the few states that still recognizes dower rights (ORC 2103.02) — a married person's spouse holds a potential 1/3 life interest in their real property. If Mary Harmon is alive, her dower interest in this parcel likely requires her signature on any easement regardless of whether the deed names her. If she has passed, her interest may have passed to heirs. Either way, John alone almost certainly cannot sign alone.",
     question:"What do you do before scheduling a landowner visit?",
     choices:[
       {text:"Call John Harmon and ask if he's the sole owner now, take his word for it, and proceed.",good:false,scores:[-20,-15,-5]},
@@ -1030,16 +1652,16 @@ const ADV_SCENARIOS = [
       {text:"Check the obituaries online for Mary Harmon, and if she's listed, proceed with John.",good:false,scores:[-10,-20,0]},
       {text:"Note it in the file and proceed anyway — title issues get resolved later.",good:false,scores:[-20,-15,-10]}
     ],
-    goodFeedback:"Exactly right. This is a title defect — a potential break in the chain. You cannot get a valid easement from someone who doesn't own the whole interest. Flagging it now saves your project from a defective instrument later. Your title attorney will research probate records and determine if Mary's interest passed to John by law or if additional signatures are required.",
+    goodFeedback:"Exactly right — and in Ohio specifically, this is even more significant. Ohio still recognizes dower rights under ORC 2103.02. If Mary is alive, she holds a dower interest in John's property and almost certainly needs to sign the easement to release that interest. Your title attorney will determine the exact situation, but in Ohio you should always flag a married owner whose spouse is not on the deed. This comes up constantly in Ohio ROW work.",
     badFeedback:"A landowner signing an easement they don't have full authority to sign creates a defective instrument — the easement may not be legally enforceable. Obituaries aren't legal evidence. Your title attorney exists precisely for situations like this.",
-    lesson:"Never assume verbal confirmation of ownership is sufficient. The deed of record controls. When there's a title question, escalate to your title attorney before approaching the landowner."
+    lesson:"In Ohio, always check marital status — dower rights (ORC 2103.02) mean a spouse may need to sign even if their name isn't on the deed. Never assume verbal confirmation of ownership is sufficient. Escalate to your title attorney."
   },
 
   {
     id:"t2", type:"deed", typeLabel:"Deed Reading", typeClass:"type-deed",
-    situation:"A deed you're reviewing describes the parcel using metes and bounds. The description references a \"large oak tree at the southeast corner\" as a monument — from a 1952 deed. Your pipeline easement crosses the eastern edge of this 200-acre parcel in rural Oklahoma.",
-    context:"The tree likely no longer exists. Your pipeline easement crosses the eastern edge of this property.",
-    concept:"<strong>Metes and Bounds:</strong> An older boundary description method using compass directions, distances, and physical monuments. Monument-based descriptions create problems when the monument no longer exists.",
+    situation:"A deed you're reviewing describes the parcel using metes and bounds. The description references a \"large oak tree at the southeast corner\" as a monument — from a 1952 deed. Your pipeline easement crosses the eastern edge of this 200-acre parcel in rural eastern Ohio.",
+    context:"The tree likely no longer exists. Eastern Ohio commonly uses metes-and-bounds descriptions in older deeds — the state also uses the Public Land Survey System (townships and ranges) in most areas, but pre-1800s tracts and Virginia Military District lands in south-central Ohio use metes and bounds exclusively.",
+    concept:"<strong>Metes and Bounds vs. PLSS:</strong> Ohio uses both systems. Most of Ohio is surveyed under the Public Land Survey System (sections, townships, ranges). But the Virginia Military District (south-central Ohio) and some early tracts use metes and bounds with physical monuments. Missing monuments create boundary uncertainty that only a licensed Ohio surveyor can resolve.",
     question:"The oak tree likely doesn't exist anymore. What's the concern?",
     choices:[
       {text:"No concern — descriptions like this are common and courts figure it out.",good:false,scores:[-15,-10,0]},
@@ -1241,9 +1863,9 @@ const ADV_SCENARIOS = [
 
   ,{
     id:"t5", type:"title", typeLabel:"Title Research", typeClass:"type-title",
-    situation:"During title research on a rural parcel in Oklahoma, you discover that a portion of the route crosses land that was once part of a Dawes Act allotment assigned to a tribal member. The current county records show a non-Native individual as the owner.",
-    context:"The chain of title shows the land transferred out of tribal ownership in 1934. The pipeline crosses approximately 400 feet of this parcel.",
-    concept:"<strong>Tribal and Allotted Land:</strong> Land originally allotted to tribal members under the Dawes Act has a complex legal history. Even when it appears in county records as privately owned, there can be federal trust interests or BIA involvement depending on how and when the transfer occurred.",
+    situation:"During title research on a rural parcel, you discover that a portion of the route crosses land that was once part of an allotment or treaty land associated with a tribal nation. The current county records show a non-Native individual as the owner.",
+    context:"The chain of title shows the land transferred out of tribal association decades ago. While this scenario is more common in Oklahoma and western states, Ohio has its own tribal history — Ottawa, Wyandot, Delaware, and Shawnee nations historically held land across Ohio — and remnant land interests or federal oversight can occasionally appear in Ohio title chains, particularly in northwest Ohio.",
+    concept:"<strong>Tribal and Treaty Land History:</strong> Land with any tribal allotment or treaty association requires specialist legal review regardless of what county records show. In Ohio, these situations are uncommon but not impossible, particularly in the northwest. Federal trust interests or BIA involvement may not appear in county deed records at all. This is a specialized legal area — not standard title work.",
     question:"What do you do?",
     choices:[
       {text:"The county records show a private owner — proceed with normal title and landowner contact.",good:false,scores:[-15,-20,-5]},
@@ -1532,7 +2154,7 @@ const DECK3_SCENARIOS = [
     id:"x8", type:"legal", typeLabel:"Legal Escalation", typeClass:"type-legal",
     situation:"A landowner during a meeting makes what sounds like a recorded statement on his phone. You are not certain — his phone is face-down on the table — but you notice it is on and suspect he is recording the conversation.",
     context:"You are in a state whose recording consent laws you are not certain of. The conversation is routine.",
-    concept:"<strong>Recorded Conversations:</strong> Recording laws vary by state. Regardless of legality, recorded conversations become evidence if disputes arise — so what you say in every landowner meeting should be accurate and defensible.",
+    concept:"<strong>Recorded Conversations:</strong> Ohio is a one-party consent state (ORC 2933.53) — a landowner can legally record any conversation they are a party to without telling you. This is not a threat; it is the law. What matters is that everything you say is accurate, honest, and defensible. If you conduct yourself professionally in every meeting, a recording is nothing to fear.",
     question:"How do you handle this?",
     choices:[
       {text:"Ask him directly if he is recording the conversation.",good:false,scores:[5,-5,-10]},
@@ -1540,9 +2162,9 @@ const DECK3_SCENARIOS = [
       {text:"Stop the meeting and say you are not comfortable continuing without knowing if you are being recorded.",good:false,scores:[-5,-5,-15]},
       {text:"Pick up your own phone and start recording as well.",good:false,scores:[-5,-10,-15]}
     ],
-    goodFeedback:"This is the right mindset. If you are conducting yourself professionally — stating accurate information, not making promises you cannot keep, not misrepresenting the project — it does not matter whether he is recording. The recording concern is a signal to be precise and accurate, not to change what you are doing.",
+    goodFeedback:"Exactly right — and in Ohio specifically, this is settled law. Under ORC 2933.53, a party to a conversation can record it without telling anyone. The landowner may well be recording you legally. The correct response is the same either way: accurate, honest, professional. Agents who worry about recordings are usually agents who say things they should not. If your conduct is clean, a recording is evidence in your favor.",
     badFeedback:"Directly asking if he is recording can come across as confrontational. Stopping the meeting makes you look like you have something to hide. Counter-recording without his knowledge may be illegal.",
-    lesson:"Conduct every landowner meeting as if it is being recorded — because it may be. Professional, accurate, and defensible at all times."
+    lesson:"In Ohio, the landowner can legally record you without notice (ORC 2933.53). Conduct every meeting as if it is being recorded — because in Ohio, it very well may be. Professional, accurate, and defensible at all times."
   },
 
   {
@@ -1746,7 +2368,64 @@ const DECK_CONFIG = {
 };
 
 let activeDeck = null;
+let activeDeckKey = null;
+let runMode = 'normal'; // 'normal' | 'review'
 let deck = [], currentIndex = 0, axes = {}, answered = false;
+
+// ─── Guarded storage (v4) ───
+const STORE_KEY = 'rowTrainerV1';
+let memStore = null;
+function loadStore() {
+  if (memStore) return memStore;
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    memStore = raw ? JSON.parse(raw) : {};
+  } catch(e) { memStore = {}; }
+  if (!memStore.decks) memStore.decks = {};
+  // v2 migration: ensure missed[] and history[] on every deck record
+  Object.keys(memStore.decks).forEach(k => {
+    const d = memStore.decks[k];
+    if (!d.missed) d.missed = [];
+    if (!d.history) d.history = [];
+  });
+  return memStore;
+}
+function deckRec(key) {
+  const s = loadStore();
+  if (!s.decks[key]) s.decks[key] = { runs:0, best:0, last:0, missed:[], history:[] };
+  return s.decks[key];
+}
+function addMissed(key, id) {
+  const d = deckRec(key);
+  if (!d.missed.includes(id)) { d.missed.push(id); saveStore(); }
+}
+function clearMissed(key, id) {
+  const d = deckRec(key);
+  const i = d.missed.indexOf(id);
+  if (i >= 0) { d.missed.splice(i, 1); saveStore(); }
+}
+function saveStore() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(memStore)); } catch(e) {}
+}
+function recordRun(deckKey, avg) {
+  const d = deckRec(deckKey);
+  d.runs += 1;
+  d.last = avg;
+  if (avg > d.best) d.best = avg;
+  d.history.push({ a: avg, t: Date.now() });
+  if (d.history.length > 30) d.history.shift();
+  saveStore();
+  refreshDeckStats();
+}
+function refreshDeckStats() {
+  const s = loadStore();
+  [['intro','stat-intro'],['adv','stat-adv'],['deck3','stat-deck3']].forEach(([k,id]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const d = s.decks[k];
+    el.textContent = d ? ('Best ' + d.best + ' \u00b7 ' + d.runs + (d.runs === 1 ? ' run' : ' runs')) : 'Not started';
+  });
+}
 
 function shuffle(arr) {
   const a = [...arr];
@@ -1758,8 +2437,22 @@ function shuffle(arr) {
 }
 function clamp(v) { return Math.max(0, Math.min(100, v)); }
 
+function countUp(el, target, dur) {
+  if (!el) return;
+  const t0 = performance.now();
+  function tick(t) {
+    const p = Math.min(1, (t - t0) / dur);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(target * e);
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
 function startDeck(which) {
+  runMode = 'normal';
   activeDeck = DECK_CONFIG[which];
+  activeDeckKey = which;
   deck = shuffle(activeDeck.scenarios).slice(0, DRAW_COUNT);
   currentIndex = 0;
   axes = {};
@@ -1776,14 +2469,37 @@ function startDeck(which) {
 }
 
 function restartDeck() {
-  if (activeDeck) startDeck(activeDeck === DECK_CONFIG.intro ? 'intro' : 'adv');
+  if (!activeDeckKey) return;
+  if (runMode === 'review') startReview(activeDeckKey);
+  else startDeck(activeDeckKey);
+}
+
+function startReview(which) {
+  const d = deckRec(which);
+  if (!d.missed.length) { toast('No missed cards in that deck'); return; }
+  runMode = 'review';
+  activeDeck = DECK_CONFIG[which];
+  activeDeckKey = which;
+  const pool = activeDeck.scenarios.filter(s => d.missed.includes(s.id));
+  deck = shuffle(pool).slice(0, DRAW_COUNT);
+  currentIndex = 0;
+  axes = {};
+  activeDeck.axes.forEach(a => axes[a.key] = 50);
+  answered = false;
+  document.getElementById('header-deck-label').textContent = activeDeck.label + ' \u00b7 Review';
+  document.getElementById('header-deck-label').className = 'header-deck-label ' + activeDeck.labelCls;
+  document.getElementById('progress-fill').className = 'progress-fill ' + activeDeck.fillCls;
+  showScreen('scenario-screen');
+  renderScenario();
+  setNav('');
 }
 
 function renderScenario() {
   answered = false;
   const s = deck[currentIndex];
-  const pct = Math.round(((currentIndex+1)/DRAW_COUNT)*100);
-  document.getElementById('progress-label').textContent = `${currentIndex+1} / ${DRAW_COUNT}`;
+  const total = deck.length;
+  const pct = Math.round(((currentIndex+1)/total)*100);
+  document.getElementById('progress-label').textContent = `${currentIndex+1} / ${total}`;
   document.getElementById('progress-fill').style.width = pct + '%';
 
   const calloutCls = activeDeck.calloutAdv ? 'callout-box callout-adv' : 'callout-box';
@@ -1812,10 +2528,30 @@ function pick(idx) {
     axes[a.key] = clamp(axes[a.key] + c.scores[i]);
   });
 
+  // missed-card tracking: wrong adds, right clears (any mode)
+  if (good) clearMissed(activeDeckKey, s.id);
+  else addMissed(activeDeckKey, s.id);
+
+  // haptic feedback (Android Chrome)
+  try {
+    if (navigator.vibrate) navigator.vibrate(good ? 18 : [0, 35, 50, 35]);
+  } catch(e) {}
+
   document.querySelectorAll('.choice-btn').forEach((btn, i) => {
     btn.disabled = true;
-    if (i === idx) btn.classList.add(good ? 'sel-good' : 'sel-bad');
-    else if (s.choices[i].good) btn.classList.add('rev-good');
+    if (i === idx) {
+      btn.classList.add(good ? 'sel-good' : 'sel-bad');
+      const mark = document.createElement('span');
+      mark.className = 'verdict-mark ' + (good ? 'vm-good' : 'vm-bad');
+      mark.textContent = good ? '\u2713' : '\u2715';
+      btn.appendChild(mark);
+    } else if (s.choices[i].good) {
+      btn.classList.add('rev-good');
+      const mark = document.createElement('span');
+      mark.className = 'verdict-mark vm-reveal';
+      mark.textContent = '\u2713';
+      btn.appendChild(mark);
+    }
   });
 
   const fp = document.getElementById('fp');
@@ -1838,13 +2574,20 @@ function pick(idx) {
       ${currentIndex+1 < DRAW_COUNT ? 'Next Scenario →' : 'See Results →'}
     </button>
   `;
-  fp.classList.add('visible');
-  fp.scrollIntoView({behavior:'smooth', block:'nearest'});
+  // Hold still so the answer color + animation register, THEN ease to the feedback.
+  // Scroll target is the chosen button (centered) so their answer stays on screen.
+  const chosenBtn = document.querySelectorAll('.choice-btn')[idx];
+  setTimeout(() => {
+    fp.classList.add('visible');
+    setTimeout(() => {
+      if (chosenBtn) chosenBtn.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 260);
+  }, 900);
 }
 
 function next() {
   currentIndex++;
-  if (currentIndex >= DRAW_COUNT) showResults();
+  if (currentIndex >= deck.length) showResults();
   else { renderScenario(); window.scrollTo(0,0); }
 }
 
@@ -1853,8 +2596,10 @@ function showResults() {
   const cfg = activeDeck;
   const vals = cfg.axes.map(a => axes[a.key]);
   const avg = Math.round(vals.reduce((s,v) => s+v, 0) / vals.length);
+  if (runMode === 'normal') recordRun(activeDeckKey, avg);
+  else refreshDeckStats();
 
-  document.getElementById('results-eyebrow').textContent = cfg.label + ' · Complete';
+  document.getElementById('results-eyebrow').textContent = cfg.label + (runMode === 'review' ? ' · Review Complete' : ' · Complete');
   document.getElementById('results-eyebrow').className = 'results-eyebrow ' + cfg.eyebrowCls;
 
   const titles = avg>=70 ? (cfg===DECK_CONFIG.intro ? "Ready to Learn More" : "Solid Foundation")
@@ -1862,16 +2607,19 @@ function showResults() {
                : (cfg===DECK_CONFIG.intro ? "Start with the Basics" : "Keep Digging");
   document.getElementById('results-title').textContent = titles;
 
-  document.getElementById('results-avg').innerHTML = `Overall: <span>${avg}</span> / 100`;
+  document.getElementById('results-avg').innerHTML = `Overall: <span>0</span> / 100`;
   document.getElementById('results-avg').className = 'results-avg ' + cfg.avgCls;
 
   document.getElementById('axis-results').innerHTML = cfg.axes.map((a,i) => `
     <div class="axis-row ${a.cls}">
       <div class="axis-row-name">${a.name}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${vals[i]}%"></div></div>
-      <div class="axis-pct">${vals[i]}</div>
+      <div class="axis-pct">0</div>
     </div>
   `).join('');
+  document.querySelectorAll('#axis-results .axis-pct').forEach((el,i) => countUp(el, vals[i], 950));
+  const avgSpan = document.querySelector('#results-avg span');
+  countUp(avgSpan, avg, 950);
 
   document.getElementById('r-label-1').textContent = 'Assessment';
   document.getElementById('r-label-1').className = 'r-label ' + cfg.rl2Cls;
@@ -1905,8 +2653,297 @@ function showScreen(id) {
 }
 
 function navTo(tab) {
-  const map = { home:'home-screen', guide:'guide-screen', glossary:'glossary-screen' };
-  if (map[tab]) { showScreen(map[tab]); setNav(tab); }
+  const map = { home:'home-screen', guide:'guide-screen', glossary:'glossary-screen', help:'help-screen', practice:'practice-screen' };
+  if (map[tab]) {
+    showScreen(map[tab]);
+    setNav(tab);
+    if (tab === 'practice') renderPractice();
+  }
+}
+
+// ─── Practice screen render ───
+function renderPractice() {
+  const s = loadStore();
+  const rows = document.getElementById('prac-review-rows');
+  const cfg = [
+    ['intro','Deck 01','pb-blue'],
+    ['adv','Deck 02','pb-gold'],
+    ['deck3','Deck 03','pb-teal']
+  ];
+  rows.innerHTML = cfg.map(([k,name,cls]) => {
+    const n = (s.decks[k] && s.decks[k].missed) ? s.decks[k].missed.length : 0;
+    return '<button class="prac-btn ' + cls + '"' +
+      (n ? ' onclick="startReview(\'' + k + '\')"' : ' disabled') + '>' +
+      name + ' \u00b7 ' + (n ? n + ' missed card' + (n===1?'':'s') : 'none missed') + '</button>';
+  }).join('');
+  renderProgress();
+}
+
+function renderProgress() {
+  const s = loadStore();
+  const el = document.getElementById('prac-progress');
+  const cfg = [
+    ['intro','Deck 01 \u00b7 Into the Field','#5a9fd4'],
+    ['adv','Deck 02 \u00b7 Title &amp; Legal','#e8b020'],
+    ['deck3','Deck 03 \u00b7 Advanced Field','#2ab09e']
+  ];
+  let out = '';
+  cfg.forEach(([k,label,color]) => {
+    const d = s.decks[k];
+    if (!d || !d.history || d.history.length < 2) return;
+    const h = d.history;
+    const W = 280, H = 60, PAD = 4;
+    const min = 0, max = 100;
+    const pts = h.map((r,i) => {
+      const x = PAD + (i / (h.length-1)) * (W - PAD*2);
+      const y = H - PAD - ((r.a - min) / (max - min)) * (H - PAD*2);
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+    out += '<div class="prog-chart-wrap">' +
+      '<div class="prog-chart-label" style="color:' + color + '">' + label + ' \u00b7 ' + h.length + ' runs \u00b7 best ' + d.best + '</div>' +
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="' + H + '" preserveAspectRatio="none">' +
+      '<line x1="' + PAD + '" y1="' + (H-PAD) + '" x2="' + (W-PAD) + '" y2="' + (H-PAD) + '" stroke="#252830" stroke-width="1"/>' +
+      '<line x1="' + PAD + '" y1="' + (H/2).toFixed(1) + '" x2="' + (W-PAD) + '" y2="' + (H/2).toFixed(1) + '" stroke="#252830" stroke-width="1" stroke-dasharray="3,3"/>' +
+      '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
+      '</svg></div>';
+  });
+  el.innerHTML = out || '<div class="guide-block-text">Run each deck at least twice to see your score trend here.</div>';
+}
+
+// ─── Study mode ───
+let studyDeckKey = null, studyIdx = 0;
+function startStudy(which) {
+  studyDeckKey = which;
+  studyIdx = 0;
+  const cfg = DECK_CONFIG[which];
+  document.getElementById('header-deck-label').textContent = cfg.label + ' \u00b7 Study';
+  document.getElementById('header-deck-label').className = 'header-deck-label ' + cfg.labelCls;
+  document.getElementById('progress-fill').className = 'progress-fill ' + cfg.fillCls;
+  showScreen('scenario-screen');
+  setNav('');
+  renderStudy();
+}
+function renderStudy() {
+  const cfg = DECK_CONFIG[studyDeckKey];
+  const pool = cfg.scenarios;
+  const s = pool[studyIdx];
+  const total = pool.length;
+  document.getElementById('progress-label').textContent = (studyIdx+1) + ' / ' + total;
+  document.getElementById('progress-fill').style.width = Math.round(((studyIdx+1)/total)*100) + '%';
+  const calloutCls = cfg.calloutAdv ? 'callout-box callout-adv' : 'callout-box';
+  document.getElementById('scenario-body').innerHTML =
+    '<div class="type-badge ' + s.typeClass + '">' + s.typeLabel + ' \u00b7 Study</div>' +
+    '<div class="scenario-situation">' + s.situation + '</div>' +
+    '<div class="scenario-context ' + cfg.ctxCls + '">' + s.context + '</div>' +
+    '<div class="' + calloutCls + '">' + s.concept + '</div>' +
+    '<div class="q-label">\u2014 Tap any answer to reveal</div>' +
+    '<div class="choices">' +
+    s.choices.map((ch,i) => '<button class="choice-btn ' + cfg.hoverCls + '" onclick="studyReveal(' + i + ')">' + ch.text + '</button>').join('') +
+    '</div>' +
+    '<div id="study-lesson"></div>' +
+    '<div class="study-nav">' +
+    '<button onclick="studyPrev()"' + (studyIdx===0?' disabled':'') + '>\u2190 Prev</button>' +
+    '<button onclick="goHome()">Exit</button>' +
+    '<button onclick="studyNext()"' + (studyIdx===total-1?' disabled':'') + '>Next \u2192</button>' +
+    '</div>';
+}
+function studyReveal(idx) {
+  const cfg = DECK_CONFIG[studyDeckKey];
+  const s = cfg.scenarios[studyIdx];
+  document.querySelectorAll('.choice-btn').forEach((btn,i) => {
+    btn.disabled = true;
+    if (s.choices[i].good) btn.classList.add('sel-good');
+    else if (i === idx) btn.classList.add('sel-bad');
+  });
+  document.getElementById('study-lesson').innerHTML =
+    '<div class="rule-box ' + cfg.ruleCls + ' study-reveal-lesson">' +
+    '<div class="rule-label ' + cfg.rlCls + '">The Rule</div>' +
+    '<div class="rule-text">' + s.lesson + '</div></div>';
+}
+function studyPrev() { if (studyIdx > 0) { studyIdx--; renderStudy(); window.scrollTo(0,0); } }
+function studyNext() {
+  const total = DECK_CONFIG[studyDeckKey].scenarios.length;
+  if (studyIdx < total-1) { studyIdx++; renderStudy(); window.scrollTo(0,0); }
+}
+
+// ─── Flashcards ───
+const FLASH_TERMS = [
+  ["Fee Simple","The most complete form of land ownership \u2014 the owner holds the land outright, forever, with the right to sell, lease, or transfer it. This is the ownership type you confirm when running title."],
+  ["Chain of Title","The complete history of ownership transfers on a parcel. A clean chain means each owner properly received it from the last. A break \u2014 a missing deed, an unresolved estate \u2014 is a title defect that must be cured before an easement can be signed."],
+  ["Deed","The legal document that transfers ownership. The recorded deed confirms who currently owns the land and in what form (individual, LLC, trust)."],
+  ["Grantor / Grantee","Grantor gives the property; Grantee receives it. Deed indexes are organized by both \u2014 essential for running title at the courthouse."],
+  ["Legal Description","The formal boundary language in a deed \u2014 metes and bounds, or the Public Land Survey System (townships, ranges, sections). Your easement must fall within the described parcel."],
+  ["Tax Records / Parcel ID","In Ohio, records split across three offices: Recorder (legal title), Auditor (ownership data, parcel maps \u2014 fastest first lookup), Treasurer (tax billing). The Recorder's deed controls legal ownership \u2014 the tax roll is a starting point, not the answer."],
+  ["Easement","The legal right to use someone else's land for a specific purpose \u2014 like a pipeline crossing \u2014 without owning it. The core deliverable of ROW work. Recorded at the county; runs with the land."],
+  ["Right-of-Way (ROW)","The strip of land (or right to use it) for infrastructure. The ROW easement defines width, permitted uses, and duration. Permanent ROW stays forever; temporary construction ROW expires."],
+  ["Lien","A legal claim against property, usually for unpaid debt \u2014 mortgage, taxes, mechanics lien, judgment. Lienholders may need to consent to your easement. Always flag liens to your title attorney."],
+  ["Mortgage","Ohio uses mortgages exclusively (not deeds of trust) with judicial foreclosure via sheriff's sale (7\u201312 months). Recorded mortgages often must be subordinated before your easement is safe."],
+  ["Mineral Rights","Rights to oil, gas, coal beneath the surface \u2014 can be owned separately from the surface. Surface ownership controls your ROW, but mineral owners may have separate interests, especially on gathering lines."],
+  ["Encumbrance","Any claim, lien, easement, or restriction affecting title or use. Running title means finding all of them and understanding which affect your project."],
+  ["Title Search / Title Run","Examining public records to determine current ownership, the chain of title, and all recorded encumbrances \u2014 done for every parcel a route crosses."],
+  ["Curative","Fixing title defects \u2014 broken chains, unresolved heirs, unreleased liens. Requires attorneys and can take weeks to months. Flag early."],
+  ["Eminent Domain / Condemnation","In Ohio: appropriation, under ORC Chapter 163. Interstate pipelines may use federal Natural Gas Act authority; intrastate must qualify under ORC 1723.01. Always a last resort, always courts, never a negotiating tool. Ohio landowners can challenge necessity and get a jury on compensation."],
+  ["Just Compensation","Fair market value owed when an easement is taken. Ohio's constitution (Article I, Section 19) gives landowners a jury trial right on the amount \u2014 stronger than the federal standard, and why negotiated deals are almost always preferable."],
+  ["Damage Payments","Compensation beyond easement value \u2014 crop damage, timber, fences, disrupted operations. Negotiated separately, documented carefully."],
+  ["Subordination Agreement","A lender's consent giving your easement priority over their mortgage, so it survives foreclosure. Legal team obtains these."],
+  ["Survivorship Deed","Ohio statutory form (ORC 5302.17), extremely common on farm properties. When one owner dies, the survivor takes the whole interest automatically \u2014 no probate. Verify with a recorded death certificate and your title attorney."],
+  ["Dower Rights","Ohio still recognizes dower (ORC 2103.02): a married person's spouse holds a potential 1/3 life interest regardless of whose name is on the deed. Check marital status on every parcel \u2014 the spouse likely must sign to release dower."]
+];
+let flashOrder = [], flashIdx = 0, flashFlipped = false;
+function startFlash() {
+  flashOrder = shuffle(FLASH_TERMS.map((_,i) => i));
+  flashIdx = 0;
+  flashFlipped = false;
+  document.getElementById('header-deck-label').textContent = 'Flashcards';
+  document.getElementById('header-deck-label').className = 'header-deck-label label-adv';
+  document.getElementById('progress-fill').className = 'progress-fill fill-adv';
+  showScreen('scenario-screen');
+  setNav('');
+  renderFlash();
+}
+function renderFlash() {
+  const total = flashOrder.length;
+  const t = FLASH_TERMS[flashOrder[flashIdx]];
+  document.getElementById('progress-label').textContent = (flashIdx+1) + ' / ' + total;
+  document.getElementById('progress-fill').style.width = Math.round(((flashIdx+1)/total)*100) + '%';
+  document.getElementById('scenario-body').innerHTML =
+    '<div class="type-badge type-title">Glossary Flashcards</div>' +
+    '<div class="flash-hint">' + (flashFlipped ? 'Tap to see the term' : 'Tap to reveal the definition') + '</div>' +
+    '<div class="flash-card" onclick="flashFlip()">' +
+    (flashFlipped
+      ? '<div class="flash-def">' + t[1] + '</div>'
+      : '<div class="flash-term">' + t[0] + '</div>') +
+    '</div>' +
+    '<div class="study-nav">' +
+    '<button onclick="flashPrev()"' + (flashIdx===0?' disabled':'') + '>\u2190 Prev</button>' +
+    '<button onclick="flashShuffle()">Shuffle</button>' +
+    '<button onclick="goHome()">Exit</button>' +
+    '<button onclick="flashNext()"' + (flashIdx===total-1?' disabled':'') + '>Next \u2192</button>' +
+    '</div>';
+}
+function flashFlip() { flashFlipped = !flashFlipped; renderFlash(); }
+function flashPrev() { if (flashIdx > 0) { flashIdx--; flashFlipped = false; renderFlash(); } }
+function flashNext() { if (flashIdx < flashOrder.length-1) { flashIdx++; flashFlipped = false; renderFlash(); } }
+function flashShuffle() { flashOrder = shuffle(flashOrder); flashIdx = 0; flashFlipped = false; renderFlash(); toast('Shuffled'); }
+
+// ─── Toast ───
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function toastVersion() { toast('v8.0 \u00b7 May 26 \u00b7 59 scenarios \u00b7 light/dark \u00b7 Ohio edition'); }
+
+// ─── Theme ───
+function applyTheme(mode) {
+  const isLight = mode === 'light';
+  document.body.classList.toggle('light', isLight);
+  const lbl = document.getElementById('theme-label');
+  if (lbl) lbl.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+  const moon = document.getElementById('theme-icon-moon');
+  const sun  = document.getElementById('theme-icon-sun');
+  if (moon && sun) {
+    moon.style.display = isLight ? 'none' : '';
+    sun.style.display  = isLight ? '' : 'none';
+  }
+}
+function toggleTheme() {
+  const s = loadStore();
+  s.theme = (s.theme === 'light') ? 'dark' : 'light';
+  saveStore();
+  applyTheme(s.theme);
+  try { if (navigator.vibrate) navigator.vibrate(12); } catch(e) {}
+  toast(s.theme === 'light' ? 'Light mode' : 'Dark mode');
+}
+
+// ─── Walkthrough tour ───
+const TOUR_STEPS = [
+  { title: "Welcome to the Field",
+    body: "This is a decision-based training system for becoming a Right-of-Way Agent \u2014 the person who secures legal permission for pipelines to cross private land. Everything here is built around Ohio law and practice. This quick tour shows you how it works." },
+  { title: "Three Decks, In Order",
+    body: "Deck 01 teaches the role \u2014 what the job is, how you conduct yourself. Deck 02 teaches title and legal work \u2014 deeds, liens, easements, Ohio property law. Deck 03 is advanced \u2014 permits, damage claims, complex situations. Run them in order your first time through." },
+  { title: "Scenarios, Not Lectures",
+    body: "Every card drops you into a real situation and asks what you would do. Pick an answer, get honest feedback, and learn the rule behind it. Wrong answers teach the most \u2014 read the feedback either way. Each run draws 10 scenarios, shuffled, so runs differ." },
+  { title: "Your Progress Is Saved",
+    body: "Each deck tracks three skill axes and saves your best score and run count on this device \u2014 nothing is transmitted anywhere. Watch your numbers climb as the reasoning becomes instinct." },
+  { title: "The Reference Shelf",
+    body: "The Role Guide explains the job in plain English \u2014 read it first. The Glossary defines 20 terms including the Ohio-specific ones that surprise out-of-state candidates. Practice Modes adds missed-card review, a no-scoring study mode, and glossary flashcards. Help has a Getting Started wizard. Good luck out there." }
+];
+let tourIdx = 0;
+function startTour() {
+  tourIdx = 0;
+  showScreen('home-screen');
+  setNav('home');
+  renderTour();
+  document.getElementById('tour-overlay').classList.add('active');
+}
+function renderTour() {
+  const s = TOUR_STEPS[tourIdx];
+  document.getElementById('tour-step-label').textContent = 'Step ' + (tourIdx+1) + ' of ' + TOUR_STEPS.length;
+  document.getElementById('tour-title').textContent = s.title;
+  document.getElementById('tour-body').textContent = s.body;
+  document.getElementById('tour-dots').innerHTML = TOUR_STEPS.map((_,i) =>
+    '<div class="tour-dot' + (i === tourIdx ? ' on' : '') + '"></div>').join('');
+  document.getElementById('tour-next').textContent = tourIdx === TOUR_STEPS.length-1 ? 'Start Training' : 'Next';
+}
+function tourNext() {
+  if (tourIdx < TOUR_STEPS.length-1) { tourIdx++; renderTour(); }
+  else endTour();
+}
+function endTour() {
+  document.getElementById('tour-overlay').classList.remove('active');
+  const s = loadStore();
+  s.tourDone = true;
+  saveStore();
+}
+
+// ─── Getting Started wizard ───
+const WIZ = {
+  q: "Where are you starting from?",
+  opts: [
+    { text: "I know almost nothing about this role yet.",
+      rec: "<strong>Start with the Role Guide</strong> (5-minute read), then run <strong>Deck 01</strong> twice before touching anything else. The role has to make sense before the law does. When Deck 01 feels comfortable \u2014 scores holding above 70 \u2014 move to Deck 02.", act: 'guide' },
+    { text: "I understand the role \u2014 I need the title and legal knowledge.",
+      rec: "Skim the <strong>Glossary</strong> first, especially the four Ohio-specific terms at the bottom \u2014 dower rights alone will separate you from out-of-state candidates. Then run <strong>Deck 02</strong> until your Title IQ holds above 70. Come back to Deck 01 once to confirm the conduct rules are instinct.", act: 'glossary' },
+    { text: "I have an interview coming \u2014 sharpen everything.",
+      rec: "Run all three decks once today to find your weakest axis \u2014 the results screen names it for you. Spend tomorrow re-running your weakest deck. Before the interview, re-read the <strong>Role Guide's non-negotiable rules</strong> \u2014 interviewers probe exactly those: escalation, documentation, honesty, and never letting schedule pressure override property rights.", act: 'deck1' },
+    { text: "I've done ROW-adjacent work before (utilities, land, title).",
+      rec: "Jump into <strong>Deck 02</strong> \u2014 the Ohio-specific material (dower, survivorship deeds, the three-office records system) is where transplanted experience has gaps. Then run <strong>Deck 03</strong>; the regulatory and damage-settlement scenarios assume field maturity you already have.", act: 'deck2' }
+  ]
+};
+let wizScreenPrev = null;
+function startWizard() {
+  const body = document.getElementById('scenario-body');
+  document.getElementById('header-deck-label').textContent = 'Getting Started';
+  document.getElementById('header-deck-label').className = 'header-deck-label label-adv';
+  document.getElementById('progress-label').textContent = '';
+  document.getElementById('progress-fill').style.width = '0%';
+  showScreen('scenario-screen');
+  setNav('');
+  body.innerHTML = '<div class="type-badge type-role">Guide Wizard</div>' +
+    '<div class="wiz-q">' + WIZ.q + '</div>' +
+    '<div class="wiz-opts">' +
+    WIZ.opts.map((o,i) => '<button class="wiz-opt" onclick="wizPick(' + i + ')">' + o.text + '</button>').join('') +
+    '</div>';
+}
+function wizPick(i) {
+  const o = WIZ.opts[i];
+  const body = document.getElementById('scenario-body');
+  const actBtn = {
+    guide:    '<button class="btn-next btn-next-adv" onclick="navTo(\'guide\')">Open the Role Guide \u2192</button>',
+    glossary: '<button class="btn-next btn-next-adv" onclick="navTo(\'glossary\')">Open the Glossary \u2192</button>',
+    deck1:    '<button class="btn-next btn-next-adv" onclick="startDeck(\'intro\')">Run Deck 01 \u2192</button>',
+    deck2:    '<button class="btn-next btn-next-adv" onclick="startDeck(\'adv\')">Run Deck 02 \u2192</button>'
+  }[o.act];
+  body.innerHTML = '<div class="type-badge type-role">Guide Wizard</div>' +
+    '<div class="wiz-q">Your recommended path</div>' +
+    '<div class="wiz-rec">' + o.rec + '</div>' +
+    actBtn +
+    '<div style="height:0.6rem"></div>' +
+    '<button class="tour-skip" style="width:100%" onclick="goHome()">Back to Home</button>';
 }
 
 function setNav(active) {
@@ -1915,6 +2952,16 @@ function setNav(active) {
   if (map[active]) { const el = document.getElementById(map[active]); if(el) el.classList.add('active'); }
   else document.getElementById('nav-home').classList.add('active');
 }
+
+// ─── Init ───
+(function init() {
+  refreshDeckStats();
+  const s = loadStore();
+  applyTheme(s.theme || 'dark');
+  if (!s.tourDone) {
+    setTimeout(startTour, 600);
+  }
+})();
 </script>
 </body>
 </html>
