@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yanke Bionics · Skill Map</title>
+<style>
+  :root{
+    --green:#b0d235; --ink:#231f20; --dark:#1a1718; --mid:#2a2627;
+    --muted:#8a8788; --light:#f5f5f3; --card:#ffffff; --line:#e6e6e1;
+    --warn:#8a6d10; --ease:cubic-bezier(.2,.85,.25,1);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0}
+  body{background:linear-gradient(180deg,#f7f8f5 0%,#eceeea 100%);background-attachment:fixed;
+    color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.45;
+    padding-bottom:78px}
+  h1,h2,.blk{font-family:"Arial Black","Arial Bold",Arial,sans-serif;font-weight:900;letter-spacing:-.01em}
+
+  header{background:linear-gradient(155deg,#211d1e,#141112);color:#fff;padding:12px 15px 13px;
+    position:sticky;top:0;z-index:40;border-bottom:3px solid var(--green);
+    box-shadow:0 4px 18px rgba(0,0,0,.28)}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .logowrap{opacity:0;transform:translateY(5px);animation:logoIn .55s var(--ease) .08s forwards}
+  @keyframes logoIn{to{opacity:1;transform:none}}
+  .revlogo{height:26px;width:auto;display:block}
+  .ver{font-size:10.5px;background:var(--green);border:none;color:var(--ink);padding:5px 9px;
+    border-radius:20px;cursor:pointer;font-weight:700;transition:transform .12s var(--ease)}
+  .ver:active{transform:scale(.92)}
+  .htitle{margin-top:9px;font-size:18px;color:#fff}
+  .hsub{font-size:12px;color:#b9bdb2;margin-top:2px}
+
+  .filterbar{position:sticky;top:0;z-index:35;background:rgba(20,17,18,.96);backdrop-filter:blur(6px);
+    padding:9px 12px;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    border-bottom:1px solid #322d2e;scrollbar-width:none}
+  .filterbar::-webkit-scrollbar{display:none}
+  .fchip{flex:none;font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:20px;
+    border:1px solid #3a3536;background:#241f21;color:#cfd3c8;cursor:pointer;transition:all .16s var(--ease);white-space:nowrap}
+  .fchip.on{background:var(--green);color:var(--ink);border-color:var(--green);transform:scale(1.02)}
+
+  .wrap{max-width:640px;margin:0 auto;padding:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:12px;
+    box-shadow:0 2px 10px rgba(20,17,18,.05),0 1px 2px rgba(20,17,18,.04)}
+  .card.accent{border-top:4px solid var(--green)}
+  h2{font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 9px;color:var(--ink)}
+
+  .steps{margin:0;padding-left:20px}
+  .steps li{margin:5px 0;font-size:14px}
+  .steps b{font-weight:900}
+  .note{margin-top:11px;padding:10px 12px;background:var(--light);border-radius:10px;font-size:12.5px;color:#54514f}
+  .note b{color:var(--ink)}
+  .lvlrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+  .lvlpill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:14px;background:#eef1e6;
+    border:1px solid #dbe3c4;color:#4c5a1f}
+
+  .legend{display:flex;flex-direction:column;gap:9px}
+  .leg{display:flex;gap:10px;align-items:flex-start;font-size:13px}
+  .dot{flex:none;width:15px;height:15px;border-radius:5px;margin-top:2px}
+  .leg .lk{font-weight:900;font-size:12px}
+  .leg span{color:var(--muted);font-size:12px}
+
+  label.fld{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--muted);flex:1;min-width:140px}
+  input[type=text]{font:inherit;font-size:15px;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--light)}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .btn{font:inherit;font-size:13px;font-weight:700;padding:10px 13px;border-radius:11px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;transition:transform .1s var(--ease)}
+  .btn:active{transform:scale(.96)}
+  .btn.ghost{border-color:var(--ink)}
+
+  .catwrap{margin-top:16px}
+  .cathead{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;
+    padding:11px 13px;background:linear-gradient(135deg,#2a2627,#201c1d);color:#fff;border-radius:12px;
+    box-shadow:0 2px 8px rgba(20,17,18,.14)}
+  .cathead .ct{font-family:"Arial Black",Arial;font-weight:900;font-size:13.5px;letter-spacing:.02em}
+  .cathead .cmeta{font-size:11px;color:#b9bdb2;display:flex;align-items:center;gap:9px}
+  .chev{transition:transform .25s var(--ease);font-size:12px}
+  .cathead.closed .chev{transform:rotate(-90deg)}
+  .catflag{font-size:10.5px;color:#1a1718;background:var(--green);padding:2px 7px;border-radius:10px;font-weight:700}
+  .catbody{overflow:hidden;transition:max-height .3s var(--ease);margin-top:8px}
+
+  .skill{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:9px;
+    box-shadow:0 1px 4px rgba(20,17,18,.05)}
+  .sk-name{font-weight:900;font-size:14.5px;font-family:"Arial Black",Arial;letter-spacing:-.01em}
+  .sk-desc{font-size:12.5px;color:#5b5856;margin-top:3px;line-height:1.4}
+  .sk-note{font-size:11.5px;color:var(--warn);margin-top:4px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+  .chip{font-size:13px;font-weight:800;padding:9px 15px;border-radius:20px;border:1.5px solid var(--line);
+    background:#fff;color:#7c7a78;cursor:pointer;min-width:56px;text-align:center;min-height:40px;
+    transition:transform .13s var(--ease),box-shadow .13s;font-family:Arial}
+  .chip:active{transform:scale(.9)}
+  .chip.on{color:#fff;border-color:transparent;animation:pop .24s var(--ease);box-shadow:0 3px 12px rgba(20,17,18,.22)}
+  .chip.draft{border-style:dashed}
+  @keyframes pop{0%{transform:scale(.88)}55%{transform:scale(1.07)}100%{transform:scale(1)}}
+
+  .descs{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+  .db{background:var(--light);border-radius:11px;padding:9px 11px;border-left:4px solid var(--green);
+    animation:slidein .26s var(--ease)}
+  @keyframes slidein{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+  .db .dbh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .db .dk{font-size:11px;font-weight:900;color:#fff;padding:2px 8px;border-radius:8px;font-family:Arial}
+  .db .dn{font-size:11px;color:var(--muted)}
+  .db textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 9px;font:inherit;font-size:13px;
+    background:#fff;resize:none;overflow:hidden;min-height:38px;line-height:1.4}
+  .db textarea::placeholder{color:#adaba8}
+  .notesbox{margin-top:10px}
+  .nlab{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px}
+  .nta{width:100%;border:1px dashed var(--line);border-radius:9px;padding:8px 9px;font:inherit;font-size:13px;background:#fbfbfa;resize:none;overflow:hidden;min-height:36px;line-height:1.4}
+
+  .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:45;background:#fff;border-top:1px solid var(--line);
+    box-shadow:0 -4px 18px rgba(20,17,18,.12);padding:9px 14px;display:flex;align-items:center;gap:12px}
+  .bbprog{flex:1}
+  .bbline{font-size:11.5px;color:var(--muted);margin-bottom:5px}
+  .bbline b{color:var(--ink);font-size:13px;transition:transform .2s var(--ease);display:inline-block}
+  .bbline b.bump{transform:scale(1.3)}
+  .track{height:8px;background:#e7e7e2;border-radius:20px;overflow:hidden}
+  .fill{height:100%;width:0;background:linear-gradient(90deg,#9fbf2f,var(--green));border-radius:20px;transition:width .5s var(--ease)}
+  .fill.done{animation:glow 1.4s ease-in-out infinite}
+  @keyframes glow{0%,100%{box-shadow:0 0 0 rgba(176,210,53,0)}50%{box-shadow:0 0 12px rgba(176,210,53,.9)}}
+  .bbbtn{font:inherit;font-size:14px;font-weight:900;padding:12px 20px;border-radius:12px;border:none;
+    background:var(--green);color:var(--ink);cursor:pointer;transition:transform .1s var(--ease);font-family:"Arial Black",Arial}
+  .bbbtn:active{transform:scale(.95)}
+
+  .foot{font-size:11px;color:var(--muted);text-align:center;padding:16px 10px 8px;line-height:1.7}
+  .foot .mot{font-family:"Arial Black",Arial;font-weight:900;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;
+    padding:11px 18px;border-radius:22px;font-size:13px;opacity:0;pointer-events:none;transition:.22s var(--ease);z-index:60;
+    border:1px solid var(--green)}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+  .save{font-size:11px;color:#5c7a12}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div class="logowrap"><svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496.23 77.31" class="revlogo">
+  <defs>
+    <style>
+      .yk-1, .yk-2, .yk-3, .yk-4, .yk-5, .yk-6, .yk-7 {
+        fill: none;
+      }
+
+      .yk-8 {
+        fill: #231f20;
+      }
+
+      .yk-9 {
+        fill: #afd136;
+      }
+
+      .yk-10 {
+        fill: #b0d235;
+      }
+
+      .yk-2, .yk-3, .yk-4 {
+        stroke: #b0d235;
+      }
+
+      .yk-2, .yk-3, .yk-4, .yk-5, .yk-6, .yk-7 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .yk-2, .yk-7 {
+        stroke-width: .24px;
+      }
+
+      .yk-3, .yk-6 {
+        stroke-width: .49px;
+      }
+
+      .yk-4, .yk-5 {
+        stroke-width: .97px;
+      }
+
+      .yk-11 {
+        fill: #fff;
+      }
+
+      .yk-5, .yk-6, .yk-7 {
+        stroke: #231f20;
+      }
+
+      .yk-12 {
+        opacity: .1;
+      }
+    </style>
+  </defs>
+  <g class="yk-12">
+    <path class="yk-8" d="M230.34,28.54c0,.11,3.98,9.38,5.34,12.63,1.37,3.25,2.75,7.64,3.28,8.59.52.93.95,1.08,1.56,1.02.61-.06,1.78-.23,1.78-.23,0,0-2.64,1.61-3.25,1.91-.18-.18-5.1-8.44-6.71-10.72-1.61-2.28-3.04-12.17-3.04-12.17,0,0,1.03-1.06,1.03-1.03"/>
+    <path class="yk-7" d="M230.34,28.54c0,.11,3.98,9.38,5.34,12.63,1.37,3.25,2.75,7.64,3.28,8.59.52.93.95,1.08,1.56,1.02.61-.06,1.78-.23,1.78-.23,0,0-2.64,1.61-3.25,1.91-.18-.18-5.1-8.44-6.71-10.72-1.61-2.28-3.04-12.17-3.04-12.17,0,0,1.03-1.06,1.03-1.03Z"/>
+    <path class="yk-8" d="M223.66,28.54c0,.11-3.98,9.38-5.34,12.63-1.37,3.25-2.75,7.64-3.28,8.59-.52.93-.95,1.08-1.56,1.02-.61-.06-1.78-.23-1.78-.23,0,0,2.64,1.61,3.25,1.91.18-.18,5.1-8.44,6.71-10.72,1.61-2.28,3.04-12.17,3.04-12.17,0,0-1.03-1.06-1.03-1.03"/>
+    <path class="yk-7" d="M223.66,28.54c0,.11-3.98,9.38-5.34,12.63-1.37,3.25-2.75,7.64-3.28,8.59-.52.93-.95,1.08-1.56,1.02-.61-.06-1.78-.23-1.78-.23,0,0,2.64,1.61,3.25,1.91.18-.18,5.1-8.44,6.71-10.72,1.61-2.28,3.04-12.17,3.04-12.17,0,0-1.03-1.06-1.03-1.03Z"/>
+    <path class="yk-8" d="M227.33,14.02s8.1.73,15.03-2.73c2.52-1.4,2.85-2.46,3.13-2.79.55,0,1.03.46,1.03.55s.24.67.24.67c0,0-.79.33-2.49,1.46-1.7,1.12-5.4,3.61-11.48,5.04-6.07,1.43-5.46-2.19-5.46-2.19"/>
+    <path class="yk-7" d="M227.33,14.02s8.1.73,15.03-2.73c2.52-1.4,2.85-2.46,3.13-2.79.55,0,1.03.46,1.03.55s.24.67.24.67c0,0-.79.33-2.49,1.46-1.7,1.12-5.4,3.61-11.48,5.04-6.07,1.43-5.46-2.19-5.46-2.19Z"/>
+    <path class="yk-8" d="M227.21,14.02s-8.11.73-15.03-2.73c-2.52-1.4-2.85-2.46-3.13-2.79-.55,0-1.03.46-1.03.55s-.24.67-.24.67c0,0,.79.33,2.49,1.46,1.7,1.12,5.4,3.61,11.48,5.04,6.07,1.43,5.46-2.19,5.46-2.19"/>
+    <path class="yk-7" d="M227.21,14.02s-8.11.73-15.03-2.73c-2.52-1.4-2.85-2.46-3.13-2.79-.55,0-1.03.46-1.03.55s-.24.67-.24.67c0,0,.79.33,2.49,1.46,1.7,1.12,5.4,3.61,11.48,5.04,6.07,1.43,5.46-2.19,5.46-2.19Z"/>
+    <path class="yk-11" d="M227.23,33.45c-.21,0-.51.92-.51.92,0,0-5.26,19.92-5.49,20.41-1.11-.22-3.95-1.13-4.17-1.44.27-.22,1.34-.49,2.24-.59.9-.1.94-.75.94-.75,0,0,.78-6.7,1.48-13.92.7-7.22,1.51-9.45,1.95-10.71.5-1.43.08-2.73.08-2.73,0,0-.77-2.94-.95-3.6-.17-.67-.56-1.39-1.11-1.82s-2.03-.65-3.12-.8c-1.09-.14-7.11-1.25-9-1.7-1.89-.45-3.54-.62-4.09-.67-.38-.03-.48-.21-.38-.31.07-.07.26-.2.26-.2.2-.13.56-.36.76-.48.35-.2.82-.28,1.19-.2.37.09.51.12,1.67.42,1.77.46,4.97.57,7.32.49,2.34-.08,6.28-.54,7.85-1.05,2.1-.69,3.08-.77,3.08-.77h0s.99.08,3.08.77c1.57.51,5.51.97,7.85,1.05,2.34.08,5.54-.03,7.32-.49,1.16-.3,1.3-.33,1.66-.42.37-.09.84,0,1.19.2.19.11.55.35.76.48,0,0,.2.13.26.2.1.11,0,.28-.38.31-.56.04-2.2.22-4.09.67-1.89.45-7.91,1.56-9,1.7-1.09.14-2.56.37-3.12.8s-.94,1.16-1.11,1.82c-.17.66-.95,3.6-.95,3.6,0,0-.3,1.21.08,2.73.32,1.29,1.25,3.48,1.95,10.71.7,7.23,1.48,13.92,1.48,13.92,0,0,.04.65.94.75.9.1,1.97.36,2.24.59-.23.3-3.06,1.21-4.17,1.44-.23-.49-5.49-20.41-5.49-20.41,0,0-.31-.92-.51-.92"/>
+    <path class="yk-6" d="M227.23,33.45c-.21,0-.51.92-.51.92,0,0-5.26,19.92-5.49,20.41-1.11-.22-3.95-1.13-4.17-1.44.27-.22,1.34-.49,2.24-.59.9-.1.94-.75.94-.75,0,0,.78-6.7,1.48-13.92.7-7.22,1.51-9.45,1.95-10.71.5-1.43.08-2.73.08-2.73,0,0-.77-2.94-.95-3.6-.17-.67-.56-1.39-1.11-1.82s-2.03-.65-3.12-.8c-1.09-.14-7.11-1.25-9-1.7-1.89-.45-3.54-.62-4.09-.67-.38-.03-.48-.21-.38-.31.07-.07.26-.2.26-.2.2-.13.56-.36.76-.48.35-.2.82-.28,1.19-.2.37.09.51.12,1.67.42,1.77.46,4.97.57,7.32.49,2.34-.08,6.28-.54,7.85-1.05,2.1-.69,3.08-.77,3.08-.77h0s.99.08,3.08.77c1.57.51,5.51.97,7.85,1.05,2.34.08,5.54-.03,7.32-.49,1.16-.3,1.3-.33,1.66-.42.37-.09.84,0,1.19.2.19.11.55.35.76.48,0,0,.2.13.26.2.1.11,0,.28-.38.31-.56.04-2.2.22-4.09.67-1.89.45-7.91,1.56-9,1.7-1.09.14-2.56.37-3.12.8s-.94,1.16-1.11,1.82c-.17.66-.95,3.6-.95,3.6,0,0-.3,1.21.08,2.73.32,1.29,1.25,3.48,1.95,10.71.7,7.23,1.48,13.92,1.48,13.92,0,0,.04.65.94.75.9.1,1.97.36,2.24.59-.23.3-3.06,1.21-4.17,1.44-.23-.49-5.49-20.41-5.49-20.41,0,0-.31-.92-.51-.92"/>
+    <path class="yk-11" d="M225.26,10.77c0-1.45.86-2.13,1.92-2.13s1.92.69,1.92,2.13-.86,3.11-1.92,3.11-1.92-1.66-1.92-3.11"/>
+    <path class="yk-6" d="M225.26,10.77c0-1.45.86-2.13,1.92-2.13s1.92.69,1.92,2.13-.86,3.11-1.92,3.11-1.92-1.66-1.92-3.11Z"/>
+    <path class="yk-5" d="M199.9,28.01c0,15.07,12.21,27.28,27.28,27.28s27.28-12.21,27.28-27.28S242.25.73,227.19.73s-27.28,12.21-27.28,27.28Z"/>
+    <rect class="yk-5" x="204.63" y="8.01" width="45.09" height="47.23"/>
+    <rect class="yk-1" x="199.17" width="56.02" height="56.02"/>
+  </g>
+  <path class="yk-10" d="M230.86,28.54c0,.11,3.98,9.38,5.34,12.63,1.37,3.25,2.75,7.64,3.28,8.59.52.93.95,1.08,1.56,1.02.61-.06,1.78-.23,1.78-.23,0,0-2.64,1.61-3.25,1.91-.18-.18-5.1-8.44-6.71-10.72-1.61-2.28-3.04-12.17-3.04-12.17,0,0,1.03-1.06,1.03-1.03"/>
+  <path class="yk-2" d="M230.86,28.54c0,.11,3.98,9.38,5.34,12.63,1.37,3.25,2.75,7.64,3.28,8.59.52.93.95,1.08,1.56,1.02.61-.06,1.78-.23,1.78-.23,0,0-2.64,1.61-3.25,1.91-.18-.18-5.1-8.44-6.71-10.72-1.61-2.28-3.04-12.17-3.04-12.17,0,0,1.03-1.06,1.03-1.03Z"/>
+  <path class="yk-10" d="M224.18,28.54c0,.11-3.98,9.38-5.34,12.63-1.37,3.25-2.75,7.64-3.28,8.59-.52.93-.95,1.08-1.56,1.02-.61-.06-1.78-.23-1.78-.23,0,0,2.64,1.61,3.25,1.91.18-.18,5.1-8.44,6.71-10.72,1.61-2.28,3.04-12.17,3.04-12.17,0,0-1.03-1.06-1.03-1.03"/>
+  <path class="yk-2" d="M224.18,28.54c0,.11-3.98,9.38-5.34,12.63-1.37,3.25-2.75,7.64-3.28,8.59-.52.93-.95,1.08-1.56,1.02-.61-.06-1.78-.23-1.78-.23,0,0,2.64,1.61,3.25,1.91.18-.18,5.1-8.44,6.71-10.72,1.61-2.28,3.04-12.17,3.04-12.17,0,0-1.03-1.06-1.03-1.03Z"/>
+  <path class="yk-10" d="M227.86,14.02s8.1.73,15.03-2.73c2.52-1.4,2.85-2.46,3.13-2.79.55,0,1.03.46,1.03.55s.24.67.24.67c0,0-.79.33-2.49,1.46-1.7,1.12-5.4,3.61-11.48,5.04-6.07,1.43-5.46-2.19-5.46-2.19"/>
+  <path class="yk-2" d="M227.86,14.02s8.1.73,15.03-2.73c2.52-1.4,2.85-2.46,3.13-2.79.55,0,1.03.46,1.03.55s.24.67.24.67c0,0-.79.33-2.49,1.46-1.7,1.12-5.4,3.61-11.48,5.04-6.07,1.43-5.46-2.19-5.46-2.19Z"/>
+  <path class="yk-10" d="M227.74,14.02s-8.11.73-15.03-2.73c-2.52-1.4-2.85-2.46-3.13-2.79-.55,0-1.03.46-1.03.55s-.24.67-.24.67c0,0,.79.33,2.49,1.46,1.7,1.12,5.4,3.61,11.48,5.04,6.07,1.43,5.46-2.19,5.46-2.19"/>
+  <path class="yk-2" d="M227.74,14.02s-8.11.73-15.03-2.73c-2.52-1.4-2.85-2.46-3.13-2.79-.55,0-1.03.46-1.03.55s-.24.67-.24.67c0,0,.79.33,2.49,1.46,1.7,1.12,5.4,3.61,11.48,5.04,6.07,1.43,5.46-2.19,5.46-2.19Z"/>
+  <path class="yk-11" d="M227.75,33.45c-.21,0-.51.92-.51.92,0,0-5.26,19.92-5.49,20.41-1.11-.22-3.95-1.13-4.17-1.44.27-.22,1.34-.49,2.24-.59.9-.1.94-.75.94-.75,0,0,.78-6.7,1.48-13.92.7-7.22,1.51-9.45,1.95-10.71.5-1.43.08-2.73.08-2.73,0,0-.77-2.94-.95-3.6-.17-.67-.56-1.39-1.11-1.82-.55-.42-2.03-.65-3.12-.79-1.09-.14-7.11-1.25-9-1.7-1.89-.45-3.54-.62-4.09-.67-.38-.03-.48-.21-.38-.31.07-.07.26-.2.26-.2.2-.13.56-.36.76-.48.35-.2.82-.28,1.19-.2.37.09.51.12,1.67.42,1.77.46,4.97.57,7.32.49,2.34-.08,6.28-.54,7.85-1.05,2.1-.69,3.08-.77,3.08-.77h0s.99.08,3.08.77c1.57.51,5.51.97,7.85,1.05,2.34.08,5.54-.03,7.32-.49,1.16-.3,1.3-.33,1.66-.42.37-.09.84,0,1.19.2.19.11.55.35.76.48,0,0,.2.13.26.2.1.11,0,.28-.38.31-.56.04-2.2.22-4.09.67-1.89.45-7.91,1.56-9,1.7-1.09.14-2.56.37-3.12.79-.55.43-.94,1.16-1.11,1.82-.17.66-.95,3.6-.95,3.6,0,0-.3,1.21.08,2.73.32,1.29,1.25,3.48,1.95,10.71.7,7.23,1.48,13.92,1.48,13.92,0,0,.04.65.94.75.9.1,1.97.36,2.24.59-.23.3-3.06,1.21-4.17,1.44-.23-.49-5.49-20.41-5.49-20.41,0,0-.31-.92-.51-.92"/>
+  <path class="yk-3" d="M227.75,33.45c-.21,0-.51.92-.51.92,0,0-5.26,19.92-5.49,20.41-1.11-.22-3.95-1.13-4.17-1.44.27-.22,1.34-.49,2.24-.59.9-.1.94-.75.94-.75,0,0,.78-6.7,1.48-13.92.7-7.22,1.51-9.45,1.95-10.71.5-1.43.08-2.73.08-2.73,0,0-.77-2.94-.95-3.6-.17-.67-.56-1.39-1.11-1.82-.55-.42-2.03-.65-3.12-.79-1.09-.14-7.11-1.25-9-1.7-1.89-.45-3.54-.62-4.09-.67-.38-.03-.48-.21-.38-.31.07-.07.26-.2.26-.2.2-.13.56-.36.76-.48.35-.2.82-.28,1.19-.2.37.09.51.12,1.67.42,1.77.46,4.97.57,7.32.49,2.34-.08,6.28-.54,7.85-1.05,2.1-.69,3.08-.77,3.08-.77h0s.99.08,3.08.77c1.57.51,5.51.97,7.85,1.05,2.34.08,5.54-.03,7.32-.49,1.16-.3,1.3-.33,1.66-.42.37-.09.84,0,1.19.2.19.11.55.35.76.48,0,0,.2.13.26.2.1.11,0,.28-.38.31-.56.04-2.2.22-4.09.67-1.89.45-7.91,1.56-9,1.7-1.09.14-2.56.37-3.12.79-.55.43-.94,1.16-1.11,1.82-.17.66-.95,3.6-.95,3.6,0,0-.3,1.21.08,2.73.32,1.29,1.25,3.48,1.95,10.71.7,7.23,1.48,13.92,1.48,13.92,0,0,.04.65.94.75.9.1,1.97.36,2.24.59-.23.3-3.06,1.21-4.17,1.44-.23-.49-5.49-20.41-5.49-20.41,0,0-.31-.92-.51-.92"/>
+  <path class="yk-11" d="M225.78,10.77c0-1.45.86-2.13,1.92-2.13s1.92.69,1.92,2.13-.86,3.11-1.92,3.11-1.92-1.66-1.92-3.11"/>
+  <path class="yk-3" d="M225.78,10.77c0-1.45.86-2.13,1.92-2.13s1.92.69,1.92,2.13-.86,3.11-1.92,3.11-1.92-1.66-1.92-3.11Z"/>
+  <path class="yk-4" d="M200.43,28.01c0,15.07,12.21,27.28,27.28,27.28s27.28-12.21,27.28-27.28S242.77.73,227.71.73s-27.28,12.21-27.28,27.28Z"/>
+  <rect class="yk-4" x="205.16" y="8.01" width="45.09" height="47.23"/>
+  <rect class="yk-1" x="199.7" width="56.02" height="56.02"/>
+  <path class="yk-9" d="M482.53,51.68c7.97,0,13.7-4.47,13.7-11.35v-.11c0-6.13-4.13-9.4-13.07-11.35-8.83-1.89-10.89-4.01-10.89-7.8v-.11c0-3.61,3.32-6.48,8.54-6.48,4.13,0,7.85,1.32,11.58,4.36l2.64-3.5c-4.07-3.27-8.25-4.93-14.1-4.93-7.62,0-13.18,4.64-13.18,10.95v.11c0,6.59,4.24,9.57,13.47,11.58,8.42,1.78,10.43,3.9,10.43,7.62v.11c0,3.95-3.55,6.82-8.94,6.82s-9.57-1.89-13.76-5.67l-2.81,3.32c4.82,4.3,10.03,6.42,16.39,6.42M445.96,51.8c7.28,0,11.86-2.81,16.05-7.05l-2.98-2.92c-3.84,3.67-7.45,5.79-12.95,5.79-8.83,0-15.53-7.28-15.53-16.56v-.11c0-9.23,6.65-16.45,15.53-16.45,5.44,0,9.23,2.29,12.61,5.5l3.09-3.32c-4.01-3.78-8.37-6.36-15.65-6.36-11.81,0-20.29,9.4-20.29,20.75v.11c0,11.52,8.54,20.63,20.12,20.63M412.49,51.11h4.53V10.99h-4.53v40.12ZM367.96,51.11h4.41V18.21l25.91,32.9h3.61V10.99h-4.41v32.15l-25.28-32.15h-4.24v40.12ZM339.13,47.62c-9.17,0-15.82-7.45-15.82-16.56v-.11c0-9.11,6.53-16.45,15.7-16.45s15.82,7.45,15.82,16.56v.11c0,9.11-6.53,16.45-15.7,16.45M339.01,51.8c12.21,0,20.52-9.69,20.52-20.75v-.11c0-11.06-8.2-20.63-20.4-20.63s-20.52,9.69-20.52,20.75v.11c0,11.06,8.2,20.63,20.4,20.63M305.26,51.11h4.53V10.99h-4.53v40.12ZM269.09,47.04v-14.16h12.67c6.99,0,10.66,2.52,10.66,6.88v.11c0,4.47-3.78,7.17-9.86,7.17h-13.47ZM269.09,28.87v-13.81h12.21c5.73,0,8.88,2.58,8.88,6.53v.11c0,4.7-3.78,7.17-9.23,7.17h-11.87ZM264.62,51.11h17.83c8.77,0,14.56-4.07,14.56-10.95v-.11c0-5.5-3.84-8.25-8.6-9.69,3.15-1.38,6.36-4.07,6.36-9.29v-.11c0-2.58-.92-4.7-2.58-6.42-2.29-2.23-5.9-3.55-10.49-3.55h-17.08v40.12ZM163.18,51.11h29.29v-4.13h-24.76v-14.04h21.89v-4.13h-21.89v-13.7h24.47v-4.13h-29v40.12ZM123.11,51.11h4.53v-10.77l8.54-8.65,15.42,19.43h5.67l-17.94-22.58,17.2-17.54h-5.85l-23.04,23.96V10.99h-4.53v40.12ZM78.98,51.11h4.41V18.21l25.91,32.9h3.61V10.99h-4.41v32.15l-25.28-32.15h-4.24v40.12ZM42.59,36.44l9.17-20.46,9.11,20.46h-18.28ZM31.41,51.11h4.64l4.76-10.6h21.84l4.7,10.6h4.87L53.93,10.7h-4.24l-18.28,40.41ZM16.68,51.11h4.58v-15.93l16.68-24.19h-5.27l-13.64,20.06L5.5,10.99H0l16.68,24.24v15.88Z"/>
+  <path class="yk-11" d="M417.04,77.15h6.93v-1.45h-5.31v-2.49h4.64v-1.45h-4.64v-2.41h5.24v-1.45h-6.86v9.26ZM407.77,72.48v-3.11h2.37c1.2,0,1.92.54,1.92,1.54v.03c0,.94-.74,1.55-1.91,1.55h-2.38ZM406.15,77.15h1.63v-3.23h2.04l2.28,3.23h1.92l-2.5-3.51c1.3-.37,2.21-1.28,2.21-2.8v-.03c0-.81-.28-1.5-.77-2-.59-.58-1.51-.92-2.67-.92h-4.13v9.26ZM396.79,73.47l1.59-3.71,1.6,3.71h-3.19ZM393.58,77.15h1.67l.95-2.24h4.38l.94,2.24h1.72l-4.08-9.33h-1.51l-4.07,9.33ZM387.58,77.31c1.73,0,2.79-.64,3.76-1.64l-1.05-1.06c-.79.74-1.52,1.2-2.66,1.2-1.77,0-3.06-1.48-3.06-3.29v-.03c0-1.81,1.28-3.27,3.06-3.27,1.06,0,1.85.46,2.59,1.15l1.04-1.2c-.89-.85-1.92-1.44-3.63-1.44-2.8,0-4.77,2.15-4.77,4.79v.03c0,2.66,2.01,4.76,4.71,4.76M370.37,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM356.32,77.15h1.6v-6.59l5.11,6.59h1.36v-9.26h-1.6v6.4l-4.96-6.4h-1.51v9.26ZM346.13,77.15h6.93v-1.45h-5.31v-2.49h4.64v-1.45h-4.64v-2.41h5.24v-1.45h-6.87v9.26ZM340.71,77.15h1.63v-9.26h-1.63v9.26ZM332.99,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM322.55,73.47l1.59-3.71,1.6,3.71h-3.19ZM319.34,77.15h1.67l.95-2.24h4.38l.94,2.24h1.72l-4.08-9.33h-1.51l-4.07,9.33ZM312.52,72.7v-3.34h1.89c1.22,0,2,.57,2,1.65v.03c0,.97-.77,1.66-2,1.66h-1.89ZM310.9,77.15h1.63v-2.98h1.84c2.04,0,3.7-1.08,3.7-3.16v-.03c0-1.87-1.36-3.1-3.52-3.1h-3.65v9.26ZM298.81,77.31c1.73,0,2.79-.64,3.76-1.64l-1.05-1.06c-.79.74-1.52,1.2-2.66,1.2-1.77,0-3.06-1.48-3.06-3.29v-.03c0-1.81,1.28-3.27,3.06-3.27,1.06,0,1.85.46,2.59,1.15l1.05-1.2c-.89-.85-1.92-1.44-3.63-1.44-2.8,0-4.77,2.15-4.77,4.79v.03c0,2.66,2.01,4.76,4.71,4.76M289.09,77.15h1.63v-9.26h-1.63v9.26ZM281.38,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM271.48,75.81c-1.84,0-3.15-1.49-3.15-3.29v-.03c0-1.8,1.28-3.27,3.12-3.27s3.15,1.5,3.15,3.3v.03c0,1.8-1.28,3.27-3.12,3.27M271.45,77.31c2.85,0,4.86-2.18,4.86-4.79v-.03c0-2.61-1.98-4.76-4.83-4.76s-4.85,2.18-4.85,4.79v.03c0,2.61,1.98,4.76,4.83,4.76M255.66,77.15h1.63v-3.9h4.42v3.9h1.63v-9.26h-1.63v3.85h-4.42v-3.85h-1.63v9.26ZM248.03,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM236.53,72.48v-3.11h2.37c1.2,0,1.92.54,1.92,1.54v.03c0,.94-.74,1.55-1.91,1.55h-2.38ZM234.91,77.15h1.63v-3.23h2.04l2.28,3.23h1.92l-2.5-3.51c1.3-.37,2.21-1.28,2.21-2.8v-.03c0-.81-.28-1.5-.77-2-.6-.58-1.51-.92-2.67-.92h-4.13v9.26ZM226.78,75.81c-1.84,0-3.15-1.49-3.15-3.29v-.03c0-1.8,1.28-3.27,3.12-3.27s3.15,1.5,3.15,3.3v.03c0,1.8-1.28,3.27-3.12,3.27M226.76,77.31c2.85,0,4.86-2.18,4.86-4.79v-.03c0-2.61-1.98-4.76-4.83-4.76s-4.86,2.18-4.86,4.79v.03c0,2.61,1.98,4.76,4.83,4.76M207,75.67v-6.3h1.83c1.95,0,3.22,1.34,3.22,3.15v.03c0,1.81-1.27,3.12-3.22,3.12h-1.83ZM205.38,77.15h3.45c2.91,0,4.92-2.02,4.92-4.63v-.03c0-2.61-2.01-4.6-4.92-4.6h-3.45v9.26ZM193.6,77.15h1.6v-6.59l5.11,6.59h1.36v-9.26h-1.6v6.4l-4.96-6.4h-1.51v9.26ZM184.25,73.47l1.59-3.71,1.6,3.71h-3.19ZM181.03,77.15h1.67l.95-2.24h4.38l.94,2.24h1.72l-4.07-9.33h-1.51l-4.08,9.33ZM169.74,77.31c1.73,0,2.79-.64,3.76-1.64l-1.04-1.06c-.79.74-1.52,1.2-2.66,1.2-1.77,0-3.06-1.48-3.06-3.29v-.03c0-1.81,1.28-3.27,3.06-3.27,1.06,0,1.85.46,2.59,1.15l1.05-1.2c-.89-.85-1.92-1.44-3.63-1.44-2.8,0-4.77,2.15-4.77,4.79v.03c0,2.66,2.01,4.76,4.71,4.76M160.02,77.15h1.63v-9.26h-1.63v9.26ZM152.31,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM139.84,77.15h6.93v-1.45h-5.3v-2.49h4.64v-1.45h-4.64v-2.41h5.24v-1.45h-6.87v9.26ZM128.46,77.15h1.63v-3.9h4.42v3.9h1.62v-9.26h-1.62v3.85h-4.42v-3.85h-1.63v9.26ZM120.84,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM112.21,77.28c1.95,0,3.31-1.03,3.31-2.76v-.03c0-1.54-1.02-2.24-2.98-2.71-1.77-.42-2.2-.74-2.2-1.46v-.03c0-.61.56-1.1,1.51-1.1.85,0,1.68.33,2.51.95l.87-1.23c-.94-.75-2.01-1.16-3.36-1.16-1.84,0-3.16,1.1-3.16,2.68v.03c0,1.71,1.11,2.29,3.08,2.77,1.72.4,2.09.75,2.09,1.42v.03c0,.7-.64,1.17-1.64,1.17-1.15,0-2.04-.44-2.92-1.2l-.98,1.16c1.11.99,2.45,1.48,3.86,1.48M100.91,75.81c-1.84,0-3.15-1.49-3.15-3.29v-.03c0-1.8,1.28-3.27,3.12-3.27s3.15,1.5,3.15,3.3v.03c0,1.8-1.28,3.27-3.12,3.27M100.89,77.31c2.85,0,4.86-2.18,4.86-4.79v-.03c0-2.61-1.98-4.76-4.83-4.76s-4.85,2.18-4.85,4.79v.03c0,2.61,1.98,4.76,4.83,4.76M87.21,72.48v-3.11h2.37c1.2,0,1.92.54,1.92,1.54v.03c0,.94-.74,1.55-1.91,1.55h-2.38ZM85.58,77.15h1.63v-3.23h2.04l2.28,3.23h1.92l-2.5-3.51c1.3-.37,2.21-1.28,2.21-2.8v-.03c0-.81-.28-1.5-.77-2-.6-.58-1.51-.92-2.67-.92h-4.13v9.26ZM77.04,72.7v-3.34h1.89c1.22,0,2,.57,2,1.65v.03c0,.97-.77,1.66-2,1.66h-1.89ZM75.42,77.15h1.63v-2.98h1.84c2.04,0,3.7-1.08,3.7-3.16v-.03c0-1.87-1.36-3.1-3.52-3.1h-3.65v9.26Z"/>
+</svg></div>
+    <button class="ver" id="ver">v0.5 &middot; Jul 30</button>
+  </div>
+  <div class="htitle">Skill Map</div>
+  <div class="hsub">tag the departments each skill belongs to</div>
+</header>
+
+<div class="filterbar" id="filters"></div>
+
+<div class="wrap">
+
+  <div class="card accent">
+    <h2>What to do</h2>
+    <ol class="steps">
+      <li>For each skill, tap the <b>departments</b> it belongs to. A skill can belong to more than one.</li>
+      <li>Each department box is <b>pre-filled with a starting description</b>. Edit it to match how the skill really works in that department, or leave it. Add notes if you want.</li>
+    </ol>
+    <div class="note">
+      You do <b>not</b> rate people or pick skill levels here. That is a separate review step later.
+      For reference only, skill level will be described in three steps:
+      <div class="lvlrow">
+        <span class="lvlpill">1 Novice</span>
+        <span class="lvlpill">2 Proficient</span>
+        <span class="lvlpill">3 Mastered &middot; can teach it</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The departments</h2>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <label class="fld">Your name
+        <input type="text" id="who" placeholder="who is filling this out">
+      </label>
+      <label class="fld">Your role (optional)
+        <input type="text" id="role" placeholder="e.g. AFO lead">
+      </label>
+    </div>
+    <div class="row" style="margin-top:11px">
+      <button class="btn" id="expCsv">Export CSV</button>
+      <button class="btn" id="impBtn">Load a file</button>
+      <button class="btn" id="suggest">Restore suggestions</button>
+      <button class="btn ghost" id="clear">Clear all</button>
+      <input type="file" id="impFile" accept="application/json" style="display:none">
+    </div>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="foot">
+    Tag departments, describe the skill in each. Levels and people come later.<br>
+    <span class="mot">ACCEPT NO LIMITATIONS.</span> &nbsp;&middot;&nbsp; Yanke Bionics
+  </div>
+</div>
+
+<div class="bottombar">
+  <div class="bbprog">
+    <div class="bbline">Skills tagged &nbsp;<b id="pnum">0</b> <span id="ptot"></span> &nbsp;<span class="save" id="save"></span></div>
+    <div class="track"><div class="fill" id="fill"></div></div>
+  </div>
+  <button class="bbbtn" id="expJson">Export</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const VERSION = "v0.5 · Jul 30";
+const SKEY = "labSkillAssign_v5";
+const SECTIONS = [
+  {k:"FO",  name:"Foot Orthotics", col:"#3a7ca5"},
+  {k:"AFO", name:"Ankle-Foot Orthotic", col:"#2f9e8f"},
+  {k:"PROS",name:"Prosthetics", col:"#c9772f"},
+  {k:"DIG", name:"Digital", col:"#4f6d7a", desc:"scanning, CAD, robot carving, printing"},
+  {k:"SUP", name:"Supervisor", col:"#9c3d54", desc:"running the floor and the people"},
+  {k:"ENG", name:"Engineering", col:"#6b7a2a", desc:"R&D, engineering roles", draft:true}
+];
+const COL={}; SECTIONS.forEach(s=>COL[s.k]=s.col);
+
+const SKILLS = [
+  {id:"HT-01",c:"Hand Tools",n:"Hammers & mallets",d:"Striking tools for forming and shaping plastic, leather, and metal.",s:["FO","AFO","PROS"]},
+  {id:"HT-02",c:"Hand Tools",n:"Utility knives, scalpels, shears",d:"Cutting and trimming plastics, leather, and foam by hand.",s:["FO","AFO","PROS"]},
+  {id:"HT-03",c:"Hand Tools",n:"Pliers",d:"Gripping, bending, and setting rivets and hardware.",s:["FO","AFO","PROS"]},
+  {id:"HT-04",c:"Hand Tools",n:"Screwdrivers, wrenches, Allen keys",d:"Assembling joints, fasteners, and straps.",s:["FO","AFO","PROS"]},
+  {id:"HT-05",c:"Hand Tools",n:"Rasps & files",d:"Hand-shaping and smoothing plastic and metal edges.",s:["FO","AFO","PROS"]},
+  {id:"HT-06",c:"Hand Tools",n:"Measuring tools",d:"Measuring and marking with rulers, calipers, tapes, and squares.",s:["FO","AFO","PROS"]},
+
+  {id:"PM-01",c:"Power Tools & Machinery",n:"Bench grinders & sanders",d:"Powered abrasive smoothing and shaping of surfaces.",s:["FO","AFO","PROS"]},
+  {id:"PM-02",c:"Power Tools & Machinery",n:"Routers",d:"Shaping orthoses and trimming edges with a router.",s:["FO","AFO","PROS"]},
+  {id:"PM-03",c:"Power Tools & Machinery",n:"Band saws & jig saws",d:"Cutting plastics, wood, and composites to shape.",s:["FO","AFO","PROS"]},
+  {id:"PM-04",c:"Power Tools & Machinery",n:"Drill presses & hand drills",d:"Drilling holes for rivets, joints, and attachments.",s:["FO","AFO","PROS"]},
+  {id:"PM-05",c:"Power Tools & Machinery",n:"Sewing machines",d:"Industrial sewing of straps, padding, leather, and Velcro.",note:"Which departments actually sew?",s:["AFO","PROS"]},
+  {id:"PM-06",c:"Power Tools & Machinery",n:"Heat guns",d:"Spot-heating thermoplastics for local adjustments.",s:["FO","AFO","PROS"]},
+  {id:"PM-07",c:"Power Tools & Machinery",n:"Trautman carver",d:"Carving and finishing on the Trautman. Ranges from basic surface smoothing to advanced sculpting depending on the device and department.",s:["AFO","PROS","FO"]},
+
+  {id:"SE-01",c:"Specialized O&P Equipment",n:"Vacuum formers",d:"Pulling heated plastic over a mold or cast.",s:["FO","AFO","PROS"]},
+  {id:"SE-02",c:"Specialized O&P Equipment",n:"Ovens / convection heaters",d:"Heating thermoplastics and curing laminations.",s:["FO","AFO","PROS"]},
+  {id:"SE-03",c:"Specialized O&P Equipment",n:"Cast saws & cast modification",d:"Cutting and shaping plaster or foam positive models.",s:["AFO","PROS"]},
+  {id:"SE-04",c:"Specialized O&P Equipment",n:"Laminating equipment",d:"Laminating carbon fiber or fiberglass with resin.",s:["PROS","AFO"]},
+  {id:"SE-05",c:"Specialized O&P Equipment",n:"Alignment jigs & fixtures",d:"Setting correct joint and upright positioning.",s:["AFO","PROS"]},
+
+  {id:"MS-01",c:"Materials Handling & Safety",n:"Respirators, masks, goggles",d:"Personal protection from dust and resin.",s:["FO","AFO","PROS","DIG"]},
+  {id:"MS-02",c:"Materials Handling & Safety",n:"Ventilated stations / fume hoods",d:"Working safely with lamination and adhesive fumes.",s:["AFO","PROS"]},
+  {id:"MS-03",c:"Materials Handling & Safety",n:"Gloves",d:"Chemical- and cut-resistant hand protection.",s:["FO","AFO","PROS"]},
+  {id:"MS-04",c:"Materials Handling & Safety",n:"Clamps & vices",d:"Securing work during fabrication.",s:["FO","AFO","PROS"]},
+  {id:"MS-05",c:"Materials Handling & Safety",n:"Mixers & scales",d:"Accurately mixing resins, adhesives, and plaster.",s:["AFO","PROS"]},
+
+  {id:"DC-01",c:"Digital / CAD-CAM",n:"3D scanning",d:"Capturing limb shapes as digital models.",s:["DIG","FO","AFO","PROS"]},
+  {id:"DC-02",c:"Digital / CAD-CAM",n:"CAD software",d:"Digital design and modification of devices.",s:["DIG","FO","AFO","PROS"]},
+  {id:"DC-03",c:"Digital / CAD-CAM",n:"ARKAD 3D modification",d:"Modifying positive models in ARKAD.",s:["DIG"]},
+  {id:"DC-04",c:"Digital / CAD-CAM",n:"CAD/CAM digital workflows",d:"Running the digital design-to-carve workflow.",s:["DIG","FO","AFO","PROS"]},
+  {id:"DC-05",c:"Digital / CAD-CAM",n:"CNC carvers / routers",d:"Carving positive models from digital scans.",s:["DIG"]},
+  {id:"DC-06",c:"Digital / CAD-CAM",n:"Robot carving",d:"Setup, washing, and carving on the robot.",s:["DIG"]},
+  {id:"DC-07",c:"Digital / CAD-CAM",n:"Wax milling",d:"Milling wax positives for fabrication.",s:["DIG","AFO","PROS"]},
+  {id:"DC-08",c:"Digital / CAD-CAM",n:"3D printers",d:"Printing device parts for production.",s:["DIG"]},
+  {id:"DC-09",c:"Digital / CAD-CAM",n:"Lab order / scan data input",d:"Entering orders and scan data into the system.",s:["DIG","FO","AFO","PROS"]},
+
+  {id:"FT-01",c:"Fabrication Techniques",n:"Model modification (MOD)",d:"Modifying the positive model for the device the department makes.",note:"Same word, different job per department",s:["FO","AFO","PROS","DIG"]},
+  {id:"FT-02",c:"Fabrication Techniques",n:"Molding / vacuum forming",d:"Forming plastic over the positive to make the device shell.",s:["FO","AFO","PROS"]},
+  {id:"FT-03",c:"Fabrication Techniques",n:"Molding prep / plaster",d:"Preparing plaster and the positive for molding.",s:["AFO","PROS"]},
+  {id:"FT-04",c:"Fabrication Techniques",n:"Finish milling",d:"Milling the device to final shape.",s:["FO","AFO","PROS"]},
+  {id:"FT-05",c:"Fabrication Techniques",n:"Finish sanding",d:"Sanding the device to a final smooth finish.",s:["FO","AFO","PROS"]},
+  {id:"FT-06",c:"Fabrication Techniques",n:"Cutting / trimlines",d:"Cutting the device to its trimlines.",s:["FO","AFO","PROS"]},
+  {id:"FT-07",c:"Fabrication Techniques",n:"Metal bending / KAFO metal work",d:"Bending and fitting uprights and joints.",s:["AFO"]},
+  {id:"FT-08",c:"Fabrication Techniques",n:"Finish AFO",d:"Final finishing and detailing of an AFO.",s:["AFO"]},
+  {id:"FT-09",c:"Fabrication Techniques",n:"Moon Boot fabrication",d:"Fabricating the Moon Boot device.",note:"Complex, currently one trained person",s:["AFO"]},
+  {id:"FT-10",c:"Fabrication Techniques",n:"QC / quality control",d:"Checking the finished device against spec.",s:["FO","AFO","PROS","DIG"]},
+
+  {id:"PW-01",c:"Production & Workflow",n:"Production tracking",d:"Logging your work and its status.",s:["FO","AFO","PROS","DIG","SUP"]},
+  {id:"PW-02",c:"Production & Workflow",n:"Follow-through on assigned jobs",d:"Carrying assigned jobs through to completion.",s:["FO","AFO","PROS","DIG"]},
+
+  {id:"SUP-01",c:"Supervision & Leadership",cnote:"DRAFT",n:"Onboarding & training techs",d:"Bringing new techs up to speed.",s:["SUP"]},
+  {id:"SUP-02",c:"Supervision & Leadership",n:"Scheduling & work assignment",d:"Assigning work and building the schedule.",s:["SUP"]},
+  {id:"SUP-03",c:"Supervision & Leadership",n:"Throughput / turnaround management",d:"Keeping turnaround targets on track.",s:["SUP"]},
+  {id:"SUP-04",c:"Supervision & Leadership",n:"QA oversight & final sign-off",d:"Final quality review and sign-off.",s:["SUP"]},
+  {id:"SUP-05",c:"Supervision & Leadership",n:"Coverage & staffing planning",d:"Planning coverage and staffing levels.",s:["SUP"]},
+  {id:"SUP-06",c:"Supervision & Leadership",n:"Manage work flows",d:"Managing the flow of work across the floor.",s:["SUP"]},
+  {id:"SUP-07",c:"Supervision & Leadership",n:"Performance coaching & reviews",d:"Coaching techs and running reviews.",s:["SUP"]},
+  {id:"SUP-08",c:"Supervision & Leadership",n:"Materials / inventory & ordering",d:"Managing materials, inventory, and ordering.",s:["SUP"]},
+  {id:"SUP-09",c:"Supervision & Leadership",n:"Lab safety oversight",d:"Overseeing lab safety and compliance.",s:["SUP"]},
+  {id:"SUP-10",c:"Supervision & Leadership",n:"Cross-training program",d:"Running cross-training to reduce single points of failure.",s:["SUP"]},
+  {id:"SUP-11",c:"Supervision & Leadership",n:"Escalation & problem resolution",d:"Handling equipment issues and rush orders.",s:["SUP"]},
+
+  {id:"ENG-01",c:"Engineering & R&D",cnote:"DRAFT - needs your engineers' input",n:"R&D of new fabrication techniques",d:"Researching and developing new fabrication methods.",s:["ENG"]},
+  {id:"ENG-02",c:"Engineering & R&D",n:"CAD programming / automation",d:"Programming and automating CAD beyond production use.",s:["ENG"]},
+  {id:"ENG-03",c:"Engineering & R&D",n:"Additive / 3D-print development",d:"Developing 3D-print materials, settings, and methods.",s:["ENG"]},
+  {id:"ENG-04",c:"Engineering & R&D",n:"Prototyping new devices",d:"Building prototypes of new devices and components.",s:["ENG"]},
+  {id:"ENG-05",c:"Engineering & R&D",n:"Materials research & testing",d:"Researching and testing materials.",s:["ENG"]},
+  {id:"ENG-06",c:"Engineering & R&D",n:"Design for manufacturability",d:"Making designs buildable and reverse-engineering parts.",s:["ENG"]},
+  {id:"ENG-07",c:"Engineering & R&D",n:"Process documentation & SOPs",d:"Documenting processes and writing SOPs.",s:["ENG"]},
+  {id:"ENG-08",c:"Engineering & R&D",n:"Design validation & testing",d:"Validating and testing new methods.",s:["ENG"]},
+  {id:"ENG-09",c:"Engineering & R&D",n:"Mechanical design / tolerance analysis",d:"Mechanical design and tolerance work.",s:["ENG"]},
+  {id:"ENG-10",c:"Engineering & R&D",n:"Fixture / jig / tooling design",d:"Designing fixtures, jigs, and tooling.",s:["ENG"]}
+];
+
+let state = {};   // state[id] = { DEPT:{desc:""} }
+let notes = {};  // notes[id] = "free text"
+let filter = "ALL";
+let closedCats = {};
+
+function load(){
+  try{ const raw=localStorage.getItem(SKEY);
+    if(raw){ const o=JSON.parse(raw); state=o.state||{}; notes=o.notes||{}; closedCats=o.closedCats||{};
+      document.getElementById("who").value=o.who||""; document.getElementById("role").value=o.role||""; }
+  }catch(e){ state={}; notes={}; }
+  if(!Object.keys(state).length) seedDefaults();
+}
+function seedDefaults(){
+  SKILLS.forEach(sk=>{ const st=ensure(sk.id); sk.s.forEach(k=>{ if(!st[k]) st[k]={desc:sk.d}; }); });
+}
+function save(){
+  try{ localStorage.setItem(SKEY, JSON.stringify({state,notes,closedCats,
+    who:document.getElementById("who").value, role:document.getElementById("role").value})); }catch(e){}
+  const s=document.getElementById("save"); s.textContent="saved";
+  clearTimeout(save._t); save._t=setTimeout(()=>s.textContent="",900);
+}
+function ensure(id){ if(!state[id]) state[id]={}; return state[id]; }
+function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),1700); }
+
+function buildLegend(){
+  const L=document.getElementById("legend"); L.innerHTML="";
+  SECTIONS.forEach(s=>{
+    const d=document.createElement("div"); d.className="leg";
+    const dot=document.createElement("span"); dot.className="dot"; dot.style.background=s.col;
+    const b=document.createElement("div");
+    b.innerHTML='<span class="lk">'+s.k+'</span> '+s.name+(s.draft?' (draft)':'')+(s.desc?' <span>'+s.desc+'</span>':'');
+    d.appendChild(dot); d.appendChild(b); L.appendChild(d);
+  });
+}
+function buildFilters(){
+  const F=document.getElementById("filters"); F.innerHTML="";
+  [["ALL","All"]].concat(SECTIONS.map(s=>[s.k,s.k])).forEach(([k,lab])=>{
+    const c=document.createElement("div"); c.className="fchip"+(filter===k?" on":""); c.textContent=lab;
+    if(filter===k && k!=="ALL"){ c.style.background=COL[k]; c.style.color="#fff"; c.style.borderColor=COL[k]; }
+    c.onclick=()=>{ filter=k; buildFilters(); render(); };
+    F.appendChild(c);
+  });
+}
+function visible(sk){
+  if(filter==="ALL") return true;
+  if(sk.s.includes(filter)) return true;
+  const st=state[sk.id]; return !!(st && st[filter]);
+}
+function autogrow(ta){ ta.style.height="auto"; ta.style.height=(ta.scrollHeight)+"px"; }
+
+function render(){
+  const list=document.getElementById("list"); list.innerHTML="";
+  const cats=[];
+  SKILLS.filter(visible).forEach(sk=>{ if(!cats.find(c=>c.name===sk.c)) cats.push({name:sk.c,cnote:sk.cnote,items:[]}); });
+  SKILLS.filter(visible).forEach(sk=>{ cats.find(c=>c.name===sk.c).items.push(sk); });
+
+  cats.forEach(cat=>{
+    const wrap=document.createElement("div"); wrap.className="catwrap";
+    const head=document.createElement("div"); head.className="cathead"+(closedCats[cat.name]?" closed":"");
+    const left=document.createElement("div"); left.className="ct"; left.textContent=cat.name;
+    const meta=document.createElement("div"); meta.className="cmeta";
+    if(cat.cnote){ const f=document.createElement("span"); f.className="catflag"; f.textContent=cat.cnote; meta.appendChild(f); }
+    const cnt=document.createElement("span"); cnt.textContent=cat.items.length; meta.appendChild(cnt);
+    const chev=document.createElement("span"); chev.className="chev"; chev.textContent="\u25BC"; meta.appendChild(chev);
+    head.appendChild(left); head.appendChild(meta);
+    const body=document.createElement("div"); body.className="catbody";
+    head.onclick=()=>{ closedCats[cat.name]=!closedCats[cat.name]; save();
+      head.classList.toggle("closed"); body.style.maxHeight=closedCats[cat.name]?"0px":body.scrollHeight+"px"; };
+    wrap.appendChild(head);
+
+    cat.items.forEach(sk=>{
+      const card=document.createElement("div"); card.className="skill";
+      const nm=document.createElement("div"); nm.className="sk-name"; nm.textContent=sk.n; card.appendChild(nm);
+      const de=document.createElement("div"); de.className="sk-desc"; de.textContent=sk.d; card.appendChild(de);
+      if(sk.note){ const nt=document.createElement("div"); nt.className="sk-note"; nt.textContent=sk.note; card.appendChild(nt); }
+
+      const chips=document.createElement("div"); chips.className="chips";
+      SECTIONS.forEach(s=>{
+        const st=ensure(sk.id);
+        const chip=document.createElement("div"); chip.className="chip"+(st[s.k]?" on":"")+(s.draft?" draft":"");
+        chip.textContent=s.k;
+        if(st[s.k]) chip.style.background=s.col;
+        chip.onclick=()=>{ if(st[s.k]) delete st[s.k]; else st[s.k]={desc:sk.d}; save(); render(); };
+        chips.appendChild(chip);
+      });
+      card.appendChild(chips);
+
+      const applied=SECTIONS.filter(s=>ensure(sk.id)[s.k]);
+      if(applied.length){
+        const dc=document.createElement("div"); dc.className="descs";
+        applied.forEach(s=>{
+          const cell=ensure(sk.id)[s.k];
+          const db=document.createElement("div"); db.className="db"; db.style.borderLeftColor=s.col;
+          const h=document.createElement("div"); h.className="dbh";
+          const dk=document.createElement("span"); dk.className="dk"; dk.textContent=s.k; dk.style.background=s.col;
+          const dn=document.createElement("span"); dn.className="dn"; dn.textContent="what it looks like in "+s.name;
+          h.appendChild(dk); h.appendChild(dn); db.appendChild(h);
+          const ta=document.createElement("textarea");
+          ta.placeholder="How is this skill used in "+s.k+"? What does good look like here?";
+          ta.value=cell.desc||"";
+          ta.oninput=()=>{ cell.desc=ta.value; autogrow(ta); save(); };
+          db.appendChild(ta); dc.appendChild(db);
+          requestAnimationFrame(()=>autogrow(ta));
+        });
+        card.appendChild(dc);
+      }
+      const notesWrap=document.createElement("div"); notesWrap.className="notesbox";
+      const nl=document.createElement("div"); nl.className="nlab"; nl.textContent="Notes (optional)";
+      const nta=document.createElement("textarea"); nta.className="nta"; nta.placeholder="Anything else about this skill...";
+      nta.value=notes[sk.id]||"";
+      nta.oninput=()=>{ notes[sk.id]=nta.value; autogrow(nta); save(); };
+      notesWrap.appendChild(nl); notesWrap.appendChild(nta); card.appendChild(notesWrap);
+      requestAnimationFrame(()=>autogrow(nta));
+      body.appendChild(card);
+    });
+    wrap.appendChild(body);
+    list.appendChild(wrap);
+    requestAnimationFrame(()=>{ body.style.maxHeight=closedCats[cat.name]?"0px":body.scrollHeight+"px"; });
+  });
+  updateProg();
+}
+function updateProg(){
+  let done=0;
+  SKILLS.forEach(sk=>{ const st=state[sk.id]; if(st && Object.keys(st).length) done++; });
+  const total=SKILLS.length;
+  const pnum=document.getElementById("pnum"), fill=document.getElementById("fill");
+  document.getElementById("ptot").textContent="of "+total;
+  if(pnum.textContent!==String(done)){ pnum.classList.add("bump"); setTimeout(()=>pnum.classList.remove("bump"),200); }
+  pnum.textContent=done;
+  fill.style.width=Math.round(done/total*100)+"%";
+  if(done===total && total>0){ if(!fill.classList.contains("done")){ fill.classList.add("done"); toast("Every skill tagged. Nice."); } }
+  else fill.classList.remove("done");
+}
+
+function download(name,text,mime){ const b=new Blob([text],{type:mime}); const u=URL.createObjectURL(b);
+  const a=document.createElement("a"); a.href=u; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(u),500); }
+function stamp(){ return new Date().toISOString().slice(0,10); }
+function whoSlug(){ return (document.getElementById("who").value||"anon").replace(/[^a-z0-9]+/gi,"-").toLowerCase(); }
+
+function expJson(){
+  const out={tool:"lab-skill-map",version:VERSION,date:stamp(),
+    respondent:document.getElementById("who").value||"",role:document.getElementById("role").value||"",
+    assignments:state,notes:notes};
+  download("skill-map_"+whoSlug()+"_"+stamp()+".json", JSON.stringify(out,null,2),"application/json");
+  toast("Exported. Attach it to your reply.");
+}
+function expCsv(){
+  const who=document.getElementById("who").value||"";
+  const rows=[["SkillID","Skill","Category","BaseDescription","Department","DepartmentDescription","Notes","Respondent"]];
+  SKILLS.forEach(sk=>{ const st=state[sk.id]||{}; const nt=notes[sk.id]||""; const ks=Object.keys(st);
+    if(ks.length) ks.forEach(k=>rows.push([sk.id,sk.n,sk.c,sk.d,k,st[k].desc||"",nt,who]));
+    else if(nt) rows.push([sk.id,sk.n,sk.c,sk.d,"","",nt,who]); });
+  const csv=rows.map(r=>r.map(x=>{const v=String(x);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",")).join("\n");
+  download("skill-map_"+whoSlug()+"_"+stamp()+".csv", csv,"text/csv");
+}
+function importFile(file){ const rd=new FileReader();
+  rd.onload=()=>{ try{ const o=JSON.parse(rd.result);
+    if(o.assignments){ state=o.assignments; if(o.notes) notes=o.notes;
+      if(o.respondent) document.getElementById("who").value=o.respondent;
+      if(o.role) document.getElementById("role").value=o.role;
+      save(); render(); toast("Loaded"); } else toast("Not a valid file");
+  }catch(e){ toast("Could not read that file"); } };
+  rd.readAsText(file); }
+function loadSuggest(){
+  if(!confirm("Restore my suggested departments and descriptions where missing? Will not erase edits you already made.")) return;
+  SKILLS.forEach(sk=>{ const st=ensure(sk.id); sk.s.forEach(k=>{ if(!st[k]) st[k]={desc:sk.d}; }); });
+  save(); render(); toast("Suggestions restored");
+}
+function clearAll(){ if(!confirm("Clear every choice? Cannot be undone.")) return; state={}; notes={}; save(); render(); toast("Cleared"); }
+
+load(); buildLegend(); buildFilters();
+document.getElementById("ver").onclick=()=>toast(VERSION);
+document.getElementById("who").oninput=save;
+document.getElementById("role").oninput=save;
+document.getElementById("expJson").onclick=expJson;
+document.getElementById("expCsv").onclick=expCsv;
+document.getElementById("suggest").onclick=loadSuggest;
+document.getElementById("clear").onclick=clearAll;
+document.getElementById("impBtn").onclick=()=>document.getElementById("impFile").click();
+document.getElementById("impFile").onchange=e=>{ if(e.target.files[0]) importFile(e.target.files[0]); };
+render();
+</script>
+</body>
+</html>
