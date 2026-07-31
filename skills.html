@@ -5,128 +5,126 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Yanke Bionics · Skill Map</title>
 <style>
-  :root{
-    --green:#b0d235; --ink:#231f20; --dark:#1a1718; --mid:#2a2627;
-    --muted:#8a8788; --light:#f5f5f3; --card:#ffffff; --line:#e6e6e1;
-    --warn:#8a6d10; --ease:cubic-bezier(.2,.85,.25,1);
-  }
+  :root{--green:#b0d235;--ink:#231f20;--dark:#1a1718;--mid:#2a2627;--muted:#8a8788;--light:#f5f5f3;--card:#fff;--line:#e6e6e1;--ease:cubic-bezier(.2,.85,.25,1)}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0}
-  body{background:linear-gradient(180deg,#f7f8f5 0%,#eceeea 100%);background-attachment:fixed;
-    color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.45;
-    padding-bottom:78px}
+  body{background:linear-gradient(180deg,#f7f8f5,#eceeea);background-attachment:fixed;color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.45;padding-bottom:78px}
   h1,h2,.blk{font-family:"Arial Black","Arial Bold",Arial,sans-serif;font-weight:900;letter-spacing:-.01em}
-
-  header{background:linear-gradient(155deg,#211d1e,#141112);color:#fff;padding:12px 15px 13px;
-    position:sticky;top:0;z-index:40;border-bottom:3px solid var(--green);
-    box-shadow:0 4px 18px rgba(0,0,0,.28)}
+  .hidden{display:none!important}
+  /* shell */
+  header{background:linear-gradient(155deg,#211d1e,#141112);color:#fff;padding:11px 15px 0;position:sticky;top:0;z-index:40;border-bottom:3px solid var(--green);box-shadow:0 4px 18px rgba(0,0,0,.28)}
   .htop{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .logowrap{opacity:0;transform:translateY(5px);animation:logoIn .55s var(--ease) .08s forwards}
   @keyframes logoIn{to{opacity:1;transform:none}}
   .revlogo{height:26px;width:auto;display:block}
-  .ver{font-size:10.5px;background:var(--green);border:none;color:var(--ink);padding:5px 9px;
-    border-radius:20px;cursor:pointer;font-weight:700;transition:transform .12s var(--ease)}
-  .ver:active{transform:scale(.92)}
-  .htitle{margin-top:9px;font-size:18px;color:#fff}
-  .hsub{font-size:12px;color:#b9bdb2;margin-top:2px}
-
-  .filterbar{position:sticky;top:0;z-index:35;background:rgba(20,17,18,.96);backdrop-filter:blur(6px);
-    padding:9px 12px;display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;
-    border-bottom:1px solid #322d2e;scrollbar-width:none}
-  .filterbar::-webkit-scrollbar{display:none}
-  .fchip{flex:none;font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:20px;
-    border:1px solid #3a3536;background:#241f21;color:#cfd3c8;cursor:pointer;transition:all .16s var(--ease);white-space:nowrap}
-  .fchip.on{background:var(--green);color:var(--ink);border-color:var(--green);transform:scale(1.02)}
-
-  .wrap{max-width:640px;margin:0 auto;padding:13px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:12px;
-    box-shadow:0 2px 10px rgba(20,17,18,.05),0 1px 2px rgba(20,17,18,.04)}
+  .ver{font-size:10.5px;background:var(--green);border:none;color:var(--ink);padding:5px 9px;border-radius:20px;cursor:pointer;font-weight:700}
+  .tabs{display:flex;gap:4px;margin-top:11px}
+  .tab{flex:1;font:inherit;font-size:13px;font-weight:900;font-family:"Arial Black",Arial;padding:10px 8px;border:none;background:transparent;color:#9a978f;cursor:pointer;border-bottom:3px solid transparent;transition:color .15s,border-color .15s}
+  .tab.on{color:#fff;border-bottom-color:var(--green)}
+  .wrap{max-width:820px;margin:0 auto;padding:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(20,17,18,.05)}
   .card.accent{border-top:4px solid var(--green)}
-  h2{font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 9px;color:var(--ink)}
-
-  .steps{margin:0;padding-left:20px}
-  .steps li{margin:5px 0;font-size:14px}
-  .steps b{font-weight:900}
-  .note{margin-top:11px;padding:10px 12px;background:var(--light);border-radius:10px;font-size:12.5px;color:#54514f}
-  .note b{color:var(--ink)}
-  .lvlrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
-  .lvlpill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:14px;background:#eef1e6;
-    border:1px solid #dbe3c4;color:#4c5a1f}
-
-  .legend{display:flex;flex-direction:column;gap:9px}
-  .leg{display:flex;gap:10px;align-items:flex-start;font-size:13px}
-  .dot{flex:none;width:15px;height:15px;border-radius:5px;margin-top:2px}
-  .leg .lk{font-weight:900;font-size:12px}
-  .leg span{color:var(--muted);font-size:12px}
-
-  label.fld{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--muted);flex:1;min-width:140px}
-  input[type=text]{font:inherit;font-size:15px;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--light)}
-  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  .btn{font:inherit;font-size:13px;font-weight:700;padding:10px 13px;border-radius:11px;
-    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;transition:transform .1s var(--ease)}
+  h2{font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 10px;color:var(--ink)}
+  .btn{font:inherit;font-size:13px;font-weight:700;padding:10px 13px;border-radius:11px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;transition:transform .1s var(--ease)}
   .btn:active{transform:scale(.96)}
   .btn.ghost{border-color:var(--ink)}
-
-  .catwrap{margin-top:16px}
-  .cathead{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;
-    padding:11px 13px;background:linear-gradient(135deg,#2a2627,#201c1d);color:#fff;border-radius:12px;
-    box-shadow:0 2px 8px rgba(20,17,18,.14)}
-  .cathead .ct{font-family:"Arial Black",Arial;font-weight:900;font-size:13.5px;letter-spacing:.02em}
-  .cathead .cmeta{font-size:11px;color:#b9bdb2;display:flex;align-items:center;gap:9px}
-  .chev{transition:transform .25s var(--ease);font-size:12px}
-  .cathead.closed .chev{transform:rotate(-90deg)}
-  .catflag{font-size:10.5px;color:#1a1718;background:var(--green);padding:2px 7px;border-radius:10px;font-weight:700}
-  .catbody{overflow:hidden;transition:max-height .3s var(--ease);margin-top:8px}
-
-  .skill{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:9px;
-    box-shadow:0 1px 4px rgba(20,17,18,.05)}
-  .sk-name{font-weight:900;font-size:14.5px;font-family:"Arial Black",Arial;letter-spacing:-.01em}
-  .sk-desc{font-size:12.5px;color:#5b5856;margin-top:3px;line-height:1.4}
-  .sk-note{font-size:11.5px;color:var(--warn);margin-top:4px}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
-  .chip{font-size:13px;font-weight:800;padding:9px 15px;border-radius:20px;border:1.5px solid var(--line);
-    background:#fff;color:#7c7a78;cursor:pointer;min-width:56px;text-align:center;min-height:40px;
-    transition:transform .13s var(--ease),box-shadow .13s;font-family:Arial}
-  .chip:active{transform:scale(.9)}
-  .chip.on{color:#fff;border-color:transparent;animation:pop .24s var(--ease);box-shadow:0 3px 12px rgba(20,17,18,.22)}
-  .chip.draft{border-style:dashed}
-  @keyframes pop{0%{transform:scale(.88)}55%{transform:scale(1.07)}100%{transform:scale(1)}}
-
-  .descs{margin-top:10px;display:flex;flex-direction:column;gap:8px}
-  .db{background:var(--light);border-radius:11px;padding:9px 11px;border-left:4px solid var(--green);
-    animation:slidein .26s var(--ease)}
-  @keyframes slidein{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
-  .db .dbh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-  .db .dk{font-size:11px;font-weight:900;color:#fff;padding:2px 8px;border-radius:8px;font-family:Arial}
-  .db .dn{font-size:11px;color:var(--muted)}
-  .db textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 9px;font:inherit;font-size:13px;
-    background:#fff;resize:none;overflow:hidden;min-height:38px;line-height:1.4}
-  .db textarea::placeholder{color:#adaba8}
-  .notesbox{margin-top:10px}
-  .nlab{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px}
-  .nta{width:100%;border:1px dashed var(--line);border-radius:9px;padding:8px 9px;font:inherit;font-size:13px;background:#fbfbfa;resize:none;overflow:hidden;min-height:36px;line-height:1.4}
-
-  .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:45;background:#fff;border-top:1px solid var(--line);
-    box-shadow:0 -4px 18px rgba(20,17,18,.12);padding:9px 14px;display:flex;align-items:center;gap:12px}
-  .bbprog{flex:1}
-  .bbline{font-size:11.5px;color:var(--muted);margin-bottom:5px}
-  .bbline b{color:var(--ink);font-size:13px;transition:transform .2s var(--ease);display:inline-block}
-  .bbline b.bump{transform:scale(1.3)}
-  .track{height:8px;background:#e7e7e2;border-radius:20px;overflow:hidden}
-  .fill{height:100%;width:0;background:linear-gradient(90deg,#9fbf2f,var(--green));border-radius:20px;transition:width .5s var(--ease)}
-  .fill.done{animation:glow 1.4s ease-in-out infinite}
-  @keyframes glow{0%,100%{box-shadow:0 0 0 rgba(176,210,53,0)}50%{box-shadow:0 0 12px rgba(176,210,53,.9)}}
-  .bbbtn{font:inherit;font-size:14px;font-weight:900;padding:12px 20px;border-radius:12px;border:none;
-    background:var(--green);color:var(--ink);cursor:pointer;transition:transform .1s var(--ease);font-family:"Arial Black",Arial}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  input[type=text],input[type=password]{font:inherit;font-size:15px;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--light)}
+  .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:45;background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(20,17,18,.12);padding:9px 14px;display:flex;align-items:center;gap:10px}
+  .bbbtn{font:inherit;font-size:13.5px;font-weight:900;padding:11px 16px;border-radius:11px;border:none;background:var(--green);color:var(--ink);cursor:pointer;font-family:"Arial Black",Arial;transition:transform .1s var(--ease)}
   .bbbtn:active{transform:scale(.95)}
-
+  .bbbtn.sec{background:#fff;border:1px solid var(--ink);color:var(--ink)}
   .foot{font-size:11px;color:var(--muted);text-align:center;padding:16px 10px 8px;line-height:1.7}
   .foot .mot{font-family:"Arial Black",Arial;font-weight:900;color:var(--ink)}
-  .toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;
-    padding:11px 18px;border-radius:22px;font-size:13px;opacity:0;pointer-events:none;transition:.22s var(--ease);z-index:60;
-    border:1px solid var(--green)}
+  .toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:22px;font-size:13px;opacity:0;pointer-events:none;transition:.22s var(--ease);z-index:60;border:1px solid var(--green)}
   .toast.show{opacity:1;transform:translateX(-50%)}
   .save{font-size:11px;color:#5c7a12}
+
+  /* department view */
+  #view-dep .steps{margin:0;padding-left:20px}
+  #view-dep .steps li{margin:5px 0;font-size:14px}
+  #view-dep .note{margin-top:11px;padding:10px 12px;background:var(--light);border-radius:10px;font-size:12.5px;color:#54514f}
+  #view-dep .lvlrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+  #view-dep .lvlpill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:14px;background:#eef1e6;border:1px solid #dbe3c4;color:#4c5a1f}
+  #view-dep .legend{display:flex;flex-direction:column;gap:9px}
+  #view-dep .leg{display:flex;gap:10px;align-items:flex-start;font-size:13px}
+  #view-dep .dot{flex:none;width:15px;height:15px;border-radius:5px;margin-top:2px}
+  #view-dep .lk{font-weight:900;font-size:12px}
+  #view-dep .leg span{color:var(--muted);font-size:12px}
+  #view-dep label.fld{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--muted);flex:1;min-width:150px}
+  #dep-filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+  #view-dep .fchip{font-size:12px;font-weight:700;padding:8px 12px;border-radius:18px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;transition:all .15s var(--ease)}
+  #view-dep .fchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  #view-dep .cat{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:18px 4px 8px;font-weight:900;font-family:Arial}
+  #view-dep .cat .flag{color:#8a6d10;font-weight:700;text-transform:none;letter-spacing:0;font-size:11px}
+  #view-dep .skill{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;box-shadow:0 1px 3px rgba(20,17,18,.05)}
+  #view-dep .sk-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  #view-dep .sk-name{font-weight:700;font-size:15px}
+  #view-dep .sk-desc{font-size:12.5px;color:#5b5856;margin-top:3px}
+  #view-dep .sk-note{font-size:11.5px;color:#8a6d10;margin-top:4px}
+  #view-dep .allbtn{font-size:11px;font-weight:700;padding:5px 10px;border-radius:16px;border:1px dashed var(--ink);background:#fff;color:var(--ink);cursor:pointer;white-space:nowrap}
+  #view-dep .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+  #view-dep .chip{font-size:13px;font-weight:800;padding:9px 15px;border-radius:20px;border:1.5px solid var(--line);background:#fff;color:#7c7a78;cursor:pointer;min-width:56px;text-align:center;min-height:40px;transition:transform .13s var(--ease)}
+  #view-dep .chip:active{transform:scale(.9)}
+  #view-dep .chip.on{color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(20,17,18,.22)}
+  #view-dep .chip.draft{border-style:dashed}
+  #view-dep .descs{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+  #view-dep .db{background:var(--light);border-radius:11px;padding:9px 11px;border-left:4px solid var(--green)}
+  #view-dep .db .dbh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  #view-dep .db .dk{font-size:11px;font-weight:900;color:#fff;padding:2px 8px;border-radius:8px}
+  #view-dep .db .dn{font-size:11px;color:var(--muted)}
+  #view-dep .db textarea,#view-dep .nta{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 9px;font:inherit;font-size:13px;background:#fff;resize:none;overflow:hidden;min-height:38px;line-height:1.4}
+  #view-dep .notesbox{margin-top:10px}
+  #view-dep .nlab{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px}
+  #view-dep .nta{border:1px dashed var(--line);background:#fbfbfa;min-height:36px}
+  #dep-track{height:8px;background:#e7e7e2;border-radius:20px;overflow:hidden}
+  #dep-fill{height:100%;width:0;background:linear-gradient(90deg,#9fbf2f,var(--green));border-radius:20px;transition:width .5s var(--ease)}
+  .bbprog{flex:1}.bbline{font-size:11.5px;color:var(--muted);margin-bottom:5px}.bbline b{color:var(--ink);font-size:13px}
+
+  /* employee view */
+  #view-emp .intro{font-size:13.5px;color:#54514f}
+  #view-emp .roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:11px;margin-top:4px}
+  #view-emp .ecard{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:13px;cursor:pointer;box-shadow:0 2px 8px rgba(20,17,18,.05);transition:transform .12s var(--ease)}
+  #view-emp .ecard:active{transform:scale(.97)}
+  #view-emp .av{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-family:"Arial Black",Arial;font-weight:900;font-size:14px;color:#fff}
+  #view-emp .ecard .en{font-weight:900;font-size:14.5px;margin-top:9px;font-family:"Arial Black",Arial}
+  #view-emp .ecard .em{font-size:11.5px;color:var(--muted);margin-top:3px}
+  #view-emp .bar2{height:6px;background:#e7e7e2;border-radius:20px;overflow:hidden;margin-top:8px}
+  #view-emp .bar2 i{display:block;height:100%;background:linear-gradient(90deg,#9fbf2f,var(--green));border-radius:20px;transition:width .4s var(--ease)}
+  #view-emp .ehead{display:flex;align-items:center;gap:11px}
+  #view-emp .back{font-size:13px;font-weight:700;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
+  #view-emp .ehead .en{font-family:"Arial Black",Arial;font-weight:900;font-size:18px}
+  #view-emp .ehead .prog{font-size:11.5px;color:var(--muted);margin-top:2px}
+  #view-emp .toolbar{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+  #view-emp .fchip{font-size:12px;font-weight:700;padding:8px 12px;border-radius:18px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;transition:all .15s var(--ease)}
+  #view-emp .fchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  #view-emp .dutytog{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+  #view-emp .switch{width:42px;height:24px;border-radius:20px;background:#c7cfd6;position:relative;cursor:pointer;transition:.15s}
+  #view-emp .switch.on{background:var(--ink)}
+  #view-emp .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.15s}
+  #view-emp .switch.on .knob{left:20px}
+  #view-emp .cat{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:#fff;font-weight:900;font-family:Arial;background:linear-gradient(135deg,#2a2627,#201c1d);padding:8px 12px;border-radius:10px;margin:16px 0 8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+  #view-emp .chev{transition:transform .25s var(--ease);font-size:11px}
+  #view-emp .cat.closed .chev{transform:rotate(-90deg)}
+  #view-emp .catbody{overflow:hidden;transition:max-height .3s var(--ease)}
+  #view-emp .erow{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:8px;box-shadow:0 1px 3px rgba(20,17,18,.05)}
+  #view-emp .ername{font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:7px}
+  #view-emp .tags{display:inline-flex;gap:4px}
+  #view-emp .tg{width:9px;height:9px;border-radius:3px;display:inline-block}
+  #view-emp .edesc{font-size:12px;color:#5b5856;margin-top:5px;display:none}
+  #view-emp .edesc.show{display:block}
+  #view-emp .ctrls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:9px}
+  #view-emp .seg{display:flex;gap:4px}
+  #view-emp .seg button{min-width:46px;height:34px;border-radius:9px;border:1px solid var(--line);background:#fff;font:inherit;font-size:12.5px;font-weight:800;color:#7c7a78;cursor:pointer}
+  #view-emp .seg button.lv1{background:#e8f0cf;color:#3d4a12;border-color:#d3e4a6}
+  #view-emp .seg button.lv2{background:var(--green);color:var(--ink);border-color:var(--green)}
+  #view-emp .seg button.lv3{background:#6f8f1e;color:#fff;border-color:#6f8f1e}
+  #view-emp .duty{height:34px;padding:0 13px;border-radius:9px;border:1.5px dashed var(--line);background:#fff;color:#9a9895;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+  #view-emp .duty.on{background:var(--ink);color:#fff;border:1.5px solid var(--ink)}
+  #view-emp .gate{text-align:center;padding:30px 16px}
+  #view-emp .gate .lock{font-size:34px}
+  #view-emp .gate h2{justify-content:center}
+  #view-emp .gate p{font-size:13px;color:var(--muted);max-width:340px;margin:6px auto 14px}
 </style>
 </head>
 <body>
@@ -220,16 +218,16 @@
   <path class="yk-9" d="M482.53,51.68c7.97,0,13.7-4.47,13.7-11.35v-.11c0-6.13-4.13-9.4-13.07-11.35-8.83-1.89-10.89-4.01-10.89-7.8v-.11c0-3.61,3.32-6.48,8.54-6.48,4.13,0,7.85,1.32,11.58,4.36l2.64-3.5c-4.07-3.27-8.25-4.93-14.1-4.93-7.62,0-13.18,4.64-13.18,10.95v.11c0,6.59,4.24,9.57,13.47,11.58,8.42,1.78,10.43,3.9,10.43,7.62v.11c0,3.95-3.55,6.82-8.94,6.82s-9.57-1.89-13.76-5.67l-2.81,3.32c4.82,4.3,10.03,6.42,16.39,6.42M445.96,51.8c7.28,0,11.86-2.81,16.05-7.05l-2.98-2.92c-3.84,3.67-7.45,5.79-12.95,5.79-8.83,0-15.53-7.28-15.53-16.56v-.11c0-9.23,6.65-16.45,15.53-16.45,5.44,0,9.23,2.29,12.61,5.5l3.09-3.32c-4.01-3.78-8.37-6.36-15.65-6.36-11.81,0-20.29,9.4-20.29,20.75v.11c0,11.52,8.54,20.63,20.12,20.63M412.49,51.11h4.53V10.99h-4.53v40.12ZM367.96,51.11h4.41V18.21l25.91,32.9h3.61V10.99h-4.41v32.15l-25.28-32.15h-4.24v40.12ZM339.13,47.62c-9.17,0-15.82-7.45-15.82-16.56v-.11c0-9.11,6.53-16.45,15.7-16.45s15.82,7.45,15.82,16.56v.11c0,9.11-6.53,16.45-15.7,16.45M339.01,51.8c12.21,0,20.52-9.69,20.52-20.75v-.11c0-11.06-8.2-20.63-20.4-20.63s-20.52,9.69-20.52,20.75v.11c0,11.06,8.2,20.63,20.4,20.63M305.26,51.11h4.53V10.99h-4.53v40.12ZM269.09,47.04v-14.16h12.67c6.99,0,10.66,2.52,10.66,6.88v.11c0,4.47-3.78,7.17-9.86,7.17h-13.47ZM269.09,28.87v-13.81h12.21c5.73,0,8.88,2.58,8.88,6.53v.11c0,4.7-3.78,7.17-9.23,7.17h-11.87ZM264.62,51.11h17.83c8.77,0,14.56-4.07,14.56-10.95v-.11c0-5.5-3.84-8.25-8.6-9.69,3.15-1.38,6.36-4.07,6.36-9.29v-.11c0-2.58-.92-4.7-2.58-6.42-2.29-2.23-5.9-3.55-10.49-3.55h-17.08v40.12ZM163.18,51.11h29.29v-4.13h-24.76v-14.04h21.89v-4.13h-21.89v-13.7h24.47v-4.13h-29v40.12ZM123.11,51.11h4.53v-10.77l8.54-8.65,15.42,19.43h5.67l-17.94-22.58,17.2-17.54h-5.85l-23.04,23.96V10.99h-4.53v40.12ZM78.98,51.11h4.41V18.21l25.91,32.9h3.61V10.99h-4.41v32.15l-25.28-32.15h-4.24v40.12ZM42.59,36.44l9.17-20.46,9.11,20.46h-18.28ZM31.41,51.11h4.64l4.76-10.6h21.84l4.7,10.6h4.87L53.93,10.7h-4.24l-18.28,40.41ZM16.68,51.11h4.58v-15.93l16.68-24.19h-5.27l-13.64,20.06L5.5,10.99H0l16.68,24.24v15.88Z"/>
   <path class="yk-11" d="M417.04,77.15h6.93v-1.45h-5.31v-2.49h4.64v-1.45h-4.64v-2.41h5.24v-1.45h-6.86v9.26ZM407.77,72.48v-3.11h2.37c1.2,0,1.92.54,1.92,1.54v.03c0,.94-.74,1.55-1.91,1.55h-2.38ZM406.15,77.15h1.63v-3.23h2.04l2.28,3.23h1.92l-2.5-3.51c1.3-.37,2.21-1.28,2.21-2.8v-.03c0-.81-.28-1.5-.77-2-.59-.58-1.51-.92-2.67-.92h-4.13v9.26ZM396.79,73.47l1.59-3.71,1.6,3.71h-3.19ZM393.58,77.15h1.67l.95-2.24h4.38l.94,2.24h1.72l-4.08-9.33h-1.51l-4.07,9.33ZM387.58,77.31c1.73,0,2.79-.64,3.76-1.64l-1.05-1.06c-.79.74-1.52,1.2-2.66,1.2-1.77,0-3.06-1.48-3.06-3.29v-.03c0-1.81,1.28-3.27,3.06-3.27,1.06,0,1.85.46,2.59,1.15l1.04-1.2c-.89-.85-1.92-1.44-3.63-1.44-2.8,0-4.77,2.15-4.77,4.79v.03c0,2.66,2.01,4.76,4.71,4.76M370.37,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM356.32,77.15h1.6v-6.59l5.11,6.59h1.36v-9.26h-1.6v6.4l-4.96-6.4h-1.51v9.26ZM346.13,77.15h6.93v-1.45h-5.31v-2.49h4.64v-1.45h-4.64v-2.41h5.24v-1.45h-6.87v9.26ZM340.71,77.15h1.63v-9.26h-1.63v9.26ZM332.99,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM322.55,73.47l1.59-3.71,1.6,3.71h-3.19ZM319.34,77.15h1.67l.95-2.24h4.38l.94,2.24h1.72l-4.08-9.33h-1.51l-4.07,9.33ZM312.52,72.7v-3.34h1.89c1.22,0,2,.57,2,1.65v.03c0,.97-.77,1.66-2,1.66h-1.89ZM310.9,77.15h1.63v-2.98h1.84c2.04,0,3.7-1.08,3.7-3.16v-.03c0-1.87-1.36-3.1-3.52-3.1h-3.65v9.26ZM298.81,77.31c1.73,0,2.79-.64,3.76-1.64l-1.05-1.06c-.79.74-1.52,1.2-2.66,1.2-1.77,0-3.06-1.48-3.06-3.29v-.03c0-1.81,1.28-3.27,3.06-3.27,1.06,0,1.85.46,2.59,1.15l1.05-1.2c-.89-.85-1.92-1.44-3.63-1.44-2.8,0-4.77,2.15-4.77,4.79v.03c0,2.66,2.01,4.76,4.71,4.76M289.09,77.15h1.63v-9.26h-1.63v9.26ZM281.38,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM271.48,75.81c-1.84,0-3.15-1.49-3.15-3.29v-.03c0-1.8,1.28-3.27,3.12-3.27s3.15,1.5,3.15,3.3v.03c0,1.8-1.28,3.27-3.12,3.27M271.45,77.31c2.85,0,4.86-2.18,4.86-4.79v-.03c0-2.61-1.98-4.76-4.83-4.76s-4.85,2.18-4.85,4.79v.03c0,2.61,1.98,4.76,4.83,4.76M255.66,77.15h1.63v-3.9h4.42v3.9h1.63v-9.26h-1.63v3.85h-4.42v-3.85h-1.63v9.26ZM248.03,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM236.53,72.48v-3.11h2.37c1.2,0,1.92.54,1.92,1.54v.03c0,.94-.74,1.55-1.91,1.55h-2.38ZM234.91,77.15h1.63v-3.23h2.04l2.28,3.23h1.92l-2.5-3.51c1.3-.37,2.21-1.28,2.21-2.8v-.03c0-.81-.28-1.5-.77-2-.6-.58-1.51-.92-2.67-.92h-4.13v9.26ZM226.78,75.81c-1.84,0-3.15-1.49-3.15-3.29v-.03c0-1.8,1.28-3.27,3.12-3.27s3.15,1.5,3.15,3.3v.03c0,1.8-1.28,3.27-3.12,3.27M226.76,77.31c2.85,0,4.86-2.18,4.86-4.79v-.03c0-2.61-1.98-4.76-4.83-4.76s-4.86,2.18-4.86,4.79v.03c0,2.61,1.98,4.76,4.83,4.76M207,75.67v-6.3h1.83c1.95,0,3.22,1.34,3.22,3.15v.03c0,1.81-1.27,3.12-3.22,3.12h-1.83ZM205.38,77.15h3.45c2.91,0,4.92-2.02,4.92-4.63v-.03c0-2.61-2.01-4.6-4.92-4.6h-3.45v9.26ZM193.6,77.15h1.6v-6.59l5.11,6.59h1.36v-9.26h-1.6v6.4l-4.96-6.4h-1.51v9.26ZM184.25,73.47l1.59-3.71,1.6,3.71h-3.19ZM181.03,77.15h1.67l.95-2.24h4.38l.94,2.24h1.72l-4.07-9.33h-1.51l-4.08,9.33ZM169.74,77.31c1.73,0,2.79-.64,3.76-1.64l-1.04-1.06c-.79.74-1.52,1.2-2.66,1.2-1.77,0-3.06-1.48-3.06-3.29v-.03c0-1.81,1.28-3.27,3.06-3.27,1.06,0,1.85.46,2.59,1.15l1.05-1.2c-.89-.85-1.92-1.44-3.63-1.44-2.8,0-4.77,2.15-4.77,4.79v.03c0,2.66,2.01,4.76,4.71,4.76M160.02,77.15h1.63v-9.26h-1.63v9.26ZM152.31,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM139.84,77.15h6.93v-1.45h-5.3v-2.49h4.64v-1.45h-4.64v-2.41h5.24v-1.45h-6.87v9.26ZM128.46,77.15h1.63v-3.9h4.42v3.9h1.62v-9.26h-1.62v3.85h-4.42v-3.85h-1.63v9.26ZM120.84,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM112.21,77.28c1.95,0,3.31-1.03,3.31-2.76v-.03c0-1.54-1.02-2.24-2.98-2.71-1.77-.42-2.2-.74-2.2-1.46v-.03c0-.61.56-1.1,1.51-1.1.85,0,1.68.33,2.51.95l.87-1.23c-.94-.75-2.01-1.16-3.36-1.16-1.84,0-3.16,1.1-3.16,2.68v.03c0,1.71,1.11,2.29,3.08,2.77,1.72.4,2.09.75,2.09,1.42v.03c0,.7-.64,1.17-1.64,1.17-1.15,0-2.04-.44-2.92-1.2l-.98,1.16c1.11.99,2.45,1.48,3.86,1.48M100.91,75.81c-1.84,0-3.15-1.49-3.15-3.29v-.03c0-1.8,1.28-3.27,3.12-3.27s3.15,1.5,3.15,3.3v.03c0,1.8-1.28,3.27-3.12,3.27M100.89,77.31c2.85,0,4.86-2.18,4.86-4.79v-.03c0-2.61-1.98-4.76-4.83-4.76s-4.85,2.18-4.85,4.79v.03c0,2.61,1.98,4.76,4.83,4.76M87.21,72.48v-3.11h2.37c1.2,0,1.92.54,1.92,1.54v.03c0,.94-.74,1.55-1.91,1.55h-2.38ZM85.58,77.15h1.63v-3.23h2.04l2.28,3.23h1.92l-2.5-3.51c1.3-.37,2.21-1.28,2.21-2.8v-.03c0-.81-.28-1.5-.77-2-.6-.58-1.51-.92-2.67-.92h-4.13v9.26ZM77.04,72.7v-3.34h1.89c1.22,0,2,.57,2,1.65v.03c0,.97-.77,1.66-2,1.66h-1.89ZM75.42,77.15h1.63v-2.98h1.84c2.04,0,3.7-1.08,3.7-3.16v-.03c0-1.87-1.36-3.1-3.52-3.1h-3.65v9.26Z"/>
 </svg></div>
-    <button class="ver" id="ver">v0.8 &middot; Jul 30</button>
+    <button class="ver" id="ver">v1.0 &middot; Jul 31</button>
   </div>
-  <div class="htitle">Skill Map</div>
-  <div class="hsub">review how each skill is assigned, change what you would</div>
+  <div class="tabs">
+    <button class="tab on" id="tab-dep">Skill Map</button>
+    <button class="tab" id="tab-emp">Employees</button>
+  </div>
 </header>
 
-<div class="filterbar" id="filters"></div>
-
-<div class="wrap">
-
+<!-- DEPARTMENT VIEW -->
+<div id="view-dep" class="wrap view">
   <div class="card accent">
     <h2>What to do</h2>
     <ol class="steps">
@@ -237,71 +235,48 @@
       <li><b>Change anything you would assign differently.</b> Add or remove a department, fix a description, or leave it if it is right.</li>
       <li>Drop a <b>note</b> on anything that needs explaining.</li>
     </ol>
-    <div class="note">
-      You do <b>not</b> rate people or pick skill levels here. That is a separate review step later.
-      For reference only, skill level will be described in three steps:
-      <div class="lvlrow">
-        <span class="lvlpill">1 Novice</span>
-        <span class="lvlpill">2 Proficient</span>
-        <span class="lvlpill">3 Mastered &middot; can teach it</span>
-      </div>
+    <div class="note">You do <b>not</b> rate people or pick skill levels here. For reference, level will later be described in three steps:
+      <div class="lvlrow"><span class="lvlpill">1 Novice</span><span class="lvlpill">2 Proficient</span><span class="lvlpill">3 Mastered &middot; can teach</span></div>
     </div>
   </div>
-
-  <div class="card">
-    <h2>The departments</h2>
-    <div class="legend" id="legend"></div>
-  </div>
-
+  <div class="card"><h2>The departments</h2><div class="legend" id="dep-legend"></div></div>
   <div class="card">
     <div class="row">
-      <label class="fld">Your name
-        <input type="text" id="who" placeholder="who is filling this out">
-      </label>
-      <label class="fld">Your role (optional)
-        <input type="text" id="role" placeholder="e.g. AFO lead">
-      </label>
+      <label class="fld">Your name<input type="text" id="dep-who" placeholder="who is filling this out"></label>
+      <label class="fld">Your role (optional)<input type="text" id="dep-role" placeholder="e.g. AFO lead"></label>
     </div>
     <div class="row" style="margin-top:11px">
-      <button class="btn" id="expCsv">Export CSV</button>
-      <button class="btn" id="impBtn">Load a file</button>
-      <button class="btn" id="suggest">Restore suggestions</button>
-      <button class="btn ghost" id="clear">Clear all</button>
-      <input type="file" id="impFile" accept="application/json" style="display:none">
+      <button class="btn" id="dep-csv">Export CSV</button>
+      <button class="btn" id="dep-imp">Load a file</button>
+      <button class="btn" id="dep-suggest">Restore suggestions</button>
+      <button class="btn ghost" id="dep-clear">Clear all</button>
+      <input type="file" id="dep-impFile" accept="application/json" style="display:none">
     </div>
   </div>
-
-  <div id="list"></div>
-
-  <div class="foot">
-    Tag departments, describe the skill in each. Levels and people come later.<br>
-    <span class="mot">ACCEPT NO LIMITATIONS.</span> &nbsp;&middot;&nbsp; Yanke Bionics
-  </div>
+  <div id="dep-filters"></div>
+  <div id="dep-list"></div>
+  <div class="foot">Tag departments, describe the skill in each.<br><span class="mot">ACCEPT NO LIMITATIONS.</span> &middot; Yanke Bionics</div>
 </div>
 
-<div class="bottombar">
-  <div class="bbprog">
-    <div class="bbline">Skills tagged &nbsp;<b id="pnum">0</b> <span id="ptot"></span> &nbsp;<span class="save" id="save"></span></div>
-    <div class="track"><div class="fill" id="fill"></div></div>
-  </div>
-  <button class="bbbtn" id="expJson">Send</button>
+<!-- EMPLOYEE VIEW -->
+<div id="view-emp" class="wrap view hidden">
+  <div id="emp-app"></div>
 </div>
 
+<div id="bar-dep" class="bottombar">
+  <div class="bbprog"><div class="bbline">Skills tagged &nbsp;<b id="dep-pnum">0</b> <span id="dep-ptot"></span> &nbsp;<span class="save" id="dep-save"></span></div><div id="dep-track"><div id="dep-fill"></div></div></div>
+  <button class="bbbtn" id="dep-send">Send</button>
+</div>
+<div id="bar-emp" class="bottombar hidden">
+  <div class="bbprog" style="font-size:11.5px;color:var(--muted)"><span id="emp-info"></span> &nbsp;<span class="save" id="emp-save"></span></div>
+  <button class="bbbtn sec" id="emp-csv">CSV</button>
+  <button class="bbbtn" id="emp-json">Export all</button>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
-const VERSION = "v0.8 · Jul 30";
-const SKEY = "labSkillAssign_v8";
-const SECTIONS = [
-  {k:"FO",  name:"Foot Orthotics", col:"#3a7ca5"},
-  {k:"AFO", name:"Ankle-Foot Orthotic", col:"#2f9e8f"},
-  {k:"PROS",name:"Prosthetics", col:"#c9772f"},
-  {k:"DIG", name:"Digital", col:"#4f6d7a", desc:"scanning, CAD, robot carving, printing"},
-  {k:"SUP", name:"Supervisor", col:"#9c3d54", desc:"running the floor and the people"},
-  {k:"ENG", name:"Engineering", col:"#6b7a2a", desc:"R&D, engineering roles", draft:true}
-];
-const COL={}; SECTIONS.forEach(s=>COL[s.k]=s.col);
-
+const SECTIONS=[{k:"FO",name:"Foot Orthotics",col:"#3a7ca5"},{k:"AFO",name:"Ankle-Foot Orthotic",col:"#2f9e8f"},{k:"PROS",name:"Prosthetics",col:"#c9772f"},{k:"DIG",name:"Digital",col:"#4f6d7a",desc:"scanning, CAD, robot carving, printing"},{k:"SUP",name:"Supervisor",col:"#9c3d54",desc:"running the floor and the people"},{k:"ENG",name:"Engineering",col:"#6b7a2a",desc:"R&D, engineering roles",draft:true}];
+const COL={};SECTIONS.forEach(s=>COL[s.k]=s.col);
 const SKILLS = [
   {id:"HT-01",c:"Hand Tools",n:"Hammers & mallets",d:"Striking tools for forming and shaping plastic, leather, and metal.",dd:{"AFO": "Striking tools for forming and shaping plastic, leather, rivets and metal.", "PROS": "Striking tools for forming and shaping plastic, leather, rivets and metal."},s:["AFO", "PROS"]},
   {id:"HT-02",c:"Hand Tools",n:"Utility knives, scalpels, shears",d:"Cutting and trimming plastics, leather, and foam by hand.",s:["FO", "AFO", "PROS"]},
@@ -370,201 +345,101 @@ const SKILLS = [
   {id:"ENG-09",c:"Engineering & R&D",n:"Mechanical design / tolerance analysis",d:"Mechanical design and tolerance work.",s:["ENG"]},
   {id:"ENG-10",c:"Engineering & R&D",n:"Fixture / jig / tooling design",d:"Designing fixtures, jigs, and tooling.",s:["ENG"]}
 ];
+const LEVELS=[[1,"Novice","Nov"],[2,"Proficient","Pro"],[3,"Mastered","Mas"]];
+const LVLNAME={1:"Novice",2:"Proficient",3:"Mastered"};
+const AVCOL=["#3a7ca5","#2f9e8f","#c9772f","#9c3d54","#6b7a2a","#4f6d7a","#8a5a2b","#5a6f8a"];
+const EMPLOYEES=[{id:"amber-w",name:"Amber W."},{id:"jacob-l",name:"Jacob L."},{id:"joseph-m",name:"Joseph M."},{id:"michael-d",name:"Michael D."},{id:"stanley-c",name:"Stanley C."},{id:"corey-f",name:"Corey F."},{id:"jacob-s",name:"Jacob S."},{id:"kyler-b",name:"Kyler B."},{id:"roddye-m",name:"Roddye M."},{id:"gary-m",name:"Gary M."},{id:"james-d",name:"James D."},{id:"mark-k",name:"Mark K."},{id:"ryan-h",name:"Ryan H."},{id:"caleb-e",name:"Caleb E."},{id:"david-a",name:"David A."},{id:"mot-b",name:"Mot B."}];
 
-let state = {};   // state[id] = { DEPT:{desc:""} }
-let notes = {};  // notes[id] = "free text"
-let filter = "ALL";
-let closedCats = {};
+const $=id=>document.getElementById(id);
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),1700);}
+function download(name,text,mime){const b=new Blob([text],{type:mime});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),500);}
+function stamp(){return new Date().toISOString().slice(0,10);}
+function autogrow(ta){ta.style.height="auto";ta.style.height=ta.scrollHeight+"px";}
 
-function load(){
-  try{ const raw=localStorage.getItem(SKEY);
-    if(raw){ const o=JSON.parse(raw); state=o.state||{}; notes=o.notes||{}; closedCats=o.closedCats||{};
-      document.getElementById("who").value=o.who||""; document.getElementById("role").value=o.role||""; }
-  }catch(e){ state={}; notes={}; }
-  if(!Object.keys(state).length) seedDefaults();
-}
-function seedDefaults(){
-  SKILLS.forEach(sk=>{ const st=ensure(sk.id); sk.s.forEach(k=>{ if(!st[k]) st[k]={desc:ddesc(sk,k)}; }); });
-}
-function save(){
-  try{ localStorage.setItem(SKEY, JSON.stringify({state,notes,closedCats,
-    who:document.getElementById("who").value, role:document.getElementById("role").value})); }catch(e){}
-  const s=document.getElementById("save"); s.textContent="saved";
-  clearTimeout(save._t); save._t=setTimeout(()=>s.textContent="",900);
-}
-function ensure(id){ if(!state[id]) state[id]={}; return state[id]; }
-function ddesc(sk,k){ return (sk.dd&&sk.dd[k])||sk.d; }
-function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show");
-  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),1700); }
+/* ---------------- DEPARTMENT MODULE ---------------- */
+const DEP=(function(){
+  const KEY="labSkillAssign_v9";
+  let state={},notes={},filter="ALL";
+  function ddesc(sk,k){return (sk.dd&&sk.dd[k])||sk.d;}
+  function seed(){SKILLS.forEach(sk=>{const st=ens(sk.id);sk.s.forEach(k=>{if(!st[k])st[k]={desc:ddesc(sk,k)};});});}
+  function ens(id){if(!state[id])state[id]={};return state[id];}
+  function load(){try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);state=o.state||{};notes=o.notes||{};$("dep-who").value=o.who||"";$("dep-role").value=o.role||"";}}catch(e){state={};notes={};}if(!Object.keys(state).length)seed();}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify({state,notes,who:$("dep-who").value,role:$("dep-role").value}));}catch(e){}const s=$("dep-save");s.textContent="saved";clearTimeout(save._t);save._t=setTimeout(()=>s.textContent="",900);}
+  function legend(){const L=$("dep-legend");L.innerHTML="";SECTIONS.forEach(s=>{const d=document.createElement("div");d.className="leg";const dot=document.createElement("span");dot.className="dot";dot.style.background=s.col;const b=document.createElement("div");b.innerHTML='<span class="lk">'+s.k+'</span> '+s.name+(s.draft?' (draft)':'')+(s.desc?' <span>'+s.desc+'</span>':'');d.appendChild(dot);d.appendChild(b);L.appendChild(d);});}
+  function filters(){const F=$("dep-filters");F.innerHTML="";[["ALL","All"]].concat(SECTIONS.map(s=>[s.k,s.k])).forEach(([k,lab])=>{const c=document.createElement("div");c.className="fchip"+(filter===k?" on":"");c.textContent=lab;c.onclick=()=>{filter=k;filters();render();};F.appendChild(c);});}
+  function vis(sk){if(filter==="ALL")return true;if(sk.s.includes(filter))return true;const st=state[sk.id];return !!(st&&st[filter]);}
+  function render(){const list=$("dep-list");list.innerHTML="";let cur=null;SKILLS.filter(vis).forEach(sk=>{
+    if(sk.c!==cur){cur=sk.c;const h=document.createElement("div");h.className="cat";h.textContent=sk.c;if(sk.cnote){const f=document.createElement("span");f.className="flag";f.textContent="  "+sk.cnote;h.appendChild(f);}list.appendChild(h);}
+    const card=document.createElement("div");card.className="skill";
+    const head=document.createElement("div");head.className="sk-head";const left=document.createElement("div");
+    const nm=document.createElement("div");nm.className="sk-name";nm.textContent=sk.n;left.appendChild(nm);
+    const de=document.createElement("div");de.className="sk-desc";de.textContent=sk.d;left.appendChild(de);
+    if(sk.note){const nt=document.createElement("div");nt.className="sk-note";nt.textContent=sk.note;left.appendChild(nt);}
+    head.appendChild(left);const all=document.createElement("button");all.className="allbtn";all.textContent="All sections";
+    all.onclick=()=>{const st=ens(sk.id);SECTIONS.forEach(s=>{if(!st[s.k])st[s.k]={desc:ddesc(sk,s.k)};});save();render();};head.appendChild(all);card.appendChild(head);
+    const chips=document.createElement("div");chips.className="chips";
+    SECTIONS.forEach(s=>{const st=ens(sk.id);const chip=document.createElement("div");chip.className="chip"+(st[s.k]?" on":"")+(s.draft?" draft":"");chip.textContent=s.k;if(st[s.k])chip.style.background=s.col;chip.onclick=()=>{if(st[s.k])delete st[s.k];else st[s.k]={desc:ddesc(sk,s.k)};save();render();};chips.appendChild(chip);});
+    card.appendChild(chips);
+    const applied=SECTIONS.filter(s=>ens(sk.id)[s.k]);
+    if(applied.length){const dc=document.createElement("div");dc.className="descs";applied.forEach(s=>{const cell=ens(sk.id)[s.k];const db=document.createElement("div");db.className="db";db.style.borderLeftColor=s.col;const h=document.createElement("div");h.className="dbh";const dk=document.createElement("span");dk.className="dk";dk.textContent=s.k;dk.style.background=s.col;const dn=document.createElement("span");dn.className="dn";dn.textContent="what it looks like in "+s.name;h.appendChild(dk);h.appendChild(dn);db.appendChild(h);const ta=document.createElement("textarea");ta.value=cell.desc||"";ta.oninput=()=>{cell.desc=ta.value;autogrow(ta);save();};db.appendChild(ta);dc.appendChild(db);requestAnimationFrame(()=>autogrow(ta));});card.appendChild(dc);}
+    const nw=document.createElement("div");nw.className="notesbox";const nl=document.createElement("div");nl.className="nlab";nl.textContent="Notes (optional)";const nta=document.createElement("textarea");nta.className="nta";nta.placeholder="Anything else about this skill...";nta.value=notes[sk.id]||"";nta.oninput=()=>{notes[sk.id]=nta.value;autogrow(nta);save();};nw.appendChild(nl);nw.appendChild(nta);card.appendChild(nw);requestAnimationFrame(()=>autogrow(nta));
+    list.appendChild(card);
+  });prog();}
+  function prog(){let done=0;SKILLS.forEach(sk=>{const st=state[sk.id];if(st&&Object.keys(st).length)done++;});$("dep-ptot").textContent="of "+SKILLS.length;$("dep-pnum").textContent=done;$("dep-fill").style.width=Math.round(done/SKILLS.length*100)+"%";}
+  function slug(){return ($("dep-who").value||"anon").replace(/[^a-z0-9]+/gi,"-").toLowerCase();}
+  async function send(){const nm=$("dep-who").value.trim();if(!nm){toast("Add your name first");$("dep-who").focus();return;}const out={tool:"lab-skill-map",version:"v1.0",date:stamp(),respondent:nm,role:$("dep-role").value||"",assignments:state,notes};const text=JSON.stringify(out,null,2);const fn="skill-map_"+slug()+"_"+stamp()+".json";try{const f=new File([text],fn,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Skill map answers"});toast("Thanks, sent.");return;}}catch(e){if(e&&e.name==="AbortError")return;}download(fn,text,"application/json");toast("Saved. Text or email that file back.");}
+  function csv(){const who=$("dep-who").value||"";const rows=[["SkillID","Skill","Category","BaseDescription","Department","DepartmentDescription","Notes","Respondent"]];SKILLS.forEach(sk=>{const st=state[sk.id]||{};const nt=notes[sk.id]||"";const ks=Object.keys(st);if(ks.length)ks.forEach(k=>rows.push([sk.id,sk.n,sk.c,sk.d,k,st[k].desc||"",nt,who]));else if(nt)rows.push([sk.id,sk.n,sk.c,sk.d,"","",nt,who]);});download("skill-map_"+slug()+"_"+stamp()+".csv",rows.map(r=>r.map(x=>{const v=String(x);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",")).join("\n"),"text/csv");}
+  function imp(file){const rd=new FileReader();rd.onload=()=>{try{const o=JSON.parse(rd.result);if(o.assignments){state=o.assignments;if(o.notes)notes=o.notes;if(o.respondent)$("dep-who").value=o.respondent;if(o.role)$("dep-role").value=o.role;save();render();toast("Loaded");}else toast("Not a valid file");}catch(e){toast("Could not read that file");}};rd.readAsText(file);}
+  function suggest(){if(!confirm("Restore my suggested departments and descriptions where missing? Will not erase edits you already made."))return;SKILLS.forEach(sk=>{const st=ens(sk.id);sk.s.forEach(k=>{if(!st[k])st[k]={desc:ddesc(sk,k)};});});save();render();toast("Suggestions restored");}
+  function clear(){if(!confirm("Clear every choice? Cannot be undone."))return;state={};notes={};save();render();toast("Cleared");}
+  function init(){load();legend();filters();$("dep-who").oninput=save;$("dep-role").oninput=save;$("dep-send").onclick=send;$("dep-csv").onclick=csv;$("dep-suggest").onclick=suggest;$("dep-clear").onclick=clear;$("dep-imp").onclick=()=>$("dep-impFile").click();$("dep-impFile").onchange=e=>{if(e.target.files[0])imp(e.target.files[0]);};render();}
+  return {init};
+})();
 
-function buildLegend(){
-  const L=document.getElementById("legend"); L.innerHTML="";
-  SECTIONS.forEach(s=>{
-    const d=document.createElement("div"); d.className="leg";
-    const dot=document.createElement("span"); dot.className="dot"; dot.style.background=s.col;
-    const b=document.createElement("div");
-    b.innerHTML='<span class="lk">'+s.k+'</span> '+s.name+(s.draft?' (draft)':'')+(s.desc?' <span>'+s.desc+'</span>':'');
-    d.appendChild(dot); d.appendChild(b); L.appendChild(d);
-  });
-}
-function buildFilters(){
-  const F=document.getElementById("filters"); F.innerHTML="";
-  [["ALL","All"]].concat(SECTIONS.map(s=>[s.k,s.k])).forEach(([k,lab])=>{
-    const c=document.createElement("div"); c.className="fchip"+(filter===k?" on":""); c.textContent=lab;
-    if(filter===k && k!=="ALL"){ c.style.background=COL[k]; c.style.color="#fff"; c.style.borderColor=COL[k]; }
-    c.onclick=()=>{ filter=k; buildFilters(); render(); };
-    F.appendChild(c);
-  });
-}
-function visible(sk){
-  if(filter==="ALL") return true;
-  if(sk.s.includes(filter)) return true;
-  const st=state[sk.id]; return !!(st && st[filter]);
-}
-function autogrow(ta){ ta.style.height="auto"; ta.style.height=(ta.scrollHeight)+"px"; }
+/* ---------------- EMPLOYEE MODULE ---------------- */
+const EMP=(function(){
+  const KEY="labEmpSkillMap_v1";
+  let A={},current=null,filter="ALL",dutiesOnly=false,closed={};
+  function eData(id){if(!A[id])A[id]={};return A[id];}
+  function initials(nm){const p=nm.split(" ");return (p[0][0]||"")+((p[1]&&p[1][0])||"");}
+  function counts(id){const d=A[id]||{};let r=0,dy=0;for(const k in d){if(d[k].lvl)r++;if(d[k].duty)dy++;}return{rated:r,duty:dy};}
+  function load(){try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);A=o.A||{};closed=o.closed||{};}}catch(e){A={};}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify({A,closed}));}catch(e){}const s=$("emp-save");if(s){s.textContent="saved";clearTimeout(save._t);save._t=setTimeout(()=>s.textContent="",900);}}
+  function render(){current?detail():roster();}
+  function roster(){const app=$("emp-app");app.innerHTML="";const intro=document.createElement("div");intro.className="card";intro.innerHTML='<h2>Pick a person</h2><div class="intro">Tap a card to rate what they can do. For each skill set a level (Novice, Proficient, Mastered) and mark Duty if it is part of their day-to-day job. Someone can be Mastered at a skill that is not a duty, that is bench strength.</div>';app.appendChild(intro);const grid=document.createElement("div");grid.className="roster";EMPLOYEES.forEach((e,i)=>{const c=counts(e.id);const card=document.createElement("div");card.className="ecard";const av=document.createElement("div");av.className="av";av.style.background=AVCOL[i%AVCOL.length];av.textContent=initials(e.name);const nm=document.createElement("div");nm.className="en";nm.textContent=e.name;const meta=document.createElement("div");meta.className="em";meta.textContent=c.rated+" skills · "+c.duty+" duties";const bar=document.createElement("div");bar.className="bar2";const bi=document.createElement("i");bi.style.width=Math.round(c.rated/SKILLS.length*100)+"%";bar.appendChild(bi);card.appendChild(av);card.appendChild(nm);card.appendChild(meta);card.appendChild(bar);card.onclick=()=>{current=e.id;filter="ALL";dutiesOnly=false;window.scrollTo(0,0);render();};grid.appendChild(card);});app.appendChild(grid);$("emp-info").innerHTML="<b>"+EMPLOYEES.length+"</b> people";}
+  function seg(cell){const w=document.createElement("div");w.className="seg";LEVELS.forEach(([val,full,ab])=>{const b=document.createElement("button");b.textContent=ab;b.title=full;if(cell.lvl===val)b.classList.add("lv"+val);b.onclick=()=>{cell.lvl=(cell.lvl===val?0:val);save();render();};w.appendChild(b);});return w;}
+  function detail(){const emp=EMPLOYEES.find(e=>e.id===current);const app=$("emp-app");app.innerHTML="";const c=counts(emp.id);
+    const head=document.createElement("div");head.className="card";const hr=document.createElement("div");hr.className="ehead";const back=document.createElement("button");back.className="back";back.textContent="\u2039 All";back.onclick=()=>{current=null;window.scrollTo(0,0);render();};const av=document.createElement("div");av.className="av";av.style.background=AVCOL[EMPLOYEES.findIndex(e=>e.id===current)%AVCOL.length];av.textContent=initials(emp.name);const nmw=document.createElement("div");nmw.innerHTML='<div class="en">'+emp.name+'</div><div class="prog">'+c.rated+' of '+SKILLS.length+' rated · '+c.duty+' duties</div>';hr.appendChild(back);hr.appendChild(av);hr.appendChild(nmw);head.appendChild(hr);
+    const tb=document.createElement("div");tb.className="toolbar";[["ALL","All"]].concat(SECTIONS.map(s=>[s.k,s.k])).forEach(([k,lab])=>{const ch=document.createElement("div");ch.className="fchip"+(filter===k?" on":"");ch.textContent=lab;if(filter===k&&k!=="ALL"){ch.style.background=COL[k];ch.style.borderColor=COL[k];ch.style.color="#fff";}ch.onclick=()=>{filter=k;render();};tb.appendChild(ch);});const dt=document.createElement("div");dt.className="dutytog";dt.innerHTML='<span>Duties only</span>';const sw=document.createElement("div");sw.className="switch"+(dutiesOnly?" on":"");sw.innerHTML='<div class="knob"></div>';sw.onclick=()=>{dutiesOnly=!dutiesOnly;render();};dt.appendChild(sw);tb.appendChild(dt);head.appendChild(tb);app.appendChild(head);
+    const data=eData(emp.id);function vis(sk){if(dutiesOnly&&!(data[sk.id]&&data[sk.id].duty))return false;if(filter==="ALL")return true;return sk.s.includes(filter);}
+    const list=document.createElement("div");const cats=[];SKILLS.filter(vis).forEach(sk=>{if(!cats.find(x=>x.name===sk.c))cats.push({name:sk.c,items:[]});});SKILLS.filter(vis).forEach(sk=>{cats.find(x=>x.name===sk.c).items.push(sk);});
+    if(!cats.length){const e=document.createElement("div");e.className="card intro";e.textContent="No skills match this view.";list.appendChild(e);}
+    cats.forEach(cat=>{const ch=document.createElement("div");ch.className="cat"+(closed[cat.name]?" closed":"");ch.innerHTML='<span>'+cat.name+'</span><span class="chev">\u25BC</span>';const body=document.createElement("div");body.className="catbody";ch.onclick=()=>{closed[cat.name]=!closed[cat.name];save();ch.classList.toggle("closed");body.style.maxHeight=closed[cat.name]?"0px":body.scrollHeight+"px";};list.appendChild(ch);
+      cat.items.forEach(sk=>{const cell=data[sk.id]||(data[sk.id]={lvl:0,duty:false});const row=document.createElement("div");row.className="erow";const nm=document.createElement("div");nm.className="ername";const nt=document.createElement("span");nt.textContent=sk.n;nm.appendChild(nt);const tags=document.createElement("span");tags.className="tags";sk.s.forEach(k=>{const t=document.createElement("span");t.className="tg";t.style.background=COL[k]||"#ccc";t.title=k;tags.appendChild(t);});nm.appendChild(tags);const desc=document.createElement("div");desc.className="edesc";desc.textContent=sk.d;nm.onclick=()=>desc.classList.toggle("show");row.appendChild(nm);row.appendChild(desc);const ctr=document.createElement("div");ctr.className="ctrls";ctr.appendChild(seg(cell));const duty=document.createElement("button");duty.className="duty"+(cell.duty?" on":"");duty.textContent=cell.duty?"\u2713 Duty":"Duty";duty.onclick=()=>{cell.duty=!cell.duty;save();render();};ctr.appendChild(duty);row.appendChild(ctr);body.appendChild(row);});
+      list.appendChild(body);requestAnimationFrame(()=>{body.style.maxHeight=closed[cat.name]?"0px":body.scrollHeight+"px";});});
+    app.appendChild(list);$("emp-info").innerHTML="<b>"+c.rated+"</b> rated &middot; <b>"+c.duty+"</b> duties";}
+  function json(){const out={tool:"lab-employee-skillmap",version:"v1.0",date:stamp(),employees:EMPLOYEES,skills:SKILLS.map(s=>({id:s.id,n:s.n,c:s.c})),assessments:A};download("employee-skillmap_"+stamp()+".json",JSON.stringify(out,null,2),"application/json");toast("Exported the whole lab");}
+  function csv(){const rows=[["Employee","SkillID","Skill","Category","Departments","Level","LevelName","IsDuty"]];EMPLOYEES.forEach(e=>{const d=A[e.id]||{};SKILLS.forEach(sk=>{const c=d[sk.id];if(c&&(c.lvl||c.duty))rows.push([e.name,sk.id,sk.n,sk.c,sk.s.join("|"),c.lvl||"",LVLNAME[c.lvl]||"",c.duty?"yes":""]);});});download("employee-skillmap_"+stamp()+".csv",rows.map(r=>r.map(x=>{const v=String(x);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",")).join("\n"),"text/csv");toast("Exported CSV");}
+  function init(){load();$("emp-json").onclick=json;$("emp-csv").onclick=csv;}
+  return {init,render};
+})();
 
-function render(){
-  const list=document.getElementById("list"); list.innerHTML="";
-  const cats=[];
-  SKILLS.filter(visible).forEach(sk=>{ if(!cats.find(c=>c.name===sk.c)) cats.push({name:sk.c,cnote:sk.cnote,items:[]}); });
-  SKILLS.filter(visible).forEach(sk=>{ cats.find(c=>c.name===sk.c).items.push(sk); });
-
-  cats.forEach(cat=>{
-    const wrap=document.createElement("div"); wrap.className="catwrap";
-    const head=document.createElement("div"); head.className="cathead"+(closedCats[cat.name]?" closed":"");
-    const left=document.createElement("div"); left.className="ct"; left.textContent=cat.name;
-    const meta=document.createElement("div"); meta.className="cmeta";
-    if(cat.cnote){ const f=document.createElement("span"); f.className="catflag"; f.textContent=cat.cnote; meta.appendChild(f); }
-    const cnt=document.createElement("span"); cnt.textContent=cat.items.length; meta.appendChild(cnt);
-    const chev=document.createElement("span"); chev.className="chev"; chev.textContent="\u25BC"; meta.appendChild(chev);
-    head.appendChild(left); head.appendChild(meta);
-    const body=document.createElement("div"); body.className="catbody";
-    head.onclick=()=>{ closedCats[cat.name]=!closedCats[cat.name]; save();
-      head.classList.toggle("closed"); body.style.maxHeight=closedCats[cat.name]?"0px":body.scrollHeight+"px"; };
-    wrap.appendChild(head);
-
-    cat.items.forEach(sk=>{
-      const card=document.createElement("div"); card.className="skill";
-      const nm=document.createElement("div"); nm.className="sk-name"; nm.textContent=sk.n; card.appendChild(nm);
-      const de=document.createElement("div"); de.className="sk-desc"; de.textContent=sk.d; card.appendChild(de);
-      if(sk.note){ const nt=document.createElement("div"); nt.className="sk-note"; nt.textContent=sk.note; card.appendChild(nt); }
-
-      const chips=document.createElement("div"); chips.className="chips";
-      SECTIONS.forEach(s=>{
-        const st=ensure(sk.id);
-        const chip=document.createElement("div"); chip.className="chip"+(st[s.k]?" on":"")+(s.draft?" draft":"");
-        chip.textContent=s.k;
-        if(st[s.k]) chip.style.background=s.col;
-        chip.onclick=()=>{ if(st[s.k]) delete st[s.k]; else st[s.k]={desc:ddesc(sk,s.k)}; save(); render(); };
-        chips.appendChild(chip);
-      });
-      card.appendChild(chips);
-
-      const applied=SECTIONS.filter(s=>ensure(sk.id)[s.k]);
-      if(applied.length){
-        const dc=document.createElement("div"); dc.className="descs";
-        applied.forEach(s=>{
-          const cell=ensure(sk.id)[s.k];
-          const db=document.createElement("div"); db.className="db"; db.style.borderLeftColor=s.col;
-          const h=document.createElement("div"); h.className="dbh";
-          const dk=document.createElement("span"); dk.className="dk"; dk.textContent=s.k; dk.style.background=s.col;
-          const dn=document.createElement("span"); dn.className="dn"; dn.textContent="what it looks like in "+s.name;
-          h.appendChild(dk); h.appendChild(dn); db.appendChild(h);
-          const ta=document.createElement("textarea");
-          ta.placeholder="How is this skill used in "+s.k+"? What does good look like here?";
-          ta.value=cell.desc||"";
-          ta.oninput=()=>{ cell.desc=ta.value; autogrow(ta); save(); };
-          db.appendChild(ta); dc.appendChild(db);
-          requestAnimationFrame(()=>autogrow(ta));
-        });
-        card.appendChild(dc);
-      }
-      const notesWrap=document.createElement("div"); notesWrap.className="notesbox";
-      const nl=document.createElement("div"); nl.className="nlab"; nl.textContent="Notes (optional)";
-      const nta=document.createElement("textarea"); nta.className="nta"; nta.placeholder="Anything else about this skill...";
-      nta.value=notes[sk.id]||"";
-      nta.oninput=()=>{ notes[sk.id]=nta.value; autogrow(nta); save(); };
-      notesWrap.appendChild(nl); notesWrap.appendChild(nta); card.appendChild(notesWrap);
-      requestAnimationFrame(()=>autogrow(nta));
-      body.appendChild(card);
-    });
-    wrap.appendChild(body);
-    list.appendChild(wrap);
-    requestAnimationFrame(()=>{ body.style.maxHeight=closedCats[cat.name]?"0px":body.scrollHeight+"px"; });
-  });
-  updateProg();
+/* ---------------- TABS + GATE ---------------- */
+let empReady=false;
+function showTab(t){
+  const dep=t==="dep";
+  $("view-dep").classList.toggle("hidden",!dep);$("view-emp").classList.toggle("hidden",dep);
+  $("bar-dep").classList.toggle("hidden",!dep);$("bar-emp").classList.toggle("hidden",dep);
+  $("tab-dep").classList.toggle("on",dep);$("tab-emp").classList.toggle("on",!dep);
+  if(!dep){ if(!empReady){EMP.init();empReady=true;} EMP.render(); }
+  window.scrollTo(0,0);
 }
-function updateProg(){
-  let done=0;
-  SKILLS.forEach(sk=>{ const st=state[sk.id]; if(st && Object.keys(st).length) done++; });
-  const total=SKILLS.length;
-  const pnum=document.getElementById("pnum"), fill=document.getElementById("fill");
-  document.getElementById("ptot").textContent="of "+total;
-  if(pnum.textContent!==String(done)){ pnum.classList.add("bump"); setTimeout(()=>pnum.classList.remove("bump"),200); }
-  pnum.textContent=done;
-  fill.style.width=Math.round(done/total*100)+"%";
-  if(done===total && total>0){ if(!fill.classList.contains("done")){ fill.classList.add("done"); toast("Every skill tagged. Nice."); } }
-  else fill.classList.remove("done");
-}
+$("tab-dep").onclick=()=>showTab("dep");
+$("tab-emp").onclick=()=>showTab("emp");
+$("ver").onclick=()=>toast("v1.0 · Jul 31");
 
-function download(name,text,mime){ const b=new Blob([text],{type:mime}); const u=URL.createObjectURL(b);
-  const a=document.createElement("a"); a.href=u; a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(u),500); }
-function stamp(){ return new Date().toISOString().slice(0,10); }
-function whoSlug(){ return (document.getElementById("who").value||"anon").replace(/[^a-z0-9]+/gi,"-").toLowerCase(); }
-
-async function expJson(){
-  const nm=document.getElementById("who").value.trim();
-  if(!nm){ toast("Add your name first"); document.getElementById("who").focus(); return; }
-  const out={tool:"lab-skill-map",version:VERSION,date:stamp(),
-    respondent:nm,role:document.getElementById("role").value||"",assignments:state,notes:notes};
-  const text=JSON.stringify(out,null,2);
-  const fname="skill-map_"+whoSlug()+"_"+stamp()+".json";
-  try{
-    const file=new File([text],fname,{type:"application/json"});
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({files:[file],title:"Skill map answers"});
-      toast("Thanks, sent."); return;
-    }
-  }catch(e){ if(e&&e.name==="AbortError") return; }
-  download(fname,text,"application/json");
-  toast("Saved to your phone. Text or email that file back.");
-}
-function expCsv(){
-  if(!document.getElementById("who").value.trim()){ toast("Add your name first"); document.getElementById("who").focus(); return; }
-  const who=document.getElementById("who").value||"";
-  const rows=[["SkillID","Skill","Category","BaseDescription","Department","DepartmentDescription","Notes","Respondent"]];
-  SKILLS.forEach(sk=>{ const st=state[sk.id]||{}; const nt=notes[sk.id]||""; const ks=Object.keys(st);
-    if(ks.length) ks.forEach(k=>rows.push([sk.id,sk.n,sk.c,sk.d,k,st[k].desc||"",nt,who]));
-    else if(nt) rows.push([sk.id,sk.n,sk.c,sk.d,"","",nt,who]); });
-  const csv=rows.map(r=>r.map(x=>{const v=String(x);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",")).join("\n");
-  download("skill-map_"+whoSlug()+"_"+stamp()+".csv", csv,"text/csv");
-}
-function importFile(file){ const rd=new FileReader();
-  rd.onload=()=>{ try{ const o=JSON.parse(rd.result);
-    if(o.assignments){ state=o.assignments; if(o.notes) notes=o.notes;
-      if(o.respondent) document.getElementById("who").value=o.respondent;
-      if(o.role) document.getElementById("role").value=o.role;
-      save(); render(); toast("Loaded"); } else toast("Not a valid file");
-  }catch(e){ toast("Could not read that file"); } };
-  rd.readAsText(file); }
-function loadSuggest(){
-  if(!confirm("Restore my suggested departments and descriptions where missing? Will not erase edits you already made.")) return;
-  SKILLS.forEach(sk=>{ const st=ensure(sk.id); sk.s.forEach(k=>{ if(!st[k]) st[k]={desc:ddesc(sk,k)}; }); });
-  save(); render(); toast("Suggestions restored");
-}
-function clearAll(){ if(!confirm("Clear every choice? Cannot be undone.")) return; state={}; notes={}; save(); render(); toast("Cleared"); }
-
-load(); buildLegend(); buildFilters();
-document.getElementById("ver").onclick=()=>toast(VERSION);
-document.getElementById("who").oninput=save;
-document.getElementById("role").oninput=save;
-document.getElementById("expJson").onclick=expJson;
-document.getElementById("expCsv").onclick=expCsv;
-document.getElementById("suggest").onclick=loadSuggest;
-document.getElementById("clear").onclick=clearAll;
-document.getElementById("impBtn").onclick=()=>document.getElementById("impFile").click();
-document.getElementById("impFile").onchange=e=>{ if(e.target.files[0]) importFile(e.target.files[0]); };
-render();
+DEP.init();
+showTab("dep");
 </script>
 </body>
 </html>
