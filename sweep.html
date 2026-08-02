@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="build" content="v1.0 · Aug 2 2026">
+<meta name="theme-color" content="#14161a">
+<title>Sweep · project triage</title>
+<style>
+:root{
+  --bg:#14161a; --panel:#1d2026; --panel2:#242830; --line:#33383f;
+  --ink:#e9e7e1; --dim:#9aa0a8; --faint:#6a7078;
+  --now:#ffb545; --next:#5fd0a8; --later:#6ea8e0; --someday:#a08de0;
+  --parked:#8a919b; --cut:#e06a5f; --done:#7a8f6a; --unsorted:#d8d4cc;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0; padding:0; background:var(--bg); color:var(--ink);
+  font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; min-height:100%;}
+body{padding-bottom:70px}
+button{font:inherit; color:inherit; background:none; border:none; cursor:pointer}
+textarea,input{font:inherit; color:var(--ink); background:var(--panel2);
+  border:1px solid var(--line); border-radius:10px; padding:10px 12px; width:100%}
+textarea:focus,input:focus{outline:2px solid var(--later); border-color:transparent}
+
+header{padding:16px 16px 8px; display:flex; align-items:baseline; gap:10px}
+header h1{margin:0; font-size:22px; letter-spacing:.06em; font-weight:800}
+header .sub{color:var(--faint); font-size:13px}
+#storageBanner{display:none; margin:0 12px 8px; padding:10px 12px; border-radius:10px;
+  background:#4a1f1c; color:#ffd9d4; border:1px solid #8a3a34; font-size:14px}
+#storageBanner.show{display:block}
+
+nav{position:fixed; left:0; right:0; bottom:0; display:flex; background:var(--panel);
+  border-top:1px solid var(--line); padding-bottom:env(safe-area-inset-bottom); z-index:40}
+nav button{flex:1; padding:13px 0 11px; color:var(--dim); font-weight:700; font-size:14px;
+  letter-spacing:.08em; border-top:3px solid transparent}
+nav button.on{color:var(--ink); border-top-color:var(--now)}
+
+.view{display:none; padding:4px 12px 24px}
+.view.on{display:block}
+
+/* SORT */
+#sortIntro{background:var(--panel); border:1px solid var(--line); border-radius:14px;
+  padding:14px; margin-bottom:12px; font-size:14.5px; color:var(--dim)}
+#sortIntro b{color:var(--ink)}
+#sortIntro button{margin-top:8px; color:var(--later); font-weight:700; padding:4px 0}
+#sortCount{color:var(--faint); font-size:13px; margin:2px 4px 10px; letter-spacing:.05em}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px}
+.card h2{margin:0 0 4px; font-size:20px}
+.card .desc{color:var(--dim); font-size:14.5px; margin:0 0 14px}
+.lbl{font-size:12px; letter-spacing:.12em; color:var(--faint); font-weight:700; margin:12px 0 6px}
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chip{padding:8px 13px; border-radius:999px; border:1.5px solid var(--line);
+  font-size:14px; font-weight:600; color:var(--dim)}
+.chip.on{color:#14161a; border-color:transparent}
+.buckets{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:6px}
+.bk{padding:13px 8px; border-radius:12px; border:1.5px solid var(--line); font-weight:800;
+  font-size:15px; letter-spacing:.04em; color:var(--dim); text-align:center}
+.bk small{display:block; font-weight:500; font-size:11.5px; letter-spacing:.02em; margin-top:2px; color:var(--faint)}
+.bk:active{transform:scale(.97)}
+.rowBtns{display:flex; gap:8px; margin-top:14px}
+.ghost{flex:1; padding:11px; border-radius:12px; border:1px solid var(--line); color:var(--dim); font-weight:700}
+#sortDone{display:none; text-align:center; padding:40px 16px; color:var(--dim)}
+#sortDone .big{font-size:44px; margin-bottom:8px}
+
+/* BOARD */
+#zoneFilter{display:flex; gap:8px; overflow-x:auto; padding:4px 2px 12px}
+#zoneFilter .chip{flex:0 0 auto}
+.section{margin-bottom:14px}
+.section h3{margin:0 0 6px; font-size:13px; letter-spacing:.12em; font-weight:800; display:flex; align-items:center; gap:8px}
+.section h3 .n{color:var(--faint); font-weight:600}
+.rows{display:flex; flex-direction:column; gap:6px}
+.row{display:flex; align-items:center; gap:10px; background:var(--panel);
+  border:1px solid var(--line); border-radius:12px; padding:11px 12px; text-align:left; width:100%}
+.row .dot{width:10px; height:10px; border-radius:50%; flex:0 0 auto}
+.row .nm{flex:1; font-weight:600; font-size:15px}
+.row .nm small{display:block; color:var(--faint); font-weight:500; font-size:12.5px}
+.row .ord{display:flex; flex-direction:column; gap:2px}
+.row .ord button{padding:2px 8px; color:var(--faint); font-size:13px; border:1px solid var(--line); border-radius:7px}
+.empty{color:var(--faint); font-size:13.5px; padding:4px 2px}
+
+/* TALLY */
+.tallyBox{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:12px}
+.tallyBox h3{margin:0 0 10px; font-size:13px; letter-spacing:.12em; color:var(--faint)}
+.bigNum{font-size:34px; font-weight:800; font-variant-numeric:tabular-nums}
+.bigNum small{font-size:14px; color:var(--dim); font-weight:600; margin-left:6px}
+.bar{display:flex; height:14px; border-radius:7px; overflow:hidden; margin:10px 0 6px; background:var(--panel2)}
+.legend{display:flex; flex-wrap:wrap; gap:10px; font-size:13px; color:var(--dim)}
+.legend span{display:flex; align-items:center; gap:5px}
+.legend i{width:9px; height:9px; border-radius:50%; display:inline-block}
+.act{display:block; width:100%; padding:13px; border-radius:12px; border:1px solid var(--line);
+  background:var(--panel); font-weight:700; font-size:15px; margin-bottom:8px; text-align:center}
+.act.primary{background:var(--now); color:#14161a; border-color:transparent}
+#fileIn{display:none}
+.mini{font-size:12.5px; color:var(--faint); margin:4px 2px 14px}
+
+/* SHEET */
+#veil{display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:50}
+#veil.show{display:block}
+#sheet{position:fixed; left:0; right:0; bottom:-110%; background:var(--panel);
+  border-radius:18px 18px 0 0; border-top:1px solid var(--line); padding:16px 16px calc(16px + env(safe-area-inset-bottom));
+  z-index:60; transition:bottom .22s ease; max-height:88vh; overflow-y:auto}
+#sheet.show{bottom:0}
+#sheet .grab{width:44px; height:4px; border-radius:2px; background:var(--line); margin:0 auto 12px}
+#shDelete{color:var(--cut); font-weight:700; padding:10px 0; margin-top:6px}
+#toast{position:fixed; left:50%; transform:translateX(-50%); bottom:76px; background:#000;
+  color:#fff; padding:9px 16px; border-radius:999px; font-size:14px; opacity:0; transition:opacity .2s; z-index:70; pointer-events:none}
+#toast.show{opacity:.92}
+footer{color:var(--faint); font-size:12px; text-align:center; padding:18px 0 8px}
+@media (prefers-reduced-motion:reduce){ #sheet{transition:none} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SWEEP</h1>
+  <div class="sub">every project, one pass, cleaned up</div>
+</header>
+<div id="storageBanner">Storage is not persisting on this open (Downloads / file view). Your sorting can be lost. Use Save draft on the Tally tab, or open from the https link.</div>
+
+<!-- SORT -->
+<div class="view on" id="v-sort">
+  <div id="sortIntro">
+    <b>How this works:</b> every project and thread is preloaded below, one card at a time.
+    For each one: confirm the <b>zone</b>, then tap a <b>bucket</b>. Cut means it is out of consideration.
+    Skip anything you are not sure about. Nothing is deleted, only sorted. Edit later on the Board.
+    <button id="introHide" type="button">Got it, hide this</button>
+  </div>
+  <div id="sortCount"></div>
+  <div class="card" id="sortCard">
+    <h2 id="scName"></h2>
+    <p class="desc" id="scDesc"></p>
+    <div class="lbl">ZONE</div>
+    <div class="chips" id="scZones"></div>
+    <div class="lbl">BUCKET</div>
+    <div class="buckets" id="scBuckets"></div>
+    <div class="lbl">NOTE (optional)</div>
+    <textarea id="scNote" rows="2" placeholder="why, blockers, who is waiting..."></textarea>
+    <div class="rowBtns">
+      <button class="ghost" id="scSkip" type="button">Skip for now</button>
+    </div>
+  </div>
+  <div id="sortDone">
+    <div class="big">✦</div>
+    <div><b>Every card is sorted.</b><br>The Board shows the cleaned-up picture. Tally has the numbers and the export.</div>
+  </div>
+</div>
+
+<!-- BOARD -->
+<div class="view" id="v-board">
+  <div id="zoneFilter"></div>
+  <div id="boardSections"></div>
+</div>
+
+<!-- TALLY -->
+<div class="view" id="v-tally">
+  <div class="tallyBox">
+    <h3>LOAD</h3>
+    <div class="bigNum" id="tActive"></div>
+    <div class="mini" id="tActiveSub"></div>
+    <div class="bar" id="tBar"></div>
+    <div class="legend" id="tLegend"></div>
+  </div>
+  <div class="tallyBox">
+    <h3>BY ZONE (still in play)</h3>
+    <div class="legend" id="tZones" style="flex-direction:column; align-items:flex-start; gap:6px"></div>
+  </div>
+  <button class="act primary" id="btnExportMd" type="button">Export sorted list (.md for Claude)</button>
+  <button class="act" id="btnCopyMd" type="button">Copy sorted list to clipboard</button>
+  <button class="act" id="btnSave" type="button">Save draft (.json backup)</button>
+  <button class="act" id="btnLoad" type="button">Load draft / import</button>
+  <input type="file" id="fileIn" accept=".json,application/json">
+  <button class="act" id="btnAdd" type="button">+ Add a project</button>
+  <div class="mini" id="storageStatus"></div>
+</div>
+
+<nav>
+  <button data-v="sort" class="on" type="button">SORT</button>
+  <button data-v="board" type="button">BOARD</button>
+  <button data-v="tally" type="button">TALLY</button>
+</nav>
+
+<div id="veil"></div>
+<div id="sheet">
+  <div class="grab"></div>
+  <div class="lbl">NAME</div>
+  <input id="shName" type="text">
+  <div class="lbl">DESCRIPTION</div>
+  <input id="shDesc" type="text">
+  <div class="lbl">ZONE</div>
+  <div class="chips" id="shZones"></div>
+  <div class="lbl">BUCKET</div>
+  <div class="chips" id="shBuckets"></div>
+  <div class="lbl">NOTE</div>
+  <textarea id="shNote" rows="2"></textarea>
+  <div class="rowBtns">
+    <button class="ghost" id="shClose" type="button">Done</button>
+  </div>
+  <button id="shDelete" type="button">Remove from list entirely</button>
+</div>
+<div id="toast"></div>
+<footer><span id="verBadge"></span></footer>
+
+<script>
+"use strict";
+/* ============ constants ============ */
+var ZONES=[
+  {id:"yanke",  n:"Yanke",       c:"#3aa7a0"},
+  {id:"family", n:"Family",      c:"#e0a83c"},
+  {id:"friends",n:"Friends",     c:"#c07ae0"},
+  {id:"client", n:"Client/Side", c:"#e07a5f"},
+  {id:"self",   n:"Self",        c:"#6ea8e0"},
+  {id:"ip",     n:"Creative IP", c:"#8fd06a"}
+];
+var BUCKETS=[
+  {id:"now",     n:"NOW",     hint:"actively working",       c:"#ffb545"},
+  {id:"next",    n:"NEXT",    hint:"queued right behind",    c:"#5fd0a8"},
+  {id:"later",   n:"LATER",   hint:"real, not soon",         c:"#6ea8e0"},
+  {id:"someday", n:"SOMEDAY", hint:"keep the idea",          c:"#a08de0"},
+  {id:"parked",  n:"PARKED",  hint:"waiting on something",   c:"#8a919b"},
+  {id:"cut",     n:"CUT",     hint:"out of consideration",   c:"#e06a5f"},
+  {id:"done",    n:"DONE",    hint:"shipped / concluded",    c:"#7a8f6a"}
+];
+var BOARD_ORDER=["now","next","later","someday","parked","unsorted","done","cut"];
+function bucketMeta(id){ if(id==="unsorted") return {id:"unsorted",n:"UNSORTED",c:"#d8d4cc"};
+  for(var i=0;i<BUCKETS.length;i++) if(BUCKETS[i].id===id) return BUCKETS[i]; return BUCKETS[0]; }
+function zoneMeta(id){ for(var i=0;i<ZONES.length;i++) if(ZONES[i].id===id) return ZONES[i]; return ZONES[4]; }
+
+/* ============ seed data ============ */
+function seed(){
+  var s=[
+    ["CFab Marketing System","B2B marketing for central fabrication","yanke","unsorted"],
+    ["Roger LinkedIn Pivot","Clinical-authority content strategy, worksheet out to Roger","yanke","unsorted"],
+    ["CCA Lab Screens","Susan's values campaign signage","yanke","unsorted"],
+    ["Lab Skills Matrix","Fab lab job-level career path tool","yanke","unsorted"],
+    ["AFO Trimline Reference","Trim-line illustration base art","yanke","unsorted"],
+    ["Reframe","Clinician plain-language editor","yanke","unsorted"],
+    ["Forklift Training Sim","Tow motor cert-prep PWA","yanke","unsorted"],
+    ["Yanke Social Kit","Standing hook library and platform specs","yanke","unsorted"],
+    ["Patient Voice Rules","Standing patient-facing voice rules","yanke","unsorted"],
+    ["28x28 Campaign","SEBCM July mobility challenge, concluded","yanke","done"],
+    ["Game Shelf","Flagship family game collection PWA","family","unsorted"],
+    ["Shelf Profiles","People and relationship system expansion","family","unsorted"],
+    ["BeatForge / Noodle","Beat-making trainer, perf fix blocked, rename queued","family","unsorted"],
+    ["Pigment","Color lab explorer","family","unsorted"],
+    ["Jigsaw","Photo jigsaw toy on the shelf","family","unsorted"],
+    ["Puff Kart","Mode-7 kart racer capability spike","family","unsorted"],
+    ["Bot Lab","AI creature life-sim sandbox","family","unsorted"],
+    ["Star Stuff","Space merge game, portal candidate","family","unsorted"],
+    ["AstroMerge Realms","Merge plus strategy space critters","family","unsorted"],
+    ["Cozy Critter Garden","Merge game for grandma","family","unsorted"],
+    ["Buzz → Rock Paper Scissors","Firebase learning build, successful, evolving into RPS","family","unsorted"],
+    ["Nova / Ziggy","AI buddy app for Garrett","family","unsorted"],
+    ["Party RPG","Phones-as-character-sheets group adventure","friends","unsorted"],
+    ["Crop Circle ARG","Joe's conspiracy rabbit-hole app","friends","unsorted"],
+    ["Joke of the Day","Coworker joke group app","friends","unsorted"],
+    ["Dead Drop","Small-group spy mystery","friends","unsorted"],
+    ["Brew Deck","Homebrew learning PWA for the brew club","friends","unsorted"],
+    ["Civic Compass","Civic info gift for aunt","friends","unsorted"],
+    ["Golem / Shem","WebGL2 sculpting tool for Michael","friends","unsorted"],
+    ["Nails by Lily","Portfolio and booking site handoff build","client","unsorted"],
+    ["Kestrel / Side Hustle","Small-biz site gigs and lead tracker","client","unsorted"],
+    ["AI Consulting","Exploratory paid-work track","client","unsorted"],
+    ["Game Portals","CrazyGames and Poki submissions","client","unsorted"],
+    ["The Closet","Portfolio website","self","unsorted"],
+    ["Weft","Self-tracker PWA and woven identity","self","unsorted"],
+    ["Mot OS / Slate & Steel","Personal operating system app","self","unsorted"],
+    ["The Bench","Growth system and dashboard","self","unsorted"],
+    ["Spectra","Synesthesia investigation","self","unsorted"],
+    ["RoughCut","Phone-first video editor","self","unsorted"],
+    ["Decision Decks","Scenario reflection decks","self","unsorted"],
+    ["Decision Engine","One-question-at-a-time decision tool","self","unsorted"],
+    ["Curiosity Tools","Question-driven explainers (pitching etc.)","self","unsorted"],
+    ["Job Search","Two-track search thread","self","unsorted"],
+    ["Astro-Wolf","Illustrated chapter book IP","ip","unsorted"],
+    ["Threshold Delivery","Urban fantasy thriller IP","ip","unsorted"]
+  ];
+  var out=[];
+  for(var i=0;i<s.length;i++){
+    out.push({id:"p"+i, name:s[i][0], desc:s[i][1], zone:s[i][2], bucket:s[i][3], note:"", ord:i});
+  }
+  return out;
+}
+
+/* ============ storage ============ */
+var KEY="sweep_v1";
+var mem=null, storageOK=false;
+function probeStorage(){
+  try{
+    var t="__sweep_probe__";
+    localStorage.setItem(t,"1");
+    var ok=localStorage.getItem(t)==="1";
+    localStorage.removeItem(t);
+    storageOK=ok;
+  }catch(e){ storageOK=false; }
+  var risky=!storageOK || location.protocol==="file:" || location.protocol==="content:";
+  if(risky) document.getElementById("storageBanner").classList.add("show");
+  var st=document.getElementById("storageStatus");
+  st.textContent = storageOK ? "Storage: OK ("+location.protocol+"//)" :
+    "Storage: NOT persisting. Use Save draft.";
+}
+function load(){
+  if(storageOK){
+    try{
+      var raw=localStorage.getItem(KEY);
+      if(raw){ var d=JSON.parse(raw); if(d && d.projects) return d; }
+    }catch(e){}
+  }
+  return mem || {v:1, projects:seed(), introHidden:false};
+}
+function save(){
+  mem=DATA;
+  if(storageOK){
+    try{ localStorage.setItem(KEY, JSON.stringify(DATA)); }catch(e){}
+  }
+}
+var DATA=null;
+
+/* ============ helpers ============ */
+function byId(id){ return document.getElementById(id); }
+function toast(msg){
+  var t=byId("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(function(){ t.classList.remove("show"); },1600);
+}
+function proj(id){ for(var i=0;i<DATA.projects.length;i++) if(DATA.projects[i].id===id) return DATA.projects[i]; return null; }
+function inPlay(p){ return p.bucket!=="cut" && p.bucket!=="done"; }
+function fmtDate(){ var d=new Date(); return d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}); }
+
+/* ============ SORT view ============ */
+var sortId=null, skipped={};
+function nextUnsorted(){
+  for(var i=0;i<DATA.projects.length;i++){
+    var p=DATA.projects[i];
+    if(p.bucket==="unsorted" && !skipped[p.id]) return p;
+  }
+  for(var j=0;j<DATA.projects.length;j++){
+    var q=DATA.projects[j];
+    if(q.bucket==="unsorted") return q;   /* second lap through skips */
+  }
+  return null;
+}
+function renderSort(){
+  byId("sortIntro").style.display = DATA.introHidden ? "none" : "block";
+  var remaining=0;
+  for(var i=0;i<DATA.projects.length;i++) if(DATA.projects[i].bucket==="unsorted") remaining++;
+  byId("sortCount").textContent = remaining>0 ? remaining+" to sort" : "";
+  var p=nextUnsorted();
+  if(!p){
+    byId("sortCard").style.display="none";
+    byId("sortDone").style.display="block";
+    sortId=null;
+    return;
+  }
+  byId("sortCard").style.display="block";
+  byId("sortDone").style.display="none";
+  sortId=p.id;
+  byId("scName").textContent=p.name;
+  byId("scDesc").textContent=p.desc;
+  byId("scNote").value=p.note||"";
+  /* zone chips */
+  var zc=byId("scZones"); zc.textContent="";
+  ZONES.forEach(function(z){
+    var b=document.createElement("button");
+    b.type="button"; b.className="chip"+(p.zone===z.id?" on":""); b.textContent=z.n;
+    if(p.zone===z.id) b.style.background=z.c;
+    b.addEventListener("click",function(){ p.zone=z.id; save(); renderSort(); });
+    zc.appendChild(b);
+  });
+  /* bucket buttons */
+  var bc=byId("scBuckets"); bc.textContent="";
+  BUCKETS.forEach(function(bk){
+    var b=document.createElement("button");
+    b.type="button"; b.className="bk";
+    b.innerHTML="<span>"+bk.n+"</span><small>"+bk.hint+"</small>";
+    b.style.borderColor=bk.c; b.style.color=bk.c;
+    b.addEventListener("click",function(){
+      p.note=byId("scNote").value;
+      p.bucket=bk.id; save(); toast(p.name+" → "+bk.n);
+      renderSort(); renderBoard(); renderTally();
+    });
+    bc.appendChild(b);
+  });
+}
+byId("scSkip").addEventListener("click",function(){
+  if(sortId){ var p=proj(sortId); if(p) p.note=byId("scNote").value; skipped[sortId]=true; save(); }
+  renderSort();
+});
+byId("scNote").addEventListener("change",function(){
+  if(sortId){ var p=proj(sortId); if(p){ p.note=this.value; save(); } }
+});
+byId("introHide").addEventListener("click",function(){
+  DATA.introHidden=true; save(); renderSort();
+});
+
+/* ============ BOARD view ============ */
+var zoneFilter="all";
+function renderZoneFilter(){
+  var zf=byId("zoneFilter"); zf.textContent="";
+  var all=document.createElement("button");
+  all.type="button"; all.className="chip"+(zoneFilter==="all"?" on":""); all.textContent="All";
+  if(zoneFilter==="all") all.style.background="#d8d4cc";
+  all.addEventListener("click",function(){ zoneFilter="all"; renderBoard(); });
+  zf.appendChild(all);
+  ZONES.forEach(function(z){
+    var b=document.createElement("button");
+    b.type="button"; b.className="chip"+(zoneFilter===z.id?" on":""); b.textContent=z.n;
+    if(zoneFilter===z.id) b.style.background=z.c;
+    b.addEventListener("click",function(){ zoneFilter=z.id; renderBoard(); });
+    zf.appendChild(b);
+  });
+}
+function renderBoard(){
+  renderZoneFilter();
+  var host=byId("boardSections"); host.textContent="";
+  BOARD_ORDER.forEach(function(bid){
+    var items=DATA.projects.filter(function(p){
+      return p.bucket===bid && (zoneFilter==="all" || p.zone===zoneFilter);
+    }).sort(function(a,b){ return a.ord-b.ord; });
+    var meta=bucketMeta(bid);
+    if(bid!=="now" && bid!=="next" && items.length===0) return;
+    var sec=document.createElement("div"); sec.className="section";
+    var h=document.createElement("h3");
+    h.style.color=meta.c;
+    h.innerHTML=meta.n+' <span class="n">'+items.length+"</span>";
+    sec.appendChild(h);
+    var rows=document.createElement("div"); rows.className="rows";
+    if(items.length===0){
+      var e=document.createElement("div"); e.className="empty"; e.textContent="nothing here yet";
+      rows.appendChild(e);
+    }
+    items.forEach(function(p,idx){
+      var r=document.createElement("button"); r.type="button"; r.className="row";
+      var d=document.createElement("span"); d.className="dot"; d.style.background=zoneMeta(p.zone).c;
+      var nm=document.createElement("span"); nm.className="nm";
+      nm.innerHTML=p.name+(p.note?"<small>"+escapeHtml(p.note)+"</small>":"");
+      r.appendChild(d); r.appendChild(nm);
+      if(bid==="now"||bid==="next"){
+        var ord=document.createElement("span"); ord.className="ord";
+        var up=document.createElement("button"); up.type="button"; up.textContent="↑";
+        var dn=document.createElement("button"); dn.type="button"; dn.textContent="↓";
+        up.addEventListener("click",function(ev){ ev.stopPropagation(); moveOrd(p,items,idx,-1); });
+        dn.addEventListener("click",function(ev){ ev.stopPropagation(); moveOrd(p,items,idx,+1); });
+        ord.appendChild(up); ord.appendChild(dn); r.appendChild(ord);
+      }
+      r.addEventListener("click",function(){ openSheet(p.id); });
+      rows.appendChild(r);
+    });
+    sec.appendChild(rows); host.appendChild(sec);
+  });
+}
+function moveOrd(p,items,idx,dir){
+  var j=idx+dir; if(j<0||j>=items.length) return;
+  var o=p.ord; p.ord=items[j].ord; items[j].ord=o;
+  save(); renderBoard();
+}
+function escapeHtml(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* ============ sheet editor ============ */
+var sheetId=null;
+function openSheet(id){
+  var p=proj(id); if(!p) return;
+  sheetId=id;
+  byId("shName").value=p.name;
+  byId("shDesc").value=p.desc;
+  byId("shNote").value=p.note||"";
+  var zc=byId("shZones"); zc.textContent="";
+  ZONES.forEach(function(z){
+    var b=document.createElement("button");
+    b.type="button"; b.className="chip"+(p.zone===z.id?" on":""); b.textContent=z.n;
+    if(p.zone===z.id) b.style.background=z.c;
+    b.addEventListener("click",function(){ p.zone=z.id; save(); openSheet(id); renderBoard(); renderTally(); });
+    zc.appendChild(b);
+  });
+  var bc=byId("shBuckets"); bc.textContent="";
+  BUCKETS.forEach(function(bk){
+    var b=document.createElement("button");
+    b.type="button"; b.className="chip"+(p.bucket===bk.id?" on":""); b.textContent=bk.n;
+    if(p.bucket===bk.id) b.style.background=bk.c;
+    b.addEventListener("click",function(){ p.bucket=bk.id; save(); openSheet(id); renderBoard(); renderTally(); renderSort(); });
+    bc.appendChild(b);
+  });
+  byId("veil").classList.add("show");
+  byId("sheet").classList.add("show");
+}
+function closeSheet(){
+  if(sheetId){
+    var p=proj(sheetId);
+    if(p){
+      p.name=byId("shName").value.trim()||p.name;
+      p.desc=byId("shDesc").value;
+      p.note=byId("shNote").value;
+      save();
+    }
+  }
+  sheetId=null;
+  byId("veil").classList.remove("show");
+  byId("sheet").classList.remove("show");
+  renderBoard(); renderTally(); renderSort();
+}
+byId("shClose").addEventListener("click",closeSheet);
+byId("veil").addEventListener("click",closeSheet);
+byId("shDelete").addEventListener("click",function(){
+  if(!sheetId) return;
+  var p=proj(sheetId); if(!p) return;
+  if(!confirm("Remove \""+p.name+"\" from the list entirely? Cut keeps a record; this erases it.")) return;
+  DATA.projects=DATA.projects.filter(function(q){ return q.id!==sheetId; });
+  sheetId=null; save(); closeSheet(); toast("Removed");
+});
+document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeSheet(); });
+
+/* ============ TALLY view ============ */
+function renderTally(){
+  var ps=DATA.projects;
+  var active=ps.filter(inPlay).length;
+  var unsorted=ps.filter(function(p){return p.bucket==="unsorted";}).length;
+  byId("tActive").innerHTML=active+"<small>still in play of "+ps.length+" total</small>";
+  byId("tActiveSub").textContent = unsorted>0 ? unsorted+" not yet sorted" :
+    "Everything sorted. In play = Now, Next, Later, Someday, Parked.";
+  var bar=byId("tBar"); bar.textContent="";
+  var leg=byId("tLegend"); leg.textContent="";
+  BOARD_ORDER.forEach(function(bid){
+    var n=ps.filter(function(p){return p.bucket===bid;}).length;
+    if(n===0) return;
+    var m=bucketMeta(bid);
+    var seg=document.createElement("div");
+    seg.style.flex=String(n); seg.style.background=m.c;
+    bar.appendChild(seg);
+    var l=document.createElement("span");
+    l.innerHTML='<i style="background:'+m.c+'"></i>'+m.n+" "+n;
+    leg.appendChild(l);
+  });
+  var tz=byId("tZones"); tz.textContent="";
+  ZONES.forEach(function(z){
+    var n=ps.filter(function(p){return p.zone===z.id && inPlay(p);}).length;
+    var l=document.createElement("span");
+    l.innerHTML='<i style="background:'+z.c+'"></i>'+z.n+": "+n+" in play";
+    tz.appendChild(l);
+  });
+}
+
+/* ============ export / import ============ */
+function buildMd(){
+  var lines=["# Sweep export · "+fmtDate(),""];
+  BOARD_ORDER.forEach(function(bid){
+    var items=DATA.projects.filter(function(p){return p.bucket===bid;})
+      .sort(function(a,b){return a.ord-b.ord;});
+    if(items.length===0) return;
+    lines.push("## "+bucketMeta(bid).n+" ("+items.length+")");
+    items.forEach(function(p){
+      var l="- **"+p.name+"** ["+zoneMeta(p.zone).n+"]";
+      if(p.note) l+=" · "+p.note;
+      lines.push(l);
+    });
+    lines.push("");
+  });
+  return lines.join("\n");
+}
+function download(name,text,type){
+  var blob=new Blob([text],{type:type||"text/plain"});
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
+}
+byId("btnExportMd").addEventListener("click",function(){
+  download("sweep-"+Date.now()+".md", buildMd(), "text/markdown");
+  toast("Markdown exported");
+});
+byId("btnCopyMd").addEventListener("click",function(){
+  var md=buildMd();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(md).then(function(){ toast("Copied"); },
+      function(){ download("sweep-"+Date.now()+".md",md,"text/markdown"); });
+  }else{
+    download("sweep-"+Date.now()+".md",md,"text/markdown");
+  }
+});
+byId("btnSave").addEventListener("click",function(){
+  download("sweep-draft.json", JSON.stringify(DATA,null,1), "application/json");
+  toast("Draft saved to file");
+});
+byId("btnLoad").addEventListener("click",function(){ byId("fileIn").click(); });
+byId("fileIn").addEventListener("change",function(){
+  var f=this.files && this.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var d=JSON.parse(r.result);
+      if(!d || !d.projects) throw new Error("bad file");
+      DATA=d; save(); renderAll(); toast("Draft loaded");
+    }catch(e){ toast("Could not read that file"); }
+  };
+  r.readAsText(f);
+  this.value="";
+});
+byId("btnAdd").addEventListener("click",function(){
+  var name=prompt("Project name?");
+  if(!name) return;
+  var maxOrd=0;
+  DATA.projects.forEach(function(p){ if(p.ord>maxOrd) maxOrd=p.ord; });
+  var np={id:"p"+Date.now(), name:name.trim(), desc:"", zone:"self", bucket:"unsorted", note:"", ord:maxOrd+1};
+  DATA.projects.push(np); save(); renderAll(); openSheet(np.id);
+});
+
+/* ============ nav ============ */
+var navBtns=document.querySelectorAll("nav button");
+navBtns.forEach(function(b){
+  b.addEventListener("click",function(){
+    navBtns.forEach(function(x){ x.classList.remove("on"); });
+    b.classList.add("on");
+    document.querySelectorAll(".view").forEach(function(v){ v.classList.remove("on"); });
+    byId("v-"+b.getAttribute("data-v")).classList.add("on");
+    if(b.getAttribute("data-v")==="board") renderBoard();
+    if(b.getAttribute("data-v")==="tally") renderTally();
+    if(b.getAttribute("data-v")==="sort") renderSort();
+  });
+});
+
+/* ============ version badge + buster ============ */
+function buildStr(){
+  var m=document.querySelector('meta[name="build"]');
+  return m ? m.getAttribute("content") : "dev";
+}
+byId("verBadge").textContent="Sweep "+buildStr();
+byId("verBadge").addEventListener("click",function(){ toast(buildStr()); });
+(function buster(){
+  if(typeof fetch!=="function") return;
+  if(location.protocol!=="https:" && location.protocol!=="http:") return;
+  try{
+    if(sessionStorage.getItem("sweep_busted")) return;
+  }catch(e){ return; }
+  fetch(location.pathname,{cache:"no-store"}).then(function(r){return r.text();})
+  .then(function(txt){
+    var m=txt.match(/name="build" content="([^"]+)"/);
+    if(m && m[1]!==buildStr()){
+      try{ sessionStorage.setItem("sweep_busted","1"); }catch(e){}
+      location.replace(location.pathname+"?v="+encodeURIComponent(m[1]));
+    }
+  }).catch(function(){});
+})();
+
+/* ============ boot ============ */
+function renderAll(){ renderSort(); renderBoard(); renderTally(); }
+probeStorage();
+DATA=load();
+save();
+renderAll();
+</script>
+</body>
+</html>
