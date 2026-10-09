@@ -1,6 +1,6 @@
 # BONK · Impact Test Bay · ROADMAP
 
-Current version: v0.4.0 (Oct 9 2026)
+Current version: v0.4.1 (Oct 9 2026)
 Deployed files (all flat, no subfolders): index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png, icon-192-maskable.png, icon-512-maskable.png, apple-touch-icon.png
 Built for: a Yanke coworker having a rough week who asked for a stick figure he can run into a wall over and over.
 
@@ -39,6 +39,7 @@ v0.4.0 (Oct 9)  -- he looks like the coworker, blood toggle, achievements + reco
 - BLOOD toggle (chip, default OFF): wall splats with drips, floor pools, red spray particles that land and leave pools. Turning it off clears the splats. Cartoon red, no detail.
 - BULLSEYE target painted on the wall at a random height (0.7-3.2 m), re-rolled after every hit. Scoring by impact height vs center: center 50 (counts a bullseye + streak), inner 25, outer 10. Shows as rings on the wall body plus scoring bands on the wall face. HUD got a 5th stat: bulls.
 - ACHIEVEMENTS (20) + RECORDS under the "awards" chip: totals (bonks, head, bullseyes, target pts, best streak, max height) and best mph per launcher (on foot / cannon / rocket / thrown). Unlocks toast + two-tone ding. Impact speed and records are attributed by lastLaunch ('feet' | 'cannon' | 'rocket' | 'throw'), which also drives the honest speed cap.
+- v0.4.1 fix: muscle-tone damping now acts only on each point's velocity RELATIVE to the body's mean velocity (td=1-tone*.02 per substep), so free fall is never slowed. The v0.2.1 whole-body damping had made him fall in slow motion (terminal velocity ~6.5 m/s at default tone, ~2.5 m/s at STIFF).
 - Deploy location: lives at motbuchanan.github.io/DecisionDeck/bonk/ (folder inside the DecisionDeck repo). All paths relative, so the PWA works there.
 
 ## How it works (for the next chat)

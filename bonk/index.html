@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="build" content="0.4.0 · Oct 9 2026">
+<meta name="build" content="0.4.1 · Oct 9 2026">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#141a22">
 <link rel="manifest" href="manifest.webmanifest">
@@ -138,7 +138,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     <div class="stat"><b id="sBull">0</b><i>bulls</i></div>
   </div>
   <canvas id="cv"></canvas>
-  <button id="ver" type="button">v0.4.0</button>
+  <button id="ver" type="button">v0.4.1</button>
   <button id="help" type="button" aria-label="How to use">?</button>
   <div id="toast"></div>
 </div>
@@ -367,9 +367,11 @@ function sub(h){
   var i,dx,dy,d,k,a,b,s,len;
   var bx=0,by=0;
   if(burning){ bx=X[NECK]-X[HIP]; by=Y[NECK]-Y[HIP]; d=Math.hypot(bx,by)||1; bx=bx/d*ROCKET_A*h*h; by=by/d*ROCKET_A*h*h; fuel-=h; if(fuel<=0){fuel=0;burning=false;} }
-  var gdd=G*h*h, dmp=.9996-tone*.0078;
+  var gdd=G*h*h, td=1-tone*.02, cmx=0, cmy=0;
+  for(i=0;i<N;i++){ cmx+=X[i]-PX[i]; cmy+=Y[i]-PY[i]; } cmx/=N; cmy/=N;
   for(i=0;i<N;i++){
-    var vx=(X[i]-PX[i])*dmp, vy=(Y[i]-PY[i])*dmp;
+    /* muscle tone damps only motion RELATIVE to the body's own velocity, so free fall is never slowed */
+    var vx=(cmx+(X[i]-PX[i]-cmx)*td)*.9996, vy=(cmy+(Y[i]-PY[i]-cmy)*td)*.9996;
     var sp=Math.hypot(vx,vy); if(sp>.2){ vx*=.2/sp; vy*=.2/sp; }
     PX[i]=X[i]; PY[i]=Y[i]; X[i]+=vx+bx; Y[i]+=vy-gdd+by; VX[i]=vx+bx; VY[i]=vy-gdd+by;
   }
