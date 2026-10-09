@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="build" content="0.4.1 · Oct 9 2026">
+<meta name="build" content="0.4.2 · Oct 9 2026">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#141a22">
 <link rel="manifest" href="manifest.webmanifest">
@@ -138,7 +138,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     <div class="stat"><b id="sBull">0</b><i>bulls</i></div>
   </div>
   <canvas id="cv"></canvas>
-  <button id="ver" type="button">v0.4.1</button>
+  <button id="ver" type="button">v0.4.2</button>
   <button id="help" type="button" aria-label="How to use">?</button>
   <div id="toast"></div>
 </div>
@@ -157,7 +157,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     <input id="spd" type="range" min="1" max="25" step="1" value="12" aria-label="Speed">
   </div>
   <div id="fuelWrap" hidden>
-    <div class="dial"><b id="fv">100</b><u>% FUEL</u><em>HOLD TO BURN</em></div>
+    <div class="dial"><b id="fv">100</b><u>% FUEL</u><em id="burnEm">HOLD TO BURN</em></div>
     <div class="fuel"><i id="fuelBar"></i></div>
   </div>
   <div class="go">
@@ -194,7 +194,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       <li><b>Pick a launcher</b> up top &mdash; On Foot, Cannon, or Rocket.</li>
       <li><b>Set the DISTANCE</b> &mdash; how far back he starts from the wall.</li>
       <li><b>Aim the ANGLE</b> (Cannon &amp; Rocket). The dashed line shows exactly where the shot lands before you fire.</li>
-      <li><b>Set the POWER</b> &mdash; running speed, cannon muzzle, or hold BURN for the rocket.</li>
+      <li><b>Set the POWER</b> &mdash; running speed, cannon muzzle, or hold BURN for the rocket. While burning, <b>slide your thumb up or down to steer</b>.</li>
       <li><b>Hit GO.</b> He picks himself up and walks back. LOOP repeats it forever.</li>
       <li><b>Grab him</b> with a finger and fling him any time, in any mode.</li>
       <li><b>LIMP &rarr; STIFF</b> sets how floppy he is on impact.</li>
@@ -232,7 +232,7 @@ var LIMITS=[[NECK,HIP,.44,.53],[HEAD,MID,.37,.45],
   [HEAD,HIP,.55,.71]];
 var SUB=8, ITER=5, STEP=1/60;
 var REST_W=.22, REST_G=.18, FR_G=.07, FR_W=.04;
-var ROCKET_A=38, FUEL_MAX=1.6;
+var ROCKET_A=30, FUEL_MAX=3.6;
 
 /* ================= state ================= */
 var X=new Float64Array(N),Y=new Float64Array(N),PX=new Float64Array(N),PY=new Float64Array(N);
@@ -243,7 +243,7 @@ var kx=START_X,kv=0,kphase=0,kdir=1,klean=0,idleT=0,kinJump=true;
 var goQueued=false, loopOn=false;
 var ragT=0,settleT=0,getT=0,windT=0,ragFacing=1;
 var armed=true, torsoSpeed=0, headCool=0, runV=0;
-var fuel=FUEL_MAX, burning=false, burnHeld=false;
+var fuel=FUEL_MAX, burning=false, burnHeld=false, steer=0, steerBaseY=0;
 var grab=-1, gx=0, gy=0;
 var timeS=0, hitStop=0, shake=0, flash=0, lastThud=0, lastMph=0;
 var imp={wv:0,wy:0,hv:0,gv:0,gx:0};
@@ -366,13 +366,22 @@ function toRagdoll(){
 function sub(h){
   var i,dx,dy,d,k,a,b,s,len;
   var bx=0,by=0;
-  if(burning){ bx=X[NECK]-X[HIP]; by=Y[NECK]-Y[HIP]; d=Math.hypot(bx,by)||1; bx=bx/d*ROCKET_A*h*h; by=by/d*ROCKET_A*h*h; fuel-=h; if(fuel<=0){fuel=0;burning=false;} }
+  if(burning){
+    var sx=X[NECK]-X[HIP], sy=Y[NECK]-Y[HIP], sd=Math.hypot(sx,sy)||1; sx/=sd; sy/=sd;
+    var tx=sx, ty=sy+steer*1.25, tl=Math.hypot(tx,ty)||1; tx/=tl; ty/=tl;   /* steer up/down in WORLD space */
+    bx=tx*ROCKET_A*h*h; by=ty*ROCKET_A*h*h;
+    /* pitch the body to nose toward the thrust so it reads as steering (velocity-neutral, no energy added) */
+    var ca=Math.atan2(ty,tx)-Math.atan2(sy,sx); if(ca>Math.PI)ca-=TAU; else if(ca<-Math.PI)ca+=TAU; ca*=.1;
+    if(ca>1e-4||ca<-1e-4){ var ox=0,oy=0; for(i=0;i<N;i++){ox+=X[i];oy+=Y[i];} ox/=N; oy/=N; var rc=Math.cos(ca), rs=Math.sin(ca);
+      for(i=0;i<N;i++){ var px0=X[i]-ox,py0=Y[i]-oy; X[i]=ox+px0*rc-py0*rs; Y[i]=oy+px0*rs+py0*rc; var qx0=PX[i]-ox,qy0=PY[i]-oy; PX[i]=ox+qx0*rc-qy0*rs; PY[i]=oy+qx0*rs+qy0*rc; } }
+    fuel-=h; if(fuel<=0){fuel=0;burning=false;}
+  }
   var gdd=G*h*h, td=1-tone*.02, cmx=0, cmy=0;
   for(i=0;i<N;i++){ cmx+=X[i]-PX[i]; cmy+=Y[i]-PY[i]; } cmx/=N; cmy/=N;
   for(i=0;i<N;i++){
     /* muscle tone damps only motion RELATIVE to the body's own velocity, so free fall is never slowed */
     var vx=(cmx+(X[i]-PX[i]-cmx)*td)*.9996, vy=(cmy+(Y[i]-PY[i]-cmy)*td)*.9996;
-    var sp=Math.hypot(vx,vy); if(sp>.2){ vx*=.2/sp; vy*=.2/sp; }
+    var spc=burning?.016:.2; var sp=Math.hypot(vx,vy); if(sp>spc){ vx*=spc/sp; vy*=spc/sp; }
     PX[i]=X[i]; PY[i]=Y[i]; X[i]+=vx+bx; Y[i]+=vy-gdd+by; VX[i]=vx+bx; VY[i]=vy-gdd+by;
   }
   if(grab>=0){ X[grab]+=(gx-X[grab])*.28; Y[grab]+=(gy-Y[grab])*.28; }
@@ -448,7 +457,7 @@ function burnStart(){
   if(state!=='ragdoll'){ if(state==='getup'||state==='return'){ kinJump=true; for(var i=0;i<N;i++){KX[i]=X[i];KY[i]=Y[i];} } toRagdoll(); }
   burning=true; ragT=0; settleT=0; lastLaunch='rocket';
 }
-function burnStop(){ burnHeld=false; burning=false; }
+function burnStop(){ burnHeld=false; burning=false; steer=0; }
 function setMode(m){
   mode=m; store.mode=m; goQueued=false; burning=false; grab=-1;
   state='idle'; idleT=0; kx=START_X; kv=0; kphase=0; klean=0; kinJump=true; canAng=store.cAng*Math.PI/180;
@@ -968,9 +977,12 @@ spd.addEventListener('input',function(){
 });
 act.addEventListener('pointerdown',function(e){
   e.preventDefault(); unlockAudio(); act.classList.add('down'); try{act.setPointerCapture(e.pointerId)}catch(_){}
+  steerBaseY=e.clientY; steer=0;
   if(mode==='feet') go(); else if(mode==='cannon') fireCannon(); else burnStart();
 });
-function actUp(){ act.classList.remove('down'); if(mode==='rocket') burnStop(); }
+act.addEventListener('pointermove',function(e){ if(mode==='rocket'&&burnHeld){ steer=Math.max(-1,Math.min(1,(steerBaseY-e.clientY)/90)); if(burnEmTxt) $('burnEm').textContent=steer>.2?'CLIMB':steer<-.2?'DIVE':'STEER'; } });
+var burnEmTxt=true;
+function actUp(){ act.classList.remove('down'); if(mode==='rocket'){ burnStop(); $('burnEm').textContent='HOLD TO BURN'; } }
 act.addEventListener('pointerup',actUp); act.addEventListener('pointercancel',actUp); act.addEventListener('lostpointercapture',actUp);
 loopB.addEventListener('pointerdown',function(){ unlockAudio(); loopOn=!loopOn; if(!loopOn) goQueued=false; else if(mode==='feet') go(); else if(mode==='cannon'&&state!=='ragdoll') fireCannon(); syncUI(); });
 $('snd').addEventListener('pointerdown',function(){ store.snd=!store.snd; if(!store.snd) silence(); else { unlockAudio(); if(master) master.gain.value=.85; } save(); syncUI(); });
@@ -997,7 +1009,8 @@ function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('on');
 $('ver').textContent=VER+' · '+BUILD.split(' · ')[1].replace(/ \d{4}$/,'');
 $('ver').addEventListener('pointerdown',function(){ toast(VER+' loaded · built '+BUILD.split(' · ')[1]); });
 window.addEventListener('keydown',function(e){ if(e.code==='Space'&&!e.repeat){ e.preventDefault(); unlockAudio(); if(mode==='feet') go(); else if(mode==='cannon') fireCannon(); else burnStart(); } });
-window.addEventListener('keyup',function(e){ if(e.code==='Space'&&mode==='rocket') burnStop(); });
+window.addEventListener('keyup',function(e){ if(e.code==='Space'&&mode==='rocket') burnStop(); if(e.code==='ArrowUp'||e.code==='ArrowDown') steer=0; });
+window.addEventListener('keydown',function(e){ if(mode==='rocket'&&burnHeld){ if(e.code==='ArrowUp')steer=1; else if(e.code==='ArrowDown')steer=-1; } });
 
 /* grab and throw */
 function toWorld(e){ var r=cv.getBoundingClientRect(); gx=camLeft+(e.clientX-r.left)/scale; gy=(groundY-(e.clientY-r.top))/scale; }
@@ -1047,7 +1060,7 @@ tone=store.tone; $('tone').value=Math.round(store.tone*100);
 syncUI(); resize();
 try{ if(!localStorage.getItem(GKEY)) openGuide(); }catch(e){ openGuide(); }
 if(window.ResizeObserver) new ResizeObserver(resize).observe(cv); else window.addEventListener('resize',resize);
-window.__bonk={get state(){return state},get mode(){return mode},get store(){return store},get hipX(){return X[HIP]},get hipY(){return Y[HIP]},get fuel(){return fuel},get cracks(){return cracks.length},get lastMph(){return lastMph},get tone(){return tone},get dist(){return store.dist},get cAng(){return canAng},get startX(){return START_X},get canX(){return CAN_X},get guideOpen(){return !$('guide').hidden},get tgtY(){return tgtY},get lastHitY(){return lastHitY},get splats(){return splats.length},get ach(){return achCount()},get skin(){return store.skin},get lastLaunch(){return lastLaunch},setTarget:function(y){tgtY=y;},get bbh(){var lo=1e9,hi=-1e9,i;for(i=0;i<N;i++){if(Y[i]<lo)lo=Y[i];if(Y[i]>hi)hi=Y[i];}return hi-lo;},kneeMax:function(){return Math.max(angBeta(HIP,KNEE_L,FOOT_L),angBeta(HIP,KNEE_R,FOOT_R));},elbowMax:function(){return Math.min(angBeta(NECK,ELB_L,HAND_L),angBeta(NECK,ELB_R,HAND_R));},
+window.__bonk={get state(){return state},get mode(){return mode},get store(){return store},get hipX(){return X[HIP]},get hipY(){return Y[HIP]},get fuel(){return fuel},get cracks(){return cracks.length},get lastMph(){return lastMph},get tone(){return tone},get dist(){return store.dist},get cAng(){return canAng},get startX(){return START_X},get canX(){return CAN_X},get guideOpen(){return !$('guide').hidden},get tgtY(){return tgtY},get lastHitY(){return lastHitY},get splats(){return splats.length},get ach(){return achCount()},get skin(){return store.skin},get lastLaunch(){return lastLaunch},get fuel0(){return FUEL_MAX},get steer(){return steer},set steer(v){steer=v;},setTarget:function(y){tgtY=y;},get bbh(){var lo=1e9,hi=-1e9,i;for(i=0;i<N;i++){if(Y[i]<lo)lo=Y[i];if(Y[i]>hi)hi=Y[i];}return hi-lo;},kneeMax:function(){return Math.max(angBeta(HIP,KNEE_L,FOOT_L),angBeta(HIP,KNEE_R,FOOT_R));},elbowMax:function(){return Math.min(angBeta(NECK,ELB_L,HAND_L),angBeta(NECK,ELB_R,HAND_R));},
   s2w:function(){return {camLeft:camLeft,scale:scale,groundY:groundY}},pts:function(){return {x:Array.from(X),y:Array.from(Y)}}};
 requestAnimationFrame(function(t){ last=t; requestAnimationFrame(frame); });
 })();
