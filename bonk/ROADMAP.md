@@ -1,6 +1,6 @@
 # BONK · Impact Test Bay · ROADMAP
 
-Current version: v0.3.0 (Oct 9 2026)
+Current version: v0.4.0 (Oct 9 2026)
 Deployed files (all flat, no subfolders): index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png, icon-192-maskable.png, icon-512-maskable.png, apple-touch-icon.png
 Built for: a Yanke coworker having a rough week who asked for a stick figure he can run into a wall over and over.
 
@@ -34,6 +34,13 @@ v0.3.0 (Oct 9)  -- aiming, distance, walkthrough, installable PWA
 - Walkthrough overlay ("HOW TO BONK", 7 steps): shows on first run (localStorage bonk.guide1), reopens via the "?" button top-left.
 - Installable PWA: manifest.webmanifest (standalone, crash-test-dummy icons 192/512 + maskable + apple-touch 180), sw.js with cache name bonk-v0.3.0 (MUST match the badge every deploy). SW is network-first for page navigations (so the live version is always fresh online and we never fight stale cache) and cache-first for icons/manifest; offline falls back to the cached page. An "install" chip + in-guide INSTALL button appear when the browser offers beforeinstallprompt (Android/desktop Chrome); iOS users get a Share -> Add to Home Screen tip. Install only works from the https GitHub Pages URL, not a downloaded file.
 
+v0.4.0 (Oct 9)  -- he looks like the coworker, blood toggle, achievements + records, bullseye
+- SKIN toggle (chip): "him" draws the coworker (dark bowl cut, clear safety glasses, black Yanke tee with a small white chest mark, skin arms with short black sleeves, navy jeans, dark sneakers, goatee). "dummy" is the original crash-test figure. Same 12-point skeleton; only the renderer changes (drawHuman / humanHead / shoe / sleeve). Default: him.
+- BLOOD toggle (chip, default OFF): wall splats with drips, floor pools, red spray particles that land and leave pools. Turning it off clears the splats. Cartoon red, no detail.
+- BULLSEYE target painted on the wall at a random height (0.7-3.2 m), re-rolled after every hit. Scoring by impact height vs center: center 50 (counts a bullseye + streak), inner 25, outer 10. Shows as rings on the wall body plus scoring bands on the wall face. HUD got a 5th stat: bulls.
+- ACHIEVEMENTS (20) + RECORDS under the "awards" chip: totals (bonks, head, bullseyes, target pts, best streak, max height) and best mph per launcher (on foot / cannon / rocket / thrown). Unlocks toast + two-tone ding. Impact speed and records are attributed by lastLaunch ('feet' | 'cannon' | 'rocket' | 'throw'), which also drives the honest speed cap.
+- Deploy location: lives at motbuchanan.github.io/DecisionDeck/bonk/ (folder inside the DecisionDeck repo). All paths relative, so the PWA works there.
+
 ## How it works (for the next chat)
 - Kinematic walk/run cycle (function pose) on its feet; on wall contact it hands velocities to a Verlet ragdoll (function sub): 12 points, 11 sticks, 9 min/max distance limits. 8 substeps, 5 iterations. No angle constraints (removed in v0.2.1). START_X/CAN_X are dynamic (applyDist). Cannon fires along store.cAng; rocket leans by store.rAng. Test hook window.__bonk adds dist, cAng, startX, canX, guideOpen.
 - Muscle tone = per-point velocity damping (dmp = .9996 - tone*.0078). Dissipative only, so it cannot inject energy.
@@ -46,6 +53,7 @@ v0.3.0 (Oct 9)  -- aiming, distance, walkthrough, installable PWA
 - Stable filename index.html. Version lives in the head meta "build" tag, drives the badge.
 
 ## Open queue (nothing started)
+- v0.5 BREAKABLE WALLS (next): wall has HP that impacts chip away; break through into the next bay with a harder material (plywood -> brick -> concrete -> steel), multiple wooden walls in a row, carry momentum through. Needs WALL_X to become dynamic (ruler, cracks, hazard stripes, start distance all key off it).
 - More launchers: giant spring, slingshot with aim line, treadmill, wrecking ball, trebuchet
 - Things to hit besides the wall: box stack, glass pane, filing cabinet, second wall behind him
 - Slow-motion replay of the last hit (Matter.js ragdoll demo eases timescale to 0.05 and back)
