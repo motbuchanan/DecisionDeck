@@ -1,6 +1,6 @@
 # BONK · Impact Test Bay · ROADMAP
 
-Current version: v0.4.2 (Oct 9 2026)
+Current version: v0.4.3 (Oct 9 2026)
 Deployed files (all flat, no subfolders): index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png, icon-192-maskable.png, icon-512-maskable.png, apple-touch-icon.png
 Built for: a Yanke coworker having a rough week who asked for a stick figure he can run into a wall over and over.
 
@@ -41,6 +41,7 @@ v0.4.0 (Oct 9)  -- he looks like the coworker, blood toggle, achievements + reco
 - ACHIEVEMENTS (20) + RECORDS under the "awards" chip: totals (bonks, head, bullseyes, target pts, best streak, max height) and best mph per launcher (on foot / cannon / rocket / thrown). Unlocks toast + two-tone ding. Impact speed and records are attributed by lastLaunch ('feet' | 'cannon' | 'rocket' | 'throw'), which also drives the honest speed cap.
 - v0.4.1 fix: muscle-tone damping now acts only on each point's velocity RELATIVE to the body's mean velocity (td=1-tone*.02 per substep), so free fall is never slowed. The v0.2.1 whole-body damping had made him fall in slow motion (terminal velocity ~6.5 m/s at default tone, ~2.5 m/s at STIFF).
 - v0.4.2 rocket: FUEL_MAX 1.6s -> 3.6s (longer burn), thrust ROCKET_A 38 -> 30. STEERING while holding BURN: thumb up/down (steerBaseY vs clientY /90, clamped -1..1, also Arrow keys) blends world-vertical into the thrust and the body noses toward it (velocity-neutral rotation about COM). A burn-only speed clamp (.016/substep ~7.7 m/s) turns the long burn into steerable cruise instead of a launch to orbit. BURN label shows CLIMB / STEER / DIVE live.
+- v0.4.3 rocket steering redo: the old version only had a vertical axis (climb/dive, no forward/back) and felt broken. Now the BURN button is a 2D JOYSTICK - thumb offset from the press point (steerBaseX/Y) is the thrust direction in world space (right = toward wall/forward, left = back, up/down = climb/dive, diagonals combine), deadzone .12, full at 70px. An on-screen ring (#stick) at the press point with a draggable dot shows it; arrow keys also steer. setSteer(x,y) is the test hook. Verified: forward travels +x toward wall, back travels -x, up climbs, diagonal does both.
 - Deploy location: lives at motbuchanan.github.io/DecisionDeck/bonk/ (folder inside the DecisionDeck repo). All paths relative, so the PWA works there.
 
 ## How it works (for the next chat)

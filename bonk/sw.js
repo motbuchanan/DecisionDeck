@@ -1,5 +1,5 @@
 /* BONK service worker — cache name MUST match the app version badge on every deploy */
-var CACHE = 'bonk-v0.4.2';
+var CACHE = 'bonk-v0.4.3';
 var ASSETS = [
   './',
   './index.html',
