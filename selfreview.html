@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="build" content="v0.1 · Oct 13">
+<title>Yanke Bionics · My Work Review</title>
+<style>
+  :root{--green:#b0d235;--duty:#8fb01f;--extra:#c9772f;--cando:#4f6d7a;--ink:#231f20;--dark:#1a1718;--mid:#2a2627;--muted:#8a8788;--light:#f5f5f3;--card:#fff;--line:#e6e6e1;--ease:cubic-bezier(.2,.85,.25,1)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0}
+  body{background:linear-gradient(180deg,#f7f8f5,#eceeea);background-attachment:fixed;color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.45;padding-bottom:80px}
+  h1,h2,.blk{font-family:"Arial Black","Arial Bold",Arial,sans-serif;font-weight:900;letter-spacing:-.01em}
+  .hidden{display:none!important}
+  header{background:linear-gradient(155deg,#211d1e,#141112);color:#fff;padding:11px 15px 0;position:sticky;top:0;z-index:40;border-bottom:3px solid var(--green);box-shadow:0 4px 18px rgba(0,0,0,.28)}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .logowrap{opacity:0;transform:translateY(5px);animation:logoIn .55s var(--ease) .08s forwards}
+  @keyframes logoIn{to{opacity:1;transform:none}}
+  .revlogo{height:26px;width:auto;display:block}
+  .ver{font-size:10.5px;background:var(--green);border:none;color:var(--ink);padding:5px 9px;border-radius:20px;cursor:pointer;font-weight:700}
+  .htitle{margin-top:9px;font-size:18px;color:#fff}
+  .hsub{font-size:12px;color:#b9bdb2;margin-top:2px}
+  .tabs{display:flex;gap:4px;margin-top:11px}
+  .tab{flex:1;font:inherit;font-size:13px;font-weight:900;font-family:"Arial Black",Arial;padding:10px 8px;border:none;background:transparent;color:#9a978f;cursor:pointer;border-bottom:3px solid transparent;transition:color .15s,border-color .15s}
+  .tab.on{color:#fff;border-bottom-color:var(--green)}
+  .wrap{max-width:820px;margin:0 auto;padding:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(20,17,18,.05)}
+  .card.accent{border-top:4px solid var(--green)}
+  h2{font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 10px;color:var(--ink)}
+  .intro{font-size:13.5px;color:#54514f}
+  .btn{font:inherit;font-size:13px;font-weight:700;padding:10px 13px;border-radius:11px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;transition:transform .1s var(--ease)}
+  .btn:active{transform:scale(.96)}
+  .btn.ghost{border-color:var(--ink)}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  label.fld{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--muted);flex:1;min-width:150px}
+  input[type=text]{font:inherit;font-size:15px;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--light)}
+  /* legend of the three marks */
+  .marks{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+  .mk{display:flex;gap:10px;align-items:flex-start;font-size:13px}
+  .mk .dot{flex:none;width:15px;height:15px;border-radius:5px;margin-top:2px}
+  .mk b{font-weight:900}
+  .mk span{color:var(--muted);font-size:12px}
+  /* filters */
+  #filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+  .fchip{font-size:12px;font-weight:700;padding:8px 12px;border-radius:18px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;transition:all .15s var(--ease)}
+  .fchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .cat{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:#fff;font-weight:900;font-family:Arial;background:linear-gradient(135deg,#2a2627,#201c1d);padding:9px 12px;border-radius:10px;margin:16px 0 8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(20,17,18,.14)}
+  .cat .cmeta{font-size:11px;color:#b9bdb2;display:flex;gap:9px;align-items:center}
+  .chev{transition:transform .25s var(--ease);font-size:11px}
+  .cat.closed .chev{transform:rotate(-90deg)}
+  .catbody{overflow:hidden;transition:max-height .3s var(--ease)}
+  .skill{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:9px;box-shadow:0 1px 3px rgba(20,17,18,.05);border-left:4px solid var(--line);transition:border-color .2s}
+  .skill.t-duty{border-left-color:var(--duty)}
+  .skill.t-extra{border-left-color:var(--extra)}
+  .skill.t-cando{border-left-color:var(--cando)}
+  .sk-name{font-weight:800;font-size:14.5px;cursor:pointer}
+  .sk-desc{font-size:12px;color:#5b5856;margin-top:4px;display:none}
+  .sk-desc.show{display:block}
+  .markrow{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+  .mbtn{flex:1;min-width:94px;min-height:42px;font:inherit;font-size:12.5px;font-weight:800;padding:8px 6px;border-radius:11px;border:1.5px solid var(--line);background:#fff;color:#7c7a78;cursor:pointer;transition:transform .12s var(--ease);line-height:1.15}
+  .mbtn:active{transform:scale(.94)}
+  .mbtn.on.duty{background:var(--duty);color:#fff;border-color:var(--duty);box-shadow:0 3px 10px rgba(143,176,31,.35)}
+  .mbtn.on.extra{background:var(--extra);color:#fff;border-color:var(--extra);box-shadow:0 3px 10px rgba(201,119,47,.35)}
+  .mbtn.on.cando{background:var(--cando);color:#fff;border-color:var(--cando);box-shadow:0 3px 10px rgba(79,109,122,.35)}
+  .lvlrow{margin-top:9px;display:flex;align-items:center;gap:8px;animation:slide .25s var(--ease)}
+  @keyframes slide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .lvllab{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  .seg{display:flex;gap:4px}
+  .seg button{min-width:58px;height:33px;border-radius:9px;border:1px solid var(--line);background:#fff;font:inherit;font-size:12px;font-weight:800;color:#7c7a78;cursor:pointer;transition:transform .1s var(--ease)}
+  .seg button:active{transform:scale(.9)}
+  .seg button.lv1{background:#e8f0cf;color:#3d4a12;border-color:#d3e4a6}
+  .seg button.lv2{background:var(--green);color:var(--ink);border-color:var(--green)}
+  .seg button.lv3{background:#6f8f1e;color:#fff;border-color:#6f8f1e}
+  .addbtn{width:100%;font:inherit;font-size:13px;font-weight:800;padding:12px;border-radius:12px;border:1.5px dashed var(--ink);background:#fff;color:var(--ink);cursor:pointer;margin-top:4px}
+  .addform{display:flex;flex-direction:column;gap:9px;margin-top:10px}
+  .addform select{font:inherit;font-size:14px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--light)}
+  .rm{font-size:11px;color:#b3261e;background:none;border:none;cursor:pointer;font-weight:700;padding:4px}
+  /* summary / charts */
+  .big{font-family:"Arial Black",Arial;font-weight:900;font-size:30px;line-height:1}
+  .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;box-shadow:0 1px 3px rgba(20,17,18,.05)}
+  .tile .n{font-family:"Arial Black",Arial;font-weight:900;font-size:26px}
+  .tile .l{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.3}
+  .tile.duty .n{color:var(--duty)} .tile.extra .n{color:var(--extra)} .tile.cando .n{color:var(--cando)}
+  .donutwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .dlegend{display:flex;flex-direction:column;gap:8px}
+  .dl{display:flex;align-items:center;gap:8px;font-size:13px}
+  .dl .sw{width:13px;height:13px;border-radius:4px}
+  .dl b{font-weight:900}
+  .capbar{height:46px;border-radius:12px;overflow:hidden;display:flex;border:1px solid var(--line);background:#eee}
+  .capseg{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:13px;font-family:"Arial Black",Arial;transition:width .5s var(--ease);min-width:0;overflow:hidden}
+  .capseg.duty{background:var(--duty)} .capseg.extra{background:var(--extra)} .capseg.cando{background:var(--cando)}
+  .capnote{font-size:12px;color:#54514f;margin-top:10px;line-height:1.5}
+  .capnote b{color:var(--ink)}
+  .brackets{display:flex;margin-top:7px;font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+  .emptym{text-align:center;color:var(--muted);font-size:13px;padding:24px 10px}
+  .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:45;background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(20,17,18,.12);padding:9px 14px;display:flex;align-items:center;gap:10px}
+  .bbinfo{flex:1;font-size:11.5px;color:var(--muted)}
+  .bbinfo b{color:var(--ink);font-size:13px}
+  .bbbtn{font:inherit;font-size:13.5px;font-weight:900;padding:11px 16px;border-radius:11px;border:none;background:var(--green);color:var(--ink);cursor:pointer;font-family:"Arial Black",Arial;transition:transform .1s var(--ease)}
+  .bbbtn:active{transform:scale(.95)}
+  .bbbtn.sec{background:#fff;border:1px solid var(--ink);color:var(--ink)}
+  .foot{font-size:11px;color:var(--muted);text-align:center;padding:16px 10px 8px;line-height:1.7}
+  .foot .mot{font-family:"Arial Black",Arial;font-weight:900;color:var(--ink)}
+  .save{font-size:11px;color:#5c7a12}
+  .toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:22px;font-size:13px;opacity:0;pointer-events:none;transition:.22s var(--ease);z-index:60;border:1px solid var(--green)}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <div class="logowrap"><svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496.23 77.31" class="revlogo">
+  <defs>
+    <style>
+      .yk-1, .yk-2, .yk-3, .yk-4, .yk-5, .yk-6, .yk-7 {
+        fill: none;
+      }
+
+      .yk-8 {
+        fill: #231f20;
+      }
+
+      .yk-9 {
+        fill: #afd136;
+      }
+
+      .yk-10 {
+        fill: #b0d235;
+      }
+
+      .yk-2, .yk-3, .yk-4 {
+        stroke: #b0d235;
+      }
+
+      .yk-2, .yk-3, .yk-4, .yk-5, .yk-6, .yk-7 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .yk-2, .yk-7 {
+        stroke-width: .24px;
+      }
+
+      .yk-3, .yk-6 {
+        stroke-width: .49px;
+      }
+
+      .yk-4, .yk-5 {
+        stroke-width: .97px;
+      }
+
+      .yk-11 {
+        fill: #fff;
+      }
+
+      .yk-5, .yk-6, .yk-7 {
+        stroke: #231f20;
+      }
+
+      .yk-12 {
+        opacity: .1;
+      }
+    </style>
+  </defs>
+  <g class="yk-12">
+    <path class="yk-8" d="M230.34,28.54c0,.11,3.98,9.38,5.34,12.63,1.37,3.25,2.75,7.64,3.28,8.59.52.93.95,1.08,1.56,1.02.61-.06,1.78-.23,1.78-.23,0,0-2.64,1.61-3.25,1.91-.18-.18-5.1-8.44-6.71-10.72-1.61-2.28-3.04-12.17-3.04-12.17,0,0,1.03-1.06,1.03-1.03"/>
+    <path class="yk-7" d="M230.34,28.54c0,.11,3.98,9.38,5.34,12.63,1.37,3.25,2.75,7.64,3.28,8.59.52.93.95,1.08,1.56,1.02.61-.06,1.78-.23,1.78-.23,0,0-2.64,1.61-3.25,1.91-.18-.18-5.1-8.44-6.71-10.72-1.61-2.28-3.04-12.17-3.04-12.17,0,0,1.03-1.06,1.03-1.03Z"/>
+    <path class="yk-8" d="M223.66,28.54c0,.11-3.98,9.38-5.34,12.63-1.37,3.25-2.75,7.64-3.28,8.59-.52.93-.95,1.08-1.56,1.02-.61-.06-1.78-.23-1.78-.23,0,0,2.64,1.61,3.25,1.91.18-.18,5.1-8.44,6.71-10.72,1.61-2.28,3.04-12.17,3.04-12.17,0,0-1.03-1.06-1.03-1.03"/>
+    <path class="yk-7" d="M223.66,28.54c0,.11-3.98,9.38-5.34,12.63-1.37,3.25-2.75,7.64-3.28,8.59-.52.93-.95,1.08-1.56,1.02-.61-.06-1.78-.23-1.78-.23,0,0,2.64,1.61,3.25,1.91.18-.18,5.1-8.44,6.71-10.72,1.61-2.28,3.04-12.17,3.04-12.17,0,0-1.03-1.06-1.03-1.03Z"/>
+    <path class="yk-8" d="M227.33,14.02s8.1.73,15.03-2.73c2.52-1.4,2.85-2.46,3.13-2.79.55,0,1.03.46,1.03.55s.24.67.24.67c0,0-.79.33-2.49,1.46-1.7,1.12-5.4,3.61-11.48,5.04-6.07,1.43-5.46-2.19-5.46-2.19"/>
+    <path class="yk-7" d="M227.33,14.02s8.1.73,15.03-2.73c2.52-1.4,2.85-2.46,3.13-2.79.55,0,1.03.46,1.03.55s.24.67.24.67c0,0-.79.33-2.49,1.46-1.7,1.12-5.4,3.61-11.48,5.04-6.07,1.43-5.46-2.19-5.46-2.19Z"/>
+    <path class="yk-8" d="M227.21,14.02s-8.11.73-15.03-2.73c-2.52-1.4-2.85-2.46-3.13-2.79-.55,0-1.03.46-1.03.55s-.24.67-.24.67c0,0,.79.33,2.49,1.46,1.7,1.12,5.4,3.61,11.48,5.04,6.07,1.43,5.46-2.19,5.46-2.19"/>
+    <path class="yk-7" d="M227.21,14.02s-8.11.73-15.03-2.73c-2.52-1.4-2.85-2.46-3.13-2.79-.55,0-1.03.46-1.03.55s-.24.67-.24.67c0,0,.79.33,2.49,1.46,1.7,1.12,5.4,3.61,11.48,5.04,6.07,1.43,5.46-2.19,5.46-2.19Z"/>
+    <path class="yk-11" d="M227.23,33.45c-.21,0-.51.92-.51.92,0,0-5.26,19.92-5.49,20.41-1.11-.22-3.95-1.13-4.17-1.44.27-.22,1.34-.49,2.24-.59.9-.1.94-.75.94-.75,0,0,.78-6.7,1.48-13.92.7-7.22,1.51-9.45,1.95-10.71.5-1.43.08-2.73.08-2.73,0,0-.77-2.94-.95-3.6-.17-.67-.56-1.39-1.11-1.82s-2.03-.65-3.12-.8c-1.09-.14-7.11-1.25-9-1.7-1.89-.45-3.54-.62-4.09-.67-.38-.03-.48-.21-.38-.31.07-.07.26-.2.26-.2.2-.13.56-.36.76-.48.35-.2.82-.28,1.19-.2.37.09.51.12,1.67.42,1.77.46,4.97.57,7.32.49,2.34-.08,6.28-.54,7.85-1.05,2.1-.69,3.08-.77,3.08-.77h0s.99.08,3.08.77c1.57.51,5.51.97,7.85,1.05,2.34.08,5.54-.03,7.32-.49,1.16-.3,1.3-.33,1.66-.42.37-.09.84,0,1.19.2.19.11.55.35.76.48,0,0,.2.13.26.2.1.11,0,.28-.38.31-.56.04-2.2.22-4.09.67-1.89.45-7.91,1.56-9,1.7-1.09.14-2.56.37-3.12.8s-.94,1.16-1.11,1.82c-.17.66-.95,3.6-.95,3.6,0,0-.3,1.21.08,2.73.32,1.29,1.25,3.48,1.95,10.71.7,7.23,1.48,13.92,1.48,13.92,0,0,.04.65.94.75.9.1,1.97.36,2.24.59-.23.3-3.06,1.21-4.17,1.44-.23-.49-5.49-20.41-5.49-20.41,0,0-.31-.92-.51-.92"/>
+    <path class="yk-6" d="M227.23,33.45c-.21,0-.51.92-.51.92,0,0-5.26,19.92-5.49,20.41-1.11-.22-3.95-1.13-4.17-1.44.27-.22,1.34-.49,2.24-.59.9-.1.94-.75.94-.75,0,0,.78-6.7,1.48-13.92.7-7.22,1.51-9.45,1.95-10.71.5-1.43.08-2.73.08-2.73,0,0-.77-2.94-.95-3.6-.17-.67-.56-1.39-1.11-1.82s-2.03-.65-3.12-.8c-1.09-.14-7.11-1.25-9-1.7-1.89-.45-3.54-.62-4.09-.67-.38-.03-.48-.21-.38-.31.07-.07.26-.2.26-.2.2-.13.56-.36.76-.48.35-.2.82-.28,1.19-.2.37.09.51.12,1.67.42,1.77.46,4.97.57,7.32.49,2.34-.08,6.28-.54,7.85-1.05,2.1-.69,3.08-.77,3.08-.77h0s.99.08,3.08.77c1.57.51,5.51.97,7.85,1.05,2.34.08,5.54-.03,7.32-.49,1.16-.3,1.3-.33,1.66-.42.37-.09.84,0,1.19.2.19.11.55.35.76.48,0,0,.2.13.26.2.1.11,0,.28-.38.31-.56.04-2.2.22-4.09.67-1.89.45-7.91,1.56-9,1.7-1.09.14-2.56.37-3.12.8s-.94,1.16-1.11,1.82c-.17.66-.95,3.6-.95,3.6,0,0-.3,1.21.08,2.73.32,1.29,1.25,3.48,1.95,10.71.7,7.23,1.48,13.92,1.48,13.92,0,0,.04.65.94.75.9.1,1.97.36,2.24.59-.23.3-3.06,1.21-4.17,1.44-.23-.49-5.49-20.41-5.49-20.41,0,0-.31-.92-.51-.92"/>
+    <path class="yk-11" d="M225.26,10.77c0-1.45.86-2.13,1.92-2.13s1.92.69,1.92,2.13-.86,3.11-1.92,3.11-1.92-1.66-1.92-3.11"/>
+    <path class="yk-6" d="M225.26,10.77c0-1.45.86-2.13,1.92-2.13s1.92.69,1.92,2.13-.86,3.11-1.92,3.11-1.92-1.66-1.92-3.11Z"/>
+    <path class="yk-5" d="M199.9,28.01c0,15.07,12.21,27.28,27.28,27.28s27.28-12.21,27.28-27.28S242.25.73,227.19.73s-27.28,12.21-27.28,27.28Z"/>
+    <rect class="yk-5" x="204.63" y="8.01" width="45.09" height="47.23"/>
+    <rect class="yk-1" x="199.17" width="56.02" height="56.02"/>
+  </g>
+  <path class="yk-10" d="M230.86,28.54c0,.11,3.98,9.38,5.34,12.63,1.37,3.25,2.75,7.64,3.28,8.59.52.93.95,1.08,1.56,1.02.61-.06,1.78-.23,1.78-.23,0,0-2.64,1.61-3.25,1.91-.18-.18-5.1-8.44-6.71-10.72-1.61-2.28-3.04-12.17-3.04-12.17,0,0,1.03-1.06,1.03-1.03"/>
+  <path class="yk-2" d="M230.86,28.54c0,.11,3.98,9.38,5.34,12.63,1.37,3.25,2.75,7.64,3.28,8.59.52.93.95,1.08,1.56,1.02.61-.06,1.78-.23,1.78-.23,0,0-2.64,1.61-3.25,1.91-.18-.18-5.1-8.44-6.71-10.72-1.61-2.28-3.04-12.17-3.04-12.17,0,0,1.03-1.06,1.03-1.03Z"/>
+  <path class="yk-10" d="M224.18,28.54c0,.11-3.98,9.38-5.34,12.63-1.37,3.25-2.75,7.64-3.28,8.59-.52.93-.95,1.08-1.56,1.02-.61-.06-1.78-.23-1.78-.23,0,0,2.64,1.61,3.25,1.91.18-.18,5.1-8.44,6.71-10.72,1.61-2.28,3.04-12.17,3.04-12.17,0,0-1.03-1.06-1.03-1.03"/>
+  <path class="yk-2" d="M224.18,28.54c0,.11-3.98,9.38-5.34,12.63-1.37,3.25-2.75,7.64-3.28,8.59-.52.93-.95,1.08-1.56,1.02-.61-.06-1.78-.23-1.78-.23,0,0,2.64,1.61,3.25,1.91.18-.18,5.1-8.44,6.71-10.72,1.61-2.28,3.04-12.17,3.04-12.17,0,0-1.03-1.06-1.03-1.03Z"/>
+  <path class="yk-10" d="M227.86,14.02s8.1.73,15.03-2.73c2.52-1.4,2.85-2.46,3.13-2.79.55,0,1.03.46,1.03.55s.24.67.24.67c0,0-.79.33-2.49,1.46-1.7,1.12-5.4,3.61-11.48,5.04-6.07,1.43-5.46-2.19-5.46-2.19"/>
+  <path class="yk-2" d="M227.86,14.02s8.1.73,15.03-2.73c2.52-1.4,2.85-2.46,3.13-2.79.55,0,1.03.46,1.03.55s.24.67.24.67c0,0-.79.33-2.49,1.46-1.7,1.12-5.4,3.61-11.48,5.04-6.07,1.43-5.46-2.19-5.46-2.19Z"/>
+  <path class="yk-10" d="M227.74,14.02s-8.11.73-15.03-2.73c-2.52-1.4-2.85-2.46-3.13-2.79-.55,0-1.03.46-1.03.55s-.24.67-.24.67c0,0,.79.33,2.49,1.46,1.7,1.12,5.4,3.61,11.48,5.04,6.07,1.43,5.46-2.19,5.46-2.19"/>
+  <path class="yk-2" d="M227.74,14.02s-8.11.73-15.03-2.73c-2.52-1.4-2.85-2.46-3.13-2.79-.55,0-1.03.46-1.03.55s-.24.67-.24.67c0,0,.79.33,2.49,1.46,1.7,1.12,5.4,3.61,11.48,5.04,6.07,1.43,5.46-2.19,5.46-2.19Z"/>
+  <path class="yk-11" d="M227.75,33.45c-.21,0-.51.92-.51.92,0,0-5.26,19.92-5.49,20.41-1.11-.22-3.95-1.13-4.17-1.44.27-.22,1.34-.49,2.24-.59.9-.1.94-.75.94-.75,0,0,.78-6.7,1.48-13.92.7-7.22,1.51-9.45,1.95-10.71.5-1.43.08-2.73.08-2.73,0,0-.77-2.94-.95-3.6-.17-.67-.56-1.39-1.11-1.82-.55-.42-2.03-.65-3.12-.79-1.09-.14-7.11-1.25-9-1.7-1.89-.45-3.54-.62-4.09-.67-.38-.03-.48-.21-.38-.31.07-.07.26-.2.26-.2.2-.13.56-.36.76-.48.35-.2.82-.28,1.19-.2.37.09.51.12,1.67.42,1.77.46,4.97.57,7.32.49,2.34-.08,6.28-.54,7.85-1.05,2.1-.69,3.08-.77,3.08-.77h0s.99.08,3.08.77c1.57.51,5.51.97,7.85,1.05,2.34.08,5.54-.03,7.32-.49,1.16-.3,1.3-.33,1.66-.42.37-.09.84,0,1.19.2.19.11.55.35.76.48,0,0,.2.13.26.2.1.11,0,.28-.38.31-.56.04-2.2.22-4.09.67-1.89.45-7.91,1.56-9,1.7-1.09.14-2.56.37-3.12.79-.55.43-.94,1.16-1.11,1.82-.17.66-.95,3.6-.95,3.6,0,0-.3,1.21.08,2.73.32,1.29,1.25,3.48,1.95,10.71.7,7.23,1.48,13.92,1.48,13.92,0,0,.04.65.94.75.9.1,1.97.36,2.24.59-.23.3-3.06,1.21-4.17,1.44-.23-.49-5.49-20.41-5.49-20.41,0,0-.31-.92-.51-.92"/>
+  <path class="yk-3" d="M227.75,33.45c-.21,0-.51.92-.51.92,0,0-5.26,19.92-5.49,20.41-1.11-.22-3.95-1.13-4.17-1.44.27-.22,1.34-.49,2.24-.59.9-.1.94-.75.94-.75,0,0,.78-6.7,1.48-13.92.7-7.22,1.51-9.45,1.95-10.71.5-1.43.08-2.73.08-2.73,0,0-.77-2.94-.95-3.6-.17-.67-.56-1.39-1.11-1.82-.55-.42-2.03-.65-3.12-.79-1.09-.14-7.11-1.25-9-1.7-1.89-.45-3.54-.62-4.09-.67-.38-.03-.48-.21-.38-.31.07-.07.26-.2.26-.2.2-.13.56-.36.76-.48.35-.2.82-.28,1.19-.2.37.09.51.12,1.67.42,1.77.46,4.97.57,7.32.49,2.34-.08,6.28-.54,7.85-1.05,2.1-.69,3.08-.77,3.08-.77h0s.99.08,3.08.77c1.57.51,5.51.97,7.85,1.05,2.34.08,5.54-.03,7.32-.49,1.16-.3,1.3-.33,1.66-.42.37-.09.84,0,1.19.2.19.11.55.35.76.48,0,0,.2.13.26.2.1.11,0,.28-.38.31-.56.04-2.2.22-4.09.67-1.89.45-7.91,1.56-9,1.7-1.09.14-2.56.37-3.12.79-.55.43-.94,1.16-1.11,1.82-.17.66-.95,3.6-.95,3.6,0,0-.3,1.21.08,2.73.32,1.29,1.25,3.48,1.95,10.71.7,7.23,1.48,13.92,1.48,13.92,0,0,.04.65.94.75.9.1,1.97.36,2.24.59-.23.3-3.06,1.21-4.17,1.44-.23-.49-5.49-20.41-5.49-20.41,0,0-.31-.92-.51-.92"/>
+  <path class="yk-11" d="M225.78,10.77c0-1.45.86-2.13,1.92-2.13s1.92.69,1.92,2.13-.86,3.11-1.92,3.11-1.92-1.66-1.92-3.11"/>
+  <path class="yk-3" d="M225.78,10.77c0-1.45.86-2.13,1.92-2.13s1.92.69,1.92,2.13-.86,3.11-1.92,3.11-1.92-1.66-1.92-3.11Z"/>
+  <path class="yk-4" d="M200.43,28.01c0,15.07,12.21,27.28,27.28,27.28s27.28-12.21,27.28-27.28S242.77.73,227.71.73s-27.28,12.21-27.28,27.28Z"/>
+  <rect class="yk-4" x="205.16" y="8.01" width="45.09" height="47.23"/>
+  <rect class="yk-1" x="199.7" width="56.02" height="56.02"/>
+  <path class="yk-9" d="M482.53,51.68c7.97,0,13.7-4.47,13.7-11.35v-.11c0-6.13-4.13-9.4-13.07-11.35-8.83-1.89-10.89-4.01-10.89-7.8v-.11c0-3.61,3.32-6.48,8.54-6.48,4.13,0,7.85,1.32,11.58,4.36l2.64-3.5c-4.07-3.27-8.25-4.93-14.1-4.93-7.62,0-13.18,4.64-13.18,10.95v.11c0,6.59,4.24,9.57,13.47,11.58,8.42,1.78,10.43,3.9,10.43,7.62v.11c0,3.95-3.55,6.82-8.94,6.82s-9.57-1.89-13.76-5.67l-2.81,3.32c4.82,4.3,10.03,6.42,16.39,6.42M445.96,51.8c7.28,0,11.86-2.81,16.05-7.05l-2.98-2.92c-3.84,3.67-7.45,5.79-12.95,5.79-8.83,0-15.53-7.28-15.53-16.56v-.11c0-9.23,6.65-16.45,15.53-16.45,5.44,0,9.23,2.29,12.61,5.5l3.09-3.32c-4.01-3.78-8.37-6.36-15.65-6.36-11.81,0-20.29,9.4-20.29,20.75v.11c0,11.52,8.54,20.63,20.12,20.63M412.49,51.11h4.53V10.99h-4.53v40.12ZM367.96,51.11h4.41V18.21l25.91,32.9h3.61V10.99h-4.41v32.15l-25.28-32.15h-4.24v40.12ZM339.13,47.62c-9.17,0-15.82-7.45-15.82-16.56v-.11c0-9.11,6.53-16.45,15.7-16.45s15.82,7.45,15.82,16.56v.11c0,9.11-6.53,16.45-15.7,16.45M339.01,51.8c12.21,0,20.52-9.69,20.52-20.75v-.11c0-11.06-8.2-20.63-20.4-20.63s-20.52,9.69-20.52,20.75v.11c0,11.06,8.2,20.63,20.4,20.63M305.26,51.11h4.53V10.99h-4.53v40.12ZM269.09,47.04v-14.16h12.67c6.99,0,10.66,2.52,10.66,6.88v.11c0,4.47-3.78,7.17-9.86,7.17h-13.47ZM269.09,28.87v-13.81h12.21c5.73,0,8.88,2.58,8.88,6.53v.11c0,4.7-3.78,7.17-9.23,7.17h-11.87ZM264.62,51.11h17.83c8.77,0,14.56-4.07,14.56-10.95v-.11c0-5.5-3.84-8.25-8.6-9.69,3.15-1.38,6.36-4.07,6.36-9.29v-.11c0-2.58-.92-4.7-2.58-6.42-2.29-2.23-5.9-3.55-10.49-3.55h-17.08v40.12ZM163.18,51.11h29.29v-4.13h-24.76v-14.04h21.89v-4.13h-21.89v-13.7h24.47v-4.13h-29v40.12ZM123.11,51.11h4.53v-10.77l8.54-8.65,15.42,19.43h5.67l-17.94-22.58,17.2-17.54h-5.85l-23.04,23.96V10.99h-4.53v40.12ZM78.98,51.11h4.41V18.21l25.91,32.9h3.61V10.99h-4.41v32.15l-25.28-32.15h-4.24v40.12ZM42.59,36.44l9.17-20.46,9.11,20.46h-18.28ZM31.41,51.11h4.64l4.76-10.6h21.84l4.7,10.6h4.87L53.93,10.7h-4.24l-18.28,40.41ZM16.68,51.11h4.58v-15.93l16.68-24.19h-5.27l-13.64,20.06L5.5,10.99H0l16.68,24.24v15.88Z"/>
+  <path class="yk-11" d="M417.04,77.15h6.93v-1.45h-5.31v-2.49h4.64v-1.45h-4.64v-2.41h5.24v-1.45h-6.86v9.26ZM407.77,72.48v-3.11h2.37c1.2,0,1.92.54,1.92,1.54v.03c0,.94-.74,1.55-1.91,1.55h-2.38ZM406.15,77.15h1.63v-3.23h2.04l2.28,3.23h1.92l-2.5-3.51c1.3-.37,2.21-1.28,2.21-2.8v-.03c0-.81-.28-1.5-.77-2-.59-.58-1.51-.92-2.67-.92h-4.13v9.26ZM396.79,73.47l1.59-3.71,1.6,3.71h-3.19ZM393.58,77.15h1.67l.95-2.24h4.38l.94,2.24h1.72l-4.08-9.33h-1.51l-4.07,9.33ZM387.58,77.31c1.73,0,2.79-.64,3.76-1.64l-1.05-1.06c-.79.74-1.52,1.2-2.66,1.2-1.77,0-3.06-1.48-3.06-3.29v-.03c0-1.81,1.28-3.27,3.06-3.27,1.06,0,1.85.46,2.59,1.15l1.04-1.2c-.89-.85-1.92-1.44-3.63-1.44-2.8,0-4.77,2.15-4.77,4.79v.03c0,2.66,2.01,4.76,4.71,4.76M370.37,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM356.32,77.15h1.6v-6.59l5.11,6.59h1.36v-9.26h-1.6v6.4l-4.96-6.4h-1.51v9.26ZM346.13,77.15h6.93v-1.45h-5.31v-2.49h4.64v-1.45h-4.64v-2.41h5.24v-1.45h-6.87v9.26ZM340.71,77.15h1.63v-9.26h-1.63v9.26ZM332.99,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM322.55,73.47l1.59-3.71,1.6,3.71h-3.19ZM319.34,77.15h1.67l.95-2.24h4.38l.94,2.24h1.72l-4.08-9.33h-1.51l-4.07,9.33ZM312.52,72.7v-3.34h1.89c1.22,0,2,.57,2,1.65v.03c0,.97-.77,1.66-2,1.66h-1.89ZM310.9,77.15h1.63v-2.98h1.84c2.04,0,3.7-1.08,3.7-3.16v-.03c0-1.87-1.36-3.1-3.52-3.1h-3.65v9.26ZM298.81,77.31c1.73,0,2.79-.64,3.76-1.64l-1.05-1.06c-.79.74-1.52,1.2-2.66,1.2-1.77,0-3.06-1.48-3.06-3.29v-.03c0-1.81,1.28-3.27,3.06-3.27,1.06,0,1.85.46,2.59,1.15l1.05-1.2c-.89-.85-1.92-1.44-3.63-1.44-2.8,0-4.77,2.15-4.77,4.79v.03c0,2.66,2.01,4.76,4.71,4.76M289.09,77.15h1.63v-9.26h-1.63v9.26ZM281.38,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM271.48,75.81c-1.84,0-3.15-1.49-3.15-3.29v-.03c0-1.8,1.28-3.27,3.12-3.27s3.15,1.5,3.15,3.3v.03c0,1.8-1.28,3.27-3.12,3.27M271.45,77.31c2.85,0,4.86-2.18,4.86-4.79v-.03c0-2.61-1.98-4.76-4.83-4.76s-4.85,2.18-4.85,4.79v.03c0,2.61,1.98,4.76,4.83,4.76M255.66,77.15h1.63v-3.9h4.42v3.9h1.63v-9.26h-1.63v3.85h-4.42v-3.85h-1.63v9.26ZM248.03,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM236.53,72.48v-3.11h2.37c1.2,0,1.92.54,1.92,1.54v.03c0,.94-.74,1.55-1.91,1.55h-2.38ZM234.91,77.15h1.63v-3.23h2.04l2.28,3.23h1.92l-2.5-3.51c1.3-.37,2.21-1.28,2.21-2.8v-.03c0-.81-.28-1.5-.77-2-.6-.58-1.51-.92-2.67-.92h-4.13v9.26ZM226.78,75.81c-1.84,0-3.15-1.49-3.15-3.29v-.03c0-1.8,1.28-3.27,3.12-3.27s3.15,1.5,3.15,3.3v.03c0,1.8-1.28,3.27-3.12,3.27M226.76,77.31c2.85,0,4.86-2.18,4.86-4.79v-.03c0-2.61-1.98-4.76-4.83-4.76s-4.86,2.18-4.86,4.79v.03c0,2.61,1.98,4.76,4.83,4.76M207,75.67v-6.3h1.83c1.95,0,3.22,1.34,3.22,3.15v.03c0,1.81-1.27,3.12-3.22,3.12h-1.83ZM205.38,77.15h3.45c2.91,0,4.92-2.02,4.92-4.63v-.03c0-2.61-2.01-4.6-4.92-4.6h-3.45v9.26ZM193.6,77.15h1.6v-6.59l5.11,6.59h1.36v-9.26h-1.6v6.4l-4.96-6.4h-1.51v9.26ZM184.25,73.47l1.59-3.71,1.6,3.71h-3.19ZM181.03,77.15h1.67l.95-2.24h4.38l.94,2.24h1.72l-4.07-9.33h-1.51l-4.08,9.33ZM169.74,77.31c1.73,0,2.79-.64,3.76-1.64l-1.04-1.06c-.79.74-1.52,1.2-2.66,1.2-1.77,0-3.06-1.48-3.06-3.29v-.03c0-1.81,1.28-3.27,3.06-3.27,1.06,0,1.85.46,2.59,1.15l1.05-1.2c-.89-.85-1.92-1.44-3.63-1.44-2.8,0-4.77,2.15-4.77,4.79v.03c0,2.66,2.01,4.76,4.71,4.76M160.02,77.15h1.63v-9.26h-1.63v9.26ZM152.31,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM139.84,77.15h6.93v-1.45h-5.3v-2.49h4.64v-1.45h-4.64v-2.41h5.24v-1.45h-6.87v9.26ZM128.46,77.15h1.63v-3.9h4.42v3.9h1.62v-9.26h-1.62v3.85h-4.42v-3.85h-1.63v9.26ZM120.84,77.15h1.64v-7.75h2.94v-1.51h-7.51v1.51h2.94v7.75ZM112.21,77.28c1.95,0,3.31-1.03,3.31-2.76v-.03c0-1.54-1.02-2.24-2.98-2.71-1.77-.42-2.2-.74-2.2-1.46v-.03c0-.61.56-1.1,1.51-1.1.85,0,1.68.33,2.51.95l.87-1.23c-.94-.75-2.01-1.16-3.36-1.16-1.84,0-3.16,1.1-3.16,2.68v.03c0,1.71,1.11,2.29,3.08,2.77,1.72.4,2.09.75,2.09,1.42v.03c0,.7-.64,1.17-1.64,1.17-1.15,0-2.04-.44-2.92-1.2l-.98,1.16c1.11.99,2.45,1.48,3.86,1.48M100.91,75.81c-1.84,0-3.15-1.49-3.15-3.29v-.03c0-1.8,1.28-3.27,3.12-3.27s3.15,1.5,3.15,3.3v.03c0,1.8-1.28,3.27-3.12,3.27M100.89,77.31c2.85,0,4.86-2.18,4.86-4.79v-.03c0-2.61-1.98-4.76-4.83-4.76s-4.85,2.18-4.85,4.79v.03c0,2.61,1.98,4.76,4.83,4.76M87.21,72.48v-3.11h2.37c1.2,0,1.92.54,1.92,1.54v.03c0,.94-.74,1.55-1.91,1.55h-2.38ZM85.58,77.15h1.63v-3.23h2.04l2.28,3.23h1.92l-2.5-3.51c1.3-.37,2.21-1.28,2.21-2.8v-.03c0-.81-.28-1.5-.77-2-.6-.58-1.51-.92-2.67-.92h-4.13v9.26ZM77.04,72.7v-3.34h1.89c1.22,0,2,.57,2,1.65v.03c0,.97-.77,1.66-2,1.66h-1.89ZM75.42,77.15h1.63v-2.98h1.84c2.04,0,3.7-1.08,3.7-3.16v-.03c0-1.87-1.36-3.1-3.52-3.1h-3.65v9.26Z"/>
+</svg></div>
+    <button class="ver" id="ver"></button>
+  </div>
+  <div class="htitle">My Work Review</div>
+  <div class="hsub">rate what you do and what you can do, before your review</div>
+  <div class="tabs">
+    <button class="tab on" id="tab-rate">My Tasks</button>
+    <button class="tab" id="tab-sum">My Picture</button>
+  </div>
+</header>
+
+<!-- RATE -->
+<div id="view-rate" class="wrap view">
+  <div class="card accent">
+    <h2>How this works</h2>
+    <div class="intro">Go down the list. For each task, say whether it is part of your job, something extra you take on, or something you can do but rarely use. Then set how good you are at it. Skip anything you do not do or know.</div>
+    <div class="marks">
+      <div class="mk"><span class="dot" style="background:#8fb01f"></span><div><b>Daily duty</b> &mdash; clearly part of my job description <span>the work I am expected to do</span></div></div>
+      <div class="mk"><span class="dot" style="background:#c9772f"></span><div><b>Extra I take on</b> &mdash; not officially my job, I do it to keep things rolling <span>pitching in</span></div></div>
+      <div class="mk"><span class="dot" style="background:#4f6d7a"></span><div><b>Can do, rarely</b> &mdash; I know how, but I do not do it often <span>skills in my back pocket</span></div></div>
+    </div>
+    <div class="marks" style="margin-top:12px">
+      <div class="intro">Skill level, when you mark one: <b>Novice</b> (done it with help), <b>Proficient</b> (do it right on my own), <b>Mastered</b> (I set the standard and can train others).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <label class="fld">Your name<input type="text" id="who" placeholder="your name"></label>
+      <label class="fld">Your role / title (optional)<input type="text" id="role" placeholder="e.g. AFO technician"></label>
+    </div>
+  </div>
+
+  <div id="filters"></div>
+  <div id="list"></div>
+
+  <div class="card">
+    <h2>Add a task that is not on the list</h2>
+    <button class="addbtn" id="addbtn">+ Add a task</button>
+    <div class="addform hidden" id="addform">
+      <input type="text" id="add-name" placeholder="Name of the task or skill">
+      <select id="add-cat"></select>
+      <div class="row">
+        <button class="btn ghost" id="add-save">Add it</button>
+        <button class="btn" id="add-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot"><span class="mot">ACCEPT NO LIMITATIONS.</span> &middot; Yanke Bionics</div>
+</div>
+
+<!-- SUMMARY -->
+<div id="view-sum" class="wrap view hidden">
+  <div id="sum-body"></div>
+  <div class="foot"><span class="mot">ACCEPT NO LIMITATIONS.</span> &middot; Yanke Bionics</div>
+</div>
+
+<div id="bar-rate" class="bottombar">
+  <div class="bbinfo"><b id="pnum">0</b> tasks marked &nbsp;<span class="save" id="save"></span></div>
+  <button class="bbbtn sec" id="csv">CSV</button>
+  <button class="bbbtn" id="send">Send</button>
+</div>
+<div id="bar-sum" class="bottombar hidden">
+  <div class="bbinfo">Your picture updates as you rate</div>
+  <button class="bbbtn sec" id="csv2">CSV</button>
+  <button class="bbbtn" id="send2">Send</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const BUILD=document.querySelector('meta[name="build"]').content;
+(function(){try{fetch(location.pathname+"?cb="+Date.now(),{cache:"no-store"}).then(function(r){return r.text();}).then(function(t){var m=t.match(/name="build" content="([^"]+)"/);if(m&&m[1]!==BUILD&&sessionStorage.getItem("vb")!==m[1]){sessionStorage.setItem("vb",m[1]);location.replace(location.pathname+"?v="+encodeURIComponent(m[1]));}}).catch(function(){});}catch(e){}})();
+
+const SKILLS = [
+  {id:"HT-01",c:"Hand Tools",n:"Hammers & mallets",d:"Striking tools for forming and shaping plastic, leather, and metal.",dd:{"AFO": "Striking tools for forming and shaping plastic, leather, rivets and metal.", "PROS": "Striking tools for forming and shaping plastic, leather, rivets and metal."},s:["AFO", "PROS"]},
+  {id:"HT-02",c:"Hand Tools",n:"Utility knives, scalpels, shears",d:"Cutting and trimming plastics, leather, and foam by hand.",s:["FO", "AFO", "PROS"]},
+  {id:"HT-03",c:"Hand Tools",n:"Pliers",d:"Gripping, bending, and setting rivets and hardware.",s:["FO", "AFO", "PROS"]},
+  {id:"HT-04",c:"Hand Tools",n:"Screwdrivers, wrenches, Allen keys",d:"Assembling joints, fasteners, and straps.",s:["FO", "AFO", "PROS"]},
+  {id:"HT-05",c:"Hand Tools",n:"Rasps & files",d:"Hand-shaping and smoothing plastic and metal edges.",dd:{"PROS": "Hand-shaping and smoothing plastic, plaster and metal edges."},s:["PROS"]},
+  {id:"HT-06",c:"Hand Tools",n:"Measuring tools",d:"Measuring and marking with rulers, calipers, tapes, and squares.",dd:{"SUP": "Measuring and marking with rulers, calipers, tapes, and squares. Quality control"},s:["FO", "AFO", "PROS", "DIG", "SUP"]},
+  {id:"PM-01",c:"Power Tools & Machinery",n:"Bench grinders & sanders",d:"Powered abrasive smoothing and shaping of surfaces.",s:["FO", "AFO", "PROS"]},
+  {id:"PM-02",c:"Power Tools & Machinery",n:"Routers",d:"Shaping orthoses and trimming edges with a router.",s:["FO", "AFO", "PROS"]},
+  {id:"PM-03",c:"Power Tools & Machinery",n:"Band saws & jig saws",d:"Cutting plastics, wood, and composites to shape.",s:["FO", "AFO", "PROS"]},
+  {id:"PM-04",c:"Power Tools & Machinery",n:"Drill presses & hand drills",d:"Drilling holes for rivets, joints, and attachments.",dd:{"FO": "Drilling holes for copoly combos"},s:["FO", "AFO", "PROS"]},
+  {id:"PM-05",c:"Power Tools & Machinery",n:"Sewing machines",d:"Industrial sewing of straps, padding, leather, and Velcro.",note:"Which departments actually sew?",s:["AFO", "PROS"]},
+  {id:"PM-06",c:"Power Tools & Machinery",n:"Heat guns",d:"Spot-heating thermoplastics for local adjustments.",dd:{"FO": "Spot-heating soft topcovers for local orthotics"},s:["FO", "AFO", "PROS"]},
+  {id:"PM-07",c:"Power Tools & Machinery",n:"Trautman carver",d:"Carving and finishing on the Trautman. Ranges from basic surface smoothing to advanced sculpting depending on the device and department.",s:["FO", "AFO", "PROS"]},
+  {id:"SE-01",c:"Specialized O&P Equipment",n:"Vacuum formers",d:"Pulling heated plastic over a mold or cast.",s:["FO", "AFO", "PROS"]},
+  {id:"SE-02",c:"Specialized O&P Equipment",n:"Ovens / convection heaters",d:"Heating thermoplastics and curing laminations.",s:["FO", "AFO", "PROS"]},
+  {id:"SE-03",c:"Specialized O&P Equipment",n:"Cast saws & cast modification",d:"Cutting and shaping plaster or foam positive models.",dd:{"AFO": "Trimming mold off cast. Cutting and shaping plaster or foam positive models.", "PROS": "Trimming mold of socket. Cutting and shaping plaster or foam positive models."},s:["AFO", "PROS"]},
+  {id:"SE-04",c:"Specialized O&P Equipment",n:"Laminating equipment",d:"Laminating carbon fiber or fiberglass with resin.",s:["PROS"]},
+  {id:"SE-05",c:"Specialized O&P Equipment",n:"Alignment jigs & fixtures",d:"Setting correct joint and upright positioning.",dd:{"AFO": "KAFO only: the special jig used for metal-bending alignment. Other orthoses use limb molds instead."},s:["PROS", "AFO"]},
+  {id:"MS-01",c:"Materials Handling & Safety",n:"Respirators, masks, goggles",d:"Personal protection from dust and resin.",s:["FO", "AFO", "PROS", "DIG", "SUP", "ENG"]},
+  {id:"MS-02",c:"Materials Handling & Safety",n:"Ventilated stations / fume hoods",d:"Working safely with lamination and adhesive fumes.",s:["FO", "AFO", "PROS"]},
+  {id:"MS-03",c:"Materials Handling & Safety",n:"Gloves",d:"Chemical- and cut-resistant hand protection.",s:["FO", "AFO", "PROS"]},
+  {id:"MS-04",c:"Materials Handling & Safety",n:"Clamps & vices",d:"Securing work during fabrication.",s:["FO", "AFO", "PROS"]},
+  {id:"MS-05",c:"Materials Handling & Safety",n:"Mixers & scales",d:"Accurately mixing resins, adhesives, and plaster.",dd:{"DIG": "Weighing filiment for 3d printers."},s:["PROS", "DIG"]},
+  {id:"DC-01",c:"Digital / CAD-CAM",n:"3D scanning",d:"Capturing limb shapes as digital models.",s:["DIG", "ENG"]},
+  {id:"DC-02",c:"Digital / CAD-CAM",n:"CAD software",d:"Digital design and modification of devices.",s:["DIG", "ENG"]},
+  {id:"DC-03",c:"Digital / CAD-CAM",n:"ARKAD 3D modification",d:"Modifying positive models in ARKAD.",s:["DIG"]},
+  {id:"DC-04",c:"Digital / CAD-CAM",n:"CAD/CAM digital workflows",d:"Running the digital design-to-carve workflow.",s:["DIG", "SUP", "ENG"]},
+  {id:"DC-05",c:"Digital / CAD-CAM",n:"CNC carvers / routers",d:"Carving positive models from digital scans.",dd:{"DIG": "Programing/running the table setups from models from digital scans. Running"},s:["DIG"]},
+  {id:"DC-06",c:"Digital / CAD-CAM",n:"Robot carving",d:"Setup, washing, and carving on the robot.",s:["DIG"]},
+  {id:"DC-07",c:"Digital / CAD-CAM",n:"Wax milling",d:"Milling wax positives for fabrication.",dd:{"DIG": "Programing/Milling wax positives for fabrication."},s:["DIG"]},
+  {id:"DC-08",c:"Digital / CAD-CAM",n:"3D printers",d:"Printing device parts for production.",s:["DIG"]},
+  {id:"DC-09",c:"Digital / CAD-CAM",n:"Lab order / scan data input",d:"Entering orders and scan data into the system.",s:["DIG"]},
+  {id:"FT-01",c:"Fabrication Techniques",n:"Model modification (digital)",d:"Modifying the positive digitally in CAD. About 95% of modification is digital now, and that is the company direction.",s:["DIG"]},
+  {id:"FT-02",c:"Fabrication Techniques",n:"Molding / vacuum forming",d:"Forming plastic over the positive to make the device shell.",s:["FO", "AFO", "PROS"]},
+  {id:"FT-03",c:"Fabrication Techniques",n:"Molding prep / plaster",d:"Preparing plaster and the positive for molding.",s:["AFO", "PROS"]},
+  {id:"FT-04",c:"Fabrication Techniques",n:"Finish milling",d:"Milling the device to final shape.",s:["DIG"]},
+  {id:"FT-05",c:"Fabrication Techniques",n:"Finish sanding",d:"Sanding the device to a final smooth finish.",s:["FO", "AFO", "PROS"]},
+  {id:"FT-06",c:"Fabrication Techniques",n:"Cutting / trimlines",d:"Cutting the device to its trimlines.",s:["FO", "AFO", "PROS"]},
+  {id:"FT-07",c:"Fabrication Techniques",n:"Metal bending / KAFO metal work",d:"Bending and fitting uprights and joints.",s:["AFO"]},
+  {id:"FT-08",c:"Fabrication Techniques",n:"Finish AFO",d:"Final finishing and detailing of an AFO.",s:["AFO"]},
+  {id:"FT-09",c:"Fabrication Techniques",n:"Moon Boot fabrication",d:"Fabricating the Moon Boot device.",note:"Complex, currently one trained person",dd:{"DIG": "Midsole programing/milling"},s:["AFO", "DIG"]},
+  {id:"FT-10",c:"Fabrication Techniques",n:"In-process quality check",d:"Checking work quality at stops along production. You cannot check your own work.",s:["FO", "AFO", "PROS", "DIG"]},
+  {id:"FT-11",c:"Fabrication Techniques",n:"Model modification (physical)",d:"Modifying the positive physically: filling a cast with plaster and shaping it by hand. Rare now, but still needed for some jobs.",s:["FO", "AFO", "PROS"]},
+  {id:"PW-01",c:"Production & Workflow",n:"Production tracking",d:"Logging your work and its status.",s:["SUP"]},
+  {id:"PW-02",c:"Production & Workflow",n:"Follow-through on assigned jobs",d:"Carrying assigned jobs through to completion.",s:["FO", "AFO", "PROS", "DIG"]},
+  {id:"SUP-01",c:"Supervision & Leadership",n:"Onboarding & training techs",d:"Bringing new techs up to speed.",cnote:"DRAFT",s:["SUP"]},
+  {id:"SUP-02",c:"Supervision & Leadership",n:"Scheduling & work assignment",d:"Assigning work and building the schedule.",s:["SUP"]},
+  {id:"SUP-03",c:"Supervision & Leadership",n:"Throughput / turnaround management",d:"Keeping turnaround targets on track.",s:["SUP"]},
+  {id:"SUP-04",c:"Supervision & Leadership",n:"Final QC sign-off",d:"Final check before a device ships. Orthotics are signed off by the supervisor, prosthetics by a designated prosthetic team member. Never your own work.",s:["SUP", "PROS"]},
+  {id:"SUP-05",c:"Supervision & Leadership",n:"Coverage & staffing planning",d:"Planning coverage and staffing levels.",s:["SUP"]},
+  {id:"SUP-06",c:"Supervision & Leadership",n:"Manage work flows",d:"Managing the flow of work across the floor.",s:["SUP"]},
+  {id:"SUP-07",c:"Supervision & Leadership",n:"Performance coaching & reviews",d:"Coaching techs and running reviews.",s:["SUP"]},
+  {id:"SUP-08",c:"Supervision & Leadership",n:"Materials / inventory & ordering",d:"Managing materials, inventory, and ordering.",dd:{"SUP": "Managing materials, inventory, and ordering. Coordination with purchasing department"},s:["SUP"]},
+  {id:"SUP-09",c:"Supervision & Leadership",n:"Lab safety oversight",d:"Overseeing lab safety and compliance.",s:["SUP"]},
+  {id:"SUP-10",c:"Supervision & Leadership",n:"Cross-training program",d:"Running cross-training to reduce single points of failure.",s:["SUP"]},
+  {id:"SUP-11",c:"Supervision & Leadership",n:"Escalation & problem resolution",d:"Handling equipment issues and rush orders.",s:["SUP"]},
+  {id:"ENG-01",c:"Engineering & R&D",n:"R&D of new fabrication techniques",d:"Researching and developing new fabrication methods.",cnote:"DRAFT - needs your engineers' input",s:["ENG"]},
+  {id:"ENG-02",c:"Engineering & R&D",n:"CAD programming / automation",d:"Programming and automating CAD beyond production use.",s:["ENG"]},
+  {id:"ENG-03",c:"Engineering & R&D",n:"Additive / 3D-print development",d:"Developing 3D-print materials, settings, and methods.",s:["DIG", "ENG"]},
+  {id:"ENG-04",c:"Engineering & R&D",n:"Prototyping new devices",d:"Building prototypes of new devices and components.",s:["ENG"]},
+  {id:"ENG-05",c:"Engineering & R&D",n:"Materials research & testing",d:"Researching and testing materials.",s:["ENG"]},
+  {id:"ENG-06",c:"Engineering & R&D",n:"Design for manufacturability",d:"Making designs buildable and reverse-engineering parts.",s:["ENG"]},
+  {id:"ENG-07",c:"Engineering & R&D",n:"Process documentation & SOPs",d:"Documenting processes and writing SOPs.",s:["DIG", "SUP", "ENG"]},
+  {id:"ENG-08",c:"Engineering & R&D",n:"Design validation & testing",d:"Validating and testing new methods.",s:["ENG"]},
+  {id:"ENG-09",c:"Engineering & R&D",n:"Mechanical design / tolerance analysis",d:"Mechanical design and tolerance work.",s:["ENG"]},
+  {id:"ENG-10",c:"Engineering & R&D",n:"Fixture / jig / tooling design",d:"Designing fixtures, jigs, and tooling.",s:["ENG"]}
+];
+const TAGS=[["duty","Daily duty"],["extra","Extra I take on"],["cando","Can do, rarely"]];
+const TAGNAME={duty:"Daily duty",extra:"Extra I take on",cando:"Can do, rarely"};
+const TAGCOL={duty:"#8fb01f",extra:"#c9772f",cando:"#4f6d7a"};
+const LEVELS=[[1,"Novice","Nov"],[2,"Proficient","Pro"],[3,"Mastered","Mas"]];
+const LVLNAME={1:"Novice",2:"Proficient",3:"Mastered"};
+const CATS=[];SKILLS.forEach(s=>{if(!CATS.includes(s.c))CATS.push(s.c);});
+const SKEY="labSelfReview_v1";
+
+const $=id=>document.getElementById(id);
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),1700);}
+function stamp(){return new Date().toISOString().slice(0,10);}
+function download(name,text,mime){const b=new Blob([text],{type:mime});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),500);}
+
+let R={};        // R[skillId]={tag,level}
+let custom=[];   // {id,name,c,tag,level}
+let closed={};
+let filter="ALL";
+
+function load(){try{const raw=localStorage.getItem(SKEY);if(raw){const o=JSON.parse(raw);R=o.R||{};custom=o.custom||[];closed=o.closed||{};$("who").value=o.who||"";$("role").value=o.role||"";}}catch(e){R={};custom=[];}}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify({R,custom,closed,who:$("who").value,role:$("role").value}));}catch(e){}const s=$("save");s.textContent="saved";clearTimeout(save._t);save._t=setTimeout(()=>s.textContent="",900);}
+function allItems(){return SKILLS.concat(custom);}
+function rec(id){if(!R[id])R[id]={tag:null,level:0};return R[id];}
+
+function filters(){const F=$("filters");F.innerHTML="";[["ALL","All"]].concat(TAGS.map(t=>[t[0],t[1]])).forEach(([k,lab])=>{const c=document.createElement("div");c.className="fchip"+(filter===k?" on":"");c.textContent=lab;if(filter===k&&k!=="ALL"){c.style.background=TAGCOL[k];c.style.borderColor=TAGCOL[k];c.style.color="#fff";}c.onclick=()=>{filter=k;filters();render();};F.appendChild(c);});}
+function vis(it){if(filter==="ALL")return true;const r=R[it.id];return !!(r&&r.tag===filter);}
+
+function render(){
+  const list=$("list");list.innerHTML="";
+  CATS.concat(custom.length?["Added by me"]:[]).forEach(cat=>{
+    const items=allItems().filter(it=>it.c===cat && vis(it));
+    if(!items.length)return;
+    const ch=document.createElement("div");ch.className="cat"+(closed[cat]?" closed":"");
+    const marked=items.filter(it=>R[it.id]&&R[it.id].tag).length;
+    ch.innerHTML='<span>'+cat+'</span><span class="cmeta"><span>'+marked+'/'+items.length+'</span><span class="chev">▼</span></span>';
+    const body=document.createElement("div");body.className="catbody";
+    ch.onclick=()=>{closed[cat]=!closed[cat];save();ch.classList.toggle("closed");body.style.maxHeight=closed[cat]?"0px":body.scrollHeight+"px";};
+    list.appendChild(ch);
+    items.forEach(it=>{
+      const r=rec(it.id);
+      const card=document.createElement("div");card.className="skill"+(r.tag?" t-"+r.tag:"");
+      const nm=document.createElement("div");nm.className="sk-name";nm.textContent=it.n;
+      const de=document.createElement("div");de.className="sk-desc";de.textContent=it.d||"";
+      nm.onclick=()=>de.classList.toggle("show");
+      card.appendChild(nm);if(it.d)card.appendChild(de);
+      if(it.custom){const rm=document.createElement("button");rm.className="rm";rm.textContent="remove";rm.onclick=()=>{custom=custom.filter(x=>x.id!==it.id);delete R[it.id];save();render();};card.appendChild(rm);}
+      const mr=document.createElement("div");mr.className="markrow";
+      TAGS.forEach(([k,lab])=>{const b=document.createElement("button");b.className="mbtn "+k+(r.tag===k?" on":"");b.textContent=lab;b.onclick=()=>{r.tag=(r.tag===k?null:k);if(!r.tag)r.level=0;save();render();};mr.appendChild(b);});
+      card.appendChild(mr);
+      if(r.tag){const lr=document.createElement("div");lr.className="lvlrow";const ll=document.createElement("span");ll.className="lvllab";ll.textContent="My level";lr.appendChild(ll);const seg=document.createElement("div");seg.className="seg";LEVELS.forEach(([v,full,ab])=>{const b=document.createElement("button");b.textContent=ab;b.title=full;if(r.level===v)b.classList.add("lv"+v);b.onclick=()=>{r.level=(r.level===v?0:v);save();render();};seg.appendChild(b);});lr.appendChild(seg);card.appendChild(lr);}
+      body.appendChild(card);
+    });
+    list.appendChild(body);
+    requestAnimationFrame(()=>{body.style.maxHeight=closed[cat]?"0px":body.scrollHeight+"px";});
+  });
+  let marked=0;allItems().forEach(it=>{if(R[it.id]&&R[it.id].tag)marked++;});
+  $("pnum").textContent=marked;
+}
+
+/* ---------- summary ---------- */
+function tally(){const t={duty:0,extra:0,cando:0,total:0,mastered:0,proficient:0,novice:0};allItems().forEach(it=>{const r=R[it.id];if(r&&r.tag){t[r.tag]++;t.total++;if(r.level===3)t.mastered++;if(r.level===2)t.proficient++;if(r.level===1)t.novice++;}});return t;}
+function donut(t){
+  const total=t.duty+t.extra+t.cando;const r=52,cx=64,cy=64,circ=2*Math.PI*r;
+  let off=0;const segs=[["duty",t.duty,TAGCOL.duty],["extra",t.extra,TAGCOL.extra],["cando",t.cando,TAGCOL.cando]];
+  let arcs="";
+  if(total>0){segs.forEach(([k,v,col])=>{const frac=v/total;const len=frac*circ;arcs+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="20" stroke-dasharray="'+len+' '+(circ-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cy+')"></circle>';off+=len;});}
+  else{arcs='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#e2e2dd" stroke-width="20"></circle>';}
+  return '<svg viewBox="0 0 128 128" width="150" height="150" aria-label="task mix">'+arcs+'<text x="64" y="60" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="26" fill="#231f20">'+total+'</text><text x="64" y="78" text-anchor="middle" font-family="Arial" font-size="10" fill="#8a8788">TASKS</text></svg>';
+}
+function renderSummary(){
+  const t=tally();const body=$("sum-body");body.innerHTML="";
+  const nm=$("who").value.trim();
+  if(t.total===0){body.innerHTML='<div class="card"><div class="emptym">Mark a few tasks on the <b>My Tasks</b> tab and your picture builds here automatically.</div></div>';return;}
+  const perform=t.duty+t.extra;const cap=t.duty+t.extra+t.cando;
+  // headline
+  const h=document.createElement("div");h.className="card accent";
+  h.innerHTML='<h2>'+(nm?nm+"'s picture":"The picture")+'</h2>'+
+    '<div class="intro">Your job description covers <b>'+t.duty+'</b> task'+(t.duty===1?'':'s')+'. You actually perform <b>'+perform+'</b> day to day. You are capable of <b>'+cap+'</b>. That gap is skill the lab has on hand that your title does not show.</div>';
+  body.appendChild(h);
+  // donut + legend
+  const d=document.createElement("div");d.className="card";
+  d.innerHTML='<h2>What your tasks are made of</h2><div class="donutwrap">'+donut(t)+
+    '<div class="dlegend">'+
+      '<div class="dl"><span class="sw" style="background:'+TAGCOL.duty+'"></span><div><b>'+t.duty+'</b> Daily duty</div></div>'+
+      '<div class="dl"><span class="sw" style="background:'+TAGCOL.extra+'"></span><div><b>'+t.extra+'</b> Extra I take on</div></div>'+
+      '<div class="dl"><span class="sw" style="background:'+TAGCOL.cando+'"></span><div><b>'+t.cando+'</b> Can do, rarely</div></div>'+
+    '</div></div>';
+  body.appendChild(d);
+  // capability bar
+  const c=document.createElement("div");c.className="card";
+  const pd=cap?Math.round(t.duty/cap*100):0,pe=cap?Math.round(t.extra/cap*100):0,pc=cap?100-pd-pe:0;
+  c.innerHTML='<h2>Your role vs your capability</h2>'+
+    '<div class="capbar">'+
+      (t.duty?'<div class="capseg duty" style="width:'+pd+'%">'+t.duty+'</div>':'')+
+      (t.extra?'<div class="capseg extra" style="width:'+pe+'%">'+t.extra+'</div>':'')+
+      (t.cando?'<div class="capseg cando" style="width:'+pc+'%">'+t.cando+'</div>':'')+
+    '</div>'+
+    '<div class="capnote"><b>'+Math.round(t.duty/cap*100)+'%</b> of what you are capable of is your official job. The rest is work you take on and skills you carry that are not written into your role.</div>';
+  body.appendChild(c);
+  // tiles
+  const ti=document.createElement("div");ti.className="card";
+  ti.innerHTML='<h2>By the numbers</h2><div class="tiles">'+
+    '<div class="tile duty"><div class="n">'+t.duty+'</div><div class="l">Daily duties (your job description)</div></div>'+
+    '<div class="tile extra"><div class="n">'+t.extra+'</div><div class="l">Extras you take on</div></div>'+
+    '<div class="tile cando"><div class="n">'+t.cando+'</div><div class="l">Can do, rarely used</div></div>'+
+    '<div class="tile"><div class="n">'+t.mastered+'</div><div class="l">Tasks you have mastered (can train others)</div></div>'+
+  '</div>';
+  body.appendChild(ti);
+}
+
+/* ---------- add custom ---------- */
+function fillCatSelect(){const s=$("add-cat");s.innerHTML="";CATS.concat(["Added by me"]).forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;s.appendChild(o);});s.value="Added by me";}
+function addCustom(){const name=$("add-name").value.trim();if(!name){toast("Type a name first");return;}const id="CUST-"+Date.now().toString(36);custom.push({id,n:name,c:$("add-cat").value,d:"",custom:true});R[id]={tag:null,level:0};$("add-name").value="";$("addform").classList.add("hidden");save();render();toast("Added");}
+
+/* ---------- export ---------- */
+function slug(){return ($("who").value||"anon").replace(/[^a-z0-9]+/gi,"-").toLowerCase();}
+function payload(){const t=tally();return{tool:"lab-self-review",version:BUILD,date:stamp(),respondent:$("who").value||"",role:$("role").value||"",summary:{dailyDuty:t.duty,extraTakenOn:t.extra,canDoRarely:t.cando,performsTotal:t.duty+t.extra,capableTotal:t.total,mastered:t.mastered,proficient:t.proficient,novice:t.novice},ratings:R,custom:custom};}
+async function send(){const nm=$("who").value.trim();if(!nm){toast("Add your name first");$("who").focus();showTab("rate");return;}const text=JSON.stringify(payload(),null,2);const fn="self-review_"+slug()+"_"+stamp()+".json";try{const f=new File([text],fn,{type:"application/json"});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"My work review"});toast("Thanks, sent.");return;}}catch(e){if(e&&e.name==="AbortError")return;}download(fn,text,"application/json");toast("Saved. Text or email that file back.");}
+function csv(){const who=$("who").value||"";const rows=[["Task","Category","Mark","Level","LevelName","Respondent"]];allItems().forEach(it=>{const r=R[it.id];if(r&&r.tag)rows.push([it.n,it.c,TAGNAME[r.tag],r.level||"",LVLNAME[r.level]||"",who]);});download("self-review_"+slug()+"_"+stamp()+".csv",rows.map(r=>r.map(x=>{const v=String(x);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",")).join("\n"),"text/csv");}
+
+/* ---------- tabs ---------- */
+function showTab(t){const rate=t==="rate";$("view-rate").classList.toggle("hidden",!rate);$("view-sum").classList.toggle("hidden",rate);$("bar-rate").classList.toggle("hidden",!rate);$("bar-sum").classList.toggle("hidden",rate);$("tab-rate").classList.toggle("on",rate);$("tab-sum").classList.toggle("on",!rate);if(!rate)renderSummary();window.scrollTo(0,0);}
+
+load();filters();fillCatSelect();render();
+$("ver").textContent=BUILD;$("ver").onclick=()=>toast(BUILD);
+$("who").oninput=save;$("role").oninput=save;
+$("tab-rate").onclick=()=>showTab("rate");$("tab-sum").onclick=()=>showTab("sum");
+$("send").onclick=send;$("send2").onclick=send;$("csv").onclick=csv;$("csv2").onclick=csv;
+$("addbtn").onclick=()=>$("addform").classList.toggle("hidden");
+$("add-save").onclick=addCustom;$("add-cancel").onclick=()=>$("addform").classList.add("hidden");
+</script>
+</body>
+</html>
